@@ -1,10 +1,16 @@
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
-
+        driver: 'pdo_pgsql'
+        host: '%env(resolve:DATABASE_HOST)%'
+        port: '%env(resolve:DATABASE_PORT)%'
+        dbname: '%env(resolve:DATABASE_NAME)%'
+        user: '%env(resolve:DATABASE_USER)%'
+        password: '%env(resolve:DATABASE_PASSWORD)%'
+        server_version: '%env(resolve:DATABASE_SERVER_VERSION)%'
+        charset: 'utf8'
+        sslmode: 'prefer'
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
