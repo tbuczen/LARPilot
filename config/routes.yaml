@@ -1,5 +1,14 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+public:
+    resource: '../src/Controller/Public/'
     type: attribute
+    prefix: /
+
+backoffice:
+    resource: '../src/Controller/Backoffice/'
+    type: attribute
+    prefix: /backoffice
+
+api:
+    resource: '../src/Controller/API/'
+    type: attribute
+    prefix: /api
