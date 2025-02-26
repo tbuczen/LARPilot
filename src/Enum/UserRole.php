@@ -18,4 +18,6 @@ enum UserRole: string
     case TRASHER = 'trasher';
     case TRUST_PERSON = 'person_of_trust';
     case OUTFIT_APPROVER = 'outfit_approver';
+    case ACCOUNTANT = 'accountant';
+    case GASTRONOMY = 'gastro';
 }

@@ -4,7 +4,11 @@ framework:
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true
-
+    default_locale: en
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks:
+            - en
     #esi: true
     #fragments: true
 
