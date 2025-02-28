@@ -1,3 +1,15 @@
 body {
     background-color: skyblue;
 }
+
+a.nav-link.active {
+    font-weight: bold;
+}
+
+.nav-item:last-child .nav-link.active {
+    text-decoration: underline;
+}
+
+.last-active > .nav-link {
+    text-decoration: underline;
+}

@@ -10,6 +10,13 @@ common:
   welcome: Welcome
   larp: LARP
   larps: LARPs
+  incident: Incident
+  incidents: Incidents
+  menu:
+    toggle: 'Menu'
+  create: 'Create'
+  list: 'List'
+  logout: 'Log Out'
 
 #Translations specific to public part of the app
 public:
@@ -19,6 +26,15 @@ public:
 #Translations specific for Larp Organizers backoffice
 backoffice:
   main_title: LARPilot Admin Panel
+  larp:
+    invitations: "Invitations"
+    invitation_valid_for: "Valid for (seconds)"
+    seconds: "seconds"
+    generate_invitation: "Generate Invitation"
+    current_invitations: "Current Invitations"
+    invitation_link: "Invitation Link"
+    valid_until: "Valid Until"
+    no_invitations: "No invitations have been generated."
 
 #Account related translations for both player and organizers
 account:
@@ -30,3 +46,4 @@ account:
   link_another_social: "Link Another Social Account"
   unlink: "Unlink"
   confirm_unlink: "Are you sure you want to unlink this social account? This cannot be undone."
+

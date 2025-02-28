@@ -1,0 +1,32 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}{{ 'backoffice.larp.invitations'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>{{ 'backoffice.larp.invitations'|trans }}</h1>
+
+        {# Form to generate a new invitation link #}
+        <form method="post" action="{{ path('backoffice_larp_generate_invitation', { id: larp.id }) }}">
+            <div class="mb-3">
+                <label for="validFor" class="form-label">{{ 'backoffice.larp.invitation_valid_for'|trans }}</label>
+                <input type="number" name="validFor" id="validFor" class="form-control" placeholder="{{ 'backoffice.larp.seconds'|trans }}">
+            </div>
+            <button type="submit" class="btn btn-primary">{{ 'backoffice.larp.generate_invitation'|trans }}</button>
+        </form>
+
+        <h2 class="mt-4">{{ 'backoffice.larp.current_invitations'|trans }}</h2>
+        <ul class="list-group">
+            {% for invitation in invitations %}
+                <li class="list-group-item">
+                    {{ 'backoffice.larp.invitation_link'|trans }}:
+                    <code>{{ app.request.schemeAndHttpHost }}/invite/{{ invitation.code }}</code>
+                    <br>
+                    {{ 'backoffice.larp.valid_until'|trans }}: {{ invitation.validTo|date('Y-m-d H:i:s') }}
+                </li>
+            {% else %}
+                <li class="list-group-item">{{ 'backoffice.larp.no_invitations'|trans }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -5,7 +5,6 @@ namespace App\Security\Voter\Backoffice\Larp;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Entity\User;
-use App\Enum\LarpStageStatus;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -29,25 +28,18 @@ class LarpDetailsVoter extends Voter
             return false;
         }
 
-        $status = $subject->getStatus();
-
-
         $participants = $subject->getParticipants();
         /** @var LarpParticipant|null $userOrganizer */
         $userOrganizer = $participants->filter(function (LarpParticipant $participant) use ($user) {
             return $participant->getUser()->getId() === $user->getId() && $participant->isOrganizer();
         })->first();
 
-        // If the user is not participating as en organizer for this LARP, deny.
+        // If the user is not participating as an organizer for this LARP, deny.
         if (!$userOrganizer) {
             return false;
         }
 
-        if ($status !== LarpStageStatus::DRAFT || $userOrganizer->isAdmin()) {
-            return true;
-        }
-
-        return false;
+        return true;
 
     }
 }

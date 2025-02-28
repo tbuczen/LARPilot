@@ -1,0 +1,37 @@
+{# see App\Twig\MenuExtension #}
+{% macro renderMenu(items, currentPath, level = 0) %}
+    <ul id='sideMenu' class="nav flex-column" style="margin-left: {{ level * 20 }}px;">
+        {% for item in items %}
+            {% set active = (item.url == currentPath) %}
+            {% set hasActiveChild = false %}
+            {% if item.children is defined and item.children|length > 0 %}
+                {% for child in item.children %}
+                    {% if child.url == currentPath %}
+                        {% set hasActiveChild = true %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% set isActive = active or hasActiveChild %}
+            <li class="nav-item">
+                {% if item.children is defined and item.children|length > 0 %}
+                    <a class="nav-link d-flex justify-content-between align-items-center {{ isActive ? 'active' : '' }}"
+                       data-bs-toggle="collapse"
+                       href="#submenu-{{ loop.index }}-{{ level }}"
+                       role="button"
+                       aria-expanded="{{ isActive ? 'true' : 'false' }}"
+                       aria-controls="submenu-{{ loop.index }}-{{ level }}">
+                        {{ item.label|trans }}
+                        <span class="bi bi-caret-down-fill"></span>
+                    </a>
+                    <div class="collapse {{ isActive ? 'show' : '' }}" id="submenu-{{ loop.index }}-{{ level }}">
+                        {{ _self.renderMenu(item.children, currentPath, level + 1) }}
+                    </div>
+                {% else %}
+                    <a class="nav-link {{ isActive ? 'active' : '' }}" href="{{ item.url }}">
+                        {{ item.label|trans }}
+                    </a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}

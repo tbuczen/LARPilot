@@ -16,3 +16,7 @@ services:
     App\Security\Voter\:
         resource: '../src/Security/Voter'
         tags: [ 'security.voter' ]
+
+    App\Twig\:
+        resource: '../src/Twig/'
+        tags: [ 'twig.extension' ]
