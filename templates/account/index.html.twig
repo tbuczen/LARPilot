@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'account.settings' | trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>{{ 'account.settings' | trans }}</h1>
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_row(form.username) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.contactEmail) }}
+        </div>
+        <button type="submit" class="btn btn-primary">{{ 'common.save' | trans }}</button>
+        {{ form_end(form) }}
+    </div>
+
+    <div id="connectedAccounts" class="container mt-4">
+        <h1>{{ 'account.connected_accounts' | trans }}</h1>
+    </div>
+
+    <div id="larpList" class="container mt-4">
+        <h1>{{ 'account.larp.list' | trans }}</h1>
+    </div>
+{% endblock %}

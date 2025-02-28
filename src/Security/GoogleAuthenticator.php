@@ -1,18 +1,26 @@
 <?php
+
 namespace App\Security;
 
+use App\Domain\Account\UseCase\AddSocialAccountToUser\AddSocialAccountToUserCommand;
+use App\Domain\Account\UseCase\AddSocialAccountToUser\AddSocialAccountToUserHandler;
+use App\Domain\Account\UseCase\RegisterUser\RegisterUserCommand;
+use App\Domain\Account\UseCase\RegisterUser\RegisterUserHandler;
 use App\Entity\User;
+use App\Enum\SocialAccountProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use League\OAuth2\Client\Provider\GoogleUser;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
@@ -21,11 +29,12 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
 {
 
-
     public function __construct(
-        private readonly ClientRegistry $clientRegistry,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly RouterInterface $router
+        private readonly ClientRegistry                $clientRegistry,
+        private readonly RouterInterface               $router,
+        private readonly RegisterUserHandler           $registerUserHandler,
+        private readonly AddSocialAccountToUserHandler $addSocialAccountToUserHandler,
+        private readonly Security                      $security
     )
     {
     }
@@ -43,28 +52,27 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function() use ($accessToken, $client) {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
                 /** @var GoogleUser $googleUser */
                 $googleUser = $client->fetchUserFromToken($accessToken);
+                $providerEnum = SocialAccountProvider::Google;
 
-                $email = $googleUser->getEmail();
+                /** @var User|null $currentUser */
+                $currentUser = $this->security->getUser();
+                if ($currentUser) {
+                    return $this->addSocialAccountToUser($googleUser, $currentUser);
+                }
 
-                //TODO: Get or create new user based on USerSocialAccount
-
-                return $user;
+                return $this->registerNewUser($providerEnum, $googleUser);
             })
         );
     }
 
+    /** @see OAuthGoogleController::connectGoogleCheck */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // change "app_homepage" to some route in your app
-        $targetUrl = $this->router->generate('app_homepage');
-
+        $targetUrl = $this->router->generate('public_larp_list');
         return new RedirectResponse($targetUrl);
-
-        // or, on success, let the request continue to be handled by the controller
-        //return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
@@ -84,5 +92,32 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
             '/connect/', // might be the site, where users choose their oauth provider
             Response::HTTP_TEMPORARY_REDIRECT
         );
+    }
+
+    private function addSocialAccountToUser(GoogleUser $googleUser, UserInterface|User $currentUser): UserInterface
+    {
+        $command = new AddSocialAccountToUserCommand(
+            provider: SocialAccountProvider::Google,
+            providerUserId: $googleUser->getId(),
+            email: $googleUser->getEmail(),
+            userId: $currentUser->getId()->toRfc4122(),
+            username: $googleUser->getName(),
+            displayName: $googleUser->getEmail()
+        );
+
+        return $this->addSocialAccountToUserHandler->handle($command);
+    }
+
+    private function registerNewUser(SocialAccountProvider $providerEnum, GoogleUser $googleUser): UserInterface
+    {
+        $command = new RegisterUserCommand(
+            provider: $providerEnum,
+            providerUserId: $googleUser->getId(),
+            email: $googleUser->getEmail(),
+            username: $googleUser->getName(),
+            displayName: $googleUser->getEmail()
+        );
+
+        return $this->registerUserHandler->handle($command);
     }
 }

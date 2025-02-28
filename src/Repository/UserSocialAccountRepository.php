@@ -2,14 +2,16 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\UserSocialAccount;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<UserSocialAccount>
  */
-class SocialAccountRepository extends ServiceEntityRepository
+class UserSocialAccountRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -40,4 +42,17 @@ class SocialAccountRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * @param User $user
+     * @return UserSocialAccount[]
+     */
+    public function getAllBelongingToUser(User $user): array
+    {
+        return $this->createQueryBuilder('sa')
+            ->andWhere('sa.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }

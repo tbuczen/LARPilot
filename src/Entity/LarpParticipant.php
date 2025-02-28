@@ -47,7 +47,7 @@ class LarpParticipant
         return $this->larp;
     }
 
-    public function setLarp(Larp $larp): self
+    public function setLarp(?Larp $larp): self
     {
         $this->larp = $larp;
         return $this;
@@ -83,5 +83,23 @@ class LarpParticipant
     {
         $this->faction = $faction;
         return $this;
+    }
+
+    public function isPlayer(): bool
+    {
+        return in_array(UserRole::PLAYER,$this->getRoles());
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array(UserRole::ORGANIZER,$this->getRoles());
+    }
+
+    public function isOrganizer(): bool
+    {
+        $organizerRoles = array_map(fn($role) => $role->value, UserRole::getOrganizers());
+        $userRoles = array_map(fn($role) => $role->value, $this->getRoles());
+
+        return !empty(array_intersect($organizerRoles, $userRoles));
     }
 }

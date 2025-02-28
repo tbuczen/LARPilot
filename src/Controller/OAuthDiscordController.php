@@ -4,7 +4,7 @@ namespace App\Controller;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class OAuthDiscordController extends AbstractController
 {
@@ -13,7 +13,7 @@ class OAuthDiscordController extends AbstractController
     {
         return $clientRegistry
             ->getClient('discord')
-            ->redirect(['profile', 'email'], []);
+            ->redirect(['identify', 'email'], []);
     }
 
     #[Route('/connect/discord/check', name: 'connect_discord_check')]
