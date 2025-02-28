@@ -8,7 +8,6 @@ use App\Domain\Account\UseCase\RegisterUser\RegisterUserCommand;
 use App\Domain\Account\UseCase\RegisterUser\RegisterUserHandler;
 use App\Entity\User;
 use App\Enum\SocialAccountProvider;
-use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
