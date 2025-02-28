@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Sign in or Sign Up with</h1>
+    <h2>If You are already registered and want to connect accounts - You need to sign in and do it in Your account settings</h2>
+    <ul>
+        <li><a href="{{ path('connect_google_start') }}">Google</a></li>
+        <li><a href="{{ path('connect_facebook_start') }}">Facebook</a></li>
+        <li><a href="{{ path('connect_discord_start') }}">Discord</a></li>
+    </ul>
+
+{% endblock %}
+

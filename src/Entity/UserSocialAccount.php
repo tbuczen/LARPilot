@@ -4,13 +4,15 @@ namespace App\Entity;
 
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\SocialAccountProvider;
-use App\Repository\SocialAccountRepository;
+use App\Repository\UserSocialAccountRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-#[ORM\Entity(repositoryClass: SocialAccountRepository::class)]
+#[ORM\Entity(repositoryClass: UserSocialAccountRepository::class)]
 class UserSocialAccount
 {
     use UuidTraitEntity;
+    use TimestampableEntity;
 
     #[ORM\Column(type: 'string', enumType: SocialAccountProvider::class)]
     private ?SocialAccountProvider $provider = null;
@@ -18,8 +20,8 @@ class UserSocialAccount
     #[ORM\Column(length: 255)]
     private ?string $providerUserId = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(length: 255)]
+    private ?string $displayName = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'socialAccounts')]
     #[ORM\JoinColumn(nullable: false)]
@@ -48,18 +50,6 @@ class UserSocialAccount
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -69,5 +59,15 @@ class UserSocialAccount
     {
         $this->user = $user;
         return $this;
+    }
+
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(?string $displayName): void
+    {
+        $this->displayName = $displayName;
     }
 }

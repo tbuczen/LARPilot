@@ -6,6 +6,7 @@ use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -14,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     use UuidTraitEntity;
+    use TimestampableEntity;
 
     #[ORM\Column(length: 180)]
     private ?string $username = null;

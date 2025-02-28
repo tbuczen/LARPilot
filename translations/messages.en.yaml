@@ -1,4 +1,32 @@
-welcome:
+#All common translations
+common:
+  save: Save Changes
+  confirm: Confirm
+  cancel: Cancel
+  close: Close
+  back: Go Back
+  next: Next
+  previous: Previous
+  welcome: Welcome
+  larp: LARP
+  larps: LARPs
 
+#Translations specific to public part of the app
 public:
+  larp:
+    list: List of LARPs
+
+#Translations specific for Larp Organizers backoffice
 backoffice:
+  main_title: LARPilot Admin Panel
+
+#Account related translations for both player and organizers
+account:
+  larp:
+    list: Your LARPs
+  settings: Account Settings
+  connected_accounts: Connected Accounts list
+  no_connected_accounts: "You have not linked any social accounts yet."
+  link_another_social: "Link Another Social Account"
+  unlink: "Unlink"
+  confirm_unlink: "Are you sure you want to unlink this social account? This cannot be undone."

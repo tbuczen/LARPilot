@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Trait\UuidTraitEntity;
+use App\Enum\LarpStageStatus;
 use App\Repository\LarpRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,7 +32,7 @@ class Larp implements Timestampable
     private ?string $location = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    private ?LarpStageStatus $status = null;
 
     /** @var Collection<LarpCharacter>  */
     #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larp')]
@@ -116,12 +117,12 @@ class Larp implements Timestampable
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?LarpStageStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(LarpStageStatus $status): static
     {
         $this->status = $status;
 
@@ -164,20 +165,42 @@ class Larp implements Timestampable
         return $this->factions;
     }
 
-    public function addFaction(LarpFaction $faction): self
+    public function addFaction(LarpFaction $element): self
     {
-        if (!$this->factions->contains($faction)) {
-            $this->factions[] = $faction;
-            $faction->addLarp($this);
+        if (!$this->factions->contains($element)) {
+            $this->factions[] = $element;
+            $element->addLarp($this);
         }
         return $this;
     }
 
-    public function removeFaction(LarpFaction $faction): self
+    public function removeFaction(LarpFaction $element): self
     {
-        if ($this->factions->removeElement($faction)) {
-            $faction->removeLarp($this);
+        if ($this->factions->removeElement($element)) {
+            $element->removeLarp($this);
         }
         return $this;
+    }
+
+    public function addParticipant(LarpParticipant $element): self
+    {
+        if (!$this->larpParticipants->contains($element)) {
+            $this->larpParticipants[] = $element;
+            $element->setLarp($this);
+        }
+        return $this;
+    }
+
+    public function removeParticipant(LarpParticipant $element): self
+    {
+        if ($this->larpParticipants->removeElement($element)) {
+            $element->setLarp(null);
+        }
+        return $this;
+    }
+
+    public function getParticipants(): Collection
+    {
+        return $this->larpParticipants;
     }
 }

@@ -3,7 +3,11 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+#    session: true
+    session:
+        handler_id: null
+        cookie_secure: auto
+        cookie_samesite: lax
     default_locale: en
     translator:
         default_path: '%kernel.project_dir%/translations'

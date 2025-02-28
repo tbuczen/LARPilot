@@ -4,7 +4,8 @@ namespace App\Controller;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 class OAuthGoogleController extends AbstractController
 {
@@ -16,9 +17,12 @@ class OAuthGoogleController extends AbstractController
             ->redirect(['profile', 'email'], []);
     }
 
+    /** @see GoogleAuthenticator::onAuthenticationSuccess() */
     #[Route('/connect/google/check', name: 'connect_google_check')]
-    public function connectGoogleCheck(): void
+    public function connectGoogleCheck(): Response
     {
+        return new Response('Google OAuth callback intercepted, authentication should have occurred.', 200);
+
         // This route is used by the OAuth2 client bundle to handle the callback.
         // You can leave it empty; the bundle will intercept the request and handle authentication.
     }
