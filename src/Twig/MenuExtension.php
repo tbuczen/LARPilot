@@ -61,7 +61,24 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
                 ],
             ];
 
+
+            $this->menuItems[] = [
+                'label' => $this->translator->trans('common.backoffice'),
+                'url' => '#',
+                'children' => [
+                    [
+                        'label' => $this->translator->trans('backoffice.larp.list'),
+                        'url' => $this->router->generate('backoffice_larp_list'),
+                    ],
+                    [
+                        'label' => $this->translator->trans('backoffice.larp.create'),
+                        'url' => $this->router->generate('backoffice_larp_create'),
+                    ],
+                ],
+            ];
         }
+
+        //add service to check if user is organizer in any larp that is not cancelled - of so - add link to backoffice
 
         return [
             'menuItems' => $this->menuItems,

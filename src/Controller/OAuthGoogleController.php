@@ -22,8 +22,5 @@ class OAuthGoogleController extends AbstractController
     public function connectGoogleCheck(): Response
     {
         return new Response('Google OAuth callback intercepted, authentication should have occurred.', 200);
-
-        // This route is used by the OAuth2 client bundle to handle the callback.
-        // You can leave it empty; the bundle will intercept the request and handle authentication.
     }
 }

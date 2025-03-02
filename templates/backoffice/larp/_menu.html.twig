@@ -1,0 +1,65 @@
+{% macro larpBackofficeMenu(larp) %}
+    {% set currentRoute = app.request.attributes.get('_route') %}
+
+    <div class="btn-group" role="group" aria-label="LARP Backoffice Menu">
+
+        {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
+            <a href="{{ path('backoffice_larp_integration_settings', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}">
+                {{ 'backoffice.larp.integrations'|trans }}
+            </a>
+        {% endif %}
+
+        <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}"
+           class="btn btn-primary {% if currentRoute == 'backoffice_larp_details' %}active{% endif %}">
+            {{ 'common.general'|trans }}
+        </a>
+
+        {% if is_granted('VIEW_BO_LARP_INVITATIONS', larp) %}
+            <a href="{{ path('backoffice_larp_invitations', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_invitations' %}active{% endif %}">
+                {{ 'backoffice.larp.invitations'|trans }}
+            </a>
+        {% endif %}
+
+        {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
+            <a href="{{ path('backoffice_larp_incidents', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_incidents' %}active{% endif %}">
+                {{ 'common.incidents'|trans }}
+            </a>
+        {% endif %}
+        {#   Bilety, zgłoszenia (kiedy opublikowany), komisja strojowa (kiedy są zgłoszenia)     #}
+    </div>
+
+    {% if is_granted('VIEW_BO_LARP_STORY', larp) %}
+        <div class="btn-group" role="group" aria-label="LARP Backoffice Story">
+
+            <a href="{{ path('backoffice_larp_story_characters', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_characters' %}active{% endif %}">
+                {{ 'backoffice.larp.characters'|trans }}
+            </a>
+
+            <a href="{{ path('backoffice_larp_story_factions', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_factions' %}active{% endif %}">
+                {{ 'backoffice.larp.factions'|trans }}
+            </a>
+
+            <a href="{{ path('backoffice_larp_story_quests', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_quests' %}active{% endif %}">
+                {{ 'backoffice.larp.quests'|trans }}
+            </a>
+
+            <a href="{{ path('backoffice_larp_story_relations', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_relations' %}active{% endif %}">
+                {{ 'backoffice.larp.relations'|trans }}
+            </a>
+
+            <a href="{{ path('backoffice_larp_story_events', {'id': larp.id}) }}"
+               class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_events' %}active{% endif %}">
+                {{ 'backoffice.larp.events'|trans }}
+            </a>
+
+            {#   Bilety, zgłoszenia (kiedy opublikowany), komisja strojowa (kiedy są zgłoszenia)     #}
+        </div>
+    {% endif %}
+{% endmacro %}

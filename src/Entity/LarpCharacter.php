@@ -2,16 +2,22 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatorAwareInterface;
+use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpCharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Timestampable;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[Gedmo\Loggable]
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
-class LarpCharacter
+class LarpCharacter implements CreatorAwareInterface, Timestampable
 {
     use UuidTraitEntity;
+    use CreatorAwareTrait;
+    use TimestampableEntity;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;

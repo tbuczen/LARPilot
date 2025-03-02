@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<LarpFaction>
  */
-class LarpFactionRepository extends ServiceEntityRepository
+class LarpFactionRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

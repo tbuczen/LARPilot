@@ -17,11 +17,15 @@ common:
   create: 'Create'
   list: 'List'
   logout: 'Log Out'
+  backoffice: 'Admin Panel'
+  manage: 'Manage in Admin'
+  general: 'Generic'
 
 #Translations specific to public part of the app
 public:
   larp:
     list: List of LARPs
+    no_larps: 'No LARPS in the database at the moment'
 
 #Translations specific for Larp Organizers backoffice
 backoffice:
@@ -35,6 +39,20 @@ backoffice:
     invitation_link: "Invitation Link"
     valid_until: "Valid Until"
     no_invitations: "No invitations have been generated."
+    create: 'Create own LARP'
+    preview: 'Preview in public website'
+    list: 'My LARPs'
+    characters: 'Characters'
+    factions: 'Factions & Groups'
+    quests: 'Quests'
+    relations: 'Story Relations'
+    events: 'Events'
+    integrations: 'Integrated Tools'
+    integrationSettings: 'Integration Settings'
+    integration:
+      googleDrive: 'Google Drive Integration'
+      googleDriveDescription: 'Connect your Google Drive to allow LARPilot access to your LARP files. This will enable the application to view and potentially manage your specified drive folder.'
+      googleDriveConnect: 'Connect with Google Drive'
 
 #Account related translations for both player and organizers
 account:

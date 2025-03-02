@@ -1,0 +1,27 @@
+{% extends 'backoffice/base.html.twig' %}
+{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+
+{% block title %}{{ 'backoffice.larp.integrationSettings'|trans }}{% endblock %}
+
+{% block body %}
+<header>
+    {{ larpMenu.larpBackofficeMenu(larp) }}
+</header>
+<main>
+    <div class="container mt-4">
+        <h1>{{ 'backoffice.larp.integrationSettings'|trans }}</h1>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>{{ 'backoffice.larp.integration.googleDrive'|trans }}</h2>
+            </div>
+            <div class="card-body">
+                <p>{{ 'backoffice.larp.integration.googleDriveDescription'|trans }}</p>
+                <a href="{{ path('backoffice_larp_google_drive_connect', { id: larp.id }) }}" class="btn btn-primary">
+                    {{ 'backoffice.larp.integration.googleDriveConnect'|trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

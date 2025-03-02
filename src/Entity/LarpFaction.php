@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatorAwareInterface;
+use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpFactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,9 +11,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LarpFactionRepository::class)]
-class LarpFaction
+class LarpFaction implements CreatorAwareInterface
 {
     use UuidTraitEntity;
+    use CreatorAwareTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;

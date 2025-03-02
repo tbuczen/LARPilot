@@ -95,11 +95,24 @@ class LarpParticipant
         return in_array(UserRole::ORGANIZER,$this->getRoles());
     }
 
+    public function isTrustPerson(): bool
+    {
+        return in_array(UserRole::TRUST_PERSON,$this->getRoles());
+    }
+
     public function isOrganizer(): bool
     {
         $organizerRoles = array_map(fn($role) => $role->value, UserRole::getOrganizers());
         $userRoles = array_map(fn($role) => $role->value, $this->getRoles());
 
         return !empty(array_intersect($organizerRoles, $userRoles));
+    }
+
+    public function isStoryWriter(): bool
+    {
+        $storyWriters = array_map(fn($role) => $role->value, UserRole::getStoryWriters());
+        $userRoles = array_map(fn($role) => $role->value, $this->getRoles());
+
+        return !empty(array_intersect($storyWriters, $userRoles));
     }
 }

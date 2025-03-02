@@ -18,14 +18,19 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
-            aria-controls="sidebarMenu">
-        {{ 'common.menu.toggle'|trans }}
+    <button id='sidebarMenuButton' class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+        <i class="bi bi-list"></i>
     </button>
 
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
-        {% import 'macros/menu.html.twig' as menu %}
-        {{ menu.renderMenu(menuItems, app.request.pathinfo) }}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarMenuLabel">{{ 'common.menu.toggle'|trans }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{{ 'common.close'|trans }}"></button>
+        </div>
+        <div class="offcanvas-body">
+            {% import 'macros/menu.html.twig' as menu %}
+            {{ menu.renderMenu(menuItems, app.request.pathinfo) }}
+        </div>
     </div>
 
     <div id="flashMessages">
