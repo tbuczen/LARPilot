@@ -1,4 +1,28 @@
 {% extends 'backoffice/base.html.twig' %}
+{% block title %}{{ 'backoffice.larp.list'|trans }}{% endblock %}
+
 {% block body %}
-    <h1>BO LARPS list</h1>
+    <div class="container mt-4">
+        <h1 class="mb-4">{{ 'backoffice.larp.list'|trans }}</h1>
+
+        {% if larps|length > 0 %}
+            <div class="list-group">
+                {% for larp in larps %}
+                    <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <div><small>{{ larp.status.value }}</small><h5 class="mb-1">{{ larp.name }}</h5></div>
+                            <small>{{ larp.startDate|date('Y-m-d') }}</small>
+                        </div>
+                        <p class="mb-1">{{ larp.description|striptags|slice(0, 150) ~ '...' }}</p>
+                        <small>{{ larp.location }}</small>
+
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                {{ 'public.larp.no_larps'|trans }}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

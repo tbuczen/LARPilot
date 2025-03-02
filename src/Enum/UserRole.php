@@ -43,4 +43,15 @@ enum UserRole: string
             self::GASTRONOMY,
         ];
     }
+
+    public static function getStoryWriters(): array
+    {
+        return [
+            self::MAIN_STORY_WRITER,
+            self::STORY_WRITER,
+            self::GAME_MASTER,
+            self::NPC_LONG,
+            self::NPC_SHORT,
+        ];
+    }
 }

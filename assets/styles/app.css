@@ -5,11 +5,20 @@ body {
 a.nav-link.active {
     font-weight: bold;
 }
-
-.nav-item:last-child .nav-link.active {
-    text-decoration: underline;
+#sidebarMenuButton {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1100;
 }
-
-.last-active > .nav-link {
-    text-decoration: underline;
+#sidebarMenu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px; /* Adjust width as needed */
+    height: 100%;
+    background: #fff;
+    border-left: 1px solid #ddd;
+    overflow-y: auto;
+    z-index: 1050; /* Above main content */
 }

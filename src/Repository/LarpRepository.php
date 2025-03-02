@@ -3,13 +3,16 @@
 namespace App\Repository;
 
 use App\Entity\Larp;
+use App\Entity\LarpParticipant;
+use App\Entity\User;
+use App\Enum\LarpStageStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Larp>
  */
-class LarpRepository extends ServiceEntityRepository
+class LarpRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -40,4 +43,62 @@ class LarpRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * @return Larp[]
+     */
+    public function findAllUpcomingPublished(?User $currentUser = null): array
+    {
+        $now = new \DateTimeImmutable();
+
+        $qb = $this->createQueryBuilder('l')
+            ->orderBy('l.startDate', 'ASC');
+
+        $upcoming = $qb->expr()->andX(
+            $qb->expr()->eq('l.status', ':published'),
+            $qb->expr()->gte('l.startDate', ':now')
+        );
+
+        if ($currentUser) {
+            $subQb = $this->getEntityManager()->createQueryBuilder();
+            $subQb->select('1')
+                ->from(LarpParticipant::class, 'lp')
+                ->where('lp.larp = l')
+                ->andWhere('lp.user = :currentUser');
+
+            $qb->where(
+                $qb->expr()->orX(
+                    $upcoming,
+                    $qb->expr()->exists($subQb->getDQL())
+                )
+            );
+            $qb->setParameter('currentUser', $currentUser);
+        } else {
+            // If no user is logged in, only published upcoming larps are shown.
+            $qb->where($upcoming);
+        }
+
+        $qb->setParameter('published', LarpStageStatus::PUBLISHED->value)
+            ->setParameter('now', $now);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findAllWhereParticipating(User $user): array
+    {
+        $qb = $this->createQueryBuilder('l');
+
+        $subQb = $this->getEntityManager()->createQueryBuilder();
+        $subQb->select('1')
+            ->from(LarpParticipant::class, 'lp')
+            ->where('lp.larp = l')
+            ->andWhere('lp.user = :currentUser');
+
+        $qb->where(
+            $qb->expr()->exists($subQb->getDQL())
+        );
+        $qb->setParameter('currentUser', $user);
+
+        return $qb->getQuery()->getResult();
+    }
 }

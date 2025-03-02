@@ -1,4 +1,14 @@
 {% extends 'backoffice/base.html.twig' %}
+{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+
 {% block body %}
+    <header>
+        {{ larpMenu.larpBackofficeMenu(larp) }}
+    </header>
+    <main>
     <h1>LARP {{ larp.name }}</h1>
+    <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-secondary">
+        {{ 'backoffice.larp.preview'|trans }}
+    </a>
+    </main>
 {% endblock %}

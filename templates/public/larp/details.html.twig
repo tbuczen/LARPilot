@@ -2,4 +2,11 @@
 
 {% block body %}
     <h1>LARP {{ larp.name }}</h1>
+    {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
+        <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}" class="btn btn-secondary">
+            {{ 'common.manage'|trans }}
+        </a>
+    {% endif %}
+
+
 {% endblock %}

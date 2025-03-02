@@ -1,8 +1,14 @@
 {% extends 'backoffice/base.html.twig' %}
+{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
 
 {% block title %}{{ 'backoffice.larp.invitations'|trans }}{% endblock %}
 
 {% block body %}
+
+<header>
+    {{ larpMenu.larpBackofficeMenu(larp) }}
+</header>
+<main>
     <div class="container mt-4">
         <h1>{{ 'backoffice.larp.invitations'|trans }}</h1>
 
@@ -29,4 +35,5 @@
             {% endfor %}
         </ul>
     </div>
+</main>
 {% endblock %}

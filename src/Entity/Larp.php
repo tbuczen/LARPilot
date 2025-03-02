@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatorAwareInterface;
+use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\LarpStageStatus;
 use App\Repository\LarpRepository;
@@ -10,14 +12,22 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: LarpRepository::class)]
-class Larp implements Timestampable
+class Larp implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
+    use TimestampableEntity;
+    use CreatorAwareTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
+    #[Gedmo\Slug(fields: ['name'])]
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $slug = null;
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
@@ -67,6 +77,16 @@ class Larp implements Timestampable
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): void
+    {
+        $this->slug = $slug;
     }
 
     public function getDescription(): ?string

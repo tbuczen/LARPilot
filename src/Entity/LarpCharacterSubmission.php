@@ -2,18 +2,22 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatorAwareInterface;
+use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\SubmissionStatus;
 use App\Repository\LarpCharacterSubmissionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: LarpCharacterSubmissionRepository::class)]
-class LarpCharacterSubmission
+class LarpCharacterSubmission implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
     use TimestampableEntity;
+    use CreatorAwareTrait;
 
     #[ORM\Column(length: 50)]
     private ?SubmissionStatus $status = null;

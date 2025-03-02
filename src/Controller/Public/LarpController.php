@@ -16,23 +16,27 @@ class LarpController extends AbstractController
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(LarpRepository $larpRepository): Response
     {
-        $larps = $larpRepository->findAll();
+        $larps = $larpRepository->findAllUpcomingPublished($this->getUser());
         return $this->render('public/larp/list.html.twig', [
             'larps' => $larps,
         ]);
     }
 
-    #[Route('/{id}', name: 'details', methods: ['GET'])]
-    public function details(string $id, LarpRepository $larpRepository): Response
+    #[Route('/larp/{slug}', name: 'details', methods: ['GET'])]
+    public function details(string $slug, LarpRepository $larpRepository): Response
     {
-        $larp = $larpRepository->find($id);
+        $larp = $larpRepository->findOneBy(['slug' => $slug]);
         return $this->render('public/larp/details.html.twig', [
             'larp' => $larp,
         ]);
     }
 
-    #[Route('/invite/{code}', name: 'invite_accept', methods: ['GET', 'POST'])]
-    public function acceptInvitation(string $code, UserSocialAccountRepository $socialAccountRepository, EntityManagerInterface $entityManager): Response
+    #[Route('/invitation/{code}', name: 'invite_accept', methods: ['GET', 'POST'])]
+    public function acceptInvitation(
+        string $code,
+        UserSocialAccountRepository $socialAccountRepository,
+        EntityManagerInterface $entityManager
+    ): Response
     {
         // Lookup the invitation by its code
         $invitation = $entityManager->getRepository(LarpInvitation::class)->findOneBy(['code' => $code]);
