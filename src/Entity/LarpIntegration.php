@@ -6,11 +6,12 @@ use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\LarpIntegrationProvider;
+use App\Repository\LarpIntegrationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LarpIntegrationRepository::class)]
 class LarpIntegration implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
@@ -28,6 +29,9 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $expiresAt;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $scopes = null;
 
     #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'integrations')]
     #[ORM\JoinColumn(nullable: false)]
@@ -83,5 +87,14 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
         $this->larp = $larp;
     }
 
+    public function getScopes(): ?string
+    {
+        return $this->scopes;
+    }
+
+    public function setScopes(?string $scopes): void
+    {
+        $this->scopes = $scopes;
+    }
 
 }
