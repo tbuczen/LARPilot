@@ -53,6 +53,7 @@ backoffice:
       googleDrive: 'Google Drive Integration'
       googleDriveDescription: 'Connect your Google Drive to allow LARPilot access to your LARP files. This will enable the application to view and potentially manage your specified drive folder.'
       googleDriveConnect: 'Connect with Google Drive'
+      current: 'Current integrations'
 
 #Account related translations for both player and organizers
 account:
