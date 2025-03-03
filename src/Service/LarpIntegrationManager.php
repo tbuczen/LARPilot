@@ -42,6 +42,7 @@ final readonly class LarpIntegrationManager
 
     public function decorateIntegrationsWithClient(array $integrations): void
     {
+        /** @var LarpIntegration $integration */
         foreach ($integrations as $integration) {
             $oauthClient = $this->clientRegistry->getClient($integration->getProvider()->value);
             $integration->setClient($oauthClient);

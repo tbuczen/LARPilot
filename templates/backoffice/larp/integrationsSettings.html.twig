@@ -23,7 +23,7 @@
                         <ul>
                             {% for integration in integrations %}
                                 <li>
-                                    {{ integration.provider|trans }} -
+                                    {{ integration.provider.name }} -
                                     <strong>Scopes:</strong>
                                     <ul>
                                         {% for scope in integration.scopes|split(' ') %}

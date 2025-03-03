@@ -11,9 +11,9 @@ abstract class BaseRepository extends ServiceEntityRepository
     {
         // If the entity has a setCreatedBy method and it's not already set, use the current user.
 
-        $this->_em->persist($entity);
+        $this->getEntityManager()->persist($entity);
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
         return $entity;
     }
