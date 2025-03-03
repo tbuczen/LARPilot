@@ -7,9 +7,11 @@ use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 
 #[ORM\Entity(repositoryClass: LarpIntegrationRepository::class)]
 class LarpIntegration implements Timestampable, CreatorAwareInterface
@@ -18,7 +20,7 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     use TimestampableEntity;
     use CreatorAwareTrait;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'string', enumType: LarpIntegrationProvider::class)]
     private LarpIntegrationProvider $provider;
 
     #[ORM\Column(type: 'string')]
@@ -36,6 +38,7 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'integrations')]
     #[ORM\JoinColumn(nullable: false)]
     private Larp $larp;
+    private ?OAuth2ClientInterface $client = null;
 
     public function getProvider(): LarpIntegrationProvider
     {
@@ -95,6 +98,11 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     public function setScopes(?string $scopes): void
     {
         $this->scopes = $scopes;
+    }
+
+    public function setClient(OAuth2ClientInterface $oauthClient)
+    {
+        $this->client = $oauthClient;
     }
 
 }
