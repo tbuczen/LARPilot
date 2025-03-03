@@ -7,17 +7,24 @@ use App\Domain\Larp\UseCase\GenerateInvitation\GenerateInvitationHandler;
 use App\Domain\Larp\UseCase\SubmitLarp\SubmitLarpCommand;
 use App\Domain\Larp\UseCase\SubmitLarp\SubmitLarpHandler;
 use App\Entity\Larp;
+use App\Entity\LarpIntegration;
 use App\Enum\LarpIntegrationProvider;
 use App\Enum\UserRole;
 use App\Form\LarpType;
+use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
 use App\Security\GoogleAuthenticator;
 use App\Security\Voter\Backoffice\Larp\LarpDetailsVoter;
+use App\Service\LarpIntegrationManager;
+use Google\Client;
+use Google\Service\Drive;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -25,51 +32,71 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class LarpIntegrationsSettingsController extends AbstractController
 {
 
-    #[Route('/{id}/integration-settings', name: 'integration_settings', methods: ['GET', 'POST'])]
-    public function integrationsSettings(string $id, Request $request, LarpRepository $larpRepository): Response
+    public function __construct(
+        private readonly ClientRegistry $clientRegistry,
+        private readonly LarpRepository $larpRepository,
+        private readonly LarpIntegrationManager $larpIntegrationManager,
+    )
     {
-        $larp = $larpRepository->find($id);
+    }
+
+    #[Route('/{id}/integration-settings', name: 'integration_settings', methods: ['GET', 'POST'])]
+    public function integrationsSettings(
+        string                    $id,
+        LarpIntegrationRepository $larpIntegrationRepository
+    ): Response
+    {
+        $larp = $this->larpRepository->find($id);
         if (!$larp) {
             throw $this->createNotFoundException('Larp not found.');
         }
 
+        $integrations = $larpIntegrationRepository->findAllByLarp($id);
+        $this->larpIntegrationManager->decorateIntegrationsWithClient($integrations);
+
         return $this->render('backoffice/larp/integrationsSettings.html.twig', [
             'larp' => $larp,
-            // Pass existing invitations if needed
+            'integrations' => $integrations,
         ]);
     }
 
     /** @see GoogleAuthenticator */
     #[Route('/{id}/integration/connect/googleDrive', name: 'google_drive_connect', methods: ['GET', 'POST'])]
-    public function connectGoogleDrive(ClientRegistry $clientRegistry, string $id, LarpRepository $larpRepository): Response
+    public function connectGoogleDrive(
+        string           $id,
+        SessionInterface $session
+    ): Response
     {
-        $larp = $larpRepository->find($id);
+        $larp = $this->larpRepository->find($id);
         if (!$larp) {
             throw $this->createNotFoundException('Larp not found.');
         }
 
-        $client = $clientRegistry->getClient(LarpIntegrationProvider::Google->value);
+        $client = $this->clientRegistry->getClient(LarpIntegrationProvider::Google->value);
+        $session->set('current_larp_id', $id);
         return $client
-            ->redirect(['https://www.googleapis.com/auth/drive.file'], [
-                'redirect_uri' => $this->generateUrl('backoffice_larp_google_drive_connect_check', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->redirect(LarpIntegrationManager::GOOGLE_SCOPES, [
+                'redirect_uri' => $this->generateUrl('backoffice_larp_google_drive_connect_check', [], UrlGeneratorInterface::ABSOLUTE_URL)
             ]);
     }
 
-    #[Route('/{id}/integration/connect/googleDrive/check', name: 'google_drive_connect_check')]
-    public function connectGoogleCheck(Request $request, ClientRegistry $clientRegistry): RedirectResponse
+    #[Route('/integration/connect/googleDrive/check', name: 'google_drive_connect_check')]
+    public function connectGoogleCheck(SessionInterface          $session,): RedirectResponse
     {
-        // This route handles the OAuth callback.
-        // Here you can retrieve the access token, refresh token, expiration,
-        // and other user data. Then, create or update a LarpIntegration entity.
-        // (Don't forget to associate it with the appropriate Larp.)
+        /** @var GoogleClient $client */
+        $oauthClient = $this->clientRegistry->getClient(LarpIntegrationProvider::Google->value);
+        $larpId = $session->get('current_larp_id');
+        $this->larpIntegrationManager->createGoogleDriveIntegration($oauthClient->getAccessToken(), $larpId);
 
-        // For example:
-         $client = $clientRegistry->getClient('google');
-         $token = $client->getAccessToken();
-        // Save token details to the database.
+//        $client = new Client([
+//            'client_id' => getenv('OAUTH_GOOGLE_CLIENT_ID'),
+//            'client_secret' => getenv('OAUTH_GOOGLE_CLIENT_SECRET'),
+//        ]);
+//        $client->setAccessToken($accessToken->getToken());
+//        $drive = new Drive($client);
 
-        // After processing, redirect back to the integration settings page.
-        return $this->redirectToRoute('backoffice_larp_integration_settings');
+        $session->remove('current_larp_id');
+        return $this->redirectToRoute('backoffice_larp_details', ['id' => $larpId]);
     }
 
 }
