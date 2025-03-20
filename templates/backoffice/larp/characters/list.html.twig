@@ -1,0 +1,48 @@
+{% extends 'backoffice/base.html.twig' %}
+{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+
+{% block body %}
+    <header>
+        {{ larpMenu.larpBackofficeMenu(larp) }}
+    </header>
+    <main>
+        <div class="container mt-4">
+            <h1>{{ larp.name }}</h1>
+            <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-secondary">
+                {{ 'backoffice.larp.preview'|trans }}
+            </a>
+            <!-- Import Characters Button triggers a modal -->
+            <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#importModal">
+                {{ 'backoffice.larp.import_characters'|trans }}
+            </button>
+
+            <!-- Import Options Modal -->
+            <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="importModalLabel">{{ 'backoffice.larp.import_options'|trans }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% if integrations is defined and integrations|length > 0 %}
+                                {% for integration in integrations %}
+                                <!-- Option for Google Spreadsheet import -->
+                                <a href="{{ path('backoffice_larp_story_characters_import_integration', {'id': larp.id, 'integration': integration.provider.value }) }}" class="btn btn-primary">
+                                    {{ 'backoffice.larp.import_google'|trans }}
+                                </a>
+                                {% endfor %}
+                            {% endif %}
+                            <a href="{{ path('backoffice_larp_story_characters_import_file', {'id': larp.id}) }}" class="btn btn-secondary">
+                                {{ 'backoffice.larp.import_file'|trans }}
+                            </a>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ 'common.close'|trans }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

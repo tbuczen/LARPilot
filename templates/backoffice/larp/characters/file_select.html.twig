@@ -1,0 +1,29 @@
+{% extends 'backoffice/base.html.twig' %}
+{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+
+{% block title %}{{ 'integrations.file_select.title'|trans }}{% endblock %}
+
+{% block body %}
+    <header>
+        {{ larpMenu.larpBackofficeMenu(larp) }}
+    </header>
+    <main>
+        <div class="container mt-4">
+            <h1>{{ 'integrations.file_select.heading'|trans }}</h1>
+            {% if files is not empty %}
+                <ul class="list-group">
+                    {% for file in files %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ file.name }} (ID: {{ file.id }})</span>
+                            <a href="{{ path('backoffice_larp_integration_google_file_mapping', { 'id': larp.id, 'externalFileId': file.id }) }}" class="btn btn-primary btn-sm">
+                                {{ 'integrations.file_select.configure_mapping'|trans }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>{{ 'integrations.file_select.no_files'|trans }}</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

@@ -5,6 +5,13 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $googleClientId: '%env(OAUTH_GOOGLE_CLIENT_ID)%'
+            $googleClientSecret: '%env(OAUTH_GOOGLE_CLIENT_SECRET)%'
+
+    _instanceof:
+        App\Service\Integrations\IntegrationServiceInterface:
+            tags: [ 'app.integration' ]
 
     App\:
         resource: '../src/'
@@ -20,3 +27,7 @@ services:
     App\Twig\:
         resource: '../src/Twig/'
         tags: [ 'twig.extension' ]
+
+    App\Service\Integrations\IntegrationServiceProvider:
+        arguments:
+            $integrationServices: !tagged_iterator app.integration

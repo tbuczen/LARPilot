@@ -7,7 +7,6 @@ use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;

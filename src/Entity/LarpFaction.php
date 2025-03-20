@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LarpFactionRepository::class)]
-class LarpFaction implements CreatorAwareInterface
+class LarpFaction implements CreatorAwareInterface, StoryObject
 {
     use UuidTraitEntity;
     use CreatorAwareTrait;
@@ -27,7 +27,7 @@ class LarpFaction implements CreatorAwareInterface
     private Collection $larps;
 
     // A faction can have many participants:
-    #[ORM\OneToMany(targetEntity: LarpParticipant::class, mappedBy: 'faction')]
+    #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
     private Collection $members;
 
     public function __construct()
