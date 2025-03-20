@@ -34,12 +34,50 @@
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <a href="{{ path('backoffice_larp_google_drive_connect', { id: larp.id }) }}" class="btn btn-primary">
+                        <a href="{{ path('backoffice_larp_google_drive_connect', { id: larp.id }) }}" target="_blank" class="btn btn-primary">
                             {{ 'backoffice.larp.integration.googleDriveConnect'|trans }}
                         </a>
                     {% endif %}
                 </div>
             </div>
         </div>
+
+        {# File Selection Modal Triggered via Session Flag #}
+        {% if app.session.get('integration_file_modal') %}
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var myModal = new bootstrap.Modal(document.getElementById('fileModal'));
+                    myModal.show();
+                });
+            </script>
+            <form id="filePermissionsForm" method="post" action="{{ path('backoffice_larp_integration_file_permissions', { id: larp.id, integrationId: app.session.get('integration_file_modal') }) }}">
+
+            <div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="fileModalLabel">{{ 'backoffice.larp.file_select.title'|trans }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                        </div>
+
+                        <div class="modal-body"
+                             data-controller="folder-browser"
+                             data-folder-browser-integration-id="{{ app.session.get('integration_file_modal') }}">
+
+                            <div id="folderTree" data-folder-browser-target="tree"></div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'common.cancel'|trans }}</button>
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('filePermissionsForm').submit();">
+                                {{ 'common.confirm'|trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </form>
+        {% endif %}
     </main>
 {% endblock %}

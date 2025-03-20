@@ -34,7 +34,7 @@
     {% if is_granted('VIEW_BO_LARP_STORY', larp) %}
         <div class="btn-group" role="group" aria-label="LARP Backoffice Story">
 
-            <a href="{{ path('backoffice_larp_story_characters', {'id': larp.id}) }}"
+            <a href="{{ path('backoffice_larp_story_characters_list', {'id': larp.id}) }}"
                class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_characters' %}active{% endif %}">
                 {{ 'backoffice.larp.characters'|trans }}
             </a>

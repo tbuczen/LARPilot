@@ -8,6 +8,9 @@ use App\Repository\LarpParticipantRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
+/**
+ * Entity joining User with Larp and its Character
+ */
 #[ORM\Entity(repositoryClass: LarpParticipantRepository::class)]
 class LarpParticipant
 {
@@ -22,6 +25,9 @@ class LarpParticipant
     #[ORM\JoinColumn(nullable: false)]
     private ?Larp $larp = null;
 
+    #[ORM\ManyToOne(targetEntity: LarpCharacter::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?LarpCharacter $larpCharacter = null;
 
     // Store an array of role strings (which correspond to UserRole enum values)
     /** @see UserRole  */
@@ -114,5 +120,15 @@ class LarpParticipant
         $userRoles = array_map(fn($role) => $role->value, $this->getRoles());
 
         return !empty(array_intersect($storyWriters, $userRoles));
+    }
+
+    public function getLarpCharacter(): ?LarpCharacter
+    {
+        return $this->larpCharacter;
+    }
+
+    public function setLarpCharacter(?LarpCharacter $larpCharacter): void
+    {
+        $this->larpCharacter = $larpCharacter;
     }
 }

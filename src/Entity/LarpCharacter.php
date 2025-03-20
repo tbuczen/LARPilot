@@ -6,6 +6,8 @@ use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpCharacterRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Timestampable;
@@ -13,7 +15,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[Gedmo\Loggable]
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
-class LarpCharacter implements CreatorAwareInterface, Timestampable
+class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
 {
     use UuidTraitEntity;
     use CreatorAwareTrait;
@@ -43,6 +45,14 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable
     #[Gedmo\Versioned]
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $postLarpFate = null;
+
+    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'members')]
+    private Collection $factions;
+
+    public function __construct()
+    {
+        $this->factions = new ArrayCollection();
+    }
 
     public function getName(): ?string
     {
@@ -107,6 +117,28 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable
     public function setPostLarpFate(?string $postLarpFate): static
     {
         $this->postLarpFate = $postLarpFate;
+        return $this;
+    }
+
+    /**
+     * @return Collection<LarpFaction>
+     */
+    public function getFactions(): Collection
+    {
+        return $this->factions;
+    }
+
+    public function addFaction(LarpFaction $larpFaction): self
+    {
+        if (!$this->factions->contains($larpFaction)) {
+            $this->factions[] = $larpFaction;
+        }
+        return $this;
+    }
+
+    public function removeFaction(LarpFaction $larpFaction): self
+    {
+        $this->factions->removeElement($larpFaction);
         return $this;
     }
 }

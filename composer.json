@@ -48,6 +48,7 @@
         "symfony/ux-turbo": "^2.23",
         "symfony/validator": "7.2.*",
         "symfony/web-link": "7.2.*",
+        "symfony/webpack-encore-bundle": "^2.2",
         "symfony/yaml": "7.2.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
@@ -105,7 +106,9 @@
             "require": "7.2.*"
         },
         "google/apiclient-services": [
-            "Drive"
+            "Drive",
+            "Sheets",
+            "Docs"
         ]
     },
     "require-dev": {

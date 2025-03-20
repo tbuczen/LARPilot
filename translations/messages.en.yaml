@@ -20,6 +20,9 @@ common:
   backoffice: 'Admin Panel'
   manage: 'Manage in Admin'
   general: 'Generic'
+  permission:
+    view: 'View'
+    edit: 'Edit'
 
 #Translations specific to public part of the app
 public:
@@ -54,6 +57,20 @@ backoffice:
       googleDriveDescription: 'Connect your Google Drive to allow LARPilot access to your LARP files. This will enable the application to view and potentially manage your specified drive folder.'
       googleDriveConnect: 'Connect with Google Drive'
       current: 'Current integrations'
+    import_characters: "Import Characters"
+    import_options: "Import Options"
+    import_file: "Import from CSV/XLSX file"
+    import_google: "Import from Google Spreadsheet"
+    file_select:
+      title: 'Select files to share with LARPPilot'
+  google_drive_folders:
+    title: "Google Drive Folders"
+    heading: "Google Drive Folders"
+    no_folders: "No folders found."
+  spreadsheet_mapping:
+    title: "Spreadsheet Mapping Configuration"
+    heading: "Configure Spreadsheet Mapping"
+    save: "Save Mapping"
 
 #Account related translations for both player and organizers
 account:
@@ -66,3 +83,21 @@ account:
   unlink: "Unlink"
   confirm_unlink: "Are you sure you want to unlink this social account? This cannot be undone."
 
+form:
+  spreadsheet_mapping:
+    starting_row: "Starting Row"
+    faction_column: "Faction Column"
+    character_name_column: "Character Name Column"
+    in_game_name_column: "In-game Name Column"
+
+integrations:
+  file_select:
+    title: "Select File"
+    heading: "Select a File for Import"
+    configure_mapping: "Configure Mapping"
+    no_files: "No files found."
+
+folder.load_subfolders: "Load Subfolders"
+folder.collapse_subfolders: "Collapse"
+file_select:
+  no_folders: 'No resources'

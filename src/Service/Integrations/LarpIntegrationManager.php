@@ -1,17 +1,23 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Integrations;
 
 use App\Entity\LarpIntegration;
 use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use League\OAuth2\Client\Token\AccessToken;
 
 final readonly class LarpIntegrationManager
 {
 
-    const GOOGLE_SCOPES = ['https://www.googleapis.com/auth/drive.file'];
+    const GOOGLE_SCOPES = [
+//        'https://www.googleapis.com/auth/drive.file',
+        'https://www.googleapis.com/auth/drive.metadata.readonly',
+//        'https://www.googleapis.com/auth/drive.readonly',
+//        'https://www.googleapis.com/auth/spreadsheets.readonly'
+    ];
     public function __construct(
         private ClientRegistry            $clientRegistry,
         private LarpRepository            $larpRepository,
@@ -19,7 +25,7 @@ final readonly class LarpIntegrationManager
     ) {
     }
 
-    public function createGoogleDriveIntegration(object $accessToken, string $larpId): void
+    public function createGoogleDriveIntegration(AccessToken $accessToken, string $larpId): LarpIntegration
     {
         $larp = $this->larpRepository->find($larpId);
         if (!$larp) {
@@ -28,7 +34,6 @@ final readonly class LarpIntegrationManager
 
         $tokenValues = $accessToken->getValues();
         $grantedScopes = $tokenValues['scope'] ?? null;
-
         $integration = new LarpIntegration();
         $integration->setProvider(LarpIntegrationProvider::Google);
         $integration->setAccessToken($accessToken->getToken());
@@ -38,6 +43,8 @@ final readonly class LarpIntegrationManager
         $integration->setLarp($larp);
 
         $this->larpIntegrationRepository->create($integration);
+
+        return $integration;
     }
 
     public function decorateIntegrationsWithClient(array $integrations): void

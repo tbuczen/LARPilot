@@ -16,28 +16,14 @@ class LarpFactionRepository extends BaseRepository
         parent::__construct($registry, LarpFaction::class);
     }
 
-    //    /**
-    //     * @return LarpFaction[] Returns an array of LarpFaction objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('l.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findByOrCreate(array $array): LarpFaction
+    {
+        $faction = $this->findOneBy($array);
+        if (!$faction) {
+            $faction = new LarpFaction();
+            $this->getEntityManager()->persist($faction);
+        }
 
-    //    public function findOneBySomeField($value): ?LarpFaction
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return $faction;
+    }
 }
