@@ -6,7 +6,6 @@ readonly class ApplyFilesPermissionsCommand
 {
 
     public function __construct(
-        public string $larpId,
         public string $integrationId,
         public array  $permissions // File ID => Permission type (edit/view)
     ) {}

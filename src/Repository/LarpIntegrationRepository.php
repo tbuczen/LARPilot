@@ -8,6 +8,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<LarpIntegration>
+ *
+ * @method null|LarpIntegration find($id, $lockMode = null, $lockVersion = null)
+ * @method null|LarpIntegration findOneBy(array $criteria, array $orderBy = null)
+ * @method LarpIntegration[]    findAll()
+ * @method LarpIntegration[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class LarpIntegrationRepository extends BaseRepository
 {

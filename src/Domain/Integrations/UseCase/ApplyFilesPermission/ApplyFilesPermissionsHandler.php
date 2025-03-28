@@ -1,29 +1,65 @@
 <?php
 
+
 namespace App\Domain\Integrations\UseCase\ApplyFilesPermission;
 
-use App\Service\Integrations\LarpIntegrationManager;
+use App\Entity\LarpIntegration;
+use App\Entity\SharedFile;
+use App\Repository\LarpIntegrationRepository;
+use App\Repository\SharedFileRepository;
+use App\Service\Integrations\Sharing\DriveSharingServiceProvider;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class ApplyFilesPermissionsHandler
 {
-
     public function __construct(
-//        private LarpIntegrationManager $integrationManager
+        private LarpIntegrationRepository    $larpIntegrationRepository,
+        private SharedFileRepository         $sharedFileRepository,
+        private DriveSharingServiceProvider $sharingServiceProvider,
+        private EntityManagerInterface       $entityManager,
     )
     {
     }
+
     public function handle(ApplyFilesPermissionsCommand $command): void
     {
+        $integration = $this->larpIntegrationRepository->find($command->integrationId);
+        $sharingService = $this->sharingServiceProvider->getServiceFor($integration);
 
-        //"permissions" => array:4 [▼
-        //        "1jpmkA7uaU9F2vmwUhDuV3H8GUiYJkTR9" => "edit"
-        //        "1hOJFQxD6lMXgZ3ciG3acBZhfM04jbeJof2-bW5i0_c4" => "view"
-        //        "1BhfSSgtK_Y3eBTX_9yT1E_kJmLZzgkxT" => "view"
-        //        "1lA9e6bnfQarFg53ClGLjC5nHGsiNVk-pWh6o5Kxk0tQ" => "view"
-        //      ]
+        $this->entityManager->wrapInTransaction(function () use ($command, $integration, $sharingService): void {
+            foreach ($command->permissions as $file) {
+                try {
+                    $sharingService->ensureShared(
+                        $integration,
+                        $file['fileId'],
+                        $file['fileName'],
+                        $file['permission']
+                    );
 
-        dump($command);
-//        $this->integrationManager->
+                    if (!$this->sharedFileRepository->existsForIntegration($integration, $file['fileId'])) {
+                        $this->createSharedFile($integration, $file);
+                    }
 
+                } catch (\Throwable $e) {
+                    // log or notify admin
+                    throw $e;
+                }
+            }
+
+            $this->sharedFileRepository->flush();
+        });
+    }
+
+    function createSharedFile(LarpIntegration $integration, array $file): void
+    {
+        $sharedFile = new SharedFile();
+        $sharedFile->setIntegration($integration);
+        $sharedFile->setFileId($file['fileId']);
+        $sharedFile->setFileName($file['fileName']);
+        $sharedFile->setMimeType($file['mimeType']);
+        $sharedFile->setPermissionType($file['permission']);
+        $sharedFile->setMetadata([]);
+
+        $this->sharedFileRepository->save($sharedFile, false);
     }
 }

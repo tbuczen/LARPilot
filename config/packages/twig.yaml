@@ -1,5 +1,9 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        google_api_key: '%google_api_key%'
+        google_app_id: '%google_app_id%'
+        oauth_google_client_id: '%oauth_google_client_id%'
 
 when@test:
     twig:

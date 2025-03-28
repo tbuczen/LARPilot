@@ -7,6 +7,7 @@ use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -37,6 +38,14 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'integrations')]
     #[ORM\JoinColumn(nullable: false)]
     private Larp $larp;
+
+    /** @var Collection<SharedFile>  */
+    #[ORM\OneToMany(targetEntity: SharedFile::class, mappedBy: 'integration', cascade: ['persist', 'remove'])]
+    private Collection $sharedFiles;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $owner = null;
+
     private ?OAuth2ClientInterface $client = null;
 
     public function getProvider(): LarpIntegrationProvider
@@ -102,6 +111,40 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     public function setClient(OAuth2ClientInterface $oauthClient)
     {
         $this->client = $oauthClient;
+    }
+
+    public function getClient(): ?OAuth2ClientInterface
+    {
+        return $this->client;
+    }
+
+    /**
+     * @return Collection<SharedFile>
+     */
+    public function getSharedFiles(): Collection
+    {
+        return $this->sharedFiles;
+    }
+
+    public function addSharedFile(SharedFile $file): void
+    {
+        $this->sharedFiles[] = $file;
+        $file->setIntegration($this);
+    }
+
+    public function removeSharedFile(SharedFile $file): void
+    {
+        $this->sharedFiles->removeElement($file);
+    }
+
+    public function setOwner(?string $owner): void
+    {
+        $this->owner = $owner;
+    }
+
+    public function getOwner(): ?string
+    {
+        return $this->owner;
     }
 
 }

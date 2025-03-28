@@ -20,9 +20,14 @@ common:
   backoffice: 'Admin Panel'
   manage: 'Manage in Admin'
   general: 'Generic'
+  open: 'Open'
   permission:
     view: 'View'
     edit: 'Edit'
+  empty_list: 'The list is empty'
+  not_connected: 'Not Connected'
+  connect: 'Connect'
+  connected: 'Connected'
 
 #Translations specific to public part of the app
 public:
@@ -57,12 +62,15 @@ backoffice:
       googleDriveDescription: 'Connect your Google Drive to allow LARPilot access to your LARP files. This will enable the application to view and potentially manage your specified drive folder.'
       googleDriveConnect: 'Connect with Google Drive'
       current: 'Current integrations'
+      expired: 'Integration has expired, if You want to keep using it - please reconnect'
+      reconnect: 'Re-connect'
     import_characters: "Import Characters"
     import_options: "Import Options"
     import_file: "Import from CSV/XLSX file"
     import_google: "Import from Google Spreadsheet"
     file_select:
       title: 'Select files to share with LARPPilot'
+      open_picker_desc: 'Open the google file picker to choose files You want to share with LarpPilot'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"
@@ -96,6 +104,7 @@ integrations:
     heading: "Select a File for Import"
     configure_mapping: "Configure Mapping"
     no_files: "No files found."
+    shared: "Already shared files"
 
 folder.load_subfolders: "Load Subfolders"
 folder.collapse_subfolders: "Collapse"
