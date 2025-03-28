@@ -7,14 +7,17 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 abstract class BaseRepository extends ServiceEntityRepository
 {
 
-    public function create(object $entity, bool $flush = true): object
+    public function save(object $entity, bool $flush = true): object
     {
-        // If the entity has a setCreatedBy method and it's not already set, use the current user.
-
         $this->getEntityManager()->persist($entity);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
         return $entity;
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
     }
 }

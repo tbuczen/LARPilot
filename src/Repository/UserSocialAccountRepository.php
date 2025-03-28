@@ -10,6 +10,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<UserSocialAccount>
+ *
+ * @method null|UserSocialAccount find($id, $lockMode = null, $lockVersion = null)
+ * @method null|UserSocialAccount findOneBy(array $criteria, array $orderBy = null)
+ * @method UserSocialAccount[]    findAll()
+ * @method UserSocialAccount[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UserSocialAccountRepository extends BaseRepository
 {

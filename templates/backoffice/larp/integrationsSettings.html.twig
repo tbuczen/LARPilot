@@ -1,8 +1,56 @@
+{#{% extends 'backoffice/base.html.twig' %}#}
+{#{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}#}
+
+{#{% block title %}#}
+{#    {{ 'backoffice.larp.integrationSettings'|trans }}#}
+{#{% endblock %}#}
+
+{#{% block body %}#}
+{#    <header>#}
+{#        {{ larpMenu.larpBackofficeMenu(larp) }}#}
+{#    </header>#}
+{#    <main>#}
+{#        <div class="container mt-4">#}
+{#            <h1>{{ 'backoffice.larp.integrationSettings'|trans }}</h1>#}
+
+{#            <div class="card mt-4">#}
+{#                <div class="card-header">#}
+{#                    <h2>{{ 'backoffice.larp.integration.googleDrive'|trans }}</h2>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    <p>{{ 'backoffice.larp.integration.googleDriveDescription'|trans }}</p>#}
+
+{#                    {% if integrations is empty %}#}
+{#                        <p>{{ 'common.empty_list'|trans }}</p>#}
+{#                        <a#}
+{#                                href="{{ path('backoffice_larp_google_drive_connect', { id: larp.id }) }}"#}
+{#                                target="_blank"#}
+{#                                class="btn btn-primary"#}
+{#                        >#}
+{#                            {{ 'backoffice.larp.integration.googleDriveConnect'|trans }}#}
+{#                        </a>#}
+
+{#                    {% else %}#}
+{#                        #}{# Scenario: We have at least one integration (focus on Google) #}
+{#                        {% for integration in integrations %}#}
+{#                            {% if integration.provider.value is same as constant('App\\Enum\\LarpIntegrationProvider::Google').value %}#}
+{#                                {% include 'backoffice/larp/integrations/partials/_googleDriveIntegration.html.twig' %}#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </main>#}
+{#{% endblock %}#}
+
 {# templates/backoffice/larp/integrationsSettings.html.twig #}
 {% extends 'backoffice/base.html.twig' %}
 {% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
 
-{% block title %}{{ 'backoffice.larp.integrationSettings'|trans }}{% endblock %}
+{% block title %}
+    {{ 'backoffice.larp.integrationSettings'|trans }}
+{% endblock %}
 
 {% block body %}
     <header>
@@ -11,73 +59,31 @@
     <main>
         <div class="container mt-4">
             <h1>{{ 'backoffice.larp.integrationSettings'|trans }}</h1>
+            {% for provider in availableProviders %}
+                {% set current = integrations|filter(i => i.provider.sameAs(provider))|first %}
 
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h2>{{ 'backoffice.larp.integration.googleDrive'|trans }}</h2>
-                </div>
-                <div class="card-body">
-                    <p>{{ 'backoffice.larp.integration.googleDriveDescription'|trans }}</p>
-                    {% if integrations is not empty %}
-                        <h3>{{ 'backoffice.larp.integration.current'|trans }}</h3>
-                        <ul>
-                            {% for integration in integrations %}
-                                <li>
-                                    {{ integration.provider.name }} -
-                                    <strong>Scopes:</strong>
-                                    <ul>
-                                        {% for scope in integration.scopes|split(' ') %}
-                                            <li>{{ scope }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <a href="{{ path('backoffice_larp_google_drive_connect', { id: larp.id }) }}" target="_blank" class="btn btn-primary">
-                            {{ 'backoffice.larp.integration.googleDriveConnect'|trans }}
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h2>{{ provider.displayName() }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ provider.descriptionKey() is not null ? provider.descriptionKey()|trans : '' }}</p>
 
-        {# File Selection Modal Triggered via Session Flag #}
-        {% if app.session.get('integration_file_modal') %}
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var myModal = new bootstrap.Modal(document.getElementById('fileModal'));
-                    myModal.show();
-                });
-            </script>
-            <form id="filePermissionsForm" method="post" action="{{ path('backoffice_larp_integration_file_permissions', { id: larp.id, integrationId: app.session.get('integration_file_modal') }) }}">
-
-            <div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="fileModalLabel">{{ 'backoffice.larp.file_select.title'|trans }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
-                        </div>
-
-                        <div class="modal-body"
-                             data-controller="folder-browser"
-                             data-folder-browser-integration-id="{{ app.session.get('integration_file_modal') }}">
-
-                            <div id="folderTree" data-folder-browser-target="tree"></div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'common.cancel'|trans }}</button>
-                            <button type="button" class="btn btn-primary" onclick="document.getElementById('filePermissionsForm').submit();">
-                                {{ 'common.confirm'|trans }}
-                            </button>
-                        </div>
+                        {% if current == false %}
+                            <p>{{ 'common.not_connected'|trans }}</p>
+                            <a href="{{ path('backoffice_larp_connect_integration', { id: larp.id, provider: provider.value }) }}" class="btn btn-primary">
+                                {{ 'common.connect'|trans }}
+                            </a>
+                        {% else %}
+                            {% if provider.integrationSettingsTemplate() %}
+                                {% include 'backoffice/larp/integrations/' ~ provider.integrationSettingsTemplate() with { integration: current, larp: larp } %}
+                            {% else %}
+                                <p>{{ 'common.connected'|trans }}</p>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
-            </div>
-
-            </form>
-        {% endif %}
+            {% endfor %}
+        </div>
     </main>
 {% endblock %}

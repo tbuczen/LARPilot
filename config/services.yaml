@@ -1,13 +1,17 @@
 parameters:
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
-
+    google_api_key: '%env(GOOGLE_API_KEY)%'
+    google_app_id: '%env(GOOGLE_APP_ID)%'
+    oauth_google_client_id: '%env(OAUTH_GOOGLE_CLIENT_ID)%'
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            $googleClientId: '%env(OAUTH_GOOGLE_CLIENT_ID)%'
+            $googleClientId: '%oauth_google_client_id%'
             $googleClientSecret: '%env(OAUTH_GOOGLE_CLIENT_SECRET)%'
+            $googleServiceEmail: '%env(GOOGLE_SERVICE_EMAIL)%'
+            $serviceAccountJsonPath: '%env(resolve:GOOGLE_SERVICE_ACCOUNT_JSON)%'
 
     _instanceof:
         App\Service\Integrations\IntegrationServiceInterface:
@@ -27,6 +31,11 @@ services:
     App\Twig\:
         resource: '../src/Twig/'
         tags: [ 'twig.extension' ]
+
+    App\Service\Integrations\Sharing\DriveSharingServiceProvider:
+        arguments:
+            $services:
+                integration_google_drive: '@App\Service\Integrations\Sharing\GoogleDriveSharingService'
 
     App\Service\Integrations\IntegrationServiceProvider:
         arguments:
