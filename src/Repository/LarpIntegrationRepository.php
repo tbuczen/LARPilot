@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\LarpIntegration;
+use App\Enum\LarpIntegrationProvider;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,5 +33,13 @@ class LarpIntegrationRepository extends BaseRepository
             ->orderBy('li.id', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findByLarpAndProvider(string $larpId, LarpIntegrationProvider $provider): LarpIntegration
+    {
+        return $this->findOneBy([
+            'larp' => $larpId,
+            'provider' => $provider,
+        ]);
     }
 }

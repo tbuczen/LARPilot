@@ -10,17 +10,99 @@
     <main>
         <div class="container mt-4">
             <h1>{{ 'integrations.file_select.heading'|trans }}</h1>
+
             {% if files is not empty %}
-                <ul class="list-group">
+                <div class="list-group">
                     {% for file in files %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>{{ file.name }} (ID: {{ file.id }})</span>
-                            <a href="{{ path('backoffice_larp_integration_google_file_mapping', { 'id': larp.id, 'externalFileId': file.id }) }}" class="btn btn-primary btn-sm">
-                                {{ 'integrations.file_select.configure_mapping'|trans }}
-                            </a>
-                        </li>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ file.fileName }}</strong>
+                                    <div class="text-muted small">{{ file.mimeType }}</div>
+                                    <div class="text-muted small">ID: {{ file.fileId }}</div>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{{ path('backoffice_larp_integration_file_mapping', {
+                                        id: larp.id,
+                                        sharedFile: file.id,
+                                        provider: file.integration.provider.value
+                                    }) }}" class="btn btn-primary btn-sm">
+                                        {{ 'integrations.file_select.configure_mapping'|trans }}
+                                    </a>
+                                    <a href="{{ path('backoffice_larp_integration_file_open', {
+                                        id: larp.id,
+                                        provider: file.integration.provider.value,
+                                        externalFileId: file.fileId
+                                    }) }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                        {{ 'common.open'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+
+{#                            {% if file.mappings is not empty %}#}
+{#                                <div class="mt-3 ps-2 border-start">#}
+{#                                    <div class="fw-bold mb-1">{{ 'integrations.file_select.existing_mappings'|trans }}:</div>#}
+{#                                    <ul class="list-unstyled mb-0">#}
+{#                                        {% for mapping in file.mappings %}#}
+{#                                            <li class="mb-1">#}
+{#                                                <span class="badge bg-secondary">{{ mapping.fileType.value|capitalize }}</span>#}
+{#                                                <a href="{{ path('backoffice_larp_integration_file_mapping', {#}
+{#                                                    id: larp.id,#}
+{#                                                    sharedFile: file.id,#}
+{#                                                    provider: file.integration.provider.value,#}
+{#                                                    mapping: mapping.id#}
+{#                                                }) }}" class="btn btn-link btn-sm p-0 ms-2">#}
+{#                                                    {{ 'common.edit'|trans }}#}
+{#                                                </a>#}
+{#                                            </li>#}
+{#                                        {% endfor %}#}
+{#                                    </ul>#}
+{#                                </div>#}
+{#                            {% endif %}#}
+
+                            {% if file.mappings is not empty %}
+                                <div class="mt-3 ps-2 border-start">
+                                    <div class="fw-bold mb-1">{{ 'integrations.file_select.existing_mappings'|trans }}:</div>
+                                    <ul class="list-unstyled mb-0">
+                                        {% for mapping in file.mappings %}
+                                            <li class="mb-2">
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <div>
+                                                        <span class="badge bg-secondary">{{ mapping.fileType.value|capitalize }}</span>
+                                                        <a href="{{ path('backoffice_larp_integration_file_mapping', {
+                                                            id: larp.id,
+                                                            sharedFile: file.id,
+                                                            provider: file.integration.provider.value,
+                                                            mapping: mapping.id
+                                                        }) }}" class="btn btn-link btn-sm p-0 ms-2">
+                                                            {{ 'common.edit'|trans }}
+                                                        </a>
+                                                    </div>
+
+                                                    <a href="{{ path('backoffice_larp_import_with_mapping', {
+                                                        larp: larp.id,
+                                                        sharedFile: file.id,
+                                                        mapping: mapping.id
+                                                    }) }}" class="btn btn-outline-success btn-sm">
+                                                        {{ 'integrations.file_select.use_mapping'|trans }}
+                                                    </a>
+                                                </div>
+
+                                                <button class="btn btn-sm btn-link mt-1 ps-0" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#config-{{ mapping.id }}">
+                                                    {{ 'common.show_details'|trans }}
+                                                </button>
+                                                <div class="collapse" id="config-{{ mapping.id }}">
+                                                    <pre class="bg-light p-2 rounded small text-muted mt-1">{{ mapping.mappingConfiguration|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             {% else %}
                 <p>{{ 'integrations.file_select.no_files'|trans }}</p>
             {% endif %}

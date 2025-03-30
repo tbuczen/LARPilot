@@ -4,6 +4,7 @@ namespace App\Service\Integrations;
 
 use App\Entity\Larp;
 use App\Entity\LarpIntegration;
+use App\Entity\SharedFile;
 use App\Enum\LarpIntegrationProvider;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessTokenInterface;
@@ -21,5 +22,14 @@ interface IntegrationServiceInterface
     public function finalizeConnection(string $larpId, AccessTokenInterface $token, ResourceOwnerInterface $user): void;
 
     public function getOwnerNameFromOwner(ResourceOwnerInterface $owner): ?string;
+
+    public function getExternalFileUrl(LarpIntegration $integration, string $externalFileId);
+
+    /**
+     * @param SharedFile $sharedFile
+     * @return array
+     * @throws \Exception - some services might not implement it
+     */
+    public function fetchSpreadsheetRows(SharedFile $sharedFile): array;
 
 }

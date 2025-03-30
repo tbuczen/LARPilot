@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\SharedFileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SharedFileRepository::class)]
 class SharedFile
@@ -32,6 +35,15 @@ class SharedFile
 
     #[ORM\Column(type: 'string', nullable: false)]
     private string $mimeType;
+
+    #[ORM\OneToMany(targetEntity: ObjectFieldMapping::class, mappedBy: 'externalFile')]
+    private Collection $mappings;
+
+    public function __construct()
+    {
+        $this->id = Uuid::v4();
+        $this->mappings = new ArrayCollection();
+    }
 
     public function getFileId(): string
     {
@@ -92,5 +104,20 @@ class SharedFile
     {
         $this->mimeType = $mimeType;
     }
+
+    /**
+     * @return Collection<ObjectFieldMapping>
+     */
+    public function getMappings(): Collection
+    {
+        return $this->mappings;
+    }
+
+    public function setMappings(Collection $mappings): void
+    {
+        $this->mappings = $mappings;
+    }
+
+
 
 }

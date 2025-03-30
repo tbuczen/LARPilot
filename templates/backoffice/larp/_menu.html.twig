@@ -34,27 +34,27 @@
     {% if is_granted('VIEW_BO_LARP_STORY', larp) %}
         <div class="btn-group" role="group" aria-label="LARP Backoffice Story">
 
-            <a href="{{ path('backoffice_larp_story_characters_list', {'id': larp.id}) }}"
+            <a href="{{ path('backoffice_larp_story_characters_list', {'larp': larp.id}) }}"
                class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_characters' %}active{% endif %}">
                 {{ 'backoffice.larp.characters'|trans }}
             </a>
 
-            <a href="{{ path('backoffice_larp_story_factions', {'id': larp.id}) }}"
+            <a href="{{ path('backoffice_larp_story_factions', {'larp': larp.id}) }}"
                class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_factions' %}active{% endif %}">
                 {{ 'backoffice.larp.factions'|trans }}
             </a>
 
-            <a href="{{ path('backoffice_larp_story_quests', {'id': larp.id}) }}"
+            <a href="{{ path('backoffice_larp_story_quests', {'larp': larp.id}) }}"
                class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_quests' %}active{% endif %}">
                 {{ 'backoffice.larp.quests'|trans }}
             </a>
 
-            <a href="{{ path('backoffice_larp_story_relations', {'id': larp.id}) }}"
+            <a href="{{ path('backoffice_larp_story_relations', {'larp': larp.id}) }}"
                class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_relations' %}active{% endif %}">
                 {{ 'backoffice.larp.relations'|trans }}
             </a>
 
-            <a href="{{ path('backoffice_larp_story_events', {'id': larp.id}) }}"
+            <a href="{{ path('backoffice_larp_story_events', {'larp': larp.id}) }}"
                class="btn btn-primary {% if currentRoute == 'backoffice_larp_story_events' %}active{% endif %}">
                 {{ 'backoffice.larp.events'|trans }}
             </a>

@@ -28,6 +28,8 @@ common:
   not_connected: 'Not Connected'
   connect: 'Connect'
   connected: 'Connected'
+  edit: 'Edit'
+  show_details: 'Show Details'
 
 #Translations specific to public part of the app
 public:
@@ -102,9 +104,11 @@ integrations:
   file_select:
     title: "Select File"
     heading: "Select a File for Import"
-    configure_mapping: "Configure Mapping"
+    configure_mapping: "Configure New Mapping"
     no_files: "No files found."
     shared: "Already shared files"
+    existing_mappings: 'Existing mappings'
+    use_mapping: 'Import using this mapping'
 
 folder.load_subfolders: "Load Subfolders"
 folder.collapse_subfolders: "Collapse"

@@ -4,6 +4,7 @@ namespace App\Service\Integrations\Google;
 
 use App\Entity\Larp;
 use App\Entity\LarpIntegration;
+use App\Entity\SharedFile;
 use App\Enum\IntegrationFileType;
 use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
@@ -11,6 +12,7 @@ use App\Repository\LarpRepository;
 use App\Service\Integrations\Exceptions\ReAuthenticationNeededException;
 use App\Service\Integrations\IntegrationServiceInterface;
 use Google\Service\Drive;
+use Google\Service\Sheets;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
 use League\OAuth2\Client\Provider\GoogleUser;
@@ -65,10 +67,12 @@ readonly class GoogleIntegrationService implements IntegrationServiceInterface
             ]);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function finalizeConnection(string $larpId, AccessTokenInterface $token, ResourceOwnerInterface $user): void
     {
         $this->createGoogleDriveIntegration($token, $user, $larpId);
-
     }
 
     /**
@@ -77,6 +81,19 @@ readonly class GoogleIntegrationService implements IntegrationServiceInterface
     public function getClient(LarpIntegration $integration): object
     {
         return $this->googleClientManager->getClientForIntegration($integration);
+    }
+
+    public function getExternalFileUrl(LarpIntegration $integration, string $externalFileId): string
+    {
+        $client = $this->googleClientManager->createServiceAccountClient();
+        $drive = new Drive($client);
+
+        try {
+            $file = $drive->files->get($externalFileId, ['fields' => 'webViewLink']);
+            return $file->getWebViewLink();
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to retrieve file URL: ' . $e->getMessage());
+        }
     }
 
     public function getOwnerNameFromOwner(ResourceOwnerInterface $owner): ?string
@@ -114,6 +131,20 @@ readonly class GoogleIntegrationService implements IntegrationServiceInterface
 
         return $integration;
     }
+
+    public function fetchSpreadsheetRows(SharedFile $sharedFile): array
+    {
+        $client = $this->googleClientManager->createServiceAccountClient();
+        $sheetsService = new Sheets($client);
+
+        try {
+            $response = $sheetsService->spreadsheets_values->get($sharedFile->getFileId(), 'A:Z');
+            return $response->getValues() ?? [];
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Failed to read spreadsheet: ' . $e->getMessage(), 0, $e);
+        }
+    }
+
 
     public function listSpreadsheets(LarpIntegration $integration): array
     {

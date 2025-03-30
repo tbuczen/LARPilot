@@ -2,27 +2,27 @@
 
 namespace App\Controller\Backoffice\Story;
 
+use App\Domain\Larp\UseCase\ImportCharacters\ImportCharactersCommand;
+use App\Domain\Larp\UseCase\ImportCharacters\ImportCharactersHandler;
+use App\Entity\Larp;
+use App\Entity\ObjectFieldMapping;
+use App\Entity\SharedFile;
 use App\Enum\LarpIntegrationProvider;
-use App\Service\Integrations\IntegrationServiceProvider;
+use App\Service\Integrations\LarpIntegrationManager;
 use App\Service\Larp\LarpManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Webmozart\Assert\Assert;
 
 #[Route('/larp', name: 'backoffice_larp_story_characters_')]
 
 class LarpCharactersController extends AbstractController
 {
-    #[Route('/{id}/story/characters', name: 'list', methods: ['GET', 'POST'])]
-    public function list(string $id, LarpManager $larpManager): Response
+    #[Route('/{larp}/story/characters', name: 'list', methods: ['GET', 'POST'])]
+    public function list(Larp $larp, LarpManager $larpManager): Response
     {
-        $larp = $larpManager->getLarp($id);
-        if (!$larp) {
-            throw $this->createNotFoundException('Larp not found.');
-        }
-
-        $integrations = $larpManager->getIntegrationsForLarp($id);
+        $integrations = $larpManager->getIntegrationsForLarp($larp->getId()->toRfc4122());
 
         return $this->render('backoffice/larp/characters/list.html.twig', [
             'larp' => $larp,
@@ -30,55 +30,64 @@ class LarpCharactersController extends AbstractController
         ]);
     }
 
-
     #[Route('/{id}/story/characters/import/file', name: 'import_file', methods: ['GET', 'POST'])]
     public function importFile(string $id, LarpManager $larpManager): Response
     {
         return new Response('TODO:: Import from file csv/xlsx');
     }
 
-    #[Route('/{id}/story/characters/import/{integration}/select/file', name: 'import_file_select', methods: ['GET'])]
+    #[Route('/{larp}/story/characters/import/{provider}/select/file', name: 'import_file_select', methods: ['GET'])]
     public function selectIntegrationFile(
-        string $id,
+        Larp $larp,
         LarpManager $larpManager,
-        IntegrationServiceProvider $integrationServiceProvider,
-        LarpIntegrationProvider $integration
+        LarpIntegrationProvider $provider
     ): Response {
-        $larp = $larpManager->getLarp($id);
-        if (!$larp) {
-            throw $this->createNotFoundException('Larp not found.');
-        }
+        $integration = $larpManager->getIntegrationTypeForLarp($larp->getId()->toRfc4122(), $provider);
+        Assert::notNull($integration, sprintf('Integration %s not found for LARP %s', $provider->value, $larp->getId()->toRfc4122()));
 
-        // Get the Google integration for the current LARP.
-        $integration = $larpManager->getIntegrationTypeForLarp($id, $integration);
-        if (!$integration) {
-            throw new \Exception('Google integration not configured for this LARP.');
-        }
-
-        $service = $integrationServiceProvider->getServiceForIntegration($integration->getProvider());
-
-        $files = $service->listSpreadsheets($integration);
-
+        /** @var SharedFile[] $files */
+        $files = $integration->getSharedFiles();
         return $this->render('backoffice/larp/characters/file_select.html.twig', [
             'larp' => $larp,
             'files' => $files,
         ]);
     }
 
-    #[Route('/{id}/story/characters/import/{integration}', name: 'import_integration', methods: ['GET', 'POST'])]
-    public function importFromIntegration(string $id, LarpManager $larpManager, LarpIntegrationProvider $integration): Response
+    #[Route('/{larp}/story/characters/import/{provider}/{sharedFile}/{mapping}', name: 'import_from_mapping', methods: ['GET', 'POST'])]
+    public function importFromSelectedMapping(
+        Larp $larp,
+        LarpIntegrationProvider $provider,
+        SharedFile $sharedFile,
+        ObjectFieldMapping $mapping,
+        LarpIntegrationManager $integrationManager,
+        ImportCharactersHandler $handler
+    ): Response
     {
+        $integrationService = $integrationManager->getIntegrationServiceByProvider($provider);
 
-        $larp = $larpManager->getLarp($id);
-        if (!$larp) {
-            throw $this->createNotFoundException('Larp not found.');
-        }
+        $rows = $integrationService->fetchSpreadsheetRows($sharedFile);
 
-        //TODO:: Import from integration
-        return match ($integration) {
+        $command = new ImportCharactersCommand(
+            $larp->getId()->toRfc4122(),
+            $rows,
+            $mapping->getMappingConfiguration(),
+            $sharedFile->getId()->toRfc4122()
+        );
+
+        $handler->handle($command);
+
+        return $this->redirectToRoute('backoffice_larp_story_characters_list', [
+            'larp' => $larp->getId()->toRfc4122(),
+        ]);
+    }
+
+    #[Route('/{larp}/story/characters/import/{provider}', name: 'import_integration', methods: ['GET', 'POST'])]
+    public function importFromIntegration(Larp $larp, LarpIntegrationProvider $provider): Response
+    {
+        return match ($provider) {
             default => $this->redirectToRoute('backoffice_larp_story_characters_import_file_select', [
-                'id' => $id,
-                'integration' => $integration->value
+                'larp' => $larp->getId()->toRfc4122(),
+                'provider' => $provider->value
             ]),
         };
 

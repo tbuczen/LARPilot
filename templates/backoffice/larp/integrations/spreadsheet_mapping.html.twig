@@ -5,12 +5,30 @@
 {% block body %}
     <div class="container mt-4">
         <h1>{{ 'backoffice.spreadsheet_mapping.heading'|trans }}</h1>
+
         {{ form_start(form) }}
-        {{ form_row(form.startingRow, { 'label': 'form.spreadsheet_mapping.starting_row'|trans }) }}
-        {{ form_row(form.factionColumn, { 'label': 'form.spreadsheet_mapping.faction_column'|trans }) }}
-        {{ form_row(form.characterNameColumn, { 'label': 'form.spreadsheet_mapping.character_name_column'|trans }) }}
-        {{ form_row(form.inGameNameColumn, { 'label': 'form.spreadsheet_mapping.in_game_name_column'|trans }) }}
-        <button class="btn btn-primary">{{ 'backoffice.spreadsheet_mapping.save'|trans }}</button>
+
+        <div class="mb-3">
+            {{ form_row(form.mappingType) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_row(form.startingRow) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.factionColumn) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.characterNameColumn) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.inGameNameColumn) }}
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-primary">{{ 'backoffice.spreadsheet_mapping.save'|trans }}</button>
+        </div>
+
         {{ form_end(form) }}
     </div>
 {% endblock %}

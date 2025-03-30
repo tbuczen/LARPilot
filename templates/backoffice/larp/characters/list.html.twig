@@ -28,7 +28,7 @@
                             {% if integrations is defined and integrations|length > 0 %}
                                 {% for integration in integrations %}
                                 <!-- Option for Google Spreadsheet import -->
-                                <a href="{{ path('backoffice_larp_story_characters_import_integration', {'id': larp.id, 'integration': integration.provider.value }) }}" class="btn btn-primary">
+                                <a href="{{ path('backoffice_larp_story_characters_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}" class="btn btn-primary">
                                     {{ 'backoffice.larp.import_google'|trans }}
                                 </a>
                                 {% endfor %}

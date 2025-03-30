@@ -2,34 +2,32 @@
 
 namespace App\Entity;
 
-use App\Entity\Larp;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
+use App\Enum\FileMappingType;
+use App\Repository\ObjectFieldMappingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ObjectFieldMappingRepository::class )]
 class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
     use TimestampableEntity;
     use CreatorAwareTrait;
 
-    const TYPE_CHARACTER_LIST = 'character_list';
-
     #[ORM\ManyToOne(targetEntity: Larp::class)]
     #[ORM\JoinColumn(nullable: false)]
     private Larp $larp;
 
-    // Type of file (e.g., "character_list")
-    #[ORM\Column(type: 'string')]
-    private string $fileType;
+    #[ORM\Column(type: 'string',  enumType: FileMappingType::class)]
+    private FileMappingType $fileType;
 
-    // External file identifier (e.g., Google Spreadsheet ID)
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $externalFileId = null;
+    #[ORM\ManyToOne(targetEntity: SharedFile::class, inversedBy: 'mappings')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?SharedFile $externalFile = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $mappingConfiguration = null;
@@ -45,26 +43,25 @@ class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
-    public function getFileType(): string
+    public function getFileType(): FileMappingType
     {
         return $this->fileType;
     }
 
-    public function setFileType(string $fileType): self
+    public function setFileType(FileMappingType $fileType): self
     {
         $this->fileType = $fileType;
         return $this;
     }
 
-    public function getExternalFileId(): ?string
+    public function getExternalFile(): ?SharedFile
     {
-        return $this->externalFileId;
+        return $this->externalFile;
     }
 
-    public function setExternalFileId(?string $externalFileId): self
+    public function setExternalFile(?SharedFile $file): void
     {
-        $this->externalFileId = $externalFileId;
-        return $this;
+        $this->externalFile = $file;
     }
 
     public function getMappingConfiguration(): ?array
