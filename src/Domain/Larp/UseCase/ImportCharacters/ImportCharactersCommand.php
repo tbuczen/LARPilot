@@ -2,7 +2,6 @@
 
 namespace App\Domain\Larp\UseCase\ImportCharacters;
 
-use App\Enum\UserRole;
 
 readonly class ImportCharactersCommand
 {

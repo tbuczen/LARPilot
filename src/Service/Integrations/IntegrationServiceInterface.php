@@ -4,6 +4,7 @@ namespace App\Service\Integrations;
 
 use App\Entity\Larp;
 use App\Entity\LarpIntegration;
+use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
 use App\Enum\LarpIntegrationProvider;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
@@ -30,6 +31,6 @@ interface IntegrationServiceInterface
      * @return array
      * @throws \Exception - some services might not implement it
      */
-    public function fetchSpreadsheetRows(SharedFile $sharedFile): array;
+    public function fetchSpreadsheetRows(SharedFile $sharedFile, ObjectFieldMapping $mapping): array;
 
 }

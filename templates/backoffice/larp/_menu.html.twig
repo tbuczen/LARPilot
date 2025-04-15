@@ -4,7 +4,7 @@
     <div class="btn-group" role="group" aria-label="LARP Backoffice Menu">
 
         {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
-            <a href="{{ path('backoffice_larp_integration_settings', {'id': larp.id}) }}"
+            <a href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
                class="btn btn-primary {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}">
                 {{ 'backoffice.larp.integrations'|trans }}
             </a>

@@ -10,6 +10,7 @@ use App\Repository\LarpCharacterRepository;
 use App\Repository\LarpFactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Webmozart\Assert\Assert;
 
 class ImportCharactersHandler
 {
@@ -29,25 +30,21 @@ class ImportCharactersHandler
     public function handle(ImportCharactersCommand $command): void
     {
         $larp = $this->larpRepository->find($command->larpId);
-        if (!$larp) {
-            throw new Exception('Larp not found for the character import handler.');
-        }
-
+        Assert::notNull($larp, sprintf('LARP %s not found for the character import handler.', $command->larpId));
+        $columnMap = $command->mapping['columnMappings'];
+        dump($columnMap);
         $this->entityManager->beginTransaction();
         try {
             // Cache to store factions already found/created for this import
-            foreach ($command->rows as $row) {
-                if (!$this->validateRow($row, $command->mapping)) {
+            foreach ($command->rows as $rowNo => $row) {
+                if($rowNo < $command->mapping['startingRow'] - 1) {
                     continue;
                 }
-
-                // Get required field: characterName
-                $characterName = $this->getFieldValue($row, $command->mapping, 'characterName');
+                $characterName = $this->getFieldValue($row, $columnMap, 'characterName');
                 if (!$characterName) {
                     continue; // Skip rows missing a character name.
                 }
 
-                // Check for duplicates based on character name & LARP.
                 $character = $this->characterRepository->findOneBy([
                     'name' => $characterName,
                     'larp' => $larp,
@@ -60,7 +57,7 @@ class ImportCharactersHandler
                 $character->setLarp($larp);
 
                 // Process each mapping: iterate over the mapping configuration.
-                foreach ($command->mapping as $col => $fieldName) {
+                foreach ($columnMap as $fieldName => $col) {
                     $value = $row[$col] ?? null;
                     if ($value === null && !$command->force) {
                         continue;
@@ -80,7 +77,7 @@ class ImportCharactersHandler
                     }
                 }
 
-                //TODO:: Save the connection between spreadsheet row and the $character
+                //TODO:: Save the connection between spreadsheet row and the $character - we would need an entity for maintaning this conenctions - one character for example can have one row in character list, can have one dedicated thread on discord and one google document describing him.
                 $this->entityManager->persist($character);
             }
 
@@ -90,16 +87,7 @@ class ImportCharactersHandler
             $this->entityManager->rollback();
             throw $ex;
         }
-    }
-
-    /**
-     * Validate a row against the mapping.
-     * For now, we require that the row provides a non-empty value for 'characterName'.
-     */
-    private function validateRow(array $row, array $mapping): bool
-    {
-        $characterName = $this->getFieldValue($row, $mapping, 'characterName');
-        return !empty($characterName);
+        die;
     }
 
     /**
@@ -109,7 +97,7 @@ class ImportCharactersHandler
      */
     private function getFieldValue(array $row, array $mapping, string $field): ?string
     {
-        foreach ($mapping as $col => $mappedField) {
+        foreach ($mapping as $mappedField => $col) {
             if ($mappedField === $field) {
                 return $row[$col] ?? null;
             }

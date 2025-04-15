@@ -21,8 +21,12 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
     use CreatorAwareTrait;
     use TimestampableEntity;
 
+    const TARGET_TYPE = 'character';
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $inGameName = null;
 
     #[Gedmo\Versioned]
     #[ORM\Column(length: 255)]
@@ -63,6 +67,11 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
     {
         $this->name = $name;
         return $this;
+    }
+
+    public function setCharacterName(string $name): static
+    {
+        return $this->setName($name);
     }
 
     public function getDescription(): ?string
@@ -141,4 +150,20 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
         $this->factions->removeElement($larpFaction);
         return $this;
     }
+
+    public function getInGameName(): ?string
+    {
+        return $this->inGameName;
+    }
+
+    public function setInGameName(?string $inGameName): void
+    {
+        $this->inGameName = $inGameName;
+    }
+
+    public static function getTargetType(): string
+    {
+        return self::TARGET_TYPE;
+    }
+
 }

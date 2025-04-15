@@ -4,6 +4,7 @@ namespace App\Service\Integrations\Google;
 
 use App\Entity\Larp;
 use App\Entity\LarpIntegration;
+use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
 use App\Enum\IntegrationFileType;
 use App\Enum\LarpIntegrationProvider;
@@ -132,43 +133,66 @@ readonly class GoogleIntegrationService implements IntegrationServiceInterface
         return $integration;
     }
 
-    public function fetchSpreadsheetRows(SharedFile $sharedFile): array
+    public function fetchSpreadsheetRows(SharedFile $sharedFile, ObjectFieldMapping $mapping): array
     {
         $client = $this->googleClientManager->createServiceAccountClient();
         $sheetsService = new Sheets($client);
 
+        $mappingConfiguration = $mapping->getMappingConfiguration();
         try {
-            $response = $sheetsService->spreadsheets_values->get($sharedFile->getFileId(), 'A:Z');
-            return $response->getValues() ?? [];
+            $range = $mappingConfiguration['sheetName'] . '!A:' . $mappingConfiguration['endColumn'];
+            $response = $sheetsService->spreadsheets_values->get($sharedFile->getFileId(), $range);
+            $rows = $response->getValues();
+            return $this->remapWithColumnLetters($rows, $mappingConfiguration);
         } catch (\Exception $e) {
             throw new \RuntimeException('Failed to read spreadsheet: ' . $e->getMessage(), 0, $e);
         }
     }
 
-
-    public function listSpreadsheets(LarpIntegration $integration): array
+    public function remapWithColumnLetters(array $rows, array $mappingConfiguration): array
     {
-        $client = $this->googleClientManager->getClientForIntegration($integration);
-        $driveService = new Drive($client);
+        $endColumn = $mappingConfiguration['endColumn'];
+        $columnLetters = $this->generateColumnRange('A', $endColumn);
+        $maxColumns = count($columnLetters);
 
-        // Query to list only spreadsheets.
-        $query = "mimeType='application/vnd.google-apps.spreadsheet'";
-        $params = [
-            'q' => $query,
-            'fields' => 'files(id, name)',
-        ];
-
-        $files = $driveService->files->listFiles($params);
-
-        $spreadsheets = [];
-        foreach ($files->getFiles() as $file) {
-            $spreadsheets[] = [
-                'id' => $file->getId(),
-                'name' => $file->getName(),
-            ];
+        $remapped = [];
+        foreach ($rows as $row) {
+            $paddedRow = array_pad($row, $maxColumns, null);
+            $remapped[] = array_combine($columnLetters, $paddedRow);
         }
 
-        return $spreadsheets;
+        return $remapped;
+    }
+
+    private function generateColumnRange(string $start, string $end): array
+    {
+        $range = [];
+        $current = $start;
+        while (true) {
+            $range[] = $current;
+            if ($current === $end) {
+                break;
+            }
+            $current = $this->incrementColumn($current);
+        }
+        return $range;
+    }
+
+    private function incrementColumn(string $column): string
+    {
+        $length = strlen($column);
+        $column = strtoupper($column);
+        $i = $length - 1;
+
+        while ($i >= 0) {
+            if ($column[$i] !== 'Z') {
+                $column[$i] = chr(ord($column[$i]) + 1);
+                return substr($column, 0, $i + 1) . str_repeat('A', $length - $i - 1);
+            }
+            $i--;
+        }
+
+        return 'A' . str_repeat('A', $length);
     }
 
     public function getFolderContents(LarpIntegration $integration, string $folderId = 'root', bool $refresh = false): array

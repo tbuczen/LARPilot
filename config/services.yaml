@@ -29,6 +29,8 @@ services:
         tags: [ 'security.voter' ]
 
     App\Twig\:
+        exclude:
+            - '../src/Twig/Components/'
         resource: '../src/Twig/'
         tags: [ 'twig.extension' ]
 

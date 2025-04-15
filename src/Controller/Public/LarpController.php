@@ -13,6 +13,13 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/', name: 'public_larp_')]
 class LarpController extends AbstractController
 {
+    #[Route('/terms', name: 'terms', methods: ['GET'])]
+    public function terms(): Response
+    {
+        return $this->render('public/terms.html.twig', [
+        ]);
+    }
+
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(LarpRepository $larpRepository): Response
     {

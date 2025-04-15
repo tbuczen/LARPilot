@@ -79,10 +79,11 @@
                                                         </a>
                                                     </div>
 
-                                                    <a href="{{ path('backoffice_larp_import_with_mapping', {
+                                                    <a href="{{ path('backoffice_larp_story_characters_import_from_mapping', {
                                                         larp: larp.id,
                                                         sharedFile: file.id,
-                                                        mapping: mapping.id
+                                                        mapping: mapping.id,
+                                                        provider: file.integration.provider.value
                                                     }) }}" class="btn btn-outline-success btn-sm">
                                                         {{ 'integrations.file_select.use_mapping'|trans }}
                                                     </a>

@@ -7,34 +7,39 @@ use App\Form\Models\SpreadsheetMappingModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfonycasts\DynamicForms\DynamicFormBuilder;
+use Symfonycasts\DynamicForms\DependentField;
 
 class SpreadsheetMappingType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $builder = new DynamicFormBuilder($builder);
+
         $builder
             ->add('mappingType', EnumType::class, [
-                'label' => 'Type of mapping',
-                'class' =>  FileMappingType::class
+                'class' => FileMappingType::class,
+                'label' => 'Mapping type',
             ])
+            ->add('sheetName', TextType::class)
+            ->add('endColumn', TextType::class)
             ->add('startingRow', IntegerType::class, [
-                'label' => 'Starting Row',
-                'data' => 3, // Default starting row (skip headers)
+                'data' => 2,
             ])
-            ->add('factionColumn', TextType::class, [
-                'label' => 'Faction Column',
-            ])
-            ->add('characterNameColumn', TextType::class, [
-                'label' => 'Character Name Column',
-            ])
-            ->add('inGameNameColumn', TextType::class, [
-                'label' => 'In-game Name Column',
-            ])
-            ;
+            ->addDependent('columnMappings', 'mappingType', function (DependentField $field, ?FileMappingType $type) {
+                if (!$type) {
+                    return;
+                }
+
+                $field->add($type->getSubForm(), [
+                    'translation_domain' => 'forms',
+                ]);
+            })
+            ->add('submit', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -43,5 +48,4 @@ class SpreadsheetMappingType extends AbstractType
             'data_class' => SpreadsheetMappingModel::class,
         ]);
     }
-
 }

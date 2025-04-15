@@ -1,0 +1,14 @@
+<div
+        {{ attributes }}
+>
+
+    {{ form_start(form) }}
+    {{ form_row(form.mappingType) }}
+    {{ form_row(form.sheetName) }}
+    {{ form_row(form.endColumn) }}
+    {{ form_row(form.startingRow) }}
+    {% if form.columnMappings is defined %}
+        {{ form_row(form.columnMappings) }}
+    {% endif %}
+    {{ form_end(form) }}
+</div>

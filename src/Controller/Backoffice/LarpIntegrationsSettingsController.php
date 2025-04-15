@@ -4,49 +4,40 @@ namespace App\Controller\Backoffice;
 
 use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsCommand;
 use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsHandler;
-use App\Entity\LarpIntegration;
+use App\Entity\Larp;
 use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
-use App\Security\GoogleAuthenticator;
 use App\Service\Integrations\Exceptions\ReAuthenticationNeededException;
 use App\Service\Integrations\IntegrationServiceProvider;
 use App\Service\Integrations\LarpIntegrationManager;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Webmozart\Assert\Assert;
 
 #[Route('/larp', name: 'backoffice_larp_')]
 class LarpIntegrationsSettingsController extends AbstractController
 {
 
     public function __construct(
-        private readonly LarpRepository             $larpRepository,
-        private readonly LarpIntegrationManager     $larpIntegrationManager,
-        private readonly IntegrationServiceProvider $integrationServiceProvider,
-        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly LarpIntegrationManager $larpIntegrationManager,
+        private readonly UrlGeneratorInterface  $urlGenerator,
     )
     {
     }
 
-    #[Route('/{id}/integration-settings', name: 'integration_settings', methods: ['GET', 'POST'])]
+    #[Route('/{larp}/integration-settings', name: 'integration_settings', methods: ['GET', 'POST'])]
     public function integrationsSettings(
-        string                    $id,
+        Larp                      $larp,
         LarpIntegrationRepository $larpIntegrationRepository,
     ): Response
     {
-        $larp = $this->larpRepository->find($id);
-        if (!$larp) {
-            throw $this->createNotFoundException('Larp not found.');
-        }
-        $integrations = $larpIntegrationRepository->findAllByLarp($id);
+        $integrations = $larpIntegrationRepository->findAllByLarp($larp->getId()->toRfc4122());
         try {
             $this->larpIntegrationManager->decorateIntegrationsWithClient($integrations);
         } catch (ReAuthenticationNeededException) {
@@ -64,26 +55,24 @@ class LarpIntegrationsSettingsController extends AbstractController
         string                 $provider,
         LarpRepository         $larpRepository,
         LarpIntegrationManager $integrationManager,
-        SessionInterface $session,
+        SessionInterface       $session,
     ): Response
     {
         $session->set('current_larp_id', $id);
-
         $larp = $larpRepository->find($id);
-        $enum = LarpIntegrationProvider::from($provider);
-
-        $integrationService = $integrationManager->getIntegrationServiceByProvider($enum);
+        $integrationService = $integrationManager->getIntegrationServiceByProvider(LarpIntegrationProvider::from($provider));
 
         return $integrationService->connect($larp);
     }
 
     #[Route('/integration/connect/{provider}/check', name: 'connect_integration_check')]
     public function connectIntegrationCheck(
-        string $provider,
-        SessionInterface $session,
-        ClientRegistry $clientRegistry,
+        string                     $provider,
+        SessionInterface           $session,
+        ClientRegistry             $clientRegistry,
         IntegrationServiceProvider $integrationServiceProvider,
-    ): RedirectResponse {
+    ): RedirectResponse
+    {
         $larpId = $session->get('current_larp_id');
         $client = $clientRegistry->getClient($provider);
 
@@ -103,7 +92,7 @@ class LarpIntegrationsSettingsController extends AbstractController
 
         $session->remove('current_larp_id');
 
-        return $this->redirectToRoute('backoffice_larp_integration_settings', ['id' => $larpId]);
+        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larpId]);
     }
 
     #[Route('/{id}/integration/{integrationId}/filePermissions', name: 'integration_file_permissions', methods: ['POST'])]
@@ -118,24 +107,7 @@ class LarpIntegrationsSettingsController extends AbstractController
         $files = json_decode($selectedFilesJson, true) ?? [];
         $command = new ApplyFilesPermissionsCommand($integrationId, $files);
         $handler->handle($command);
-        return $this->redirectToRoute('backoffice_larp_integration_settings', ['id' => $id]);
-    }
-
-    #[Route('/integration/{integrationId}/folder/{folderId}', name: 'integration_get_folder', methods: ['GET'])]
-    public function integrationGetFolder(
-        Request                   $request,
-        string                    $folderId,
-        string                    $integrationId,
-        LarpIntegrationRepository $larpIntegrationRepository,
-    ): JsonResponse
-    {
-        /** @var LarpIntegration|null $integration */
-        $integration = $larpIntegrationRepository->find($integrationId);
-        Assert::notNull($integration);
-        $service = $this->integrationServiceProvider->getServiceForIntegration($integration->getProvider());
-        $items = $service->getFolderContents($integration, $folderId, $request->get('force', false));
-
-        return $this->json($items);
+        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $id]);
     }
 
 }

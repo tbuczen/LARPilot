@@ -65,15 +65,13 @@ class LarpCharactersController extends AbstractController
     {
         $integrationService = $integrationManager->getIntegrationServiceByProvider($provider);
 
-        $rows = $integrationService->fetchSpreadsheetRows($sharedFile);
-
+        $rows = $integrationService->fetchSpreadsheetRows($sharedFile, $mapping);
         $command = new ImportCharactersCommand(
             $larp->getId()->toRfc4122(),
             $rows,
             $mapping->getMappingConfiguration(),
             $sharedFile->getId()->toRfc4122()
         );
-
         $handler->handle($command);
 
         return $this->redirectToRoute('backoffice_larp_story_characters_list', [
