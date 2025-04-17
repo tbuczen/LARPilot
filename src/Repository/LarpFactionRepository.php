@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Larp;
 use App\Entity\LarpFaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,11 +24,24 @@ class LarpFactionRepository extends BaseRepository
         parent::__construct($registry, LarpFaction::class);
     }
 
-    public function findByOrCreate(array $array): LarpFaction
+    public function findByOrCreate(string $name, Larp $larp): LarpFaction
     {
-        $faction = $this->findOneBy($array);
+        $qb = $this->createQueryBuilder('f');
+        $qb->join('f.larps', 'l')
+            ->where('f.name = :name')
+            ->andWhere('l = :larp')
+            ->setParameters(new ArrayCollection(array(
+                new Parameter('name', $name),
+                new Parameter('larp', $larp)
+            )))
+            ->setMaxResults(1);
+
+        $faction = $qb->getQuery()->getOneOrNullResult();
+
         if (!$faction) {
             $faction = new LarpFaction();
+            $faction->setName($name);
+            $faction->addLarp($larp);
             $this->getEntityManager()->persist($faction);
         }
 

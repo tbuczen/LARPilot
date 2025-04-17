@@ -2,9 +2,9 @@
 
 namespace App\Service\Larp;
 
+use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\Larp;
 use App\Entity\LarpIntegration;
-use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
 
@@ -24,16 +24,22 @@ readonly class LarpManager
     }
 
     /**
-     * @return array|LarpIntegration[]
+     * @return LarpIntegration[]
      */
-    public function getIntegrationsForLarp(string $larpId): array
+    public function getIntegrationsForLarp(string|Larp $larp): array
     {
-        return $this->larpIntegrationRepository->findAllByLarp($larpId);
+        return $this->larpIntegrationRepository->findAllByLarp($larp);
     }
 
-    public function getIntegrationTypeForLarp(string $id, LarpIntegrationProvider $integration): ?LarpIntegration
+    public function getIntegrationTypeForLarp(string|Larp $larp, LarpIntegrationProvider $integration): ?LarpIntegration
     {
-        return $this->larpIntegrationRepository->findOneBy(['larp' => $id, 'provider' => $integration]);
+        return $this->larpIntegrationRepository->findOneBy(['larp' => $larp, 'provider' => $integration]);
+    }
+
+    public function getLarpCharacters(Larp $larp)
+    {
+
+
     }
 
 

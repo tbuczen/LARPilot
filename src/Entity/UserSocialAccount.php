@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\SocialAccountProvider;
 use App\Entity\Trait\UuidTraitEntity;
-use App\Enum\SocialAccountProvider;
 use App\Repository\UserSocialAccountRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;

@@ -5,15 +5,13 @@ namespace App\Controller\Backoffice\Integrations;
 use App\Controller\Backoffice\BaseBackofficeController;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingCommand;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingHandler;
-use App\Entity\LarpIntegration;
+use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
-use App\Enum\FileMappingType;
-use App\Enum\LarpIntegrationProvider;
-use App\Form\Integrations\SpreadsheetMappingType;
-use App\Form\Models\SpreadsheetMappingModel;
+use App\Form\Integrations\FileMappingType;
+use App\Form\Models\ExternalResourceMappingModel;
 use App\Repository\LarpIntegrationRepository;
-use App\Service\Integrations\LarpIntegrationManager;
+use App\Service\Integrations\IntegrationManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,26 +31,19 @@ class FileMappingController extends BaseBackofficeController
         ?ObjectFieldMapping     $mapping = null,
     ): Response
     {
-        $mappingModel = SpreadsheetMappingModel::fromEntity($mapping);
-        $form = $this->createForm(SpreadsheetMappingType::class, $mappingModel);
+        $mappingModel = ExternalResourceMappingModel::fromEntity($mapping);
+        $form = $this->createForm(FileMappingType::class, $mappingModel);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var SpreadsheetMappingModel $data */
+            /** @var ExternalResourceMappingModel $data */
             $data = $form->getData();
-
-            $mappings = [
-                'sheetName' => $data->sheetName,
-                'startingRow' => $data->startingRow,
-                'endColumn' => $data->endColumn,
-            ];
-
             $command = new SaveFileMappingCommand(
                 $id,
                 $provider->value,
                 $data->mappingType->value,
                 $sharedFile->getId()->toRfc4122(),
-                array_merge([ 'columnMappings' => $data->columnMappings ], $mappings),
+                $data->mappings,
             );
 
             $handler($command);
@@ -68,11 +59,11 @@ class FileMappingController extends BaseBackofficeController
             $this->showErrorsAsFlash($form->getErrors(true));
         }
 
-        return $this->render('backoffice/larp/integrations/spreadsheet_mapping.html.twig', [
+        return $this->render('backoffice/larp/integrations/file_mapping.html.twig', [
             'form' => $form,
             'larpId' => $id,
             'provider' => $provider,
-            'sharedFileId' => $sharedFile->getId()->toRfc4122(),
+            'sharedFile' => $sharedFile,
         ]);
     }
 
@@ -90,12 +81,12 @@ class FileMappingController extends BaseBackofficeController
         string                    $id,
         string                    $externalFileId,
         LarpIntegrationProvider   $provider,
-        LarpIntegrationManager    $integrationManager,
+        IntegrationManager        $integrationManager,
         LarpIntegrationRepository $larpIntegrationRepository
     ): RedirectResponse
     {
-        $integrationService = $integrationManager->getIntegrationServiceByProvider($provider);
         $integration = $larpIntegrationRepository->findByLarpAndProvider($id, $provider);
+        $integrationService = $integrationManager->getService($integration);
         $url = $integrationService->getExternalFileUrl($integration, $externalFileId);
 
         return new RedirectResponse($url);

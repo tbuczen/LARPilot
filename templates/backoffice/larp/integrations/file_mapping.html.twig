@@ -1,0 +1,13 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}{{ 'backoffice.mapping.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>{{ 'backoffice.mapping.heading'|trans }} - {{ sharedFile.fileName }}</h1>
+        {{ component('ExternalResourceMappingForm', {
+            formData: form.vars.value,
+            form: form,
+        }) }}
+    </div>
+{% endblock %}

@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\SubmissionStatus;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
-use App\Enum\SubmissionStatus;
 use App\Repository\LarpCharacterSubmissionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

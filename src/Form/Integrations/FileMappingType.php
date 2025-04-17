@@ -2,19 +2,17 @@
 
 namespace App\Form\Integrations;
 
-use App\Enum\FileMappingType;
-use App\Form\Models\SpreadsheetMappingModel;
+use App\Entity\Enum\ResourceType;
+use App\Form\Models\ExternalResourceMappingModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfonycasts\DynamicForms\DynamicFormBuilder;
 use Symfonycasts\DynamicForms\DependentField;
+use Symfonycasts\DynamicForms\DynamicFormBuilder;
 
-class SpreadsheetMappingType extends AbstractType
+class FileMappingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -22,19 +20,13 @@ class SpreadsheetMappingType extends AbstractType
 
         $builder
             ->add('mappingType', EnumType::class, [
-                'class' => FileMappingType::class,
+                'class' => ResourceType::class,
                 'label' => 'Mapping type',
             ])
-            ->add('sheetName', TextType::class)
-            ->add('endColumn', TextType::class)
-            ->add('startingRow', IntegerType::class, [
-                'data' => 2,
-            ])
-            ->addDependent('columnMappings', 'mappingType', function (DependentField $field, ?FileMappingType $type) {
+            ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) {
                 if (!$type) {
                     return;
                 }
-
                 $field->add($type->getSubForm(), [
                     'translation_domain' => 'forms',
                 ]);
@@ -45,7 +37,7 @@ class SpreadsheetMappingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SpreadsheetMappingModel::class,
+            'data_class' => ExternalResourceMappingModel::class,
         ]);
     }
 }

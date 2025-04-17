@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-interface StoryObject
+interface StoryObject extends TargetableInterface
 {
 
 }

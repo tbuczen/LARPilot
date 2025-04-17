@@ -4,13 +4,13 @@ namespace App\Controller\Backoffice;
 
 use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsCommand;
 use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsHandler;
+use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\Larp;
-use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
 use App\Service\Integrations\Exceptions\ReAuthenticationNeededException;
 use App\Service\Integrations\IntegrationServiceProvider;
-use App\Service\Integrations\LarpIntegrationManager;
+use App\Service\Integrations\IntegrationManager;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,8 +25,8 @@ class LarpIntegrationsSettingsController extends AbstractController
 {
 
     public function __construct(
-        private readonly LarpIntegrationManager $larpIntegrationManager,
-        private readonly UrlGeneratorInterface  $urlGenerator,
+        private readonly IntegrationManager    $larpIntegrationManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
     )
     {
     }
@@ -37,7 +37,7 @@ class LarpIntegrationsSettingsController extends AbstractController
         LarpIntegrationRepository $larpIntegrationRepository,
     ): Response
     {
-        $integrations = $larpIntegrationRepository->findAllByLarp($larp->getId()->toRfc4122());
+        $integrations = $larpIntegrationRepository->findAllByLarp($larp);
         try {
             $this->larpIntegrationManager->decorateIntegrationsWithClient($integrations);
         } catch (ReAuthenticationNeededException) {
@@ -51,16 +51,16 @@ class LarpIntegrationsSettingsController extends AbstractController
 
     #[Route('/{id}/integration/connect/{provider}', name: 'connect_integration')]
     public function connectIntegration(
-        string                 $id,
-        string                 $provider,
-        LarpRepository         $larpRepository,
-        LarpIntegrationManager $integrationManager,
-        SessionInterface       $session,
+        string             $id,
+        LarpIntegrationProvider             $provider,
+        LarpRepository     $larpRepository,
+        IntegrationManager $integrationManager,
+        SessionInterface   $session,
     ): Response
     {
         $session->set('current_larp_id', $id);
         $larp = $larpRepository->find($id);
-        $integrationService = $integrationManager->getIntegrationServiceByProvider(LarpIntegrationProvider::from($provider));
+        $integrationService = $integrationManager->getService($provider);
 
         return $integrationService->connect($larp);
     }

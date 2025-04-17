@@ -2,7 +2,7 @@
 
 namespace App\Domain\Account\UseCase\AddSocialAccountToUser;
 
-use App\Enum\SocialAccountProvider;
+use App\Entity\Enum\SocialAccountProvider;
 
 readonly class AddSocialAccountToUserCommand
 {

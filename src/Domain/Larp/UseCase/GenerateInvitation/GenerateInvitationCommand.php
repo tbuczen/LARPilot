@@ -2,7 +2,7 @@
 
 namespace App\Domain\Larp\UseCase\GenerateInvitation;
 
-use App\Enum\UserRole;
+use App\Entity\Enum\UserRole;
 
 readonly class GenerateInvitationCommand
 {

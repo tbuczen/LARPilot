@@ -4,7 +4,7 @@ namespace App\Controller\Backoffice;
 
 use App\Domain\Larp\UseCase\GenerateInvitation\GenerateInvitationCommand;
 use App\Domain\Larp\UseCase\GenerateInvitation\GenerateInvitationHandler;
-use App\Enum\UserRole;
+use App\Entity\Enum\UserRole;
 use App\Repository\LarpRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

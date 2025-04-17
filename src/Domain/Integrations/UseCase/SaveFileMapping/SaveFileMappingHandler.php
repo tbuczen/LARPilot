@@ -2,8 +2,8 @@
 
 namespace App\Domain\Integrations\UseCase\SaveFileMapping;
 
+use App\Entity\Enum\ResourceType;
 use App\Entity\ObjectFieldMapping;
-use App\Enum\FileMappingType;
 use App\Repository\LarpRepository;
 use App\Repository\ObjectFieldMappingRepository;
 use App\Repository\SharedFileRepository;
@@ -30,7 +30,7 @@ final readonly class SaveFileMappingHandler
         $mapping->setLarp($larp);
         $mapping->setExternalFile($sharedFile);
         $mapping->setMappingConfiguration($command->fields);
-        $mapping->setFileType(FileMappingType::tryFrom($command->mappingType));
+        $mapping->setFileType(ResourceType::tryFrom($command->mappingType));
         $this->mappingRepository->save($mapping);
     }
 }

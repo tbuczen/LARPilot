@@ -36,6 +36,9 @@ class SharedFile
     #[ORM\Column(type: 'string', nullable: false)]
     private string $mimeType;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private string $url;
+
     #[ORM\OneToMany(targetEntity: ObjectFieldMapping::class, mappedBy: 'externalFile')]
     private Collection $mappings;
 
@@ -118,6 +121,14 @@ class SharedFile
         $this->mappings = $mappings;
     }
 
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
 
+    public function setUrl(string $url): void
+    {
+        $this->url = $url;
+    }
 
 }

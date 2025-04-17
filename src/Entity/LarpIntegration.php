@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
-use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

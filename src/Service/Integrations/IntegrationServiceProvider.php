@@ -2,9 +2,9 @@
 
 namespace App\Service\Integrations;
 
-use App\Enum\LarpIntegrationProvider;
+use App\Entity\Enum\LarpIntegrationProvider;
 
-readonly class IntegrationServiceProvider
+final readonly class IntegrationServiceProvider
 {
 
         /**

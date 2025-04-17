@@ -6,8 +6,8 @@ use App\Domain\Account\UseCase\AddSocialAccountToUser\AddSocialAccountToUserComm
 use App\Domain\Account\UseCase\AddSocialAccountToUser\AddSocialAccountToUserHandler;
 use App\Domain\Account\UseCase\RegisterUser\RegisterUserCommand;
 use App\Domain\Account\UseCase\RegisterUser\RegisterUserHandler;
+use App\Entity\Enum\SocialAccountProvider;
 use App\Entity\User;
-use App\Enum\SocialAccountProvider;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;

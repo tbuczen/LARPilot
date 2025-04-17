@@ -2,13 +2,14 @@
 
 namespace App\Service\Integrations;
 
+use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\LarpIntegration;
-use App\Enum\LarpIntegrationProvider;
 use App\Repository\LarpIntegrationRepository;
 use App\Service\Integrations\Exceptions\ReAuthenticationNeededException;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use Symfony\Component\Uid\Uuid;
 
-final readonly class LarpIntegrationManager
+final readonly class IntegrationManager
 {
 
     public function __construct(
@@ -35,19 +36,19 @@ final readonly class LarpIntegrationManager
         }
     }
 
-    public function getServiceByIntegrationId(string $integrationId): IntegrationServiceInterface
+    public function getService(LarpIntegration|string|Uuid|LarpIntegrationProvider $input): IntegrationServiceInterface
     {
-        $integration = $this->larpIntegrationRepository->find($integrationId);
+        $provider = match (true) {
+            is_string($input), $input instanceof Uuid => $this->larpIntegrationRepository->find($input)?->getProvider(),
+            $input instanceof LarpIntegrationProvider => $input,
+            $input instanceof LarpIntegration => $input->getProvider(),
+            default => throw new \InvalidArgumentException("Invalid type for integrationOrId: " . get_debug_type($input)),
+        };
 
-        if (!$integration) {
-            throw new \InvalidArgumentException("Integration with ID $integrationId not found.");
+        if (!$provider) {
+            throw new \InvalidArgumentException("Integration not found for given ID.");
         }
 
-        return $this->getIntegrationServiceByProvider($integration->getProvider());
-    }
-
-    public function getIntegrationServiceByProvider(LarpIntegrationProvider $provider): IntegrationServiceInterface
-    {
         return $this->integrationServiceProvider->getServiceForIntegration($provider);
     }
 

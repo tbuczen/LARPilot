@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Enum\LarpIntegrationProvider;
+use App\Entity\Larp;
 use App\Entity\LarpIntegration;
-use App\Enum\LarpIntegrationProvider;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,11 +26,11 @@ class LarpIntegrationRepository extends BaseRepository
     /**
      * @return LarpIntegration[]
      */
-    public function findAllByLarp(string $larpId): array
+    public function findAllByLarp(string|Larp $larp): array
     {
         return $this->createQueryBuilder('li')
             ->andWhere('li.larp = :larp')
-            ->setParameter('larp', $larpId)
+            ->setParameter('larp', $larp)
             ->orderBy('li.id', 'ASC')
             ->getQuery()
             ->getResult();

@@ -2,7 +2,7 @@
 
 namespace App\Service\Integrations\Sharing;
 
-use App\Enum\LarpIntegrationProvider;
+use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\LarpIntegration;
 
 final readonly class DriveSharingServiceProvider

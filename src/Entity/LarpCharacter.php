@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\TargetType;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
@@ -12,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Uid\Uuid;
 
 #[Gedmo\Loggable]
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
@@ -21,11 +23,10 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
     use CreatorAwareTrait;
     use TimestampableEntity;
 
-    const TARGET_TYPE = 'character';
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $inGameName = null;
 
     #[Gedmo\Versioned]
@@ -36,16 +37,13 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
     #[ORM\JoinColumn(nullable: false)]
     private ?Larp $larp = null;
 
-    // The owning side of the one-to-one self-referencing relation:
     #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'continuation')]
     #[ORM\JoinColumn(name: "previous_character_id", referencedColumnName: "id", nullable: true)]
     private ?LarpCharacter $previousCharacter = null;
 
-    // Inverse side, no join column here:
     #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'previousCharacter')]
     private ?LarpCharacter $continuation = null;
 
-    // New field for post-LARP fate, with versioning enabled:
     #[Gedmo\Versioned]
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $postLarpFate = null;
@@ -55,6 +53,7 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
 
     public function __construct()
     {
+        $this->id = Uuid::v4();
         $this->factions = new ArrayCollection();
     }
 
@@ -161,9 +160,9 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
         $this->inGameName = $inGameName;
     }
 
-    public static function getTargetType(): string
+    public static function getTargetType(): TargetType
     {
-        return self::TARGET_TYPE;
+        return TargetType::Character;
     }
 
 }

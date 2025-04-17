@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\ResourceType;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
-use App\Enum\FileMappingType;
 use App\Repository\ObjectFieldMappingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
@@ -22,8 +22,8 @@ class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
     #[ORM\JoinColumn(nullable: false)]
     private Larp $larp;
 
-    #[ORM\Column(type: 'string',  enumType: FileMappingType::class)]
-    private FileMappingType $fileType;
+    #[ORM\Column(type: 'string',  enumType: ResourceType::class)]
+    private ResourceType $fileType;
 
     #[ORM\ManyToOne(targetEntity: SharedFile::class, inversedBy: 'mappings')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -43,12 +43,12 @@ class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
-    public function getFileType(): FileMappingType
+    public function getFileType(): ResourceType
     {
         return $this->fileType;
     }
 
-    public function setFileType(FileMappingType $fileType): self
+    public function setFileType(ResourceType $fileType): self
     {
         $this->fileType = $fileType;
         return $this;

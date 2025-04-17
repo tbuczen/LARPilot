@@ -72,7 +72,7 @@ export default class extends Controller {
     loadPicker(oauthToken, developerKey) {
         const docsView = new google.picker.DocsView()
             .setIncludeFolders(true)
-            .setSelectFolderEnabled(false)
+            .setSelectFolderEnabled(true)
             .setMimeTypes(
                 "application/vnd.google-apps.document," +
                 "application/vnd.google-apps.spreadsheet"

@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\UserRole;
 use App\Entity\Trait\UuidTraitEntity;
-use App\Enum\UserRole;
 use App\Repository\LarpParticipantRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;

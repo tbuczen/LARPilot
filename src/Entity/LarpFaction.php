@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\TargetType;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
@@ -9,6 +10,7 @@ use App\Repository\LarpFactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LarpFactionRepository::class)]
 class LarpFaction implements CreatorAwareInterface, StoryObject
@@ -22,16 +24,15 @@ class LarpFaction implements CreatorAwareInterface, StoryObject
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    // A faction can be associated with multiple larps:
     #[ORM\ManyToMany(targetEntity: Larp::class, inversedBy: 'factions')]
     private Collection $larps;
 
-    // A faction can have many participants:
     #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
     private Collection $members;
 
     public function __construct()
     {
+        $this->id = Uuid::v4();
         $this->larps = new ArrayCollection();
         $this->members = new ArrayCollection();
     }
@@ -106,5 +107,10 @@ class LarpFaction implements CreatorAwareInterface, StoryObject
             }
         }
         return $this;
+    }
+
+    public static function getTargetType(): TargetType
+    {
+        return TargetType::Faction;
     }
 }

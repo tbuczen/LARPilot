@@ -2,12 +2,19 @@
 
 namespace App\Domain\Larp\UseCase\ImportCharacters;
 
+use App\Entity\Enum\ReferenceRole;
+use App\Entity\Enum\ReferenceType;
+use App\Entity\Enum\TargetType;
+use App\Entity\ExternalReference;
 use App\Entity\Larp;
 use App\Entity\LarpCharacter;
-use App\Entity\LarpFaction;
-use App\Repository\LarpRepository;
+use App\Entity\SharedFile;
 use App\Repository\LarpCharacterRepository;
 use App\Repository\LarpFactionRepository;
+use App\Repository\LarpRepository;
+use App\Repository\SharedFileRepository;
+use App\Service\Integrations\IntegrationManager;
+use App\Service\Integrations\IntegrationServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Webmozart\Assert\Assert;
@@ -16,12 +23,17 @@ class ImportCharactersHandler
 {
 
     private array $cache;
+    private ?IntegrationServiceInterface $integrationService;
+
     public function __construct(
         private readonly LarpRepository          $larpRepository,
         private readonly LarpCharacterRepository $characterRepository,
         private readonly LarpFactionRepository   $factionRepository,
-        private readonly EntityManagerInterface $entityManager
-    ) {
+        private readonly SharedFileRepository    $sharedFileRepository,
+        private readonly IntegrationManager      $integrationManager,
+        private readonly EntityManagerInterface  $entityManager
+    )
+    {
     }
 
     /**
@@ -30,14 +42,18 @@ class ImportCharactersHandler
     public function handle(ImportCharactersCommand $command): void
     {
         $larp = $this->larpRepository->find($command->larpId);
+        $file = $this->sharedFileRepository->find($command->externalFileId);
+
+        $this->integrationService = $this->integrationManager->getService($file->getIntegration());
+
         Assert::notNull($larp, sprintf('LARP %s not found for the character import handler.', $command->larpId));
         $columnMap = $command->mapping['columnMappings'];
-        dump($columnMap);
+
         $this->entityManager->beginTransaction();
         try {
             // Cache to store factions already found/created for this import
             foreach ($command->rows as $rowNo => $row) {
-                if($rowNo < $command->mapping['startingRow'] - 1) {
+                if ($rowNo < $command->mapping['startingRow'] - 1) {
                     continue;
                 }
                 $characterName = $this->getFieldValue($row, $columnMap, 'characterName');
@@ -69,6 +85,7 @@ class ImportCharactersHandler
                     } else {
                         // For scalar properties, we try a dynamic setter.
                         $setter = 'set' . ucfirst($fieldName);
+
                         if (method_exists($character, $setter)) {
                             $character->$setter($value);
                         } else {
@@ -76,8 +93,7 @@ class ImportCharactersHandler
                         }
                     }
                 }
-
-                //TODO:: Save the connection between spreadsheet row and the $character - we would need an entity for maintaning this conenctions - one character for example can have one row in character list, can have one dedicated thread on discord and one google document describing him.
+                $this->createReference($character, $rowNo, $file);
                 $this->entityManager->persist($character);
             }
 
@@ -87,14 +103,8 @@ class ImportCharactersHandler
             $this->entityManager->rollback();
             throw $ex;
         }
-        die;
     }
 
-    /**
-     * Retrieves the value from a row for a given field as defined in the mapping.
-     * Example: if mapping is ['B' => 'characterName', 'C' => 'faction'] and $field is 'characterName',
-     * it returns $row['B'] if present.
-     */
     private function getFieldValue(array $row, array $mapping, string $field): ?string
     {
         foreach ($mapping as $mappedField => $col) {
@@ -109,15 +119,24 @@ class ImportCharactersHandler
     {
         $factionName = trim($value);
         if (!isset($this->cache[$factionName])) {
-            $faction = $this->factionRepository->findByOrCreate([
-                'name' => $factionName,
-                'larp' => $larp,
-            ]);
-
-            $faction->setName($factionName);
-            $faction->addLarp($larp);
+            $faction = $this->factionRepository->findByOrCreate($factionName,$larp);
             $this->cache[$factionName] = $faction;
         }
         $character->addFaction($this->cache[$factionName]);
+    }
+
+    private function createReference(LarpCharacter $character, int|string $rowNo, SharedFile $file): void
+    {
+        $reference = new ExternalReference();
+        $reference->setTargetType($character::getTargetType());
+        $reference->setTargetId($character->getId());
+        $reference->setProvider($file->getIntegration()->getProvider());
+        $reference->setExternalId($rowNo + 1);
+        $reference->setReferenceType(ReferenceType::SpreadsheetRow);
+        $reference->setName($character->getName());
+        $reference->setUrl($this->integrationService->createReferenceUrl($file, ReferenceType::SpreadsheetRow, $reference->getExternalId()));
+        $reference->setRole(ReferenceRole::Primary);
+
+        $this->entityManager->persist($reference);
     }
 }

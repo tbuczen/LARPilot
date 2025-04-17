@@ -2,8 +2,8 @@
 
 namespace App\Service\Integrations;
 
+use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\LarpIntegration;
-use App\Enum\LarpIntegrationProvider;
 use App\Service\Integrations\Google\GoogleOAuthTokenProvider;
 
 readonly class OAuthTokenProviderFactory

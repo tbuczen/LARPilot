@@ -2,21 +2,22 @@
 
 namespace App\Form\Models;
 
+use App\Entity\Enum\ResourceType;
 use App\Entity\ObjectFieldMapping;
-use App\Enum\FileMappingType;
 
-final class SpreadsheetMappingModel
+class SpreadsheetMappingModel extends ExternalResourceMappingModel
 {
 
     public function __construct(
-        public ?FileMappingType $mappingType = FileMappingType::CHARACTER_LIST,
+        public ?ResourceType $mappingType = ResourceType::CHARACTER_LIST,
         public ?int             $startingRow = 2,
         public ?string             $sheetName = null,
         public ?string             $endColumn = null,
         /** @var array<string, string> */
-        public array $columnMappings = []
+        public array         $mappings = []
     )
     {
+        parent::__construct($mappingType, $mappings);
     }
 
     public static function fromEntity(?ObjectFieldMapping $mapping): self
@@ -31,7 +32,7 @@ final class SpreadsheetMappingModel
             $mappingConfiguration['startingRow'] ?? null,
             $mappingConfiguration['sheetName'] ?? null,
             $mappingConfiguration['endColumn'] ?? null,
-            $mappingConfiguration['columnMappings'] ?? null
+            $mappingConfiguration ?? null
         );
     }
 

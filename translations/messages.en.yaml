@@ -77,10 +77,12 @@ backoffice:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"
     no_folders: "No folders found."
-  spreadsheet_mapping:
-    title: "Spreadsheet Mapping Configuration"
-    heading: "Configure Spreadsheet Mapping"
+  mapping:
+    title: "Mapping Configuration"
+    heading: "Configure Mapping"
     save: "Save Mapping"
+  common:
+    success_save: "Successfully saved changes"
 
 #Account related translations for both player and organizers
 account:

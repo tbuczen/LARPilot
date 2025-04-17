@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Enum\LarpStageStatus;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Entity\User;
-use App\Enum\LarpStageStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
