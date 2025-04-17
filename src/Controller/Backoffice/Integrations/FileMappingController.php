@@ -32,7 +32,7 @@ class FileMappingController extends BaseBackofficeController
     ): Response
     {
         $mappingModel = ExternalResourceMappingModel::fromEntity($mapping);
-        $form = $this->createForm(FileMappingType::class, $mappingModel);
+        $form = $this->createForm(FileMappingType::class, $mappingModel, ['mimeType' => $sharedFile->getMimeType()]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -59,16 +59,13 @@ class FileMappingController extends BaseBackofficeController
             $this->showErrorsAsFlash($form->getErrors(true));
         }
 
-        return $this->render('backoffice/larp/integrations/file_mapping.html.twig', [
+        return $this->render('backoffice/larp/integrations/fileMapping.html.twig', [
             'form' => $form,
             'larpId' => $id,
             'provider' => $provider,
             'sharedFile' => $sharedFile,
         ]);
     }
-
-
-
 
     #[Route('/{id}/integration/{provider}/file/{externalFileId}/preview', name: 'preview_spreadsheet')]
     public function previewSpreadsheet(string $id, LarpIntegrationProvider $provider, string $externalFileId, Request $request): Response

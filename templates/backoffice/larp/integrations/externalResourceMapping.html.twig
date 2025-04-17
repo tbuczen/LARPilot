@@ -1,0 +1,21 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}{{ 'backoffice.mapping.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>{{ 'backoffice.mapping.heading'|trans }}</h1>
+        {% if files is not empty %}
+            <div class="list-group">
+                {% include 'backoffice/larp/partials/_sharedFileList.html.twig' with {
+                    files: files,
+                    configureMappingPath: 'backoffice_larp_integration_file_mapping',
+                    openFilePath: 'backoffice_larp_integration_file_open',
+                    useMappingPath: null
+                } %}
+            </div>
+        {% else %}
+            <p>{{ 'integrations.file_select.no_files'|trans }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

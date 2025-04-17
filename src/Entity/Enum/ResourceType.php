@@ -38,7 +38,7 @@ enum ResourceType: string
         };
     }
 
-    public function isList(): bool
+    public function isSpreadsheet(): bool
     {
         return in_array($this, [
             self::CHARACTER_LIST,
@@ -53,6 +53,14 @@ enum ResourceType: string
             self::CHARACTER_DOC,
             self::EVENT_DOC,
             // future: EVENT_DOC etc.
+        ], true);
+    }
+
+    public function isFolderMapping(): bool
+    {
+        return in_array($this, [
+            self::CHARACTER_DOC_DIRECTORY,
+            // other folder-related types
         ], true);
     }
 }

@@ -22,6 +22,7 @@
 {% else %}
 
     {% set sharedFilesArray = integration.sharedFiles|map(file => {
+        id: file.id,
         fileId: file.fileId,
         fileName: file.fileName,
         mimeType: file.mimeType,
@@ -32,6 +33,7 @@
             data-oauth-token="{{ integration.accessToken }}"
             data-google-key="{{ google_api_key }}"
             data-initial-files="{{ sharedFilesArray|json_encode }}"
+            data-mappings-base-url="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id , sharedFile: '__FILE_ID__'  }) }}"
     >
         <p>{{ 'backoffice.larp.file_select.open_picker_desc'|trans }}</p>
         <button
@@ -58,6 +60,10 @@
             >
                 {{ 'common.save'|trans }}
             </button>
+            <a href="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id}) }}" class="btn btn-secondary">
+                {{ 'backoffice.mapping.title'|trans }}
+            </a>
+
         </form>
     </div>
 {% endif %}

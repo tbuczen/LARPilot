@@ -19,9 +19,15 @@ class ExternalResourceMappingForm extends AbstractController
     #[LiveProp]
     public ?ExternalResourceMappingModel $formData = null;
 
+    #[LiveProp]
+    public ?string $mimeType = null;
+
     protected function instantiateForm(): FormInterface
     {
-        $mappingType = $this->formData ?? new ExternalResourceMappingModel();
-        return $this->createForm(FileMappingType::class, $mappingType);
+        $formData = $this->formData ?? new ExternalResourceMappingModel();
+
+        return $this->createForm(FileMappingType::class, $formData, [
+            'mimeType' => $this->mimeType,
+        ]);
     }
 }

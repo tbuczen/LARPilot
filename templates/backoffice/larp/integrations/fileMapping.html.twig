@@ -8,6 +8,7 @@
         {{ component('ExternalResourceMappingForm', {
             formData: form.vars.value,
             form: form,
+            mimeType: sharedFile.mimeType,
         }) }}
     </div>
 {% endblock %}

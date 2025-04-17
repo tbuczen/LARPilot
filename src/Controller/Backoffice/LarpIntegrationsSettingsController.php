@@ -6,6 +6,8 @@ use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsCo
 use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsHandler;
 use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\Larp;
+use App\Entity\LarpIntegration;
+use App\Entity\SharedFile;
 use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
 use App\Service\Integrations\Exceptions\ReAuthenticationNeededException;
@@ -19,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Webmozart\Assert\Assert;
 
 #[Route('/larp', name: 'backoffice_larp_')]
 class LarpIntegrationsSettingsController extends AbstractController
@@ -51,11 +54,11 @@ class LarpIntegrationsSettingsController extends AbstractController
 
     #[Route('/{id}/integration/connect/{provider}', name: 'connect_integration')]
     public function connectIntegration(
-        string             $id,
-        LarpIntegrationProvider             $provider,
-        LarpRepository     $larpRepository,
-        IntegrationManager $integrationManager,
-        SessionInterface   $session,
+        string                  $id,
+        LarpIntegrationProvider $provider,
+        LarpRepository          $larpRepository,
+        IntegrationManager      $integrationManager,
+        SessionInterface        $session,
     ): Response
     {
         $session->set('current_larp_id', $id);
@@ -108,6 +111,24 @@ class LarpIntegrationsSettingsController extends AbstractController
         $command = new ApplyFilesPermissionsCommand($integrationId, $files);
         $handler->handle($command);
         return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $id]);
+    }
+
+
+    #[Route('/{larp}/integration/{integration}/externalResourceMapping/{sharedFile}', name: 'external_resource_mapping', methods: ['GET'])]
+    public function externalResourceMapping(
+        Larp            $larp,
+        LarpIntegration $integration,
+        ?SharedFile     $sharedFile = null,
+    ): Response
+    {
+        if ($sharedFile === null) {
+            /** @var SharedFile[] $files */
+            $files = $integration->getSharedFiles();
+        } else {
+            $files = [$sharedFile];
+        }
+
+        return $this->render('backoffice/larp/integrations/externalResourceMapping.html.twig', ['larp' => $larp, 'files' => $files]);
     }
 
 }

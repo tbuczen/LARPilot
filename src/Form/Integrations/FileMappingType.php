@@ -18,15 +18,26 @@ class FileMappingType extends AbstractType
     {
         $builder = new DynamicFormBuilder($builder);
 
+        /** @var string|null $mimeType */
+        $mimeType = $options['mimeType'];
+        $allowedTypes = $this->getAllowedResourceTypes($mimeType);
+
         $builder
             ->add('mappingType', EnumType::class, [
                 'class' => ResourceType::class,
                 'label' => 'Mapping type',
+                'choices' => $allowedTypes,
             ])
-            ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) {
+            ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType) {
                 if (!$type) {
                     return;
                 }
+                $allowedTypes = $this->getAllowedResourceTypes($mimeType);
+
+                if (!in_array($type, $allowedTypes, true)) {
+                    $type = reset($allowedTypes);
+                }
+
                 $field->add($type->getSubForm(), [
                     'translation_domain' => 'forms',
                 ]);
@@ -38,6 +49,29 @@ class FileMappingType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ExternalResourceMappingModel::class,
+            'mimeType' => null,
         ]);
+    }
+
+    public function getAllowedResourceTypes(?string $mimeType): array
+    {
+        if (!$mimeType) {
+            return ResourceType::cases(); // fallback if no mimeType known
+        }
+
+        return array_filter(ResourceType::cases(), function (ResourceType $type) use ($mimeType) {
+            // Example: you define your own matching rules here
+            if (str_starts_with($mimeType, 'application/vnd.google-apps.folder')) {
+                return $type->isFolderMapping();
+            }
+            if (str_starts_with($mimeType, 'application/vnd.google-apps.spreadsheet')) {
+                return $type->isSpreadsheet();
+            }
+            if (str_starts_with($mimeType, 'application/vnd.google-apps.document')) {
+                return $type->isDocument();
+            }
+
+            return false; // unknown types excluded
+        });
     }
 }

@@ -30,6 +30,7 @@ export default class extends Controller {
             }
 
             this.initialFiles = parsed.map(f => ({
+                internalId: f.id,
                 fileId: f.fileId,
                 fileName: f.fileName,
                 permission: f.permission || "reader",
@@ -37,6 +38,7 @@ export default class extends Controller {
             }));
 
             this.selectedFileObjects = this.initialFiles.map(f => ({
+                internalId: f.internalId,
                 id: f.fileId,
                 name: f.fileName,
                 permission: f.permission,
@@ -116,6 +118,8 @@ export default class extends Controller {
             return;
         }
 
+        const mappingsBaseUrl = this.element.dataset.mappingsBaseUrl;
+
         const table = document.createElement("table");
         table.classList.add("table", "table-striped");
 
@@ -135,6 +139,8 @@ export default class extends Controller {
         this.selectedFileObjects.forEach((fileObj, index) => {
             // Build a row
             const row = document.createElement("tr");
+            const manageMappingsUrl = mappingsBaseUrl.replace('__FILE_ID__', fileObj.internalId);
+            const openUrl = `https://drive.google.com/open?id=${fileObj.id}`;
 
             row.innerHTML = `
         <td>
@@ -168,15 +174,31 @@ export default class extends Controller {
             <label class="form-check-label">Edit</label>
           </div>
         </td>
-        <td>
-          <button 
-            type="button" 
-            class="btn btn-sm btn-danger"
-            data-index="${index}"
-            data-action="click->google-file-picker#removeFile"
-          >
-            X
-          </button>
+
+        <td class="text-end">
+          <div class="btn-group">
+            <a 
+              href="${openUrl}" 
+              target="_blank" 
+              class="btn btn-outline-secondary btn-sm"
+            >
+              Open
+            </a>
+            <a 
+              href="${manageMappingsUrl}" 
+              class="btn btn-outline-primary btn-sm"
+            >
+              Manage Mappings
+            </a>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-danger"
+              data-index="${index}"
+              data-action="click->google-file-picker#removeFile"
+            >
+              X
+            </button>
+          </div>
         </td>
       `;
 

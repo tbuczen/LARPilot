@@ -88,7 +88,7 @@ class LarpCharactersController extends BaseBackofficeController
 
         /** @var SharedFile[] $files */
         $files = $integration->getSharedFiles();
-        return $this->render('backoffice/larp/characters/file_select.html.twig', [
+        return $this->render('backoffice/larp/characters/fileSelect.html.twig', [
             'larp' => $larp,
             'files' => $files,
         ]);

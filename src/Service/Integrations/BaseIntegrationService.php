@@ -15,7 +15,7 @@ abstract readonly class BaseIntegrationService
         //all mappings configured for this LarpIntegration for this type of story object
         $mappings = $this->findMatchingFileMappingsForStoryObject($integration, $storyObject::getTargetType());
         foreach ($mappings as $mapping) {
-            if ($mapping->getFileType()->isList()) {
+            if ($mapping->getFileType()->isSpreadsheet()) {
                 $this->syncStoryObjectList($mapping, $storyObject);
             } elseif ($mapping->getFileType()->isDocument()) {
                 $this->syncStoryObjectDocument($mapping, $storyObject);
