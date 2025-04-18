@@ -16,6 +16,15 @@ abstract class BaseRepository extends ServiceEntityRepository
         return $entity;
     }
 
+    public function remove(object $entity, bool $flush = true): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function flush(): void
     {
         $this->getEntityManager()->flush();

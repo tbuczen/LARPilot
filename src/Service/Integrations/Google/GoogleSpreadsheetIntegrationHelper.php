@@ -20,7 +20,7 @@ readonly class GoogleSpreadsheetIntegrationHelper
     ) {
     }
 
-    public function fetchSpreadsheetRows(SharedFile $sharedFile, ExternalResourceMappingModel $mapping): array
+    public function fetchSpreadsheetRows(SharedFile $sharedFile, SpreadsheetMappingModel $mapping): array
     {
         $client = $this->googleClientManager->createServiceAccountClient();
         $sheetsService = new Sheets($client);
@@ -37,7 +37,7 @@ readonly class GoogleSpreadsheetIntegrationHelper
 
     protected function remapWithColumnLetters(array $rows, string $endColumn): array
     {
-        $columnLetters = $this->generateColumnRange('A', $endColumn);
+        $columnLetters = $this->generateColumnRange($endColumn);
         $maxColumns = count($columnLetters);
 
         $remapped = [];
@@ -49,7 +49,7 @@ readonly class GoogleSpreadsheetIntegrationHelper
         return $remapped;
     }
 
-    private function generateColumnRange(string $start, string $end): array
+    private function generateColumnRange(string $end, string $start = 'A'): array
     {
         $range = [];
         $current = $start;
@@ -138,40 +138,107 @@ readonly class GoogleSpreadsheetIntegrationHelper
 
     public function appendRowToSpreadsheet(SharedFile $sharedFile, SpreadsheetMappingModel $mapping, array $newRow): void
     {
-
         $spreadsheetId = $sharedFile->getFileId();
         $sheetName = $mapping->sheetName;
-
-        $range = $sheetName;
-        $body = [
-            'values' => [
-                $this->convertRowToOrderedArray($newRow),
-            ],
-        ];
+        $endColumn = $mapping->endColumn;
 
         $client = $this->googleClientManager->createServiceAccountClient();
         $sheetsService = new Sheets($client);
 
-        $sheetsService->spreadsheets_values->append(
-            $spreadsheetId,
-            $range,
-            new ValueRange($body),
-            ['valueInputOption' => 'USER_ENTERED']
+        $fullRow = $this->buildFullSpreadsheetRow($newRow, $endColumn);
+
+        $spreadsheetMetadata = $this->fetchSpreadsheetMetadata($sharedFile, $sheetName);
+        $nextRow = $this->findNextAvailableRowFromMetadata(
+            $spreadsheetMetadata,
+            $sheetName,
+            'A',
+            $endColumn
+        );
+
+        $range = sprintf('%s!A%d:%s%d', $sheetName, $nextRow, $endColumn, $nextRow);
+
+        $valueRange = new ValueRange([
+            'values' => [
+                $fullRow,
+            ],
+        ]);
+        try {
+            $sheetsService->spreadsheets_values->update(
+                $spreadsheetId,
+                $range,
+                $valueRange,
+                [
+                    'valueInputOption' => 'USER_ENTERED',
+                ]
+            );
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Failed to update spreadsheet: ' . $e->getMessage(), 0, $e);
+        }
+    }
+
+
+    private function buildFullSpreadsheetRow(array $newRow, string $endColumn): array
+    {
+        $fullRow = [];
+        $columnRange = $this->generateColumnRange($endColumn);
+
+        foreach ($columnRange as $columnLetter) {
+            if (isset($newRow[$columnLetter])) {
+                $fullRow[] = $newRow[$columnLetter];
+            } else {
+                $fullRow[] = '';
+            }
+        }
+
+        return $fullRow;
+    }
+
+    private function fetchSpreadsheetMetadata(SharedFile $sharedFile, string $sheetName): Sheets\Spreadsheet
+    {
+        $client = $this->googleClientManager->createServiceAccountClient();
+        $sheetsService = new Sheets($client);
+
+        return $sheetsService->spreadsheets->get(
+            $sharedFile->getFileId(),
+            [
+                'ranges' => [$sheetName],
+                'fields' => 'sheets.properties.title,sheets.data.rowData.values.formattedValue'
+            ]
         );
     }
 
-    private function convertRowToOrderedArray(array $rowData): array
+    private function findNextAvailableRowFromMetadata(Sheets\Spreadsheet $spreadsheet, string $sheetName, string $startColumn, string $endColumn): int
     {
-        // Example: sort C, F, G, N correctly
-        ksort($rowData); // Column letters sort alphabetically
+        foreach ($spreadsheet->getSheets() as $sheet) {
+            if ($sheet->getProperties()->getTitle() !== $sheetName) {
+                continue;
+            }
+            $rows = $sheet->getData()[0]->getRowData();
 
-        $ordered = [];
+            $columnRange = $this->generateColumnRange($endColumn, $startColumn);
+            $columnCount = count($columnRange);
 
-        foreach ($rowData as $column => $value) {
-            $ordered[] = $value;
+            foreach ($rows as $index => $row) {
+                $cells = $row->getValues() ?? [];
+                $cellsInRange = array_slice($cells, 0, $columnCount); // Only slice needed columns
+
+                $hasContent = false;
+                foreach ($cellsInRange as $cell) {
+                    if (!empty($cell->getFormattedValue())) {
+                        $hasContent = true;
+                        break;
+                    }
+                }
+
+                if (!$hasContent) {
+                    return $index + 1; // Row numbers are 1-based
+                }
+            }
+
+            return count($rows) + 1;
+
         }
 
-        return $ordered;
+        throw new \RuntimeException('Sheet not found: ' . $sheetName);
     }
-
 }

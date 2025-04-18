@@ -12,14 +12,9 @@ class EventListColumnMappingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('sheetName', TextType::class)
-            ->add('endColumn', TextType::class)
-            ->add('startingRow', IntegerType::class, [
-                'data' => 2,
-            ])
             ->add('eventName', TextType::class)
             ->add('description', TextType::class)
-            ->add('faction', TextType::class)
+            ->add('factions', TextType::class)
             ;
     }
 }

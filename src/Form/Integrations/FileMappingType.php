@@ -28,19 +28,27 @@ class FileMappingType extends AbstractType
                 'label' => 'Mapping type',
                 'choices' => $allowedTypes,
             ])
+            ->addDependent('meta', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType) {
+                if (!$type) {
+                    return;
+                }
+                $type = $this->getType($mimeType, $type);
+
+                $form = $type->getMetaForm();
+                if ($form !== null) {
+                    $field->add($form);
+                }
+            })
             ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType) {
                 if (!$type) {
                     return;
                 }
-                $allowedTypes = $this->getAllowedResourceTypes($mimeType);
+                $type = $this->getType($mimeType, $type);
 
-                if (!in_array($type, $allowedTypes, true)) {
-                    $type = reset($allowedTypes);
+                $form = $type->getSubForm();
+                if ($form !== null) {
+                    $field->add($form);
                 }
-
-                $field->add($type->getSubForm(), [
-                    'translation_domain' => 'forms',
-                ]);
             })
             ->add('submit', SubmitType::class);
     }
@@ -73,5 +81,14 @@ class FileMappingType extends AbstractType
 
             return false; // unknown types excluded
         });
+    }
+
+    private function getType(?string $mimeType, ResourceType $type): ResourceType
+    {
+        $allowedTypes = $this->getAllowedResourceTypes($mimeType);
+        if (!in_array($type, $allowedTypes, true)) {
+            $type = reset($allowedTypes);
+        }
+        return $type;
     }
 }

@@ -47,16 +47,15 @@ class ImportCharactersHandler
         $this->integrationService = $this->integrationManager->getService($file->getIntegration());
 
         Assert::notNull($larp, sprintf('LARP %s not found for the character import handler.', $command->larpId));
-        $columnMap = $command->mapping['columnMappings'];
 
         $this->entityManager->beginTransaction();
         try {
             // Cache to store factions already found/created for this import
             foreach ($command->rows as $rowNo => $row) {
-                if ($rowNo < $command->mapping['startingRow'] - 1) {
+                if ($rowNo < $command->meta['startingRow'] - 1) {
                     continue;
                 }
-                $characterName = $this->getFieldValue($row, $columnMap, 'characterName');
+                $characterName = $this->getFieldValue($row, $command->mapping, 'name');
                 if (!$characterName) {
                     continue; // Skip rows missing a character name.
                 }
@@ -73,13 +72,13 @@ class ImportCharactersHandler
                 $character->setLarp($larp);
 
                 // Process each mapping: iterate over the mapping configuration.
-                foreach ($columnMap as $fieldName => $col) {
+                foreach ($command->mapping as $fieldName => $col) {
                     $value = $row[$col] ?? null;
                     if ($value === null && !$command->force) {
                         continue;
                     }
 
-                    if ($fieldName === 'faction') {
+                    if ($fieldName === 'factions') {
                         // For faction, we need to find or create and cache it.
                         $this->handleFaction($value, $larp, $character);
                     } else {

@@ -11,7 +11,8 @@ class ExternalResourceMappingModel
     public function __construct(
         public ?ResourceType $mappingType = ResourceType::CHARACTER_LIST,
         /** @var array<string, string> */
-        public array         $mappings = []
+        public array         $mappings = [],
+        public array         $meta = []
     )
     {
     }
@@ -24,7 +25,8 @@ class ExternalResourceMappingModel
 
         return new self(
             $mapping->getFileType(),
-            $mapping->getMappingConfiguration()
+            $mapping->getMappingConfiguration(),
+            $mapping->getMetaConfiguration(),
         );
     }
 

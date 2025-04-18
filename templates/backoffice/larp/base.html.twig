@@ -1,0 +1,19 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+
+{% block body %}
+    {% if larp is defined %}
+    <header>
+        {{ larpMenu.larpBackofficeMenu(larp) }}
+    </header>
+    {% endif %}
+
+    <main class="container-xl mt-4">
+        {% block larp_content %}{% endblock %}
+    </main>
+{% endblock %}
+
+{% block title %}
+    {% block larp_title %}{% endblock %}
+{% endblock %}

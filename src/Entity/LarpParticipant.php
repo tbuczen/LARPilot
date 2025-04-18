@@ -7,6 +7,7 @@ use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpParticipantRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Entity joining User with Larp and its Character
@@ -19,6 +20,7 @@ class LarpParticipant
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'larpParticipants')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'larpParticipants')]
@@ -30,10 +32,11 @@ class LarpParticipant
     private ?LarpCharacter $larpCharacter = null;
 
     // Store an array of role strings (which correspond to UserRole enum values)
-    /** @see UserRole  */
+    /** @see UserRole */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
+    //TODO:: DO I NEED FACTION HERE?
     #[ORM\ManyToOne(targetEntity: LarpFaction::class, inversedBy: 'participants')]
     private ?LarpFaction $faction = null;
 
@@ -93,17 +96,17 @@ class LarpParticipant
 
     public function isPlayer(): bool
     {
-        return in_array(UserRole::PLAYER,$this->getRoles());
+        return in_array(UserRole::PLAYER, $this->getRoles());
     }
 
     public function isAdmin(): bool
     {
-        return in_array(UserRole::ORGANIZER,$this->getRoles());
+        return in_array(UserRole::ORGANIZER, $this->getRoles());
     }
 
     public function isTrustPerson(): bool
     {
-        return in_array(UserRole::TRUST_PERSON,$this->getRoles());
+        return in_array(UserRole::TRUST_PERSON, $this->getRoles());
     }
 
     public function isOrganizer(): bool

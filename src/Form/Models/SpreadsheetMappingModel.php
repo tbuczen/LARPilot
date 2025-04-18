@@ -10,9 +10,9 @@ class SpreadsheetMappingModel extends ExternalResourceMappingModel
 
     public function __construct(
         public ?ResourceType $mappingType = ResourceType::CHARACTER_LIST,
-        public ?int             $startingRow = 2,
-        public ?string             $sheetName = null,
-        public ?string             $endColumn = null,
+        public ?int          $startingRow = 2,
+        public ?string       $sheetName = null,
+        public ?string       $endColumn = null,
         /** @var array<string, string> */
         public array         $mappings = []
     )
@@ -26,12 +26,13 @@ class SpreadsheetMappingModel extends ExternalResourceMappingModel
             return new self();
         }
 
+        $metaConfiguration = $mapping->getMetaConfiguration();
         $mappingConfiguration = $mapping->getMappingConfiguration();
         return new self(
             $mapping->getFileType(),
-            $mappingConfiguration['startingRow'] ?? null,
-            $mappingConfiguration['sheetName'] ?? null,
-            $mappingConfiguration['endColumn'] ?? null,
+            $metaConfiguration['startingRow'] ?? null,
+            $metaConfiguration['sheetName'] ?? null,
+            $metaConfiguration['endColumn'] ?? null,
             $mappingConfiguration ?? null
         );
     }

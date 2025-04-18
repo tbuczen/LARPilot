@@ -7,6 +7,7 @@ use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpCharacterRepository;
+use App\Validator\UniqueCharacterName;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +17,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[Gedmo\Loggable]
+#[ORM\UniqueConstraint(fields: ['larp', 'name'])]
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
 class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
 {
@@ -24,6 +26,7 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
     use TimestampableEntity;
 
     #[ORM\Column(length: 255)]
+    #[UniqueCharacterName]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -66,11 +69,6 @@ class LarpCharacter implements CreatorAwareInterface, Timestampable, StoryObject
     {
         $this->name = $name;
         return $this;
-    }
-
-    public function setCharacterName(string $name): static
-    {
-        return $this->setName($name);
     }
 
     public function getDescription(): ?string

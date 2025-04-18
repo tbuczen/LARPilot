@@ -1,14 +1,12 @@
-{% extends 'backoffice/base.html.twig' %}
+{% extends 'backoffice/larp/base.html.twig' %}
 
 {% block title %}{{ 'backoffice.mapping.title'|trans }}{% endblock %}
 
-{% block body %}
-    <div class="container mt-4">
+{% block larp_content %}
         <h1>{{ 'backoffice.mapping.heading'|trans }} - {{ sharedFile.fileName }}</h1>
         {{ component('ExternalResourceMappingForm', {
             formData: form.vars.value,
             form: form,
             mimeType: sharedFile.mimeType,
         }) }}
-    </div>
 {% endblock %}

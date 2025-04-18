@@ -11,6 +11,8 @@ use App\Entity\LarpCharacter;
 use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
 use App\Form\CharacterType;
+use App\Helper\Logger;
+use App\Repository\LarpCharacterRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +21,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Webmozart\Assert\Assert;
 
 #[Route('/larp', name: 'backoffice_larp_story_characters_')]
-
 class LarpCharactersController extends BaseBackofficeController
 {
     #[Route('/{larp}/story/characters', name: 'list', methods: ['GET', 'POST'])]
@@ -36,38 +37,91 @@ class LarpCharactersController extends BaseBackofficeController
 
     #[Route('/{larp}/story/character/{character}', name: 'modify', defaults: ['character' => null], methods: ['GET', 'POST'])]
     public function modify(
-        LarpManager $larpManager,
-        IntegrationManager $integrationManager,
-        Request $request,
-        Larp $larp,
-        LarpCharacter $character,
+        LarpManager             $larpManager,
+        IntegrationManager      $integrationManager,
+        Request                 $request,
+        Larp                    $larp,
+        LarpCharacterRepository $characterRepository,
+        ?LarpCharacter          $character = null,
     ): Response
     {
+
+        $new = false;
+        if (!$character) {
+            $character = new LarpCharacter();
+            $character->setLarp($larp);
+            $new = true;
+        }
+
         $form = $this->createForm(CharacterType::class, $character, ['larp' => $larp]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $characterRepository->save($character);
+
             $integrations = $larpManager->getIntegrationsForLarp($larp);
             foreach ($integrations as $integration) {
                 try {
                     $integrationService = $integrationManager->getService($integration);
-                    $integrationService->syncStoryObject($integration, $character);
+                    if ($new) {
+                        $integrationService->createStoryObject($integration, $character);
+                    } else {
+                        $integrationService->syncStoryObject($integration, $character);
+                    }
                 } catch (\Throwable $e) {
+                    Logger::get()->error($e->getMessage(), $e->getTrace());
                     $this->addFlash('warning', 'Failed to sync with ' . $integration->getProvider()->name);
                 }
             }
 
             $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
-            return $this->redirectToRoute('backoffice_larp_story_characters_list', ['id' => $larp->getId()]);
+            return $this->redirectToRoute('backoffice_larp_story_characters_list', ['larp' => $larp->getId()]);
         }
 
-        if ($form->isSubmitted()) {
-            $this->showErrorsAsFlash($form->getErrors(true));
-        }
+//        if ($form->isSubmitted()) {
+//            $this->showErrorsAsFlash($form->getErrors(true));
+//        }
 
         return $this->render('backoffice/larp/characters/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
+        ]);
+    }
+
+    #[Route('/{larp}/story/character/{character}/delete', name: 'delete', methods: ['GET', 'POST'])]
+    public function delete(
+        LarpManager             $larpManager,
+        IntegrationManager      $integrationManager,
+        Larp                    $larp,
+        Request                 $request,
+        LarpCharacterRepository $characterRepository,
+        LarpCharacter           $character,
+    ): Response
+    {
+        $deleteIntegrations = $request->query->getBoolean('integrations');
+
+        if ($deleteIntegrations) {
+            $integrations = $larpManager->getIntegrationsForLarp($larp);
+            foreach ($integrations as $integration) {
+                try {
+                    $integrationService = $integrationManager->getService($integration);
+                    $integrationService->removeStoryObject($integration, $character);
+                } catch (\Throwable $e) {
+                    Logger::get()->error($e->getMessage(), $e->getTrace());
+                    $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Character not deleted.');
+                    return $this->redirectToRoute('backoffice_larp_story_characters_list', [
+                        'larp' => $larp->getId(),
+                    ]);
+                }
+            }
+        }
+
+        $characterRepository->remove($character);
+
+        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+
+        return $this->redirectToRoute('backoffice_larp_story_characters_list', [
+            'larp' => $larp->getId(),
         ]);
     }
 
@@ -79,10 +133,11 @@ class LarpCharactersController extends BaseBackofficeController
 
     #[Route('/{larp}/story/characters/import/{provider}/select/file', name: 'import_file_select', methods: ['GET'])]
     public function selectIntegrationFile(
-        Larp $larp,
-        LarpManager $larpManager,
+        Larp                    $larp,
+        LarpManager             $larpManager,
         LarpIntegrationProvider $provider
-    ): Response {
+    ): Response
+    {
         $integration = $larpManager->getIntegrationTypeForLarp($larp, $provider);
         Assert::notNull($integration, sprintf('Integration %s not found for LARP %s', $provider->value, $larp->getId()->toRfc4122()));
 
@@ -111,6 +166,7 @@ class LarpCharactersController extends BaseBackofficeController
             $larp->getId()->toRfc4122(),
             $rows,
             $mapping->getMappingConfiguration(),
+            $mapping->getMetaConfiguration(),
             $sharedFile->getId()->toRfc4122()
         );
         $handler->handle($command);

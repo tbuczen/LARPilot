@@ -10,17 +10,31 @@ use App\Entity\StoryObject;
 abstract readonly class BaseIntegrationService
 {
 
-    public function syncStoryObject(LarpIntegration $integration, StoryObject $storyObject): void
+    public function createStoryObject(LarpIntegration $integration, StoryObject $storyObject): void
     {
         //all mappings configured for this LarpIntegration for this type of story object
         $mappings = $this->findMatchingFileMappingsForStoryObject($integration, $storyObject::getTargetType());
+
         foreach ($mappings as $mapping) {
             if ($mapping->getFileType()->isSpreadsheet()) {
-                $this->syncStoryObjectList($mapping, $storyObject);
+                $this->createStoryObjectList($mapping, $storyObject);
             } elseif ($mapping->getFileType()->isDocument()) {
-                $this->syncStoryObjectDocument($mapping, $storyObject);
+                $this->createStoryObjectDocument($mapping, $storyObject);
             }
         }
+    }
+
+    public function removeStoryObject(LarpIntegration $integration, StoryObject $storyObject): void
+    {
+//      TODO:: get  $externalReferences, iterate over and do magic
+        throw new \RuntimeException('Not implemented yet');
+
+    }
+
+    public function syncStoryObject(LarpIntegration $integration, StoryObject $storyObject): void
+    {
+        //In update iterate over external references saved for this integration
+        throw new \RuntimeException('Not implemented yet');
     }
 
     /**
@@ -41,7 +55,7 @@ abstract readonly class BaseIntegrationService
         return $matching;
     }
 
-    protected abstract function syncStoryObjectList(ObjectFieldMapping $mapping, StoryObject $storyObject);
-    protected abstract function syncStoryObjectDocument(ObjectFieldMapping $mapping, StoryObject $storyObject);
+    protected abstract function createStoryObjectList(ObjectFieldMapping $mapping, StoryObject $storyObject);
+    protected abstract function createStoryObjectDocument(ObjectFieldMapping $mapping, StoryObject $storyObject);
 
 }

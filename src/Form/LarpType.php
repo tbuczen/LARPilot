@@ -17,21 +17,26 @@ class LarpType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Larp Name',
+                'translation_domain' => 'forms',
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
+                'translation_domain' => 'forms',
             ])
             ->add('location', TextType::class, [
                 'label' => 'Location',
                 'required' => false,
+                'translation_domain' => 'forms',
             ])
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Start Date',
                 'widget' => 'single_text',
+                'translation_domain' => 'forms',
             ])
             ->add('endDate', DateTimeType::class, [
                 'label' => 'End Date',
                 'widget' => 'single_text',
+                'translation_domain' => 'forms',
             ])
             ->add('recaptcha', EWZRecaptchaType::class, array(
                 'attr'        => array(
@@ -44,7 +49,8 @@ class LarpType extends AbstractType
                 'mapped'      => false,
                 'constraints' => array(
                     new RecaptchaTrue()
-                )
+                ),
+                'translation_domain' => 'forms',
             ));
         ;
     }

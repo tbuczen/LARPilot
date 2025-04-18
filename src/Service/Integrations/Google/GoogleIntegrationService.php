@@ -89,7 +89,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
 
     public function fetchSpreadsheetRows(SharedFile $sharedFile, ObjectFieldMapping $mapping): array
     {
-        $spreadsheetMapping = ExternalResourceMappingModel::fromEntity($mapping);
+        $spreadsheetMapping = SpreadsheetMappingModel::fromEntity($mapping);
         return $this->googleSpreadsheetIntegrationHelper->fetchSpreadsheetRows($sharedFile, $spreadsheetMapping);
     }
 
@@ -140,17 +140,17 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         return $integration;
     }
 
-    protected function syncStoryObjectList(ObjectFieldMapping $mapping, StoryObject $storyObject): void
+    protected function createStoryObjectList(ObjectFieldMapping $mapping, StoryObject $storyObject): void
     {
         $sharedFile = $mapping->getExternalFile();
         Assert::notNull($sharedFile);
 
         $spreadsheetMapping = SpreadsheetMappingModel::fromEntity($mapping);
         $columnMapping = $spreadsheetMapping->mappings;
-        $characterNameField = $columnMapping['characterName'] ?? null;
+        $characterNameField = $columnMapping['name'] ?? null;
 
         if (!$characterNameField) {
-            throw new RuntimeException('No "characterName" mapping configured.');
+            throw new RuntimeException('No "name" mapping configured.');
         }
 
         $rows = $this->googleSpreadsheetIntegrationHelper->fetchSpreadsheetRows($sharedFile, $spreadsheetMapping);
@@ -166,7 +166,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         $this->googleSpreadsheetIntegrationHelper->appendRowToSpreadsheet($sharedFile, $spreadsheetMapping, $newRow);
     }
 
-    protected function syncStoryObjectDocument(ObjectFieldMapping $mapping, StoryObject $storyObject)
+    protected function createStoryObjectDocument(ObjectFieldMapping $mapping, StoryObject $storyObject)
     {
         // TODO: Implement syncStoryObjectDocument() method.
     }

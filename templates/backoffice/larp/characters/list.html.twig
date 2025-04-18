@@ -1,90 +1,136 @@
-{% extends 'backoffice/base.html.twig' %}
-{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+{% extends 'backoffice/larp/base.html.twig' %}
 
-{% block body %}
-    <header>
-        {{ larpMenu.larpBackofficeMenu(larp) }}
-    </header>
-    <main>
-        <div class="container-xl mt-4">
-            <h1>{{ larp.name }}</h1>
-            <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-secondary">
-                {{ 'backoffice.larp.preview'|trans }}
-            </a>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
-                {{ 'backoffice.larp.import_characters'|trans }}
-            </button>
+{% block larp_content %}
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+        {{ 'backoffice.larp.import_characters'|trans }}
+    </button>
+    <a href="{{ path('backoffice_larp_story_characters_modify', { larp: larp.id }) }}" class="btn btn-success">
+        {{ 'common.create'|trans }}
+    </a>
 
-            <!-- Import Options Modal -->
-            <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="importModalLabel">{{ 'backoffice.larp.import_options'|trans }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
-                        </div>
-                        <div class="modal-body">
-                            {% if integrations is defined and integrations|length > 0 %}
-                                {% for integration in integrations %}
-                                <!-- Option for Google Spreadsheet import -->
-                                <a href="{{ path('backoffice_larp_story_characters_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}" class="btn btn-primary">
-                                    {{ 'backoffice.larp.import_google'|trans }}
-                                </a>
-                                {% endfor %}
-                            {% endif %}
-                            <a href="{{ path('backoffice_larp_story_characters_import_file', {'id': larp.id}) }}" class="btn btn-secondary">
-                                {{ 'backoffice.larp.import_file'|trans }}
+    <!-- Import Options Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">{{ 'backoffice.larp.import_options'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="{{ 'common.close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    {% if integrations is defined and integrations|length > 0 %}
+                        {% for integration in integrations %}
+                            <!-- Option for Google Spreadsheet import -->
+                            <a href="{{ path('backoffice_larp_story_characters_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}"
+                               class="btn btn-primary">
+                                {{ 'backoffice.larp.import_google'|trans }}
                             </a>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ 'common.close'|trans }}</button>
-                        </div>
-                    </div>
+                        {% endfor %}
+                    {% endif %}
+                    <a href="{{ path('backoffice_larp_story_characters_import_file', {'id': larp.id}) }}"
+                       class="btn btn-secondary">
+                        {{ 'backoffice.larp.import_file'|trans }}
+                    </a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light"
+                            data-bs-dismiss="modal">{{ 'common.close'|trans }}</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card mt-4">
-            <div class="card-header">
-                <h2>{{ 'backoffice.larp.characters_list'|trans }}</h2>
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="table-light">
+    <div class="card mt-4">
+        <div class="card-header">
+            <h2>{{ 'backoffice.larp.characters.list'|trans }}</h2>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>{{ 'common.name'|trans }}</th>
+                    <th>{{ 'common.description'|trans }}</th>
+                    <th>{{ 'common.actions'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for character in characters %}
                     <tr>
-                        <th>{{ 'common.name'|trans }}</th>
-                        <th>{{ 'common.description'|trans }}</th>
-{#                        <th>{{ 'backoffice.larp.references'|trans }}</th>#}
-                        <th></th>
+                        <td>{{ character.name }}</td>
+                        <td>{{ character.description|default('-') }}</td>
+                        <td>
+                            <a href="{{ path('backoffice_larp_story_characters_modify', { larp: larp.id, character: character.id }) }}"
+                               class="btn btn-sm btn-primary">
+                                {{ 'common.edit'|trans }}
+                            </a>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#globalDeleteCharacterModal"
+                                    data-delete-text=" {{ 'common.delete'|trans }}"
+                                    data-character-id="{{ character.id }}"
+                                    data-character-name="{{ character.name }}"
+                                    data-delete-url-base="{{ path('backoffice_larp_story_characters_delete', { larp: larp.id, character: 'CHARACTER_ID', integrations: 'INTEGRATIONS_FLAG' }) }}"
+                            >
+                                {{ 'common.delete'|trans }}
+                            </button>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for character in characters %}
-                        <tr>
-                            <td>{{ character.name }}</td>
-                            <td>{{ character.description|default('-') }}</td>
-{#                            <td>#}
-{#                            TODO: Add references#}
-{#                                {% for ref in character.externalReferences|default([]) %}#}
-{#                                    {% if ref.url %}#}
-{#                                        <a href="{{ ref.url }}" target="_blank" class="badge bg-info text-dark me-1">#}
-{#                                            {{ ref.referenceType.value|replace({'_': ' '})|title }}#}
-{#                                        </a>#}
-{#                                    {% endif %}#}
-{#                                {% else %}#}
-{#                                    <span class="text-muted">{{ 'common.none'|trans }}</span>#}
-{#                                {% endfor %}#}
-{#                            </td>#}
-                            <td>
-                                <!-- future action buttons -->
-                                <a href="#" class="btn btn-sm btn-outline-secondary disabled">{{ 'common.edit'|trans }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="globalDeleteCharacterModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="globalDeleteCharacterModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    {{ 'backoffice.common.confirmation'|trans() }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ 'common.cancel'|trans }}
+                    </button>
+                    <a href="#" id="deleteOnlyLarpilot" class="btn btn-danger">
+                        {{ 'backoffice.larp.characters.delete_only_larpilot'|trans }}
+                    </a>
+                    <a href="#" id="deleteWithIntegrations" class="btn btn-danger">
+                        {{ 'backoffice.larp.characters.delete_larpilot_and_integrations'|trans }}
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
 
-    </main>
+
+    <script>
+        const deleteModal = document.getElementById('globalDeleteCharacterModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const characterId = button.getAttribute('data-character-id');
+            const characterName = button.getAttribute('data-character-name');
+            const baseUrl = button.getAttribute('data-delete-url-base');
+            const deleteTxt = button.getAttribute('data-delete-text');
+
+            const modalTitle = deleteModal.querySelector('.modal-title');
+            modalTitle.textContent = `${deleteTxt} "${characterName}"?`;
+
+            const deleteOnlyLink = document.getElementById('deleteOnlyLarpilot');
+            const deleteWithIntegrationsLink = document.getElementById('deleteWithIntegrations');
+
+            deleteOnlyLink.href = baseUrl
+                .replace('CHARACTER_ID', characterId)
+                .replace('INTEGRATIONS_FLAG', 'false');
+
+            deleteWithIntegrationsLink.href = baseUrl
+                .replace('CHARACTER_ID', characterId)
+                .replace('INTEGRATIONS_FLAG', 'true');
+        });
+    </script>
 {% endblock %}

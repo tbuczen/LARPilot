@@ -1,17 +1,7 @@
-{% extends 'backoffice/base.html.twig' %}
-{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+{% extends 'backoffice/larp/base.html.twig' %}
 
 {% block title %}{{ 'common.incidents'|trans }}{% endblock %}
 
-{% block body %}
-<header>
-    {{ larpMenu.larpBackofficeMenu(larp) }}
-</header>
-<main>
-    <div class="container mt-4">
-        <h1>{{ 'common.incidents'|trans }}</h1>
-
-
-    </div>
-</main>
+{% block larp_content %}
+    <h1>{{ 'common.incidents'|trans }}</h1>
 {% endblock %}

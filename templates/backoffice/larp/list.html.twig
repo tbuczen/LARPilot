@@ -1,8 +1,6 @@
-{% extends 'backoffice/base.html.twig' %}
-{% block title %}{{ 'backoffice.larp.list'|trans }}{% endblock %}
+{% extends 'backoffice/larp/base.html.twig' %}
 
-{% block body %}
-    <div class="container mt-4">
+{% block larp_content %}
         <h1 class="mb-4">{{ 'backoffice.larp.list'|trans }}</h1>
 
         {% if larps|length > 0 %}
@@ -24,5 +22,4 @@
                 {{ 'public.larp.no_larps'|trans }}
             </div>
         {% endif %}
-    </div>
 {% endblock %}

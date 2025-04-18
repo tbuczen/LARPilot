@@ -16,12 +16,14 @@ class AccountSettingsType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'Username',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
+                'translation_domain' => 'forms',
             ])
             ->add('contactEmail', EmailType::class, [
                 'label' => 'Email',
                 'disabled' => true,
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
+                'translation_domain' => 'forms',
             ]);
         // profile picture, 2fa
     }

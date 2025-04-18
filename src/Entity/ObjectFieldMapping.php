@@ -32,6 +32,9 @@ class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $mappingConfiguration = null;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $metaConfiguration = null;
+
     public function getLarp(): Larp
     {
         return $this->larp;
@@ -73,5 +76,15 @@ class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
     {
         $this->mappingConfiguration = $mappingConfiguration;
         return $this;
+    }
+
+    public function getMetaConfiguration(): ?array
+    {
+        return $this->metaConfiguration;
+    }
+
+    public function setMetaConfiguration(?array $metaConfiguration): void
+    {
+        $this->metaConfiguration = $metaConfiguration;
     }
 }

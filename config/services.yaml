@@ -24,6 +24,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Helper\Logger:
+        public: true
+
     App\Security\Voter\:
         resource: '../src/Security/Voter'
         tags: [ 'security.voter' ]

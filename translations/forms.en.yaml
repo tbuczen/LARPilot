@@ -1,0 +1,18 @@
+form:
+  submit: "Submit"
+  character:
+    name: "Unique Character Name"
+    in_game_name: "In-Game Name"
+    description: "Character Description"
+    faction: "Faction"
+    choose_faction: "Choose a faction..."
+  mapping:
+    spreadsheet:
+      sheet_name: "Spreadsheet Name"
+      end_column: "End Column"
+      starting_row: "Starting Row"
+    document:
+  larp:
+    integrations: "Integrations"
+    invitations: "Invitations"
+    story: "Story"

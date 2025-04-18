@@ -1,5 +1,6 @@
 #All common translations
 common:
+  actions: Actions
   save: Save Changes
   confirm: Confirm
   cancel: Cancel
@@ -15,6 +16,8 @@ common:
   menu:
     toggle: 'Menu'
   create: 'Create'
+  name: 'Name'
+  description: 'Description'
   list: 'List'
   logout: 'Log Out'
   backoffice: 'Admin Panel'
@@ -30,6 +33,7 @@ common:
   connected: 'Connected'
   edit: 'Edit'
   show_details: 'Show Details'
+  delete: 'Delete'
 
 #Translations specific to public part of the app
 public:
@@ -52,7 +56,11 @@ backoffice:
     create: 'Create own LARP'
     preview: 'Preview in public website'
     list: 'My LARPs'
-    characters: 'Characters'
+    characters:
+      list: 'Characters'
+      delete_title: "Delete character \"%name%\"?"
+      delete_only_larpilot: "Delete only in LARPilot"
+      delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
     factions: 'Factions & Groups'
     quests: 'Quests'
     relations: 'Story Relations'
@@ -83,6 +91,8 @@ backoffice:
     save: "Save Mapping"
   common:
     success_save: "Successfully saved changes"
+    success_delete: "Successfully removed"
+    confirmation: "Are you sure you want to proceed? This action cannot be undone."
 
 #Account related translations for both player and organizers
 account:

@@ -1,23 +1,16 @@
-{% extends 'backoffice/base.html.twig' %}
+{% extends 'backoffice/larp/base.html.twig' %}
 
 {% block title %}{{ 'backoffice.google_drive_folders.title'|trans }}{% endblock %}
 
-{% block body %}
-    <header>
-        {{ larpMenu.larpBackofficeMenu(larp) }}
-    </header>
-    <main>
-        <div class="container mt-4">
-            <h1>{{ 'backoffice.google_drive_folders.heading'|trans }}</h1>
-            {% if folders is not empty %}
-                <ul>
-                    {% for folder in folders %}
-                        <li>{{ folder.name }} (ID: {{ folder.id }})</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>{{ 'backoffice.google_drive_folders.no_folders'|trans }}</p>
-            {% endif %}
-        </div>
-    </main>
+{% block larp_content %}
+    <h1>{{ 'backoffice.google_drive_folders.heading'|trans }}</h1>
+    {% if folders is not empty %}
+        <ul>
+            {% for folder in folders %}
+                <li>{{ folder.name }} (ID: {{ folder.id }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ 'backoffice.google_drive_folders.no_folders'|trans }}</p>
+    {% endif %}
 {% endblock %}

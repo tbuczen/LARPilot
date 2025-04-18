@@ -42,5 +42,7 @@ interface IntegrationServiceInterface
     ): ?string;
 
     public function syncStoryObject(LarpIntegration $integration, StoryObject $storyObject);
+    public function removeStoryObject(LarpIntegration $integration, StoryObject $storyObject);
+    public function createStoryObject(LarpIntegration $integration, StoryObject $storyObject);
 
 }

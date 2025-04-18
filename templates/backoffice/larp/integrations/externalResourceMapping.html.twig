@@ -1,9 +1,8 @@
-{% extends 'backoffice/base.html.twig' %}
+{% extends 'backoffice/larp/base.html.twig' %}
 
 {% block title %}{{ 'backoffice.mapping.title'|trans }}{% endblock %}
 
-{% block body %}
-    <div class="container mt-4">
+{% block larp_content %}
         <h1>{{ 'backoffice.mapping.heading'|trans }}</h1>
         {% if files is not empty %}
             <div class="list-group">
@@ -17,5 +16,4 @@
         {% else %}
             <p>{{ 'integrations.file_select.no_files'|trans }}</p>
         {% endif %}
-    </div>
 {% endblock %}

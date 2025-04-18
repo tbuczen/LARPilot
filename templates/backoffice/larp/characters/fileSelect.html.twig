@@ -1,28 +1,20 @@
-{% extends 'backoffice/base.html.twig' %}
-{% import 'backoffice/larp/_menu.html.twig' as larpMenu %}
+{% extends 'backoffice/larp/base.html.twig' %}
 
 {% block title %}{{ 'integrations.file_select.title'|trans }}{% endblock %}
 
-{% block body %}
-    <header>
-        {{ larpMenu.larpBackofficeMenu(larp) }}
-    </header>
-    <main>
-        <div class="container mt-4">
-            <h1>{{ 'integrations.file_select.heading'|trans }}</h1>
+{% block larp_content %}
+    <h1>{{ 'integrations.file_select.heading'|trans }}</h1>
 
-            {% if files is not empty %}
-                <div class="list-group">
-                    {% include 'backoffice/larp/partials/_sharedFileList.html.twig' with {
-                        files: files,
-                        configureMappingPath: 'backoffice_larp_integration_file_mapping',
-                        openFilePath: 'backoffice_larp_integration_file_open',
-                        useMappingPath: 'backoffice_larp_story_characters_import_from_mapping'
-                    } %}
-                </div>
-            {% else %}
-                <p>{{ 'integrations.file_select.no_files'|trans }}</p>
-            {% endif %}
+    {% if files is not empty %}
+        <div class="list-group">
+            {% include 'backoffice/larp/partials/_sharedFileList.html.twig' with {
+                files: files,
+                configureMappingPath: 'backoffice_larp_integration_file_mapping',
+                openFilePath: 'backoffice_larp_integration_file_open',
+                useMappingPath: 'backoffice_larp_story_characters_import_from_mapping'
+            } %}
         </div>
-    </main>
+    {% else %}
+        <p>{{ 'integrations.file_select.no_files'|trans }}</p>
+    {% endif %}
 {% endblock %}

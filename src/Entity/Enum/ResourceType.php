@@ -2,9 +2,11 @@
 
 namespace App\Entity\Enum;
 
-use App\Form\Integrations\CharacterDocDirectoryColumnMappingType;
+use App\Form\Integrations\CharacterDocDirectoryMappingType;
 use App\Form\Integrations\CharacterListColumnMappingType;
+use App\Form\Integrations\DocumentMetaFormType;
 use App\Form\Integrations\EventListColumnMappingType;
+use App\Form\Integrations\SpreadsheetMetaFormType;
 use Symfony\Component\Form\AbstractType;
 
 enum ResourceType: string
@@ -16,16 +18,29 @@ enum ResourceType: string
     case EVENT_DOC = 'event_doc';
 
     /**
-     * @return class-string<AbstractType>
+     * @return class-string<AbstractType>|null
      */
-    public function getSubForm(): string
+    public function getSubForm(): ?string
     {
         return match ($this) {
             self::CHARACTER_LIST => CharacterListColumnMappingType::class,
             self::EVENT_LIST => EventListColumnMappingType::class,
-            self::CHARACTER_DOC_DIRECTORY => CharacterDocDirectoryColumnMappingType::class,
+            self::CHARACTER_DOC_DIRECTORY => CharacterDocDirectoryMappingType::class,
             self::CHARACTER_DOC => throw new \Exception('To be implemented'),
             self::EVENT_DOC => throw new \Exception('To be implemented'),
+        };
+    }
+
+    /**
+     * @return class-string<AbstractType>|null
+     */
+    public function getMetaForm(): ?string
+    {
+        return match ($this) {
+            self::CHARACTER_LIST, self::EVENT_LIST => SpreadsheetMetaFormType::class,
+            self::CHARACTER_DOC => DocumentMetaFormType::class,
+            default => null,
+            // etc.
         };
     }
 

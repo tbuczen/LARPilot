@@ -1,0 +1,4 @@
+larp:
+  character:
+    error:
+      unique_name: "A character with the name \"{{ name }}\" already exists in this LARP."
