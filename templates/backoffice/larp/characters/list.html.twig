@@ -1,13 +1,6 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
-        {{ 'backoffice.larp.import_characters'|trans }}
-    </button>
-    <a href="{{ path('backoffice_larp_story_characters_modify', { larp: larp.id }) }}" class="btn btn-success">
-        {{ 'common.create'|trans }}
-    </a>
-
     <!-- Import Options Modal -->
     <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -42,7 +35,17 @@
 
     <div class="card mt-4">
         <div class="card-header">
-            <h2>{{ 'backoffice.larp.characters.list'|trans }}</h2>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'backoffice.larp.characters.list'|trans }}</h2>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                        {{ 'backoffice.larp.import_characters'|trans }}
+                    </button>
+                    <a href="{{ path('backoffice_larp_story_characters_modify', { larp: larp.id }) }}" class="btn btn-success">
+                        {{ 'common.create'|trans }}
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-striped table-hover mb-0">

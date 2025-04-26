@@ -2,10 +2,11 @@
 
 namespace App\Controller\Backoffice\Integrations;
 
-use App\Controller\Backoffice\BaseBackofficeController;
+use App\Controller\BaseController;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingCommand;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingHandler;
 use App\Entity\Enum\LarpIntegrationProvider;
+use App\Entity\Larp;
 use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
 use App\Form\Integrations\FileMappingType;
@@ -17,13 +18,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/larp', name: 'backoffice_larp_integration_')]
-class FileMappingController extends BaseBackofficeController
+#[Route('/larp/{larp}', name: 'backoffice_larp_integration_')]
+class FileMappingController extends BaseController
 {
-    #[Route('/{id}/integration/{provider}/file/{sharedFile}/mapping/{mapping}', name: 'file_mapping', defaults: ['mapping' => null]
+    #[Route('/integration/{provider}/file/{sharedFile}/mapping/{mapping}', name: 'file_mapping', defaults: ['mapping' => null]
     )]
     public function mappingConfiguration(
-        string                  $id,
+        Larp                  $larp,
         LarpIntegrationProvider $provider,
         SharedFile              $sharedFile,
         Request                 $request,
@@ -39,7 +40,7 @@ class FileMappingController extends BaseBackofficeController
             /** @var ExternalResourceMappingModel $data */
             $data = $form->getData();
             $command = new SaveFileMappingCommand(
-                $id,
+                $larp->getId()->toRfc4122(),
                 $provider->value,
                 $data->mappingType->value,
                 $sharedFile->getId()->toRfc4122(),
@@ -49,7 +50,7 @@ class FileMappingController extends BaseBackofficeController
             $handler($command);
 
             return $this->redirectToRoute('backoffice_larp_integration_file_mapping', [
-                'id' => $id,
+                'larp' => $larp->getId()->toRfc4122(),
                 'provider' => $provider->value,
                 'sharedFile' => $sharedFile->getId()->toRfc4122(),
             ]);
@@ -61,28 +62,28 @@ class FileMappingController extends BaseBackofficeController
 
         return $this->render('backoffice/larp/integrations/fileMapping.html.twig', [
             'form' => $form,
-            'larpId' => $id,
+            'larp' => $larp,
             'provider' => $provider,
             'sharedFile' => $sharedFile,
         ]);
     }
 
-    #[Route('/{id}/integration/{provider}/file/{externalFileId}/preview', name: 'preview_spreadsheet')]
-    public function previewSpreadsheet(string $id, LarpIntegrationProvider $provider, string $externalFileId, Request $request): Response
+    #[Route('/integration/{provider}/file/{externalFileId}/preview', name: 'preview_spreadsheet')]
+    public function previewSpreadsheet(Larp $larp, LarpIntegrationProvider $provider, string $externalFileId, Request $request): Response
     {
         return new Response('TODO: previewSpreadsheet');
     }
 
-    #[Route('/{id}/integration/{provider}/file/{externalFileId}/open', name: 'file_open')]
+    #[Route('/integration/{provider}/file/{externalFileId}/open', name: 'file_open')]
     public function openExternalFile(
-        string                    $id,
+        Larp                    $larp,
         string                    $externalFileId,
         LarpIntegrationProvider   $provider,
         IntegrationManager        $integrationManager,
         LarpIntegrationRepository $larpIntegrationRepository
     ): RedirectResponse
     {
-        $integration = $larpIntegrationRepository->findByLarpAndProvider($id, $provider);
+        $integration = $larpIntegrationRepository->findByLarpAndProvider($larp->getId()->toRfc4122(), $provider);
         $integrationService = $integrationManager->getService($integration);
         $url = $integrationService->getExternalFileUrl($integration, $externalFileId);
 

@@ -12,15 +12,9 @@
         <div class="mb-3">
             {{ form_row(form.contactEmail) }}
         </div>
-        <button type="submit" class="btn btn-primary">{{ 'common.save' | trans }}</button>
+        <div class="mb-3">
+            {{ form_row(form.preferredLocale) }}
+        </div>
         {{ form_end(form) }}
-    </div>
-
-    <div id="connectedAccounts" class="container mt-4">
-        <h1>{{ 'account.connected_accounts' | trans }}</h1>
-    </div>
-
-    <div id="larpList" class="container mt-4">
-        <h1>{{ 'account.larp.list' | trans }}</h1>
     </div>
 {% endblock %}

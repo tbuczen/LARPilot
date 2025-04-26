@@ -8,6 +8,7 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
+            $defaultLocale: 'en'
             $googleClientId: '%oauth_google_client_id%'
             $googleClientSecret: '%env(OAUTH_GOOGLE_CLIENT_SECRET)%'
             $googleServiceEmail: '%env(GOOGLE_SERVICE_EMAIL)%'

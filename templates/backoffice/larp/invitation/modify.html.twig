@@ -1,0 +1,11 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    {{ component('InvitationForm', {
+        formData: form.vars.value,
+        form: form,
+    }) }}
+{% endblock %}
+
+{% block title %}{{ ''|trans }}{% endblock %}
+

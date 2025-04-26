@@ -2,7 +2,7 @@
 
 namespace App\Service\Integrations\Exceptions;
 
-use App\Entity\StoryObject;
+use App\Entity\StoryObject\StoryObject;
 
 class DuplicateStoryObjectException extends \RuntimeException
 {

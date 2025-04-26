@@ -7,8 +7,9 @@ twig:
     paths:
         '%kernel.project_dir%/templates': ~
 
-#    '@LiveComponent/form_theme.html.twig',
-    form_themes: [  'bootstrap_5_layout.html.twig' ]
+    form_themes:
+        - 'bootstrap_5_layout.html.twig'
+        - '@EWZRecaptcha/Form/ewz_recaptcha_widget.html.twig'
 
 when@test:
     twig:

@@ -13,28 +13,28 @@
                         {{ 'backoffice.larp.preview'|trans }}
                     </a>
 
+                    <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}"
+                       class="btn btn-primary {% if currentRoute == 'backoffice_larp_details' %}active{% endif %}">
+                        {{ 'common.general'|trans }}
+                    </a>
+
                     {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
                         <a href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
-                           class="btn btn-outline-primary {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}">
+                           class="btn btn-primary {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}">
                             {{ 'backoffice.larp.integrations'|trans }}
                         </a>
                     {% endif %}
 
-                    <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}"
-                       class="btn btn-outline-primary {% if currentRoute == 'backoffice_larp_details' %}active{% endif %}">
-                        {{ 'common.general'|trans }}
-                    </a>
-
                     {% if is_granted('VIEW_BO_LARP_INVITATIONS', larp) %}
-                        <a href="{{ path('backoffice_larp_invitations', {'id': larp.id}) }}"
-                           class="btn btn-outline-primary {% if currentRoute == 'backoffice_larp_invitations' %}active{% endif %}">
+                        <a href="{{ path('backoffice_larp_invitations_list', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if currentRoute == 'backoffice_larp_invitations' %}active{% endif %}">
                             {{ 'backoffice.larp.invitations'|trans }}
                         </a>
                     {% endif %}
 
                     {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
                         <a href="{{ path('backoffice_larp_incidents', {'id': larp.id}) }}"
-                           class="btn btn-outline-primary {% if 'larp_incident' in currentRoute %}active{% endif %}">
+                           class="btn btn-primary {% if 'larp_incident' in currentRoute %}active{% endif %}">
                             {{ 'common.incidents'|trans }}
                         </a>
                     {% endif %}

@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use App\Repository\LarpCharacterRepository;
+use App\Repository\StoryObject\LarpCharacterRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\StoryObject;
 
 use App\Entity\Larp;
-use App\Entity\LarpFaction;
+use App\Entity\StoryObject\LarpFaction;
+use App\Repository\BaseRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
@@ -41,7 +42,7 @@ class LarpFactionRepository extends BaseRepository
 
         if (!$faction) {
             $faction = new LarpFaction();
-            $faction->setName($name);
+            $faction->setTitle($name);
             $faction->addLarp($larp);
             $this->getEntityManager()->persist($faction);
         }

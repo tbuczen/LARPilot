@@ -4,8 +4,8 @@ namespace App\Service\Infrastructure;
 
 use App\Entity\Enum\TargetType;
 use App\Entity\TargetableInterface;
-use App\Repository\LarpCharacterRepository;
-use App\Repository\LarpFactionRepository;
+use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\LarpFactionRepository;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class TargetResolver

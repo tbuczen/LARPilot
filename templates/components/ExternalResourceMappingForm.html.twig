@@ -1,8 +1,12 @@
 <div {{ attributes }} >
     {{ form_start(form) }}
     {{ form_row(form.mappingType) }}
-    {% if form.columnMappings is defined %}
-        {{ form_row(form.columnMappings) }}
+    {% if form.meta is defined %}
+        {{ form_row(form.meta) }}
     {% endif %}
+    {% if form.mappings is defined %}
+        {{ form_row(form.mappings) }}
+    {% endif %}
+    {{ form_row(form.submit) }}
     {{ form_end(form) }}
 </div>

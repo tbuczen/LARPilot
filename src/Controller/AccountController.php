@@ -6,12 +6,12 @@ use App\Entity\User;
 use App\Form\AccountSettingsType;
 use App\Repository\UserSocialAccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 #[Route('/account', name: 'account_')]
-class AccountController extends AbstractController
+class AccountController extends BaseController
 {
     #[Route('/', name: 'settings', methods: ['GET', 'POST'])]
     public function profile(Request $request,  EntityManagerInterface $entityManager): Response
@@ -24,7 +24,7 @@ class AccountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success', 'Account settings updated successfully.');
+            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
             return $this->redirectToRoute('account_settings');
         }
 

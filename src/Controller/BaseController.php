@@ -3,38 +3,29 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormErrorIterator;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 class BaseController extends AbstractController
 {
-    #[Route('/switch-locale/{_locale}', name: 'switch_locale')]
-    public function switchLocale(Request $request, string $_locale): RedirectResponse
+
+    public function __construct(
+        protected readonly TranslatorInterface $translator,
+    )
     {
-        // List of allowed locales
-        $allowedLocales = ['en', 'pl', 'de', 'es', 'cz', 'sl', 'it', 'no', 'sv'];
-        if (!in_array($_locale, $allowedLocales, true)) {
-            $_locale = 'en';
+    }
+
+    protected function showErrorsAsFlash(FormErrorIterator $errors): void
+    {
+        /** @var FormError $error */
+        foreach ($errors as $error) {
+            $fieldName = $error->getOrigin()?->getName();
+
+            if ($fieldName) {
+                $errorMessage = $error->getMessage();
+                $this->addFlash('error', $fieldName . ': ' . $errorMessage);
+            }
         }
-
-        // Set the locale in the session
-        $request->getSession()->set('_locale', $_locale);
-
-        // Redirect back to the referring page, or to homepage if none is set
-        $referer = $request->headers->get('referer', '/');
-        return $this->redirect($referer);
-    }
-
-    #[Route('/terms', name: 'terms')]
-    public function terms(): Response
-    {
-        return $this->render('public/terms.html.twig');
-    }
-
-    #[Route('/connect', name: 'sso_connect')]
-    public function index(): Response
-    {
-        return $this->render('sso/index.html.twig');
     }
 }

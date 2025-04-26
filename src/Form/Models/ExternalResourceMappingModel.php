@@ -25,8 +25,8 @@ class ExternalResourceMappingModel
 
         return new self(
             $mapping->getFileType(),
-            $mapping->getMappingConfiguration(),
-            $mapping->getMetaConfiguration(),
+            $mapping->getMappingConfiguration() ?? [],
+            $mapping->getMetaConfiguration() ?? [],
         );
     }
 

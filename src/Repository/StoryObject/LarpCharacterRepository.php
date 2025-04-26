@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\StoryObject;
 
-use App\Entity\LarpCharacter;
+use App\Entity\StoryObject\LarpCharacter;
+use App\Repository\BaseRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

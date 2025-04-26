@@ -16,6 +16,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -33,7 +34,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         private readonly RouterInterface               $router,
         private readonly RegisterUserHandler           $registerUserHandler,
         private readonly AddSocialAccountToUserHandler $addSocialAccountToUserHandler,
-        private readonly Security                      $security
+        private readonly Security                      $security,
     )
     {
     }
@@ -70,7 +71,8 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
     /** @see OAuthGoogleController::connectGoogleCheck */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetUrl = $this->router->generate('public_larp_list');
+        $session = $request->getSession();
+        $targetUrl =  $session->get('redirect_to_after_login') ?? $this->router->generate('public_larp_list');
         return new RedirectResponse($targetUrl);
     }
 
@@ -100,7 +102,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
             providerUserId: $googleUser->getId(),
             email: $googleUser->getEmail(),
             userId: $currentUser->getId()->toRfc4122(),
-            username: $googleUser->getName(),
+            username: $googleUser->getName() . '(' . $googleUser->getId() . ')',
             displayName: $googleUser->getEmail()
         );
 
@@ -113,7 +115,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
             provider: $providerEnum,
             providerUserId: $googleUser->getId(),
             email: $googleUser->getEmail(),
-            username: $googleUser->getName(),
+            username: $googleUser->getName() . '(' . $googleUser->getId() . ')',
             displayName: $googleUser->getEmail()
         );
 

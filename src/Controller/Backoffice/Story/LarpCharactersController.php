@@ -2,17 +2,17 @@
 
 namespace App\Controller\Backoffice\Story;
 
-use App\Controller\Backoffice\BaseBackofficeController;
+use App\Controller\BaseController;
 use App\Domain\Larp\UseCase\ImportCharacters\ImportCharactersCommand;
 use App\Domain\Larp\UseCase\ImportCharacters\ImportCharactersHandler;
 use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\Larp;
-use App\Entity\LarpCharacter;
 use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
+use App\Entity\StoryObject\LarpCharacter;
 use App\Form\CharacterType;
 use App\Helper\Logger;
-use App\Repository\LarpCharacterRepository;
+use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Webmozart\Assert\Assert;
 
 #[Route('/larp', name: 'backoffice_larp_story_characters_')]
-class LarpCharactersController extends BaseBackofficeController
+class LarpCharactersController extends BaseController
 {
     #[Route('/{larp}/story/characters', name: 'list', methods: ['GET', 'POST'])]
     public function list(Larp $larp, LarpManager $larpManager): Response

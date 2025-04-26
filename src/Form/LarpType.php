@@ -2,13 +2,16 @@
 
 namespace App\Form;
 
+use App\Entity\Larp;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LarpType extends AbstractType
 {
@@ -16,42 +19,40 @@ class LarpType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Larp Name',
-                'translation_domain' => 'forms',
+                'label' => 'form.larp.name',
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description',
-                'translation_domain' => 'forms',
+                'label' => 'form.larp.description',
             ])
             ->add('location', TextType::class, [
-                'label' => 'Location',
+                'label' => 'form.larp.location',
                 'required' => false,
-                'translation_domain' => 'forms',
             ])
             ->add('startDate', DateTimeType::class, [
-                'label' => 'Start Date',
+                'label' => 'form.larp.start_date',
                 'widget' => 'single_text',
-                'translation_domain' => 'forms',
             ])
             ->add('endDate', DateTimeType::class, [
-                'label' => 'End Date',
+                'label' => 'form.larp.end_date',
                 'widget' => 'single_text',
-                'translation_domain' => 'forms',
             ])
-            ->add('recaptcha', EWZRecaptchaType::class, array(
-                'attr'        => array(
-                    'options' => array(
-                        'theme' => 'light',
-                        'type'  => 'image',
-                        'size'  => 'normal'
-                    )
-                ),
+            ->add('recaptcha', EWZRecaptchaType::class, [
                 'mapped'      => false,
                 'constraints' => array(
                     new RecaptchaTrue()
                 ),
-                'translation_domain' => 'forms',
-            ));
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'form.submit',
+            ])
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'forms',
+            'data_class' => Larp::class,
+        ]);
     }
 }

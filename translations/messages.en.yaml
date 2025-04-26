@@ -34,12 +34,27 @@ common:
   edit: 'Edit'
   show_details: 'Show Details'
   delete: 'Delete'
+  login: 'Register / Sign In'
+  copy_link: 'Copy Link'
+  link_copied: 'Link copied !'
+  role: 'Role'
+  character: 'Character'
+  valid_until: 'Valid Until'
+  valid_to: 'Valid To'
+  accept: 'Accept'
+  account: 'Account'
 
 #Translations specific to public part of the app
 public:
   larp:
-    list: List of LARPs
+    list: 'List of LARPs'
     no_larps: 'No LARPS in the database at the moment'
+    invitations:
+      expired: 'Invitation expired'
+    invitation:
+      you_are_invited: 'You are invited to join as'
+      accepted: 'You have been added as participant for the larp!'
+      login_to_accept: 'Log in to accept the invitation'
 
 #Translations specific for Larp Organizers backoffice
 backoffice:
@@ -53,7 +68,7 @@ backoffice:
     invitation_link: "Invitation Link"
     valid_until: "Valid Until"
     no_invitations: "No invitations have been generated."
-    create: 'Create own LARP'
+    create: 'Create LARP'
     preview: 'Preview in public website'
     list: 'My LARPs'
     characters:
@@ -65,7 +80,7 @@ backoffice:
     quests: 'Quests'
     relations: 'Story Relations'
     events: 'Events'
-    integrations: 'Integrated Tools'
+    integrations: 'Integrations'
     integrationSettings: 'Integration Settings'
     integration:
       googleDrive: 'Google Drive Integration'
@@ -98,19 +113,12 @@ backoffice:
 account:
   larp:
     list: Your LARPs
-  settings: Account Settings
-  connected_accounts: Connected Accounts list
+  settings: "Settings"
+  connected_accounts: "Connected Accounts list"
   no_connected_accounts: "You have not linked any social accounts yet."
   link_another_social: "Link Another Social Account"
   unlink: "Unlink"
   confirm_unlink: "Are you sure you want to unlink this social account? This cannot be undone."
-
-form:
-  spreadsheet_mapping:
-    starting_row: "Starting Row"
-    faction_column: "Faction Column"
-    character_name_column: "Character Name Column"
-    in_game_name_column: "In-game Name Column"
 
 integrations:
   file_select:
@@ -121,8 +129,9 @@ integrations:
     shared: "Already shared files"
     existing_mappings: 'Existing mappings'
     use_mapping: 'Import using this mapping'
-
-folder.load_subfolders: "Load Subfolders"
-folder.collapse_subfolders: "Collapse"
 file_select:
   no_folders: 'No resources'
+
+login_page:
+  info: "If you are already registered and want to connect accounts, please sign in first and link them in your account settings."
+  title: 'Register / Log In'

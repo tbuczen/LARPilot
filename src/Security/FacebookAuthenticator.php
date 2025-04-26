@@ -70,7 +70,8 @@ class FacebookAuthenticator extends OAuth2Authenticator implements Authenticatio
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetUrl = $this->router->generate('public_larp_list');
+        $session = $request->getSession();
+        $targetUrl = $session->get('redirect_to_after_login') ?? $this->router->generate('public_larp_list');
         return new RedirectResponse($targetUrl);
     }
 
@@ -100,7 +101,7 @@ class FacebookAuthenticator extends OAuth2Authenticator implements Authenticatio
             providerUserId: $user->getId(),
             email: $user->getEmail(),
             userId: $currentUser->getId()->toRfc4122(),
-            username: $user->getName(),
+            username: $user->getName() . '(' . $user->getId() . ')',
             displayName: $user->getFirstName() . ' ' . $user->getLastName()
         );
 
@@ -113,7 +114,7 @@ class FacebookAuthenticator extends OAuth2Authenticator implements Authenticatio
             provider: $providerEnum,
             providerUserId: $user->getId(),
             email: $user->getEmail(),
-            username: $user->getName(),
+            username: $user->getName() . '(' . $user->getId() . ')',
             displayName: $user->getFirstName() . ' ' . $user->getLastName()
         );
 

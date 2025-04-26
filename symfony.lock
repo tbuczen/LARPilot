@@ -411,5 +411,8 @@
     },
     "twig/extra-bundle": {
         "version": "v3.20.0"
+    },
+    "yceruto/money-bundle": {
+        "version": "v1.3.4"
     }
 }

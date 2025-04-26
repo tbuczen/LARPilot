@@ -39,7 +39,7 @@ security:
       provider: app_user_provider
       pattern: ^/player
     backoffice:
-      lazy: true
+      lazy: false
       provider: app_user_provider
       pattern: ^/backoffice
       # activate different ways to authenticate

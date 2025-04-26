@@ -1,0 +1,11 @@
+<div {{ attributes }} >
+    {{ form_start(form) }}
+    {{ form_row(form.invitedRole) }}
+    {{ form_row(form.validTo) }}
+    {{ form_row(form.isReusable) }}
+    {% if form.larpCharacter is defined %}
+        {{ form_row(form.larpCharacter) }}
+    {% endif %}
+    {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+</div>

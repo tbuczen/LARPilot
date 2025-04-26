@@ -5,7 +5,7 @@ namespace App\Service\Integrations;
 use App\Entity\Enum\TargetType;
 use App\Entity\LarpIntegration;
 use App\Entity\ObjectFieldMapping;
-use App\Entity\StoryObject;
+use App\Entity\StoryObject\StoryObject;
 
 abstract readonly class BaseIntegrationService
 {
@@ -22,6 +22,8 @@ abstract readonly class BaseIntegrationService
                 $this->createStoryObjectDocument($mapping, $storyObject);
             }
         }
+//add
+//        ReferenceType
     }
 
     public function removeStoryObject(LarpIntegration $integration, StoryObject $storyObject): void

@@ -3,9 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Larp;
-use App\Entity\LarpCharacter;
-use App\Entity\LarpFaction;
-use App\Repository\LarpFactionRepository;
+use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\LarpFaction;
+use App\Repository\StoryObject\LarpFactionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,21 +23,18 @@ class CharacterType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'form.character.name',
-                'translation_domain' => 'forms',
+
             ])
             ->add('inGameName', TextType::class, [
                 'label' => 'form.character.in_game_name',
-                'translation_domain' => 'forms',
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.character.description',
-                'translation_domain' => 'forms',
             ])
             ->add('factions', EntityType::class, [
                 'class' => LarpFaction::class,
                 'choice_label' => 'name',
                 'label' => 'form.character.faction',
-                'translation_domain' => 'forms',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
@@ -56,7 +53,6 @@ class CharacterType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',
-                'translation_domain' => 'forms',
             ])
         ;
     }
@@ -65,6 +61,7 @@ class CharacterType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => LarpCharacter::class,
+            'translation_domain' => 'forms',
             'larp' => null,
         ]);
     }

@@ -2,17 +2,26 @@
 
 namespace App\Controller\Public;
 
+use App\Entity\Larp;
 use App\Entity\LarpInvitation;
+use App\Repository\LarpInvitationRepository;
 use App\Repository\LarpRepository;
 use App\Repository\UserSocialAccountRepository;
+use App\Service\Larp\LarpManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/', name: 'public_larp_')]
 class LarpController extends AbstractController
 {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
+
     #[Route('/terms', name: 'terms', methods: ['GET'])]
     public function terms(): Response
     {
@@ -38,35 +47,59 @@ class LarpController extends AbstractController
         ]);
     }
 
-    #[Route('/invitation/{code}', name: 'invite_accept', methods: ['GET', 'POST'])]
+    #[Route('/larp/{slug}/invitation/{code}', name: 'process_invitation', methods: ['GET', 'POST'])]
+    public function processInvitation(Request $request, LarpRepository $larpRepository, LarpInvitationRepository $invitationRepository, string $code, string $slug): Response
+    {
+        $larp = $larpRepository->findOneBy(['slug' => $slug]);
+
+        if ($larp === null) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $invitation = $invitationRepository->findOneBy(['code' => $code, 'larp' => $larp]);
+
+        if ($invitation === null) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Process the invitation (e.g., accept or decline)
+        // User has to be logged in, otherwise send to connect page and after registration redirect to this page again
+
+        return $this->render('public/larp/invitation_process.html.twig', [
+            'larp' => $larp,
+            'invitation' => $invitation,
+        ]);
+    }
+
+
+    #[Route('/larp/{slug}/invitation/{code}/accept', name: 'accept_invitation', methods: ['GET', 'POST'])]
     public function acceptInvitation(
+        LarpRepository $larpRepository,
+        LarpInvitationRepository $invitationRepository,
         string $code,
-        UserSocialAccountRepository $socialAccountRepository,
-        EntityManagerInterface $entityManager
+        string $slug,
+        LarpManager $larpManager
     ): Response
     {
-        // Lookup the invitation by its code
-        $invitation = $entityManager->getRepository(LarpInvitation::class)->findOneBy(['code' => $code]);
-        if (!$invitation) {
-            throw $this->createNotFoundException('Invalid invitation code.');
+        $larp = $larpRepository->findOneBy(['slug' => $slug]);
+        if ($larp === null) {
+            throw $this->createAccessDeniedException();
         }
-        // Check if invitation is still valid
-        if ($invitation->getValidTo() < new \DateTimeImmutable()) {
-            $this->addFlash('warning', 'Invitation has expired.');
+
+        $invitation = $invitationRepository->findOneBy(['code' => $code, 'larp' => $larp]);
+        if ($invitation === null) {
+            throw $this->createAccessDeniedException();
+        }
+
+        try {
+            $larpManager->acceptInvitation($invitation, $this->getUser());
+        } catch (\DomainException $e) {
+            $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('public_larp_list');
         }
 
-        // Now, if the user is logged in, assign them ROLE_STAFF for this Larp.
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('sso_connect');
-        }
-
-        // Add LarpParticipation for the user with ROLE_STAFF if they are not already a participant.
-        // (Implement this logic in a service or use case as needed.)
-
-        // For now, you might simply flash a message:
-        $this->addFlash('success', 'You have been added as staff for the larp!');
-        return $this->redirectToRoute('public_larp_details', ['id' => $invitation->getLarp()->getId()]);
+        $this->addFlash('success', $this->translator->trans('public.larp.invitation.accepted'));
+        return $this->redirectToRoute('public_larp_details', ['slug' => $invitation->getLarp()->getSlug()]);
     }
+
 }

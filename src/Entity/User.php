@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use App\Entity\Trait\UuidTraitEntity;
+use App\Enum\Locale;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -23,15 +26,33 @@ class User implements UserInterface
     #[ORM\Column(length: 180)]
     private ?string $contactEmail = null;
 
-    /** @var Collection<LarpCharacterSubmission>  */
+    /** @var Collection<LarpCharacterSubmission> */
     #[ORM\OneToMany(targetEntity: LarpCharacterSubmission::class, mappedBy: 'user')]
     private Collection $submissions;
+
+    #[ORM\Column(nullable: true, enumType: Locale::class)]
+    private ?Locale $preferredLocale = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
     private array $roles = [];
+
+    /** @var Collection<LarpParticipant>  */
+    #[ORM\OneToMany(targetEntity: LarpParticipant::class, mappedBy: 'user')]
+    private Collection $larpParticipants;
+
+    /** @var Collection<UserSocialAccount>  */
+    #[ORM\OneToMany(targetEntity: UserSocialAccount::class, mappedBy: 'user')]
+    private Collection $socialAccounts;
+    public function __construct()
+    {
+        $this->id = Uuid::v4();
+        $this->submissions = new ArrayCollection();
+        $this->larpParticipants = new ArrayCollection();
+        $this->socialAccounts = new ArrayCollection();
+    }
 
     public function getUsername(): ?string
     {
@@ -52,13 +73,13 @@ class User implements UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     /**
+     * @return list<string>
      * @see UserInterface
      *
-     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -96,5 +117,16 @@ class User implements UserInterface
     public function setContactEmail(string $contactEmail): void
     {
         $this->contactEmail = $contactEmail;
+    }
+
+    public function getPreferredLocale(): ?Locale
+    {
+        return $this->preferredLocale;
+    }
+
+    public function setPreferredLocale(?Locale $preferredLocale): self
+    {
+        $this->preferredLocale = $preferredLocale;
+        return $this;
     }
 }

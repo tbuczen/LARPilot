@@ -3,7 +3,7 @@
 {% block title %}{{ 'backoffice.mapping.title'|trans }}{% endblock %}
 
 {% block larp_content %}
-        <h1>{{ 'backoffice.mapping.heading'|trans }}</h1>
+        <h3>{{ 'backoffice.mapping.heading'|trans }}</h3>
         {% if files is not empty %}
             <div class="list-group">
                 {% include 'backoffice/larp/partials/_sharedFileList.html.twig' with {

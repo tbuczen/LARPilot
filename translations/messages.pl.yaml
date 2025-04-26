@@ -1,4 +1,137 @@
-welcome: "Witaj w LARPilot"
+# Wszystkie wspólne tłumaczenia
+common:
+  actions: Akcje
+  save: Zapisz zmiany
+  confirm: Potwierdź
+  cancel: Anuluj
+  close: Zamknij
+  back: Wróć
+  next: Następny
+  previous: Poprzedni
+  welcome: Witaj
+  larp: LARP
+  larps: LARPy
+  incident: Incydent
+  incidents: Incydenty
+  menu:
+    toggle: Menu
+  create: Stwórz
+  name: Nazwa
+  description: Opis
+  list: Lista
+  logout: Wyloguj się
+  backoffice: Panel Admina
+  manage: Zarządzaj w Panelu
+  general: Ogólne
+  open: Otwórz
+  permission:
+    view: Zobacz
+    edit: Edytuj
+  empty_list: Lista jest pusta
+  not_connected: Niepołączony
+  connect: Połącz
+  connected: Połączony
+  edit: Edytuj
+  show_details: Pokaż szczegóły
+  delete: Usuń
+  login: Rejestracja / Logowanie
+  copy_link: Skopiuj link
+  link_copied: Link skopiowany!
+  role: Rola
+  character: Postać
+  valid_until: Ważne do
+  accept: Akceptuj
+  account: Konto
 
+# Tłumaczenia dla części publicznej aplikacji
 public:
+  larp:
+    list: Lista LARPów
+    no_larps: Brak LARPów w bazie danych
+    invitations:
+      expired: Zaproszenie wygasło
+    invitation:
+      you_are_invited: Zaproszono Cię do udziału jako
+      accepted: Zostałeś dodany jako uczestnik LARPa!
+      login_to_accept: Zaloguj się, aby zaakceptować zaproszenie
+
+# Tłumaczenia dla Panelu Organizatora (Backoffice)
 backoffice:
+  main_title: Panel Administracyjny LARPilot
+  larp:
+    invitations: Zaproszenia
+    invitation_valid_for: Ważność (sekundy)
+    seconds: sekundy
+    generate_invitation: Wygeneruj zaproszenie
+    current_invitations: Aktualne zaproszenia
+    invitation_link: Link do zaproszenia
+    valid_until: Ważne do
+    no_invitations: Brak wygenerowanych zaproszeń.
+    create: Stwórz LARP
+    preview: Podgląd
+    list: Moje LARPy
+    characters:
+      list: Postacie
+      delete_title: Usuń postać "%name%"?
+      delete_only_larpilot: Usuń tylko w LARPilot
+      delete_larpilot_and_integrations: Usuń w LARPilot oraz wszystkich powiązanych integracjach
+    factions: Frakcje
+    quests: Zadania
+    relations: Powiązania
+    events: Wydarzenia
+    integrations: Integracje
+    integrationSettings: Ustawienia Integracji
+    integration:
+      googleDrive: Integracja Google Drive
+      googleDriveDescription: Połącz swoje konto Google Drive, aby umożliwić LARPilot dostęp do Twoich plików. Umożliwi to przeglądanie i potencjalne zarządzanie wybranym folderem.
+      googleDriveConnect: Połącz z Google Drive
+      current: Aktualne integracje
+      expired: Integracja wygasła, aby dalej korzystać - połącz ponownie
+      reconnect: Połącz ponownie
+    import_characters: Importuj postacie
+    import_options: Opcje importu
+    import_file: Importuj z pliku CSV/XLSX
+    import_google: Importuj z Google Spreadsheet
+    file_select:
+      title: Wybierz pliki do udostępnienia LARPilot
+      open_picker_desc: Otwórz selektor plików Google, aby wybrać pliki do udostępnienia
+  google_drive_folders:
+    title: Foldery Google Drive
+    heading: Foldery Google Drive
+    no_folders: Nie znaleziono folderów.
+  mapping:
+    title: Konfiguracja mapowania
+    heading: Skonfiguruj mapowanie
+    save: Zapisz mapowanie
+  common:
+    success_save: Zmiany zapisane pomyślnie
+    success_delete: Usunięto pomyślnie
+    confirmation: Czy na pewno chcesz kontynuować? Tej operacji nie można cofnąć.
+
+# Tłumaczenia konta gracza/organizatora
+account:
+  larp:
+    list: Twoje LARPy
+  settings: Ustawienia
+  connected_accounts: Lista połączonych kont
+  no_connected_accounts: Nie masz jeszcze połączonych kont społecznościowych.
+  link_another_social: Połącz inne konto społecznościowe
+  unlink: Odłącz
+  confirm_unlink: Czy na pewno chcesz odłączyć to konto? Tej operacji nie można cofnąć.
+
+integrations:
+  file_select:
+    title: Wybierz plik
+    heading: Wybierz plik do importu
+    configure_mapping: Skonfiguruj nowe mapowanie
+    no_files: Nie znaleziono plików.
+    shared: Już udostępnione pliki
+    existing_mappings: Istniejące mapowania
+    use_mapping: Importuj używając tego mapowania
+
+file_select:
+  no_folders: Brak zasobów
+
+login_page:
+  info: Jeśli już masz konto, zaloguj się i połącz konta w ustawieniach konta.
+  title: Rejestracja / Logowanie

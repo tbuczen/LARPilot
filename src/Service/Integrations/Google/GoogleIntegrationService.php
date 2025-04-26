@@ -8,8 +8,7 @@ use App\Entity\Larp;
 use App\Entity\LarpIntegration;
 use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
-use App\Entity\StoryObject;
-use App\Form\Models\ExternalResourceMappingModel;
+use App\Entity\StoryObject\StoryObject;
 use App\Form\Models\SpreadsheetMappingModel;
 use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
@@ -156,7 +155,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         $rows = $this->googleSpreadsheetIntegrationHelper->fetchSpreadsheetRows($sharedFile, $spreadsheetMapping);
 
         foreach ($rows as $row) {
-            if (isset($row[$characterNameField]) && $row[$characterNameField] === $storyObject->getName()) {
+            if (isset($row[$characterNameField]) && $row[$characterNameField] === $storyObject->getTitle()) {
                 // Duplicate found
                 throw new DuplicateStoryObjectException($storyObject, $sharedFile->getUrl());
             }

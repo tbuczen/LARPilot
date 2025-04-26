@@ -8,7 +8,7 @@ use App\Entity\Larp;
 use App\Entity\LarpIntegration;
 use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
-use App\Entity\StoryObject;
+use App\Entity\StoryObject\StoryObject;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Symfony\Component\HttpFoundation\Response;

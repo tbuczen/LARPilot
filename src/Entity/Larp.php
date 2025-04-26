@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Enum\LarpStageStatus;
+use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\LarpFaction;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
@@ -14,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LarpRepository::class)]
 class Larp implements Timestampable, CreatorAwareInterface
@@ -44,27 +47,39 @@ class Larp implements Timestampable, CreatorAwareInterface
     #[ORM\Column(length: 255)]
     private ?LarpStageStatus $status = null;
 
-    /** @var Collection<LarpCharacter>  */
+    /** @var Collection<LarpCharacter> */
     #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larp')]
     private Collection $characters;
 
-    /** @var Collection<LarpCharacterSubmission>  */
+    /** @var Collection<LarpCharacterSubmission> */
     #[ORM\OneToMany(targetEntity: LarpCharacterSubmission::class, mappedBy: 'larp')]
     private Collection $submissions;
 
-    /** @var Collection<LarpParticipant>  */
+    /** @var Collection<LarpParticipant> */
     #[ORM\OneToMany(targetEntity: LarpParticipant::class, mappedBy: 'larp')]
     private Collection $larpParticipants;
 
+    /** @var Collection<Skill> */
+    #[ORM\OneToMany(targetEntity: Skill::class, mappedBy: 'larp')]
+    private Collection $skills;
+
+    /** @var Collection<LarpIntegration> */
+    #[ORM\OneToMany(targetEntity: LarpIntegration::class, mappedBy: 'larp')]
+    private Collection $integrations;
+
+    /** @var Collection<LarpFaction> */
     #[ORM\ManyToMany(targetEntity: LarpFaction::class, mappedBy: 'larps')]
     private Collection $factions;
 
     public function __construct()
     {
+        $this->id = Uuid::v4();
         $this->characters = new ArrayCollection();
         $this->submissions = new ArrayCollection();
         $this->larpParticipants = new ArrayCollection();
         $this->factions = new ArrayCollection();
+        $this->integrations = new ArrayCollection();
+        $this->skills = new ArrayCollection();
     }
 
     public function getName(): ?string

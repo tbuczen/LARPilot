@@ -2,15 +2,13 @@
 
 namespace App\Service\Integrations\Google;
 
-use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
-use App\Entity\StoryObject;
+use App\Entity\StoryObject\StoryObject;
 use App\Form\Models\ExternalResourceMappingModel;
 use App\Form\Models\SpreadsheetMappingModel;
 use Doctrine\Common\Collections\Collection;
 use Google\Service\Sheets;
 use Google\Service\Sheets\ValueRange;
-use Webmozart\Assert\Assert;
 
 readonly class GoogleSpreadsheetIntegrationHelper
 {

@@ -58,6 +58,7 @@ class FileMappingType extends AbstractType
         $resolver->setDefaults([
             'data_class' => ExternalResourceMappingModel::class,
             'mimeType' => null,
+            'translation_domain' => 'forms',
         ]);
     }
 

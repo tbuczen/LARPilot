@@ -1,62 +1,32 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
+use App\Entity\Larp;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
-use App\Repository\LarpFactionRepository;
+use App\Repository\StoryObject\LarpFactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LarpFactionRepository::class)]
-class LarpFaction implements CreatorAwareInterface, StoryObject
+class LarpFaction extends StoryObject implements CreatorAwareInterface
 {
-    use UuidTraitEntity;
-    use CreatorAwareTrait;
-
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description = null;
-
     #[ORM\ManyToMany(targetEntity: Larp::class, inversedBy: 'factions')]
     private Collection $larps;
 
-    #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
+    #[ORM\ManyToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
     private Collection $members;
 
     public function __construct()
     {
-        $this->id = Uuid::v4();
+        parent::__construct();
         $this->larps = new ArrayCollection();
         $this->members = new ArrayCollection();
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-        return $this;
     }
 
     /**
@@ -82,29 +52,27 @@ class LarpFaction implements CreatorAwareInterface, StoryObject
     }
 
     /**
-     * @return Collection<LarpParticipant>
+     * @return Collection<LarpCharacter>
      */
     public function getMembers(): Collection
     {
         return $this->members;
     }
 
-    public function addParticipant(LarpParticipant $participant): self
+    public function addMember(LarpCharacter $larpCharacter): self
     {
-        if (!$this->members->contains($participant)) {
-            $this->members[] = $participant;
-            $participant->setFaction($this);
+        if (!$this->members->contains($larpCharacter)) {
+            $this->members[] = $larpCharacter;
+            $larpCharacter->addFaction($this);
         }
         return $this;
     }
 
-    public function removeParticipant(LarpParticipant $participant): self
+    public function removeMember(LarpCharacter $character): self
     {
-        if ($this->members->removeElement($participant)) {
+        if ($this->members->removeElement($character)) {
             // set the owning side to null (unless already changed)
-            if ($participant->getFaction() === $this) {
-                $participant->setFaction(null);
-            }
+            $character->removeFaction($this);
         }
         return $this;
     }
@@ -112,5 +80,10 @@ class LarpFaction implements CreatorAwareInterface, StoryObject
     public static function getTargetType(): TargetType
     {
         return TargetType::Faction;
+    }
+
+    public function getLarp(): ?Larp
+    {
+        // TODO: Implement getLarp() method.
     }
 }

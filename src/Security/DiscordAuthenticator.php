@@ -71,7 +71,8 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetUrl = $this->router->generate('public_larp_list');
+        $session = $request->getSession();
+        $targetUrl = $session->get('redirect_to_after_login') ?? $this->router->generate('public_larp_list');
         return new RedirectResponse($targetUrl);
     }
 
@@ -101,7 +102,7 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
             providerUserId: $user->getId(),
             email: $user->getEmail(),
             userId: $currentUser->getId()->toRfc4122(),
-            username: $user->getUsername(),
+            username: $user->getUsername() . '(' . $user->getId() . ')',
             displayName: $user->getUsername() . '#' . $user->getDiscriminator()
         );
 
@@ -114,7 +115,7 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
             provider: $providerEnum,
             providerUserId: $user->getId(),
             email: $user->getEmail(),
-            username: $user->getUsername(),
+            username: $user->getUsername() . '(' . $user->getId() . ')',
             displayName: $user->getUsername() . '#' . $user->getDiscriminator()
         );
 

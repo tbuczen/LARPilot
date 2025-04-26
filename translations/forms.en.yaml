@@ -1,11 +1,17 @@
 form:
   submit: "Submit"
+  choose: "Choose..."
   character:
     name: "Unique Character Name"
     in_game_name: "In-Game Name"
     description: "Character Description"
     faction: "Faction"
     choose_faction: "Choose a faction..."
+  invitation:
+    name: "Name"
+    valid_to: "Invitation code valid to"
+    role: "Role"
+    character: "Choose a character..."
   mapping:
     spreadsheet:
       sheet_name: "Spreadsheet Name"
@@ -13,6 +19,12 @@ form:
       starting_row: "Starting Row"
     document:
   larp:
+    create: "Create new DRAFT Larp"
+    name: "Name"
+    description: "Description"
+    location: "Location"
+    start_date: "Start Date"
+    end_date: "End Date"
     integrations: "Integrations"
     invitations: "Invitations"
     story: "Story"

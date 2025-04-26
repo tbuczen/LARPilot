@@ -2,54 +2,86 @@
 
 namespace App\Controller\Backoffice;
 
-use App\Domain\Larp\UseCase\GenerateInvitation\GenerateInvitationCommand;
-use App\Domain\Larp\UseCase\GenerateInvitation\GenerateInvitationHandler;
-use App\Entity\Enum\UserRole;
-use App\Repository\LarpRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\BaseController;
+use App\Entity\Larp;
+use App\Entity\LarpInvitation;
+use App\Form\InvitationType;
+use App\Repository\LarpInvitationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/larp', name: 'backoffice_larp_')]
-class LarpInvitationsController extends AbstractController
+#[Route('/larp/{larp}', name: 'backoffice_larp_invitations_')]
+class LarpInvitationsController extends BaseController
 {
 
-    #[Route('/{id}/generate-invitation', name: 'generate_invitation', methods: ['POST'])]
-    public function generateInvitation(string $id, Request $request, GenerateInvitationHandler $handler): Response
+    #[Route('/invitations', name: 'list', methods: ['GET', 'POST'])]
+    public function list(Request $request, Larp $larp, LarpInvitationRepository $invitationRepository, ?LarpInvitation $invitation = null): Response
     {
-        $defaultValidTo = (new \DateTime('+1 week'))->format('Y-m-d H:i:d');
-        $validTo = $request->request->get('validTo', $defaultValidTo);
-        $invitedRoleValue = $request->request->get('invitedRole', UserRole::STAFF->value);
-        $invitedRole = UserRole::from($invitedRoleValue);
 
-        $command = new GenerateInvitationCommand(
-            larpId: $id,
-            validTo: new \DateTimeImmutable($validTo),
-            invitedRole: $invitedRole
-        );
-        $dto = $handler->handle($command);
-
-        $this->addFlash('success', 'Invitation generated successfully.');
-
-        return $this->redirectToRoute('backoffice_larp_invitations', ['id' => $id]);
-    }
-
-    #[Route('/{id}/invitations', name: 'invitations', methods: ['GET'])]
-    public function invitations(string $id, LarpRepository $larpRepository): Response
-    {
-        $larp = $larpRepository->find($id);
-        if (!$larp) {
-            throw $this->createNotFoundException('Larp not found.');
+        if ($invitation !== null) {
+            $invitation = new LarpInvitation();
+            $invitation->setLarp($larp);
         }
 
-        // Assume you have a service that generates an invitation link,
-        // or you call the GenerateInvitationHandler here.
-        // For simplicity, you can render a page where the organizer can click a button to generate an invitation.
+        $form = $this->createForm(InvitationType::class, $invitation);
+        $form->handleRequest($request);
 
-        return $this->render('backoffice/larp/invitations.html.twig', [
+        if ($form->isSubmitted() && $form->isValid()) {
+            $invitationRepository->save($invitation);
+
+            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            return $this->redirectToRoute('backoffice_larp_invitations_list', ['id' => $larp->getId()]);
+        }
+
+        $invitations = $invitationRepository->findBy(['larp' => $larp]);
+        return $this->render('backoffice/larp/invitation/list.html.twig', [
             'larp' => $larp,
-            // Pass existing invitations if needed
+            'invitations' => $invitations,
         ]);
     }
+
+    #[Route('/invitation/{invitation}', name: 'modify', defaults: ['invitation' => null], methods: ['GET', 'POST'])]
+    public function modify(
+        Request                  $request,
+        Larp                     $larp,
+        LarpInvitationRepository $invitationRepository,
+        ?LarpInvitation          $invitation = null,
+    ): Response
+    {
+
+        if (!$invitation) {
+            $invitation = new LarpInvitation();
+        }
+        $form = $this->createForm(InvitationType::class, $invitation, ['larp' => $larp]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $invitation->setLarp($larp);
+            $invitationRepository->save($invitation);
+            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            return $this->redirectToRoute('backoffice_larp_invitations_list', ['larp' => $larp->getId()]);
+        }
+
+        return $this->render('backoffice/larp/invitation/modify.html.twig', [
+            'form' => $form->createView(),
+            'larp' => $larp,
+        ]);
+    }
+
+    #[Route('/invitation/{invitation}/delete', name: 'delete', methods: ['GET', 'POST'])]
+    public function delete(
+        Larp                     $larp,
+        LarpInvitationRepository $invitationRepository,
+        LarpInvitation           $invitation,
+    ): Response
+    {
+        $invitationRepository->remove($invitation);
+        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+
+        return $this->redirectToRoute('backoffice_larp_invitations_list', [
+            'larp' => $larp->getId(),
+        ]);
+    }
+
 }

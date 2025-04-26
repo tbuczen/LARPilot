@@ -3,7 +3,7 @@
 {% block title %}{{ 'backoffice.mapping.title'|trans }}{% endblock %}
 
 {% block larp_content %}
-        <h1>{{ 'backoffice.mapping.heading'|trans }} - {{ sharedFile.fileName }}</h1>
+        <h3>{{ 'backoffice.mapping.heading'|trans }} - {{ sharedFile.fileName }}</h3>
         {{ component('ExternalResourceMappingForm', {
             formData: form.vars.value,
             form: form,

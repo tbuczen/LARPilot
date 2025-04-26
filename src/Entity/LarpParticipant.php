@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enum\UserRole;
+use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpParticipantRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,8 +38,8 @@ class LarpParticipant
     private array $roles = [];
 
     //TODO:: DO I NEED FACTION HERE?
-    #[ORM\ManyToOne(targetEntity: LarpFaction::class, inversedBy: 'participants')]
-    private ?LarpFaction $faction = null;
+//    #[ORM\ManyToOne(targetEntity: LarpFaction::class, inversedBy: 'participants')]
+//    private ?LarpFaction $faction = null;
 
     public function getUser(): ?User
     {
@@ -83,16 +84,16 @@ class LarpParticipant
         return $this;
     }
 
-    public function getFaction(): ?LarpFaction
-    {
-        return $this->faction;
-    }
-
-    public function setFaction(?LarpFaction $faction): self
-    {
-        $this->faction = $faction;
-        return $this;
-    }
+//    public function getFaction(): ?LarpFaction
+//    {
+//        return $this->faction;
+//    }
+//
+//    public function setFaction(?LarpFaction $faction): self
+//    {
+//        $this->faction = $faction;
+//        return $this;
+//    }
 
     public function isPlayer(): bool
     {

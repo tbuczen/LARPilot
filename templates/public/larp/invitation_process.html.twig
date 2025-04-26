@@ -1,0 +1,40 @@
+{% extends 'public/base.html.twig' %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h1 class="card-title">{{ larp.name }}</h1>
+                <p class="card-text">
+                    {{ 'public.larp.invitation.you_are_invited'|trans }}
+                </p>
+
+                <ul class="list-group list-group-flush my-4">
+                    <li class="list-group-item">
+                        <strong>{{ 'common.role'|trans }}:</strong> {{ invitation.invitedRole.name }}
+                    </li>
+                    {% if invitation.larpCharacter %}
+                        <li class="list-group-item">
+                            <strong>{{ 'common.character'|trans }}:</strong> {{ invitation.larpCharacter.title }}
+                        </li>
+                    {% endif %}
+                    <li class="list-group-item">
+                        <strong>{{ 'common.valid_until'|trans }}:</strong> {{ invitation.validTo|date('Y-m-d H:i') }}
+                    </li>
+                </ul>
+
+                {% if app.user %}
+                    <form method="post" action="{{ path('public_larp_accept_invitation', { slug: larp.slug, code: invitation.code }) }}">
+                        <button type="submit" class="btn btn-success">
+                            {{ 'common.accept'|trans }}
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary">
+                        {{ 'public.larp.invitation.login_to_accept'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

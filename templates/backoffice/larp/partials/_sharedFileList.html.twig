@@ -8,12 +8,12 @@
             </div>
             <div class="btn-group">
                 {% if configureMappingPath %}
-                    <a href="{{ path(configureMappingPath, { id: larp.id, sharedFile: file.id, provider: file.integration.provider.value }) }}" class="btn btn-primary btn-sm">
+                    <a href="{{ path(configureMappingPath, { larp: larp.id, sharedFile: file.id, provider: file.integration.provider.value }) }}" class="btn btn-primary btn-sm">
                         {{ 'integrations.file_select.configure_mapping'|trans }}
                     </a>
                 {% endif %}
                 {% if openFilePath %}
-                    <a href="{{ path(openFilePath, { id: larp.id, provider: file.integration.provider.value, externalFileId: file.fileId }) }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ path(openFilePath, { larp: larp.id, provider: file.integration.provider.value, externalFileId: file.fileId }) }}" target="_blank" class="btn btn-outline-secondary btn-sm">
                         {{ 'common.open'|trans }}
                     </a>
                 {% endif %}
@@ -29,7 +29,7 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <span class="badge bg-secondary">{{ mapping.fileType.value|capitalize }}</span>
-                                    <a href="{{ path(configureMappingPath, { id: larp.id, sharedFile: file.id, provider: file.integration.provider.value, mapping: mapping.id }) }}" class="btn btn-link btn-sm p-0 ms-2">
+                                    <a href="{{ path(configureMappingPath, { larp: larp.id, sharedFile: file.id, provider: file.integration.provider.value, mapping: mapping.id }) }}" class="btn btn-link btn-sm p-0 ms-2">
                                         {{ 'common.edit'|trans }}
                                     </a>
                                 </div>

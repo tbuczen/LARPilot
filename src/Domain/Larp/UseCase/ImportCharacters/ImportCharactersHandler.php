@@ -4,15 +4,14 @@ namespace App\Domain\Larp\UseCase\ImportCharacters;
 
 use App\Entity\Enum\ReferenceRole;
 use App\Entity\Enum\ReferenceType;
-use App\Entity\Enum\TargetType;
 use App\Entity\ExternalReference;
 use App\Entity\Larp;
-use App\Entity\LarpCharacter;
 use App\Entity\SharedFile;
-use App\Repository\LarpCharacterRepository;
-use App\Repository\LarpFactionRepository;
+use App\Entity\StoryObject\LarpCharacter;
 use App\Repository\LarpRepository;
 use App\Repository\SharedFileRepository;
+use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\LarpFactionRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Integrations\IntegrationServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -132,7 +131,7 @@ class ImportCharactersHandler
         $reference->setProvider($file->getIntegration()->getProvider());
         $reference->setExternalId($rowNo + 1);
         $reference->setReferenceType(ReferenceType::SpreadsheetRow);
-        $reference->setName($character->getName());
+        $reference->setName($character->getTitle());
         $reference->setUrl($this->integrationService->createReferenceUrl($file, ReferenceType::SpreadsheetRow, $reference->getExternalId()));
         $reference->setRole(ReferenceRole::Primary);
 

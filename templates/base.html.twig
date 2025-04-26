@@ -17,9 +17,10 @@
             {{ encore_entry_script_tags('app') }}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
+    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl={{app.request.locale}}" async defer></script>
+
     <button id='sidebarMenuButton' class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
         <i class="bi bi-list"></i>
     </button>

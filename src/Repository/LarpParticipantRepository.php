@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\LarpFaction;
 use App\Entity\LarpParticipant;
+use App\Entity\StoryObject\LarpFaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
