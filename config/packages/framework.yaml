@@ -15,6 +15,7 @@ framework:
             - en
     #esi: true
     #fragments: true
+    ide: "phpstorm://open?url=file://%%f&line=%%l"
 
 when@test:
     framework:

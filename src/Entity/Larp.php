@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enum\LarpStageStatus;
+use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\Trait\CreatorAwareInterface;
@@ -59,6 +60,10 @@ class Larp implements Timestampable, CreatorAwareInterface
     #[ORM\OneToMany(targetEntity: LarpParticipant::class, mappedBy: 'larp')]
     private Collection $larpParticipants;
 
+    /** @var Collection<Event> */
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'larp')]
+    private Collection $events;
+
     /** @var Collection<Skill> */
     #[ORM\OneToMany(targetEntity: Skill::class, mappedBy: 'larp')]
     private Collection $skills;
@@ -68,7 +73,7 @@ class Larp implements Timestampable, CreatorAwareInterface
     private Collection $integrations;
 
     /** @var Collection<LarpFaction> */
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class, mappedBy: 'larps')]
+    #[ORM\OneToMany(targetEntity: LarpFaction::class, mappedBy: 'larp')]
     private Collection $factions;
 
     public function __construct()
@@ -80,6 +85,7 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->factions = new ArrayCollection();
         $this->integrations = new ArrayCollection();
         $this->skills = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getName(): ?string

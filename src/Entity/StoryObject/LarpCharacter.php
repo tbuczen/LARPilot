@@ -66,12 +66,12 @@ class LarpCharacter extends StoryObject
     private Collection $tags;
 
     //skills - list can be defined by organizers and people responsible for larp mechanics many to many to LarpCharacterSkill
-    #[ORM\ManyToMany(targetEntity: LarpCharacterSkill::class, mappedBy: 'character')]
+    #[ORM\OneToMany(targetEntity: LarpCharacterSkill::class, mappedBy: 'character')]
     #[ORM\JoinTable(name: "larp_character_tags")]
     private Collection $skills;
 
     //items that character should start the game with (each item should be defined in the system, crafted by crafters or bought by the organizers)
-    #[ORM\ManyToMany(targetEntity: LarpCharacterItem::class,  mappedBy: 'character')]
+    #[ORM\OneToMany(targetEntity: LarpCharacterItem::class,  mappedBy: 'character')]
     #[ORM\JoinTable(name: "larp_character_tags")]
     private Collection $items;
 

@@ -3,6 +3,7 @@
 namespace App\Entity\StoryObject;
 
 
+use App\Entity\Enum\StoryTimeUnit;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Repository\StoryObject\EventRepository;
@@ -33,6 +34,15 @@ class Event extends StoryObject
     #[ORM\ManyToOne(targetEntity: Thread::class, inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Thread $thread = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $storyMoment = null;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $storyTime = null; // np. 0 = start LARPa
+
+    #[ORM\Column(length: 20, nullable: true, enumType: StoryTimeUnit::class)]
+    private ?StoryTimeUnit $storyTimeUnit = null;
 
     public function getTechParticipants(): Collection
     {
@@ -72,6 +82,36 @@ class Event extends StoryObject
     public function setThread(?Thread $thread): void
     {
         $this->thread = $thread;
+    }
+
+    public function getStoryMoment(): ?string
+    {
+        return $this->storyMoment;
+    }
+
+    public function setStoryMoment(?string $storyMoment): void
+    {
+        $this->storyMoment = $storyMoment;
+    }
+
+    public function getStoryTime(): ?int
+    {
+        return $this->storyTime;
+    }
+
+    public function setStoryTime(?int $storyTime): void
+    {
+        $this->storyTime = $storyTime;
+    }
+
+    public function getStoryTimeUnit(): ?StoryTimeUnit
+    {
+        return $this->storyTimeUnit;
+    }
+
+    public function setStoryTimeUnit(?StoryTimeUnit $storyTimeUnit): void
+    {
+        $this->storyTimeUnit = $storyTimeUnit;
     }
 
     public function getLarp(): Larp

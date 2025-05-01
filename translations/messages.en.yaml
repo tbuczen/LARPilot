@@ -48,7 +48,7 @@ common:
 public:
   larp:
     list: 'List of LARPs'
-    no_larps: 'No LARPS in the database at the moment'
+    no_larps: 'There are no published LARPs at the moment'
     invitations:
       expired: 'Invitation expired'
     invitation:

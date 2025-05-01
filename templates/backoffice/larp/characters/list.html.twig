@@ -59,7 +59,7 @@
                 <tbody>
                 {% for character in characters %}
                     <tr>
-                        <td>{{ character.name }}</td>
+                        <td>{{ character.title }}</td>
                         <td>{{ character.description|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_characters_modify', { larp: larp.id, character: character.id }) }}"
@@ -73,7 +73,7 @@
                                     data-bs-target="#globalDeleteCharacterModal"
                                     data-delete-text=" {{ 'common.delete'|trans }}"
                                     data-character-id="{{ character.id }}"
-                                    data-character-name="{{ character.name }}"
+                                    data-character-name="{{ character.title }}"
                                     data-delete-url-base="{{ path('backoffice_larp_story_characters_delete', { larp: larp.id, character: 'CHARACTER_ID', integrations: 'INTEGRATIONS_FLAG' }) }}"
                             >
                                 {{ 'common.delete'|trans }}

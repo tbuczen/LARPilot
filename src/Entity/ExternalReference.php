@@ -6,6 +6,8 @@ use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\Enum\ReferenceRole;
 use App\Entity\Enum\ReferenceType;
 use App\Entity\Enum\TargetType;
+use App\Entity\StoryObject\StoryObject;
+use App\Entity\StoryObject\Thread;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
@@ -48,6 +50,11 @@ class ExternalReference implements CreatorAwareInterface, Timestampable
 
     #[ORM\Column(type: 'string', enumType: ReferenceRole::class)]
     private ReferenceRole $role;
+
+    #[ORM\ManyToOne(targetEntity: StoryObject::class, inversedBy: 'externalReferences')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?StoryObject $storyObject = null;
+
 
     public function getTargetType(): TargetType
     {
