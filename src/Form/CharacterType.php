@@ -21,7 +21,7 @@ class CharacterType extends AbstractType
     {
 
         $builder
-            ->add('name', TextType::class, [
+            ->add('title', TextType::class, [
                 'label' => 'form.character.name',
 
             ])
@@ -33,21 +33,17 @@ class CharacterType extends AbstractType
             ])
             ->add('factions', EntityType::class, [
                 'class' => LarpFaction::class,
-                'choice_label' => 'name',
+                'choice_label' => 'title',
                 'label' => 'form.character.faction',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'attr' => [
-                    'data-autocomplete-tags' => true,
-                ],
                 'placeholder' => 'form.character.choose_faction',
                 'query_builder' => function (LarpFactionRepository $repo) use ($options) {
                     /** @var Larp $larp */
                     $larp = $options['larp'];
                     return $repo->createQueryBuilder('f')
-                        ->join('f.larps', 'l')
-                        ->where('l = :larp')
+                        ->where('f.larp = :larp')
                         ->setParameter('larp', $larp);
                 },
             ])

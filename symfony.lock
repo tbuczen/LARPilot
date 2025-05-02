@@ -89,6 +89,9 @@
             "./tests/bootstrap.php"
         ]
     },
+    "spiriitlabs/form-filter-bundle": {
+        "version": "v11.0.6"
+    },
     "stof/doctrine-extensions-bundle": {
         "version": "1.13",
         "recipe": {

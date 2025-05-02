@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class LarpFaction extends StoryObject implements CreatorAwareInterface
 {
     #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'factions')]
-    private Larp $larp;
+    private ?Larp $larp;
 
     #[ORM\ManyToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
     private Collection $members;
@@ -56,12 +56,12 @@ class LarpFaction extends StoryObject implements CreatorAwareInterface
         return TargetType::Faction;
     }
 
-    public function getLarp(): Larp
+    public function getLarp(): ?Larp
     {
         return $this->larp;
     }
 
-    public function setLarp(Larp $larp): void
+    public function setLarp(?Larp $larp): void
     {
         $this->larp = $larp;
     }

@@ -11,16 +11,7 @@
                             aria-label="{{ 'common.close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
-                    {% if integrations is defined and integrations|length > 0 %}
-                        {% for integration in integrations %}
-                            <!-- Option for Google Spreadsheet import -->
-                            <a href="{{ path('backoffice_larp_story_character_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}"
-                               class="btn btn-primary">
-                                {{ 'backoffice.larp.import_google'|trans }}
-                            </a>
-                        {% endfor %}
-                    {% endif %}
-                    <a href="{{ path('backoffice_larp_story_character_import_file', {'larp': larp.id}) }}"
+                    <a href="{{ path('backoffice_larp_story_faction_import_file', {'larp': larp.id}) }}"
                        class="btn btn-secondary">
                         {{ 'backoffice.larp.import_file'|trans }}
                     </a>
@@ -36,52 +27,30 @@
     <div class="card mt-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'backoffice.larp.character.list'|trans }}</h2>
+                <h2 class="mb-0">{{ 'backoffice.larp.faction.list'|trans }}</h2>
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
-                        {{ 'backoffice.larp.import_characters'|trans }}
-                    </button>
-                    <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id }) }}" class="btn btn-success">
+                    <a href="{{ path('backoffice_larp_story_faction_modify', { larp: larp.id }) }}" class="btn btn-success">
                         {{ 'common.create'|trans }}
                     </a>
                 </div>
             </div>
         </div>
         <div class="card-body p-0">
-            {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
-
             <table class="table table-striped table-hover mb-0">
                 <thead class="table-light">
                 <tr>
-                    {% include 'includes/sort_th.html.twig' with {
-                        field: 'title',
-                        label: 'common.name'|trans
-                    } %}
-
-                    {% include 'includes/sort_th.html.twig' with {
-                        field: 'gender',
-                        label: 'common.gender'|trans
-                    } %}
-
+                    <th>{{ 'common.name'|trans }}</th>
                     <th>{{ 'common.description'|trans }}</th>
-
-                    {% include 'includes/sort_th.html.twig' with {
-                        field: 'factions',
-                        label: 'backoffice.larp.faction.name'|trans
-                    } %}
-
                     <th>{{ 'common.actions'|trans }}</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for character in characters %}
+                {% for faction in factions %}
                     <tr>
-                        <td>{{ character.title }}</td>
-                        <td>{{ character.gender }}</td>
-                        <td>{{ character.description|default('-') }}</td>
-                        <td>{{ character.factions|map(f => f.title)|join(', ')|default('-') }}</td>
+                        <td>{{ faction.title }}</td>
+                        <td>{{ faction.description|default('-') }}</td>
                         <td>
-                            <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id, character: character.id }) }}"
+                            <a href="{{ path('backoffice_larp_story_faction_modify', { larp: larp.id, faction: faction.id }) }}"
                                class="btn btn-sm btn-primary">
                                 {{ 'common.edit'|trans }}
                             </a>
@@ -89,11 +58,11 @@
                             <button type="button"
                                     class="btn btn-sm btn-danger"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#globalDeleteCharacterModal"
+                                    data-bs-target="#globalDeleteFactionModal"
                                     data-delete-text=" {{ 'common.delete'|trans }}"
-                                    data-character-id="{{ character.id }}"
-                                    data-character-name="{{ character.title }}"
-                                    data-delete-url-base="{{ path('backoffice_larp_story_character_delete', { larp: larp.id, character: 'CHARACTER_ID', integrations: 'INTEGRATIONS_FLAG' }) }}"
+                                    data-character-id="{{ faction.id }}"
+                                    data-character-name="{{ faction.title }}"
+                                    data-delete-url-base="{{ path('backoffice_larp_story_faction_delete', { larp: larp.id, faction: 'CHARACTER_ID' }) }}"
                             >
                                 {{ 'common.delete'|trans }}
                             </button>
@@ -105,11 +74,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="globalDeleteCharacterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="globalDeleteFactionModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="globalDeleteCharacterModalLabel"></h5>
+                    <h5 class="modal-title" id="globalDeleteFactionModalLabel"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
@@ -120,10 +89,7 @@
                         {{ 'common.cancel'|trans }}
                     </button>
                     <a href="#" id="deleteOnlyLarpilot" class="btn btn-danger">
-                        {{ 'backoffice.larp.character.delete_only_larpilot'|trans }}
-                    </a>
-                    <a href="#" id="deleteWithIntegrations" class="btn btn-danger">
-                        {{ 'backoffice.larp.character.delete_larpilot_and_integrations'|trans }}
+                        {{ 'backoffice.larp.faction.delete_only_larpilot'|trans }}
                     </a>
                 </div>
             </div>
@@ -132,7 +98,7 @@
 
 
     <script>
-        const deleteModal = document.getElementById('globalDeleteCharacterModal');
+        const deleteModal = document.getElementById('globalDeleteFactionModal');
         deleteModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
             const characterId = button.getAttribute('data-character-id');

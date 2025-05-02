@@ -7,6 +7,9 @@ form:
     description: "Character Description"
     faction: "Faction"
     choose_faction: "Choose a faction..."
+  faction:
+    name: "Unique Faction Name"
+    description: "Faction Description"
   invitation:
     name: "Name"
     valid_to: "Invitation code valid to"

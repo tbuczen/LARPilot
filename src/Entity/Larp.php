@@ -210,7 +210,7 @@ class Larp implements Timestampable, CreatorAwareInterface
     {
         if (!$this->factions->contains($element)) {
             $this->factions[] = $element;
-            $element->addLarp($this);
+            $element->setLarp($this);
         }
         return $this;
     }
@@ -218,7 +218,7 @@ class Larp implements Timestampable, CreatorAwareInterface
     public function removeFaction(LarpFaction $element): self
     {
         if ($this->factions->removeElement($element)) {
-            $element->removeLarp($this);
+            $element->setLarp(null);
         }
         return $this;
     }

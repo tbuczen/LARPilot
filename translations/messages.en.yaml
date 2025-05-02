@@ -43,6 +43,11 @@ common:
   valid_to: 'Valid To'
   accept: 'Accept'
   account: 'Account'
+  filter: 'Filter'
+  clear: 'Clear'
+  gender: 'Gender'
+  save_filter: 'Save Filter'
+  sort_by: 'Sort by'
 
 #Translations specific to public part of the app
 public:
@@ -71,13 +76,21 @@ backoffice:
     create: 'Create LARP'
     preview: 'Preview in public website'
     list: 'My LARPs'
-    characters:
+    faction:
+      name: 'Faction'
+      list: 'Factions'
+      delete_title: "Delete faction \"%name%\"?"
+      delete_only_larpilot: "Delete only in LARPilot"
+      delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
+    character:
+      name: 'Character'
       list: 'Characters'
       delete_title: "Delete character \"%name%\"?"
       delete_only_larpilot: "Delete only in LARPilot"
       delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
-    factions: 'Factions & Groups'
-    quests: 'Quests'
+    quest:
+      name: 'Quest'
+      list: 'Quests'
     relations: 'Story Relations'
     events: 'Events'
     integrations: 'Integrations'
@@ -135,3 +148,10 @@ file_select:
 login_page:
   info: "If you are already registered and want to connect accounts, please sign in first and link them in your account settings."
   title: 'Register / Log In'
+
+character_type:
+  player: "Player"
+  long_npc: "Long NPC"
+  short_npc: "Short NPC"
+  gm: "Game Master"
+  generic_npc: "Generic NPC"

@@ -11,31 +11,51 @@ use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Form\CharacterType;
+use App\Form\Filter\LarpCharacterFilterType;
 use App\Helper\Logger;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
+use Spiriit\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Webmozart\Assert\Assert;
 
-#[Route('/larp', name: 'backoffice_larp_story_characters_')]
+#[Route('/larp/{larp}/story/character/', name: 'backoffice_larp_story_character_')]
 class LarpCharactersController extends BaseController
 {
-    #[Route('/{larp}/story/characters', name: 'list', methods: ['GET', 'POST'])]
-    public function list(Larp $larp, LarpManager $larpManager): Response
+    #[Route('list', name: 'list', methods: ['GET', 'POST'])]
+    public function list(
+        Request $request,
+        Larp $larp,
+        LarpManager $larpManager,
+        LarpCharacterRepository $repository,
+        FilterBuilderUpdaterInterface $filterBuilderUpdater
+    ): Response
     {
+        $filterForm = $this->createForm(LarpCharacterFilterType::class);
+        $filterForm->handleRequest($request);
+        $qb = $repository->createQueryBuilder('c');
+        $filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+        $sort = $request->query->get('sort', 'title');
+        $dir = $request->query->get('dir', 'asc');
+
+        //todo if sort is collection field - order by first element
+        $qb->orderBy('c.' . $sort, $dir);
+        $qb->andWhere('c.larp = :larp')
+            ->setParameter('larp', $larp);
+
         $integrations = $larpManager->getIntegrationsForLarp($larp);
-        $characters = $larp->getCharacters();
         return $this->render('backoffice/larp/characters/list.html.twig', [
+            'filterForm' => $filterForm->createView(),
             'larp' => $larp,
             'integrations' => $integrations,
-            'characters' => $characters,
+            'characters' =>  $qb->getQuery()->getResult(),
         ]);
     }
 
-    #[Route('/{larp}/story/character/{character}', name: 'modify', defaults: ['character' => null], methods: ['GET', 'POST'])]
+    #[Route('{character}', name: 'modify', defaults: ['character' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager             $larpManager,
         IntegrationManager      $integrationManager,
@@ -75,12 +95,8 @@ class LarpCharactersController extends BaseController
             }
 
             $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
-            return $this->redirectToRoute('backoffice_larp_story_characters_list', ['larp' => $larp->getId()]);
+            return $this->redirectToRoute('backoffice_larp_story_character_list', ['larp' => $larp->getId()]);
         }
-
-//        if ($form->isSubmitted()) {
-//            $this->showErrorsAsFlash($form->getErrors(true));
-//        }
 
         return $this->render('backoffice/larp/characters/modify.html.twig', [
             'form' => $form->createView(),
@@ -88,7 +104,7 @@ class LarpCharactersController extends BaseController
         ]);
     }
 
-    #[Route('/{larp}/story/character/{character}/delete', name: 'delete', methods: ['GET', 'POST'])]
+    #[Route('{character}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,
         IntegrationManager      $integrationManager,
@@ -109,7 +125,7 @@ class LarpCharactersController extends BaseController
                 } catch (\Throwable $e) {
                     Logger::get()->error($e->getMessage(), $e->getTrace());
                     $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Character not deleted.');
-                    return $this->redirectToRoute('backoffice_larp_story_characters_list', [
+                    return $this->redirectToRoute('backoffice_larp_story_character_list', [
                         'larp' => $larp->getId(),
                     ]);
                 }
@@ -120,18 +136,18 @@ class LarpCharactersController extends BaseController
 
         $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
 
-        return $this->redirectToRoute('backoffice_larp_story_characters_list', [
+        return $this->redirectToRoute('backoffice_larp_story_character_list', [
             'larp' => $larp->getId(),
         ]);
     }
 
-    #[Route('/{id}/story/characters/import/file', name: 'import_file', methods: ['GET', 'POST'])]
+    #[Route('import/file', name: 'import_file', methods: ['GET', 'POST'])]
     public function importFile(string $id, LarpManager $larpManager): Response
     {
         return new Response('TODO:: Import from file csv/xlsx');
     }
 
-    #[Route('/{larp}/story/characters/import/{provider}/select/file', name: 'import_file_select', methods: ['GET'])]
+    #[Route('import/{provider}/select/file', name: 'import_file_select', methods: ['GET'])]
     public function selectIntegrationFile(
         Larp                    $larp,
         LarpManager             $larpManager,
@@ -149,7 +165,7 @@ class LarpCharactersController extends BaseController
         ]);
     }
 
-    #[Route('/{larp}/story/characters/import/{provider}/{sharedFile}/{mapping}', name: 'import_from_mapping', methods: ['GET', 'POST'])]
+    #[Route('import/{provider}/{sharedFile}/{mapping}', name: 'import_from_mapping', methods: ['GET', 'POST'])]
     public function importFromSelectedMapping(
         Larp                    $larp,
         LarpIntegrationProvider $provider,
@@ -171,16 +187,16 @@ class LarpCharactersController extends BaseController
         );
         $handler->handle($command);
 
-        return $this->redirectToRoute('backoffice_larp_story_characters_list', [
+        return $this->redirectToRoute('backoffice_larp_story_character_list', [
             'larp' => $larp->getId()->toRfc4122(),
         ]);
     }
 
-    #[Route('/{larp}/story/characters/import/{provider}', name: 'import_integration', methods: ['GET', 'POST'])]
+    #[Route('import/{provider}', name: 'import_integration', methods: ['GET', 'POST'])]
     public function importFromIntegration(Larp $larp, LarpIntegrationProvider $provider): Response
     {
         return match ($provider) {
-            default => $this->redirectToRoute('backoffice_larp_story_characters_import_file_select', [
+            default => $this->redirectToRoute('backoffice_larp_story_character_import_file_select', [
                 'larp' => $larp->getId()->toRfc4122(),
                 'provider' => $provider->value
             ]),

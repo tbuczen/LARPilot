@@ -33,3 +33,10 @@ a.nav-link.active {
     overflow-y: auto;
     z-index: 1050; /* Above main content */
 }
+
+:root {
+    --bs-tertiary-bg: #f0f0f0;
+    --bs-body-bg: #fff;
+    --bs-body-color: #212529;
+    --bs-border-color-translucent: var(--bs-primary);
+}

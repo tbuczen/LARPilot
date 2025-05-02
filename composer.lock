@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa8e772752805725c189d296b6be70cd",
+    "content-hash": "f4fe3876409082b47579ff1f95b02a76",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -3611,6 +3611,59 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "spiriitlabs/form-filter-bundle",
+            "version": "v11.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SpiriitLabs/form-filter-bundle.git",
+                "reference": "34d2a67eff787fd70f47008ca56172b0cbb39a8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SpiriitLabs/form-filter-bundle/zipball/34d2a67eff787fd70f47008ca56172b0cbb39a8b",
+                "reference": "34d2a67eff787fd70f47008ca56172b0cbb39a8b",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^3.0",
+                "doctrine/orm": "^3.0",
+                "php": "^8.1",
+                "symfony/form": "^5.4|^6.4|^7.0",
+                "symfony/framework-bundle": "^5.4|^6.4|^7.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^2.0",
+                "doctrine/doctrine-bundle": "^1.8 || ^2.0",
+                "rector/rector": "^0.17.1",
+                "symfony/phpunit-bridge": "^5.4|^6.4|^7.0",
+                "symfony/var-dumper": "^5.4|^6.4|^7.0",
+                "symplify/easy-coding-standard": "^11.3"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Spiriit\\Bundle\\FormFilterBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "This bundle aim to provide classes to build some form filters and then build a doctrine query from this form filter.",
+            "homepage": "https://github.com/SpiriitLabs/form-filter-bundle",
+            "keywords": [
+                "bundle",
+                "doctrine",
+                "filter",
+                "form",
+                "symfony"
+            ],
+            "support": {
+                "source": "https://github.com/SpiriitLabs/form-filter-bundle/tree/v11.0.6"
+            },
+            "time": "2024-11-22T10:50:32+00:00"
         },
         {
             "name": "stof/doctrine-extensions-bundle",

@@ -1,0 +1,50 @@
+<div class="p-3 border-bottom">
+    {{ form_start(form, { method: 'get' }) }}
+    <div class="row g-2">
+        {% for child in form %}
+            {% if child.vars.block_prefixes is not empty and child.vars.block_prefixes[1] != 'hidden' %}
+            <div class="col-md-3">
+                {{ form_row(child) }}
+            </div>
+            {% endif %}
+        {% endfor %}
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-block">
+                    <button type="submit" class="btn btn-outline-primary">{{ 'common.filter'|trans }}</button>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" class="btn btn-outline-secondary">{{ 'common.clear'|trans }}</a>
+                    <button class="btn btn-outline-primary">{{ 'common.save_filter'|trans }}</button>
+                    {{ form_row(form.saveFilter) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+</div>
+
+
+<div class="modal fade" id="saveFilterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ 'common.save_filter'|trans }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    {{ form_row(form.saveFilter) }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    {{ 'common.cancel'|trans }}
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    {{ 'common.save'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
