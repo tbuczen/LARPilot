@@ -7,6 +7,7 @@ use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\LarpAwareInterface;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\SavedFormFilterRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -30,7 +31,7 @@ class SavedFormFilter implements CreatorAwareInterface, Timestampable, LarpAware
     #[ORM\Column(type: 'string', length: 100)]
     private string $formName;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
     private array $parameters = [];
 
     public function __construct()

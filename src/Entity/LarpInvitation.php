@@ -6,6 +6,7 @@ use App\Entity\Enum\UserRole;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpInvitationRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -34,7 +35,7 @@ class LarpInvitation
     #[ORM\Column(type: 'boolean')]
     private bool $isReusable = true;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
     private ?array $acceptedByUserIds = [];
 
     public function __construct()

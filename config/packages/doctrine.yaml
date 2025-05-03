@@ -37,6 +37,12 @@ doctrine:
                 dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity"
         controller_resolver:
             auto_mapping: false
+        dql:
+            string_functions:
+                JSON_GET_TEXT: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetText
+                JSONB_EXISTS: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExists
+                JSONB_EXISTS_ANY: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExistsAny
+                JSONB_CONTAINS: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbContains
 
 when@test:
     doctrine:

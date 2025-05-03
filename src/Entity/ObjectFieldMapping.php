@@ -7,6 +7,7 @@ use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\ObjectFieldMappingRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -29,10 +30,10 @@ class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?SharedFile $externalFile = null;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
     private ?array $mappingConfiguration = null;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
     private ?array $metaConfiguration = null;
 
     public function getLarp(): Larp

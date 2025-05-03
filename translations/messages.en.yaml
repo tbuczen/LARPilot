@@ -46,8 +46,11 @@ common:
   filter: 'Filter'
   clear: 'Clear'
   gender: 'Gender'
-  save_filter: 'Save Filter'
   sort_by: 'Sort by'
+  save_filter: 'Save Filter'
+  choose: "Choose..."
+  saved_filter:
+    saved: 'Filter saved'
 
 #Translations specific to public part of the app
 public:

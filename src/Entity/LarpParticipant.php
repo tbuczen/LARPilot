@@ -6,6 +6,7 @@ use App\Entity\Enum\UserRole;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpParticipantRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,12 +35,8 @@ class LarpParticipant
 
     // Store an array of role strings (which correspond to UserRole enum values)
     /** @see UserRole */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
     private array $roles = [];
-
-    //TODO:: DO I NEED FACTION HERE?
-//    #[ORM\ManyToOne(targetEntity: LarpFaction::class, inversedBy: 'participants')]
-//    private ?LarpFaction $faction = null;
 
     public function getUser(): ?User
     {
@@ -63,6 +60,11 @@ class LarpParticipant
         return $this;
     }
 
+    public function getName(): ?string
+    {
+        return $this->user?->getUsername();
+    }
+
     /**
      * Returns an array of UserRole enum instances.
      *
@@ -83,17 +85,6 @@ class LarpParticipant
         $this->roles = array_map(fn($role) => $role instanceof UserRole ? $role->value : $role, $roles);
         return $this;
     }
-
-//    public function getFaction(): ?LarpFaction
-//    {
-//        return $this->faction;
-//    }
-//
-//    public function setFaction(?LarpFaction $faction): self
-//    {
-//        $this->faction = $faction;
-//        return $this;
-//    }
 
     public function isPlayer(): bool
     {

@@ -1,0 +1,178 @@
+<div class="d-inline-block" {{ attributes }}>
+
+    {% set modalId = 'saveFilterModal_' ~ formName %}
+    {% set selectId = 'saveFilterSelect_' ~ formName %}
+
+    <button
+            type="button"
+            class="btn btn-outline-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#{{ modalId }}"
+            {% if parameters is empty %}disabled{% endif %}
+    >
+        {{ 'common.save_filter'|trans }}
+    </button>
+
+    {% if savedFilters is not empty %}
+    <select id="{{ selectId }}" class="form-select d-inline-block w-auto">
+
+            <option data-parameters="" value="">{{ 'common.choose'|trans }}</option>
+            {% for filter in savedFilters %}
+                <option  data-parameters="{{ filter.parameters|url_encode }}" value="{{ filter.id }}">{{ filter.name }}</option>
+            {% endfor %}
+    </select>
+
+    <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#manageFiltersModal_{{ formName }}"
+    >
+        ⚙ {{ 'common.manage_filters'|trans }}
+    </button>
+    {% endif %}
+
+    <div class="modal fade" id="{{ modalId }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ 'common.save_filter'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="{{ 'common.close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">{{ 'common.save_filter'|trans }}</label>
+                    <input
+                            type="text"
+                            class="form-control mb-3"
+                            name="name"
+                            data-model="norender|name"
+                            placeholder="{{ 'common.name'|trans }}"
+                    >
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ 'common.close'|trans }}
+                    </button>
+                    <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-action="live#action"
+                            data-action-name="save"
+                            data-live-action-param="save"
+                            data-bs-dismiss="modal"
+                    >
+                        {{ 'common.save'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="manageFiltersModal_{{ formName }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ 'common.manage_filters'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    {% if savedFilters is empty %}
+                        <p class="text-muted">{{ 'common.no_saved_filters'|trans }}</p>
+                    {% else %}
+                        <ul class="list-group">
+                            {% for filter in savedFilters %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+                                    <input
+                                            type="text"
+                                            class="form-control form-control-sm"
+                                            value="{{ filter.name }}"
+                                            data-model="savedFilters[{{ loop.index0 }}].name::defer"
+                                    >
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button
+                                                type="button"
+                                                class="btn btn-outline-success"
+                                                data-action="live#action"
+                                                data-live-action-param="rename"
+                                                data-live-id-param="{{ filter.id }}"
+                                                data-live-name-param="{{ filter.name }}"
+                                        >
+                                            ✏
+                                        </button>
+                                        <button
+                                                type="button"
+                                                class="btn btn-outline-danger"
+                                                data-action="live#action"
+                                                data-live-action-param="delete"
+                                                data-live-id-param="{{ filter.id }}"
+                                        >
+                                            🗑
+                                        </button>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ 'common.close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('{{ modalId }}');
+            const header = modal.querySelector('.modal-header');
+            let isDragging = false, offsetX, offsetY;
+
+            header.style.cursor = 'move';
+            header.addEventListener('mousedown', function (e) {
+                isDragging = true;
+                const rect = modal.querySelector('.modal-dialog').getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                document.body.style.userSelect = 'none';
+            });
+
+            document.addEventListener('mouseup', function () {
+                isDragging = false;
+                document.body.style.userSelect = '';
+            });
+
+            document.addEventListener('mousemove', function (e) {
+                if (!isDragging) return;
+                const dialog = modal.querySelector('.modal-dialog');
+                const rect = dialog.getBoundingClientRect();
+
+                dialog.style.position = 'fixed';
+                dialog.style.margin = '0';
+                dialog.style.width = rect.width + 'px';
+
+                dialog.style.left = (e.clientX - offsetX) + 'px';
+                dialog.style.top = (e.clientY - offsetY) + 'px';
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('{{ selectId }}');
+            if (!select) return;
+
+            select.addEventListener('change', function () {
+                const option = select.options[select.selectedIndex];
+                const query = option.dataset.parameters;
+
+                if (query) {
+                    const url = new URL(window.location.href);
+                    url.search = '?' + query;
+                    window.location.href = url.toString();
+                }
+            });
+        });
+    </script>
+
+</div>

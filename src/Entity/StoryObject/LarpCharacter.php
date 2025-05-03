@@ -42,13 +42,13 @@ class LarpCharacter extends StoryObject
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $postLarpFate = null;
 
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'members')]
-    private Collection $factions;
+
 
     #[ORM\Column(length: 255, nullable: true, enumType: Gender::class)]
     private ?Gender $gender = null;
 
     #[ORM\ManyToOne(targetEntity: LarpParticipant::class)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?LarpParticipant $storyWriter = null;
 
     //notes - internal notes for the character
@@ -67,13 +67,16 @@ class LarpCharacter extends StoryObject
 
     //skills - list can be defined by organizers and people responsible for larp mechanics many to many to LarpCharacterSkill
     #[ORM\OneToMany(targetEntity: LarpCharacterSkill::class, mappedBy: 'character')]
-    #[ORM\JoinTable(name: "larp_character_tags")]
+    #[ORM\JoinTable(name: "larp_character_skill")]
     private Collection $skills;
 
     //items that character should start the game with (each item should be defined in the system, crafted by crafters or bought by the organizers)
     #[ORM\OneToMany(targetEntity: LarpCharacterItem::class,  mappedBy: 'character')]
-    #[ORM\JoinTable(name: "larp_character_tags")]
+    #[ORM\JoinTable(name: "larp_character_item")]
     private Collection $items;
+
+    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'members')]
+    private Collection $factions;
 
     public function __construct()
     {

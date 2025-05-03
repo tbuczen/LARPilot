@@ -31,13 +31,12 @@ class LarpCharactersController extends BaseController
         Larp $larp,
         LarpManager $larpManager,
         LarpCharacterRepository $repository,
-        FilterBuilderUpdaterInterface $filterBuilderUpdater
     ): Response
     {
-        $filterForm = $this->createForm(LarpCharacterFilterType::class);
+        $filterForm = $this->createForm(LarpCharacterFilterType::class, options: ['larpId' => $larp->getId()->toRfc4122()]);
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
-        $filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
         $sort = $request->query->get('sort', 'title');
         $dir = $request->query->get('dir', 'asc');
 
@@ -51,7 +50,7 @@ class LarpCharactersController extends BaseController
             'filterForm' => $filterForm->createView(),
             'larp' => $larp,
             'integrations' => $integrations,
-            'characters' =>  $qb->getQuery()->getResult(),
+            'characters' => $qb->getQuery()->getResult(),
         ]);
     }
 

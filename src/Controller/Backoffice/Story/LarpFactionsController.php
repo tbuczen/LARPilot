@@ -6,6 +6,7 @@ use App\Controller\BaseController;
 use App\Entity\Larp;
 use App\Entity\StoryObject\LarpFaction;
 use App\Form\FactionType;
+use App\Form\Filter\LarpFactionFilterType;
 use App\Helper\Logger;
 use App\Repository\StoryObject\LarpFactionRepository;
 use App\Service\Integrations\IntegrationManager;
@@ -19,10 +20,23 @@ use Symfony\Component\Routing\Attribute\Route;
 class LarpFactionsController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET'])]
-    public function factions(Larp $larp): Response
+    public function factions(Request $request, Larp $larp, LarpFactionRepository $repository): Response
     {
+        $filterForm = $this->createForm(LarpFactionFilterType::class);
+        $filterForm->handleRequest($request);
+        $qb = $repository->createQueryBuilder('c');
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+        $sort = $request->query->get('sort', 'title');
+        $dir = $request->query->get('dir', 'asc');
+
+        //todo if sort is collection field - order by first element
+        $qb->orderBy('c.' . $sort, $dir);
+        $qb->andWhere('c.larp = :larp')
+            ->setParameter('larp', $larp);
+
         return $this->render('backoffice/larp/factions/list.html.twig', [
-            'factions' => $larp->getFactions(),
+            'filterForm' => $filterForm->createView(),
+            'factions' => $qb->getQuery()->getResult(),
             'larp' => $larp,
         ]);
     }

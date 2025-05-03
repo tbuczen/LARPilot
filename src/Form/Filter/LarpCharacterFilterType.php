@@ -4,12 +4,15 @@ namespace App\Form\Filter;
 
 use App\Entity\Enum\CharacterType;
 use App\Entity\Enum\Gender;
+use App\Entity\Enum\UserRole;
+use App\Entity\LarpParticipant;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\Tag;
+use App\Repository\LarpParticipantRepository;
+use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,11 +21,20 @@ class LarpCharacterFilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $larpId = $options['larpId'];
+
         $builder
-            ->add('inGameName', Filters\TextFilterType::class)
+            ->add('title', Filters\TextFilterType::class, [
+                'condition_pattern' => FilterOperands::STRING_CONTAINS,
+            ])
+            ->add('inGameName', Filters\TextFilterType::class, [
+                'condition_pattern' => FilterOperands::STRING_CONTAINS,
+            ])
             ->add('gender', Filters\EnumFilterType::class, [
                 'class' => Gender::class,
                 'required' => false,
+                'multiple' => true,
+                'autocomplete' => true,
                 'placeholder' => 'form.choose',
             ])
             ->add('characterType', Filters\EnumFilterType::class, [
@@ -30,7 +42,7 @@ class LarpCharacterFilterType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'placeholder' =>  'form.choose',
+                'placeholder' => 'form.choose',
             ])
             ->add('factions', EntityType::class, [
                 'class' => LarpFaction::class,
@@ -41,8 +53,34 @@ class LarpCharacterFilterType extends AbstractType
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
                 'tom_select_options' => [
 //                    'plugins' =>  ['dropdown_input']
-                'hideSelected' => false
-                ]
+                    'hideSelected' => false
+                ],
+            ])
+            ->add('storyWriter', EntityType::class, [
+                'class' => LarpParticipant::class,
+                'choice_label' => 'user.username',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default', // potrzebne przez FilterBundle
+                'query_builder' => function (LarpParticipantRepository $repo) use ($larpId) {
+                    $qb = $repo->createQueryBuilder('p')
+                        ->join('p.user', 'u')
+                        ->andWhere('p.larp = :larp')
+                        ->setParameter('larp', $larpId)
+                        ->orderBy('u.username', 'ASC');
+
+                    $roles = UserRole::getStoryWriters();
+                    $orX = $qb->expr()->orX();
+
+                    foreach ($roles as $i => $role) {
+                        $orX->add("JSONB_EXISTS(p.roles, :role_$i) = true");
+                        $qb->setParameter("role_$i", $role);
+                    }
+                    $qb->andWhere($orX);
+dump($qb->getDQL());
+                    return $qb;
+                },
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
@@ -51,13 +89,7 @@ class LarpCharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
-            ])
-            ->add('saveFilter', TextType::class, [
-                'required' => false,
-                'mapped' => false,
-                'label' => 'common.save_filter_name',
             ]);
-            ;
     }
 
     public function getBlockPrefix(): string
@@ -72,6 +104,7 @@ class LarpCharacterFilterType extends AbstractType
             'validation_groups' => array('filtering'),
             'method' => 'GET',
             'translation_domain' => 'forms',
+            'larpId' => null
         ]);
     }
 }

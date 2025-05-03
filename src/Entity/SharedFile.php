@@ -6,6 +6,7 @@ use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\SharedFileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
@@ -27,7 +28,7 @@ class SharedFile
     #[ORM\JoinColumn(nullable: false)]
     private LarpIntegration $integration;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
     private array $metadata;
 
     #[ORM\Column(type: 'string', nullable: false)]

@@ -40,3 +40,7 @@ a.nav-link.active {
     --bs-body-color: #212529;
     --bs-border-color-translucent: var(--bs-primary);
 }
+
+.ts-control, .ts-wrapper.single.input-active .ts-control{
+    cursor: pointer !important;
+}

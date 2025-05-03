@@ -31,3 +31,4 @@ form:
     integrations: "Integrations"
     invitations: "Invitations"
     story: "Story"
+  save_filter_name: "Filter name"

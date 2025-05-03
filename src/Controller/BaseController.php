@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Spiriit\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
@@ -12,6 +13,7 @@ class BaseController extends AbstractController
 
     public function __construct(
         protected readonly TranslatorInterface $translator,
+        protected readonly FilterBuilderUpdaterInterface $filterBuilderUpdater
     )
     {
     }
