@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Enum\TargetType;
 
 #[ORM\Entity(repositoryClass: RelationRepository::class)]
-
 class Relation extends StoryObject
 {
 
@@ -23,6 +22,9 @@ class Relation extends StoryObject
     #[ORM\ManyToOne(targetEntity: StoryObject::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?StoryObject $to = null;
+
+    private ?TargetType $fromType = null;
+    private ?TargetType $toType = null;
 
     public function getLarp(): ?Larp
     {
@@ -39,9 +41,10 @@ class Relation extends StoryObject
         return $this->from;
     }
 
-    public function setFrom(?StoryObject $from): void
+    public function setFrom(?StoryObject $from): self
     {
         $this->from = $from;
+        return $this;
     }
 
     public function getTo(): ?StoryObject
@@ -49,23 +52,42 @@ class Relation extends StoryObject
         return $this->to;
     }
 
-    public function setTo(?StoryObject $to): void
+    public function setTo(?StoryObject $to): self
     {
         $this->to = $to;
+        return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): void
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
     }
 
     public static function getTargetType(): TargetType
     {
        return TargetType::Relation;
+    }
+
+    public function getFromType(): ?TargetType
+    {
+        return $this->fromType ?? $this->getFrom()?->getTargetType();
+    }
+
+    public function setFromType(?TargetType $fromType): self
+    {
+        $this->fromType = $fromType;
+        return $this;
+    }
+
+    public function getToType(): ?TargetType
+    {
+        return $this->toType ?? $this->getTo()?->getTargetType();
+    }
+
+    public function setToType(?TargetType $toType): self
+    {
+        $this->toType = $toType;
+        return $this;
     }
 }

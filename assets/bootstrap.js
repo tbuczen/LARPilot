@@ -9,4 +9,4 @@ const app = startStimulusApp();
 app.register('live', LiveController);
 app.register('folder-browser', Folder_browser_controller);
 app.register("google-file-picker", GoogleFilePickerController);
-app.register("custom-autocomplete_controller", CustomAutocompleteController);
+app.register("custom-autocomplete", CustomAutocompleteController);

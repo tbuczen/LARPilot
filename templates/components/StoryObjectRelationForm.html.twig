@@ -1,0 +1,26 @@
+{# templates/components/CharacterRelationForm.twig #}
+<div {{ attributes }} class="col-md-4 mb-3">
+    <div class="card bg-light shadow-sm h-100">
+        <div class="card-body" data-loading="addClass(loading-overlay)">
+            {{ form_start(form, {
+                attr: {
+                    'data-action': 'live#action:prevent',
+                    'data-live-action-param': 'save'
+                }
+            }) }}
+            {{ form_row(form.title, { attr: { 'data-model': 'norender|form.title' } }) }}
+            {{ form_row(form.description, { attr: { 'data-model': 'norender|form.description' } }) }}
+            {{ form_row(form.fromType, { attr: { 'data-model': 'form.fromType' } }) }}
+            {% if form.from is defined %}
+                {{ form_row(form.from, { attr: { 'data-model': 'norender|form.from' } }) }}
+            {% endif %}
+            {{ form_row(form.toType, { attr: { 'data-model': 'form.toType' } }) }}
+            {% if form.to is defined %}
+                {{ form_row(form.to, { attr: { 'data-model': 'norender|form.to' }}) }}
+            {% endif %}
+            {{ form_row(form.submit) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+</div>

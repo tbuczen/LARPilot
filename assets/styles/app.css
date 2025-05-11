@@ -44,3 +44,40 @@ a.nav-link.active {
 .ts-control, .ts-wrapper.single.input-active .ts-control{
     cursor: pointer !important;
 }
+
+.loading-overlay {
+    position: relative;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.loading-overlay::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2rem;
+    height: 2rem;
+    margin-top: -1rem;
+    margin-left: -1rem;
+    border: 0.2rem solid #999;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    z-index: 10;
+    background-color: transparent;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.toggleIcon.rotate {
+    transform: rotate(180deg);
+}
+.transition {
+    transition: transform 0.3s ease;
+}

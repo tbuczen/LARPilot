@@ -87,6 +87,7 @@ class LarpFactionsController extends BaseController
         return $this->render('backoffice/larp/factions/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
+            'faction' => $faction,
         ]);
     }
 

@@ -1,0 +1,26 @@
+{# templates/components/StoryObjectReferencesListForm.twig #}
+<div {{ attributes }}>
+    <div class="row">
+    {% for reference in this.getExistingReferences() %}
+
+    {% endfor %}
+
+    {% if additionalForms > 0 %}
+        {% for i in 0..(additionalForms - 1) %}
+        {{ component('StoryObjectReferenceForm', {
+            storyObject: storyObject,
+        }) }}
+        {% endfor %}
+    {% endif %}
+
+    </div>
+
+    <button
+            data-action="live#action"
+            data-live-action-param="addForm"
+            type="button"
+            class="btn btn-sm btn-success mt-2"
+    >
+        + {{ 'backoffice.larp.reference.add'|trans }}
+    </button>
+</div>

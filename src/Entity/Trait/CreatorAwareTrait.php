@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait CreatorAwareTrait
 {
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createdBy = null;
 

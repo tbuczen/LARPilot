@@ -1,0 +1,26 @@
+{# templates/components/CharacterReferenceForm.twig #}
+<div {{ attributes }} class="col-md-4 mb-3">
+    <div class="card bg-light shadow-sm h-100">
+        <div class="card-body" data-loading="addClass(loading-overlay)">
+            {{ form_start(form, {
+                attr: {
+                    'data-action': 'live#action:prevent',
+                    'data-live-action-param': 'save'
+                }
+            }) }}
+            {{ form_row(form.name, { attr: { 'data-model': 'norender|form.name' } }) }}
+
+            {{ form_row(form.referenceType, { attr: { 'data-model': 'norender|form.referenceType' } }) }}
+            {{ form_row(form.role, { attr: { 'data-model': 'form.role' } }) }}
+
+            {{ form_row(form.storyObjectType, { attr: { 'data-model': 'form.storyObjectType' } }) }}
+            {% if form.storyObject is defined %}
+                {{ form_row(form.storyObject, { attr: { 'data-model': 'norender|form.storyObject' } }) }}
+            {% endif %}
+
+            {{ form_row(form.submit) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+</div>

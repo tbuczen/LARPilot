@@ -38,5 +38,8 @@ class FactionType extends AbstractType
             'translation_domain' => 'forms',
             'larp' => null,
         ]);
+
+        $resolver->setRequired('larp');
+        $resolver->setAllowedTypes('larp', Larp::class);
     }
 }

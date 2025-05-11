@@ -30,7 +30,7 @@ class QuestFilterType extends AbstractType
                 'multiple' => true,
                 'required' => false,
                 'autocomplete' => true,
-                'data_extraction_method' => 'default', // potrzebne przez FilterBundle
+                'data_extraction_method' => 'default',
                 'tom_select_options' => [
 //                    'plugins' =>  ['dropdown_input']
                 'hideSelected' => false

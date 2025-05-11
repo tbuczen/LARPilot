@@ -23,4 +23,28 @@ enum TargetType: string
     // there will be other quest for leader's faction to find to heal him which may lead to discovering that he has been poisoned/ cursed
     // some characters might know some bits of information
     case Item = 'item';
+
+    public function getEntityClass(): string
+    {
+        return match ($this) {
+            self::Character => \App\Entity\StoryObject\LarpCharacter::class,
+            self::Thread    => \App\Entity\StoryObject\Thread::class,
+            self::Quest     => \App\Entity\StoryObject\Quest::class,
+            self::Event     => \App\Entity\StoryObject\Event::class,
+            self::Relation  => \App\Entity\StoryObject\Relation::class,
+            self::Faction   => \App\Entity\StoryObject\LarpFaction::class,
+            self::Item      => \App\Entity\StoryObject\Item::class,
+        };
+    }
+
+    public static function getAvailableForRelations(): array
+    {
+        return [
+            self::Character,
+            self::Thread,
+            self::Event,
+            self::Faction,
+            self::Item,
+        ];
+    }
 }

@@ -33,5 +33,6 @@ class LarpFactionFilterType extends AbstractType
             'method' => 'GET',
             'translation_domain' => 'forms',
         ]);
+
     }
 }

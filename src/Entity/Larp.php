@@ -244,4 +244,9 @@ class Larp implements Timestampable, CreatorAwareInterface
     {
         return $this->larpParticipants;
     }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 }

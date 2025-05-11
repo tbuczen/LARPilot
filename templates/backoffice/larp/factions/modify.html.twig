@@ -6,7 +6,59 @@
         {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>
+
+    <div class="card mb-3 shadow-sm">
+        <div
+                class="card-header d-flex justify-content-between align-items-center"
+                data-bs-toggle="collapse"
+                data-bs-target="#charactersCollapse"
+                role="button"
+                aria-expanded="true"
+                aria-controls="charactersCollapse"
+        >
+        <span class="fw-bold">
+            {{ 'backoffice.larp.character.list'|trans }}
+        </span>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="20" height="20" fill="currentColor"
+                 class="bi bi-chevron-down transition toggleIcon"
+                 viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </div>
+
+        <div id="charactersCollapse" class="collapse">
+            {% if faction.members is not empty %}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ 'common.name'|trans }}</th>
+                        <th>{{ 'common.role'|trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for character in faction.members %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id, character: character.id }) }}"
+                                   class="">
+                                    {{ character.getTitle() }}
+                                </a>
+                               </td>
+                            <td>{{ character.getGender() ?? '-' }}</td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>{{ 'common.empty_list'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+    
 {% endblock %}
 
-{% block title %}{{ ''|trans }}{% endblock %}
+{% block title %}{{ 'common.faction'|trans }} - {{ faction.getTitle() ?? 'common.new'|trans }} {% endblock %}
 

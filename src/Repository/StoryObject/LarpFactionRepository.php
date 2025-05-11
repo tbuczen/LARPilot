@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<LarpFaction>
@@ -26,15 +27,14 @@ class LarpFactionRepository extends BaseRepository
         parent::__construct($registry, LarpFaction::class);
     }
 
-    public function findByOrCreate(string $name, Larp $larp): LarpFaction
+    public function findByOrCreate(string $title, string $larpId): LarpFaction
     {
         $qb = $this->createQueryBuilder('f');
-        $qb->join('f.larps', 'l')
-            ->where('f.name = :name')
-            ->andWhere('l = :larp')
+        $qb->where('f.title = :title')
+            ->andWhere('f.larp = :larp')
             ->setParameters(new ArrayCollection(array(
-                new Parameter('name', $name),
-                new Parameter('larp', $larp)
+                new Parameter('title', $title),
+                new Parameter('larp', Uuid::fromString($larpId))
             )))
             ->setMaxResults(1);
 
@@ -42,19 +42,11 @@ class LarpFactionRepository extends BaseRepository
 
         if (!$faction) {
             $faction = new LarpFaction();
-            $faction->setTitle($name);
-            $faction->addLarp($larp);
+            $faction->setTitle($title);
+            $faction->setLarp($this->getEntityManager()->getReference(Larp::class, Uuid::fromString($larpId)));
             $this->getEntityManager()->persist($faction);
         }
 
         return $faction;
-    }
-
-    public function findByLarp(Larp $larp): QueryBuilder
-    {
-        return $this->createQueryBuilder('f')
-            ->join('f.larps', 'l')
-            ->where('l = :larp')
-            ->setParameter('larp', $larp);
     }
 }

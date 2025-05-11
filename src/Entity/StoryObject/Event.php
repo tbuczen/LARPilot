@@ -7,6 +7,7 @@ use App\Entity\Enum\StoryTimeUnit;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Repository\StoryObject\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Enum\TargetType;
@@ -44,6 +45,14 @@ class Event extends StoryObject
     #[ORM\Column(length: 20, nullable: true, enumType: StoryTimeUnit::class)]
     private ?StoryTimeUnit $storyTimeUnit = null;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->techParticipants = new ArrayCollection();
+        $this->involvedCharacters = new ArrayCollection();
+        $this->involvedFactions = new ArrayCollection();
+    }
+
     public function getTechParticipants(): Collection
     {
         return $this->techParticipants;
@@ -59,6 +68,22 @@ class Event extends StoryObject
         return $this->involvedCharacters;
     }
 
+    public function addInvolvedCharacter(LarpCharacter $character): self
+    {
+        if (!$this->involvedCharacters->contains($character)) {
+            $this->involvedCharacters->add($character);
+        }
+        return $this;
+    }
+
+    public function removeInvolvedCharacter(LarpCharacter $character): self
+    {
+        if ($this->involvedCharacters->contains($character)) {
+            $this->involvedCharacters->remove($character);
+        }
+        return $this;
+    }
+
     public function setInvolvedCharacters(Collection $involvedCharacters): void
     {
         $this->involvedCharacters = $involvedCharacters;
@@ -67,6 +92,22 @@ class Event extends StoryObject
     public function getInvolvedFactions(): Collection
     {
         return $this->involvedFactions;
+    }
+
+    public function addInvolvedFaction(LarpFaction $involvedFaction): self
+    {
+        if (!$this->involvedFactions->contains($involvedFaction)) {
+            $this->involvedFactions->add($involvedFaction);
+        }
+        return $this;
+    }
+
+    public function removeInvolvedFaction(LarpFaction $involvedFaction): self
+    {
+        if ($this->involvedFactions->contains($involvedFaction)) {
+            $this->involvedFactions->remove($involvedFaction);
+        }
+        return $this;
     }
 
     public function setInvolvedFactions(Collection $involvedFactions): void
@@ -117,6 +158,11 @@ class Event extends StoryObject
     public function getLarp(): Larp
     {
         return $this->larp;
+    }
+
+    public function setLarp(Larp $larp): void
+    {
+        $this->larp = $larp;
     }
 
     public static function getTargetType(): TargetType

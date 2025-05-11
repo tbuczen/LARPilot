@@ -51,6 +51,9 @@ common:
   choose: "Choose..."
   saved_filter:
     saved: 'Filter saved'
+  show_edit: 'Show / Edit'
+  new: 'New'
+  faction: 'Faction'
 
 #Translations specific to public part of the app
 public:
@@ -94,6 +97,7 @@ backoffice:
     quest:
       name: 'Quest'
       list: 'Quests'
+      delete_only_larpilot: "Delete only in LARPilot"
     relations: 'Story Relations'
     events: 'Events'
     integrations: 'Integrations'
@@ -112,6 +116,14 @@ backoffice:
     file_select:
       title: 'Select files to share with LARPPilot'
       open_picker_desc: 'Open the google file picker to choose files You want to share with LarpPilot'
+    threads: 'Threads'
+    relation:
+      list: 'Relations'
+      add: 'Add Relation'
+    thread:
+      list: 'Threads'
+    reference:
+      list: 'External References'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"

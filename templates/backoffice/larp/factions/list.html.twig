@@ -1,7 +1,6 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <!-- Import Options Modal -->
     <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -57,7 +56,7 @@
                         <td>
                             <a href="{{ path('backoffice_larp_story_faction_modify', { larp: larp.id, faction: faction.id }) }}"
                                class="btn btn-sm btn-primary">
-                                {{ 'common.edit'|trans }}
+                                {{ 'common.show_edit'|trans }}
                             </a>
 
                             <button type="button"

@@ -30,6 +30,7 @@ final readonly class SaveFileMappingHandler
         $mapping->setLarp($larp);
         $mapping->setExternalFile($sharedFile);
         $mapping->setMappingConfiguration($command->fields);
+        $mapping->setMetaConfiguration($command->meta);
         $mapping->setFileType(ResourceType::tryFrom($command->mappingType));
         $this->mappingRepository->save($mapping);
     }

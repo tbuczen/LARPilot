@@ -27,12 +27,6 @@ class ExternalReference implements CreatorAwareInterface, Timestampable
     use CreatorAwareTrait;
     use TimestampableEntity;
 
-    #[ORM\Column(type: 'string', enumType: TargetType::class)]
-    private TargetType $targetType;
-
-    #[ORM\Column(type: 'uuid')]
-    private Uuid $targetId;
-
     #[ORM\Column(type: 'string', enumType: LarpIntegrationProvider::class)]
     private LarpIntegrationProvider $provider;
 
@@ -54,27 +48,6 @@ class ExternalReference implements CreatorAwareInterface, Timestampable
     #[ORM\ManyToOne(targetEntity: StoryObject::class, inversedBy: 'externalReferences')]
     #[ORM\JoinColumn(nullable: true)]
     private ?StoryObject $storyObject = null;
-
-
-    public function getTargetType(): TargetType
-    {
-        return $this->targetType;
-    }
-
-    public function setTargetType(TargetType $targetType): void
-    {
-        $this->targetType = $targetType;
-    }
-
-    public function getTargetId(): Uuid
-    {
-        return $this->targetId;
-    }
-
-    public function setTargetId(Uuid $targetId): void
-    {
-        $this->targetId = $targetId;
-    }
 
     public function getProvider(): LarpIntegrationProvider
     {
@@ -134,6 +107,16 @@ class ExternalReference implements CreatorAwareInterface, Timestampable
     public function setRole(ReferenceRole $role): void
     {
         $this->role = $role;
+    }
+
+    public function getStoryObject(): ?StoryObject
+    {
+        return $this->storyObject;
+    }
+
+    public function setStoryObject(?StoryObject $storyObject): void
+    {
+        $this->storyObject = $storyObject;
     }
 
 }

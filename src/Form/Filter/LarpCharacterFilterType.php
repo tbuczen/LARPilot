@@ -5,10 +5,12 @@ namespace App\Form\Filter;
 use App\Entity\Enum\CharacterType;
 use App\Entity\Enum\Gender;
 use App\Entity\Enum\UserRole;
+use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\Tag;
 use App\Repository\LarpParticipantRepository;
+use App\Repository\StoryObject\LarpFactionRepository;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -21,7 +23,8 @@ class LarpCharacterFilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $larpId = $options['larpId'];
+        /** @var Larp $larp */
+        $larp = $options['larp'];
 
         $builder
             ->add('title', Filters\TextFilterType::class, [
@@ -52,9 +55,13 @@ class LarpCharacterFilterType extends AbstractType
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
                 'tom_select_options' => [
-//                    'plugins' =>  ['dropdown_input']
                     'hideSelected' => false
                 ],
+                'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
+                    return $repo->createQueryBuilder('f')
+                        ->where('f.larp = :larp')
+                        ->setParameter('larp', $larp);
+                },
             ])
             ->add('storyWriter', EntityType::class, [
                 'class' => LarpParticipant::class,
@@ -63,11 +70,11 @@ class LarpCharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
-                'query_builder' => function (LarpParticipantRepository $repo) use ($larpId) {
+                'query_builder' => function (LarpParticipantRepository $repo) use ($larp) {
                     $qb = $repo->createQueryBuilder('p')
                         ->join('p.user', 'u')
                         ->andWhere('p.larp = :larp')
-                        ->setParameter('larp', $larpId)
+                        ->setParameter('larp', $larp)
                         ->orderBy('u.username', 'ASC');
 
                     $roles = UserRole::getStoryWriters();
@@ -78,7 +85,6 @@ class LarpCharacterFilterType extends AbstractType
                         $qb->setParameter("role_$i", $role);
                     }
                     $qb->andWhere($orX);
-dump($qb->getDQL());
                     return $qb;
                 },
             ])
@@ -104,7 +110,10 @@ dump($qb->getDQL());
             'validation_groups' => array('filtering'),
             'method' => 'GET',
             'translation_domain' => 'forms',
-            'larpId' => null
+            'larp' => null
         ]);
+
+        $resolver->setRequired('larp');
+        $resolver->setAllowedTypes('larp', Larp::class);
     }
 }

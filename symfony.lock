@@ -63,6 +63,9 @@
             "./config/packages/google_recaptcha.yaml"
         ]
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v6.8.0"
+    },
     "knpuniversity/oauth2-client-bundle": {
         "version": "2.18",
         "recipe": {

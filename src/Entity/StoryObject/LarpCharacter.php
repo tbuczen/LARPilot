@@ -16,11 +16,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+
 #[Gedmo\Loggable]
 #[UniqueEntity(
     fields: ['larp', 'title'],
     message: 'A character with this title already exists in this LARP.'
 )]
+#[ORM\Index(name: 'idx_larp_character_larp_id', columns: ['larp_id'])]
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
 class LarpCharacter extends StoryObject
 {
@@ -31,19 +33,14 @@ class LarpCharacter extends StoryObject
     #[ORM\JoinColumn(nullable: false)]
     protected ?Larp $larp = null;
 
-    #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'continuation')]
+    #[ORM\OneToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(name: "previous_character_id", referencedColumnName: "id", nullable: true)]
     private ?LarpCharacter $previousCharacter = null;
-
-    #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'previousCharacter')]
-    private ?LarpCharacter $continuation = null;
 
     #[Gedmo\Versioned]
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $postLarpFate = null;
-
-
-
+    
     #[ORM\Column(length: 255, nullable: true, enumType: Gender::class)]
     private ?Gender $gender = null;
 
@@ -75,8 +72,14 @@ class LarpCharacter extends StoryObject
     #[ORM\JoinTable(name: "larp_character_item")]
     private Collection $items;
 
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'members')]
+    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'members', cascade: ['persist'])]
     private Collection $factions;
+
+    #[ORM\ManyToMany(targetEntity: Quest::class, inversedBy: 'involvedCharacters')]
+    private Collection $quests;
+
+    #[ORM\ManyToMany(targetEntity: Thread::class, inversedBy: 'involvedCharacters')]
+    private Collection $threads;
 
     public function __construct()
     {
@@ -84,7 +87,10 @@ class LarpCharacter extends StoryObject
         $this->factions = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->skills = new ArrayCollection();
+        $this->quests = new ArrayCollection();
+        $this->threads = new ArrayCollection();
         $this->items = new ArrayCollection();
+        $this->characterType = CharacterType::Player;
     }
 
     public function getLarp(): ?Larp
@@ -95,6 +101,20 @@ class LarpCharacter extends StoryObject
     public function setLarp(?Larp $larp): void
     {
         $this->larp = $larp;
+    }
+
+    public function addThread(Thread $thread): self
+    {
+        if (!$this->threads->contains($thread)) {
+            $this->threads->add($thread);
+        }
+        return $this;
+    }
+
+    public function removeThread(Thread $thread): self
+    {
+        $this->threads->removeElement($thread);
+        return $this;
     }
 
     public function getPreviousCharacter(): ?self
@@ -142,6 +162,7 @@ class LarpCharacter extends StoryObject
     {
         if (!$this->factions->contains($larpFaction)) {
             $this->factions[] = $larpFaction;
+//            $larpFaction->addMember($this);
         }
         return $this;
     }
@@ -260,6 +281,20 @@ class LarpCharacter extends StoryObject
     public function removeItem(Item $item): self
     {
         $this->items->removeElement($item);
+        return $this;
+    }
+
+    public function addQuest(Quest $quest): self
+    {
+        if (!$this->quests->contains($quest)) {
+            $this->quests->add($quest);
+        }
+        return $this;
+    }
+
+    public function removeQuest(Quest $quest): self
+    {
+        $this->quests->removeElement($quest);
         return $this;
     }
 

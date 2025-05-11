@@ -14,7 +14,7 @@ class CharacterListColumnMappingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
+            ->add('title', TextType::class, [
                 'label' => 'form.character.name',
             ])
             ->add('inGameName', TextType::class, [

@@ -10,6 +10,7 @@ final readonly class SaveFileMappingCommand
         public string $provider,
         public string $mappingType,
         public string $sharedFileId,
-        public array  $fields, // e.g. startingRow, factionColumn, etc.
+        public array  $fields, // e.g. title, factionColumn, etc.
+        public array  $meta, // e.g. startingRow, endColumn, etc.
     ) {}
 }

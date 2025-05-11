@@ -45,6 +45,7 @@ class FileMappingController extends BaseController
                 $data->mappingType->value,
                 $sharedFile->getId()->toRfc4122(),
                 $data->mappings,
+                $data->meta,
             );
 
             $handler($command);

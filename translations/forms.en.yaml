@@ -32,3 +32,21 @@ form:
     invitations: "Invitations"
     story: "Story"
   save_filter_name: "Filter name"
+  quest:
+    name: "Unique Quest Name"
+    description: "Quest Description"
+    thread: "Assign to Thread"
+    factions: "Factions involved in quest"
+    characters: "Characters involved in quest"
+  thread:
+    name: "Unique Thread Name"
+    description: "Thread Description"
+    factions: "Factions involved in thread"
+    characters: "Characters involved in thread"
+  relation:
+    name: "Relation Name"
+    description: "Description of the relation"
+    fromType: "Type of owning side of relation"
+    from: "Relation Owner"
+    toType: "Type of target side of relation"
+    to: "Related"

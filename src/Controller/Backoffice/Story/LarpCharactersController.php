@@ -16,7 +16,9 @@ use App\Helper\Logger;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
+use Doctrine\ORM\QueryBuilder;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,24 +35,19 @@ class LarpCharactersController extends BaseController
         LarpCharacterRepository $repository,
     ): Response
     {
-        $filterForm = $this->createForm(LarpCharacterFilterType::class, options: ['larpId' => $larp->getId()->toRfc4122()]);
+        $filterForm = $this->createForm(LarpCharacterFilterType::class, options: ['larp' => $larp]);
         $filterForm->handleRequest($request);
-        $qb = $repository->createQueryBuilder('c');
-        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
-        $sort = $request->query->get('sort', 'title');
-        $dir = $request->query->get('dir', 'asc');
-
-        //todo if sort is collection field - order by first element
-        $qb->orderBy('c.' . $sort, $dir);
-        $qb->andWhere('c.larp = :larp')
-            ->setParameter('larp', $larp);
+        $qb = $this->getListQueryBuilder($repository, $larp, $filterForm, $request);
+        $pagination = $this->getPagination($qb, $request);
+        $this->entityPreloader->preload($pagination->getItems(), 'factions');
+        $this->entityPreloader->preload($pagination->getItems(), 'storyWriter');
 
         $integrations = $larpManager->getIntegrationsForLarp($larp);
         return $this->render('backoffice/larp/characters/list.html.twig', [
             'filterForm' => $filterForm->createView(),
             'larp' => $larp,
             'integrations' => $integrations,
-            'characters' => $qb->getQuery()->getResult(),
+            'characters' => $pagination,
         ]);
     }
 
@@ -78,26 +75,14 @@ class LarpCharactersController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $characterRepository->save($character);
 
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    if ($new) {
-                        $integrationService->createStoryObject($integration, $character);
-                    } else {
-                        $integrationService->syncStoryObject($integration, $character);
-                    }
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('warning', 'Failed to sync with ' . $integration->getProvider()->name);
-                }
-            }
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $character);
 
             $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
             return $this->redirectToRoute('backoffice_larp_story_character_list', ['larp' => $larp->getId()]);
         }
 
         return $this->render('backoffice/larp/characters/modify.html.twig', [
+            'character' => $character,
             'form' => $form->createView(),
             'larp' => $larp,
         ]);

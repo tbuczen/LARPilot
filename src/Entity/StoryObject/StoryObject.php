@@ -10,6 +10,7 @@ use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\LarpAwareInterface;
 use App\Entity\Trait\UuidTraitEntity;
+use App\Repository\StoryObject\StoryObjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +18,7 @@ use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: StoryObjectRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap([
@@ -42,7 +43,7 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
     *
     */
     #[ORM\Column(length: 255)]
-    protected ?string $title;
+    protected ?string $title = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
@@ -72,9 +73,10 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
         return $this->description;
     }
 
-    public function setDescription(?string $description): void
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
     }
 
     public function getExternalReferences(): Collection
