@@ -22,7 +22,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     fields: ['larp', 'title'],
     message: 'A character with this title already exists in this LARP.'
 )]
-#[ORM\Index(name: 'idx_larp_character_larp_id', columns: ['larp_id'])]
+#[ORM\Index(columns: ['larp_id'])]
+#[ORM\Index(columns: ['in_game_name'])]
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
 class LarpCharacter extends StoryObject
 {
@@ -296,6 +297,26 @@ class LarpCharacter extends StoryObject
     {
         $this->quests->removeElement($quest);
         return $this;
+    }
+
+    public function getQuests(): Collection
+    {
+        return $this->quests;
+    }
+
+    public function setQuests(Collection $quests): void
+    {
+        $this->quests = $quests;
+    }
+
+    public function getThreads(): Collection
+    {
+        return $this->threads;
+    }
+
+    public function setThreads(Collection $threads): void
+    {
+        $this->threads = $threads;
     }
 
     public static function getTargetType(): TargetType

@@ -27,10 +27,10 @@ class SaveFilterForm extends AbstractController
     public string $name = '';
 
     #[LiveProp]
-    public string $larpId = '';
+    public string $larpId;
 
     #[LiveProp]
-    public string $formName = '';
+    public string $formName;
 
     #[LiveProp]
     public array $parameters = [];
@@ -48,9 +48,10 @@ class SaveFilterForm extends AbstractController
         $this->user = $this->security->getUser();
     }
 
-    public function mount(string $formName): void
+    public function mount(string $formName, string $larpId): void
     {
         $this->formName = $formName;
+        $this->larpId = $larpId;
         $this->refreshFilters();
     }
 
@@ -142,7 +143,7 @@ class SaveFilterForm extends AbstractController
 
     private function refreshFilters(): void
     {
-        $this->internalSavedFilters = $this->repository->findByFormNameAndUser($this->formName, $this->user);
+        $this->internalSavedFilters = $this->repository->findByFormNameAndUser($this->formName, $this->user, $this->larpId);
         $this->savedFilters = $this->internalSavedFilters;
     }
 }

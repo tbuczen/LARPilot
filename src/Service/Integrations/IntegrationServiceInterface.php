@@ -38,11 +38,14 @@ interface IntegrationServiceInterface
     public function createReferenceUrl(
         SharedFile $file,
         ReferenceType $referenceType,
-        string|int $externalId
+        string|int $externalId,
+        array $additionalData = []
     ): ?string;
 
     public function syncStoryObject(LarpIntegration $integration, StoryObject $storyObject);
     public function removeStoryObject(LarpIntegration $integration, StoryObject $storyObject);
     public function createStoryObject(LarpIntegration $integration, StoryObject $storyObject);
+
+    public function fetchSpreadsheetSheetIdByName(SharedFile $sharedFile, ObjectFieldMapping $mapping): string;
 
 }

@@ -97,6 +97,26 @@ class LarpFaction extends StoryObject implements CreatorAwareInterface
         return $this->larp;
     }
 
+    public function getQuests(): Collection
+    {
+        return $this->quests;
+    }
+
+    public function setQuests(Collection $quests): void
+    {
+        $this->quests = $quests;
+    }
+
+    public function getThreads(): Collection
+    {
+        return $this->threads;
+    }
+
+    public function setThreads(Collection $threads): void
+    {
+        $this->threads = $threads;
+    }
+
     public function setLarp(?Larp $larp): void
     {
         $this->larp = $larp;

@@ -24,6 +24,8 @@ enum TargetType: string
     // some characters might know some bits of information
     case Item = 'item';
 
+    case Place = 'place'; // a location in the larp world, can be a place of interest, a quest location, etc.
+
     public function getEntityClass(): string
     {
         return match ($this) {
@@ -34,6 +36,7 @@ enum TargetType: string
             self::Relation  => \App\Entity\StoryObject\Relation::class,
             self::Faction   => \App\Entity\StoryObject\LarpFaction::class,
             self::Item      => \App\Entity\StoryObject\Item::class,
+            self::Place      => \App\Entity\StoryObject\Place::class,
         };
     }
 
@@ -45,6 +48,7 @@ enum TargetType: string
             self::Event,
             self::Faction,
             self::Item,
+            self::Place,
         ];
     }
 }

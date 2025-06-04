@@ -42,6 +42,11 @@
 
                 {% if is_granted('VIEW_BO_LARP_STORY', larp) %}
                     <div class="btn-group" role="group" aria-label="LARP Story Menu">
+                        <a href="{{ path('backoffice_larp_story_main', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if 'larp_story_main' in currentRoute %}active{% endif %}">
+                            {{ 'backoffice.larp.story.main_title'|trans }}
+                        </a>
+
                         <a href="{{ path('backoffice_larp_story_character_list', {'larp': larp.id}) }}"
                            class="btn btn-primary {% if 'larp_story_character' in currentRoute %}active{% endif %}">
                             {{ 'backoffice.larp.character.list'|trans }}

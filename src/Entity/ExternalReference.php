@@ -49,6 +49,8 @@ class ExternalReference implements CreatorAwareInterface, Timestampable
     #[ORM\JoinColumn(nullable: true)]
     private ?StoryObject $storyObject = null;
 
+    private ?TargetType $storyObjectType = null;
+
     public function getProvider(): LarpIntegrationProvider
     {
         return $this->provider;
@@ -114,9 +116,21 @@ class ExternalReference implements CreatorAwareInterface, Timestampable
         return $this->storyObject;
     }
 
-    public function setStoryObject(?StoryObject $storyObject): void
+    public function setStoryObject(?StoryObject $storyObject): self
     {
         $this->storyObject = $storyObject;
+        return $this;
+    }
+
+    public function getStoryObjectType(): ?TargetType
+    {
+        return $this->storyObject?->getTargetType() ?? $this->storyObjectType;
+    }
+
+    public function setStoryObjectType(?TargetType $storyObjectType): self
+    {
+        $this->storyObjectType = $storyObjectType;
+        return $this;
     }
 
 }

@@ -50,3 +50,8 @@ form:
     from: "Relation Owner"
     toType: "Type of target side of relation"
     to: "Related"
+  external_reference:
+    name: "Name"
+    mapping_type: "Mapping Type"
+    reference_type: "Type"
+    url: "URL"

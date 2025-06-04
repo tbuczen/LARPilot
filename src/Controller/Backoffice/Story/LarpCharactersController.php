@@ -162,12 +162,16 @@ class LarpCharactersController extends BaseController
         $integrationService = $integrationManager->getService($provider);
 
         $rows = $integrationService->fetchSpreadsheetRows($sharedFile, $mapping);
+        $additionalData = [
+            'sheetId' => $integrationService->fetchSpreadsheetSheetIdByName($sharedFile, $mapping),
+        ];
         $command = new ImportCharactersCommand(
             $larp->getId()->toRfc4122(),
             $rows,
             $mapping->getMappingConfiguration(),
             $mapping->getMetaConfiguration(),
-            $sharedFile->getId()->toRfc4122()
+            $sharedFile->getId()->toRfc4122(),
+            additionalFileData: $additionalData
         );
         $handler->handle($command);
 

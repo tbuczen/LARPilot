@@ -9,14 +9,12 @@ use App\Entity\StoryObject\Thread;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Repository\StoryObject\LarpFactionRepository;
 use App\Repository\StoryObject\ThreadRepository;
-use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class QuestFilterType extends AbstractType
+class StoryGraphFilterType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -25,9 +23,6 @@ class QuestFilterType extends AbstractType
         $larp = $options['larp'];
 
         $builder
-            ->add('title', Filters\TextFilterType::class, [
-                'condition_pattern' => FilterOperands::STRING_CONTAINS,
-            ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,
                 'choice_label' => 'title',
@@ -36,7 +31,8 @@ class QuestFilterType extends AbstractType
                 'autocomplete' => true,
                 'data_extraction_method' => 'default',
                 'tom_select_options' => [
-                    'hideSelected' => false
+//                    'plugins' =>  ['dropdown_input']
+                'hideSelected' => false
                 ],
                 'query_builder' => function (ThreadRepository $repo) use ($larp) {
                     return $repo->createQueryBuilder('f')
@@ -76,11 +72,12 @@ class QuestFilterType extends AbstractType
                         ->setParameter('larp', $larp);
                 },
             ]);
+            ;
     }
 
     public function getBlockPrefix(): string
     {
-        return 'larp_quest_filter';
+        return 'larp_story_graph_filter';
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -54,6 +54,7 @@ common:
   show_edit: 'Show / Edit'
   new: 'New'
   faction: 'Faction'
+  manage_filters: 'Manage Filters'
 
 #Translations specific to public part of the app
 public:
@@ -124,6 +125,8 @@ backoffice:
       list: 'Threads'
     reference:
       list: 'External References'
+    story:
+      main_title: 'Story'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"

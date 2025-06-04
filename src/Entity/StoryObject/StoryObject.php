@@ -19,6 +19,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: StoryObjectRepository::class)]
+#[ORM\Index(columns: ['title'])]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap([
@@ -52,10 +53,18 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
     #[ORM\OneToMany(targetEntity: ExternalReference::class, mappedBy: 'storyObject', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $externalReferences;
 
+    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'from')]
+    private Collection $relationsFrom;
+
+    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'to')]
+    private Collection $relationsTo;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
         $this->externalReferences = new ArrayCollection();
+        $this->relationsFrom = new ArrayCollection();
+        $this->relationsTo = new ArrayCollection();
     }
 
     public function getTitle(): ?string
@@ -87,6 +96,16 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
     public function setExternalReferences(Collection $externalReferences): void
     {
         $this->externalReferences = $externalReferences;
+    }
+
+    public function getRelationsFrom(): Collection
+    {
+        return $this->relationsFrom;
+    }
+
+    public function getRelationsTo(): Collection
+    {
+        return $this->relationsTo;
     }
 
 }

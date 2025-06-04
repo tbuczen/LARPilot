@@ -22,7 +22,7 @@ class ThreadController extends BaseController
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]
     public function threads(Request $request, Larp $larp, ThreadRepository $repository): Response
     {
-        $filterForm = $this->createForm(ThreadFilterType::class);
+        $filterForm = $this->createForm(ThreadFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);

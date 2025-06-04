@@ -6,6 +6,7 @@ use App\Entity\SavedFormFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<SavedFormFilter>
@@ -25,16 +26,26 @@ class SavedFormFilterRepository extends BaseRepository
     /**
      * @return SavedFormFilter[]
      */
-    public function findByFormNameAndUser(string $formName, UserInterface $user): array
+    public function findByFormNameAndUser(string $formName, UserInterface $user, null|string|Uuid $larpId = null): array
     {
-        return $this->createQueryBuilder('f')
+        if (is_string($larpId) && !empty($larpId)) {
+            $larpId = Uuid::fromString($larpId);
+        }
+
+        $qb = $this->createQueryBuilder('f')
             ->andWhere('f.formName = :formName')
             ->andWhere('f.createdBy = :user')
             ->setParameter('formName', $formName)
             ->setParameter('user', $user)
-            ->orderBy('f.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
+            ->orderBy('f.createdAt', 'DESC');
+
+        if($larpId) {
+            $qb->andWhere('f.larp = :larp')
+                ->setParameter('larp', $larpId);
+        }
+
+        return $qb->getQuery()
+        ->getResult();
     }
 
 }

@@ -23,7 +23,7 @@ class QuestController extends BaseController
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]
     public function quests(Request $request, Larp $larp, QuestRepository $repository): Response
     {
-        $filterForm = $this->createForm(QuestFilterType::class);
+        $filterForm = $this->createForm(QuestFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);

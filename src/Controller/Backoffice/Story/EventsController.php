@@ -22,7 +22,7 @@ class EventsController extends BaseController
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request, Larp $larp, EventRepository $repository): Response
     {
-        $filterForm = $this->createForm(EventFilterType::class);
+        $filterForm = $this->createForm(EventFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);

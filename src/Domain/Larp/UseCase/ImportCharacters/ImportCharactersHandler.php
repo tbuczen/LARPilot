@@ -46,7 +46,7 @@ class ImportCharactersHandler
         $chunkSize = 20;
         $startingRow = $command->meta['startingRow'] ?? 1;
         $filteredRows = array_slice($command->rows, $startingRow - 1, null, true);
-        $chunks = array_chunk($filteredRows, $chunkSize);
+        $chunks = array_chunk($filteredRows, $chunkSize, true);
 
         $larp = $this->larpRepository->find($command->larpId);
         $file = $this->sharedFileRepository->find($command->externalFileId);
@@ -95,14 +95,10 @@ class ImportCharactersHandler
                             }
                         }
                     }
-                    $this->createReference($character, $rowNo, $file);
+                    $this->createReference($character, $rowNo, $file, $command->additionalFileData);
                     $this->entityManager->persist($character);
                 }
                 $this->entityManager->flush();
-//                $this->entityManager->clear();
-//                $this->entityManager->clear(LarpCharacter::class);
-//                $this->entityManager->clear(ExternalReference::class);
-
                 $file = $this->sharedFileRepository->find($command->externalFileId);
             }
 
@@ -134,7 +130,7 @@ class ImportCharactersHandler
         $character->addFaction($this->cache[$factionName]);
     }
 
-    private function createReference(LarpCharacter $character, int|string $rowNo, SharedFile $file): void
+    private function createReference(LarpCharacter $character, int|string $rowNo, SharedFile $file, array $additionalData = []): void
     {
         $reference = new ExternalReference();
         $reference->setStoryObject($character);
@@ -142,7 +138,7 @@ class ImportCharactersHandler
         $reference->setExternalId($rowNo + 1);
         $reference->setReferenceType(ReferenceType::SpreadsheetRow);
         $reference->setName($character->getTitle());
-        $reference->setUrl($this->integrationService->createReferenceUrl($file, ReferenceType::SpreadsheetRow, $reference->getExternalId()));
+        $reference->setUrl($this->integrationService->createReferenceUrl($file, ReferenceType::SpreadsheetRow, $reference->getExternalId(), $additionalData));
         $reference->setRole(ReferenceRole::Primary);
 
         $this->entityManager->persist($reference);

@@ -1,25 +1,41 @@
-{# templates/components/CharacterReferenceForm.twig #}
+{# templates/components/StoryObjectReferenceForm.html.twig #}
 <div {{ attributes }} class="col-md-4 mb-3">
     <div class="card bg-light shadow-sm h-100">
         <div class="card-body" data-loading="addClass(loading-overlay)">
+            {% set isExisting = form.vars.data.createdAt is not null %}
+
             {{ form_start(form, {
                 attr: {
                     'data-action': 'live#action:prevent',
                     'data-live-action-param': 'save'
                 }
             }) }}
-            {{ form_row(form.name, { attr: { 'data-model': 'norender|form.name' } }) }}
 
+            {{ form_row(form.name, { attr: { 'data-model': 'norender|form.name' } }) }}
             {{ form_row(form.referenceType, { attr: { 'data-model': 'norender|form.referenceType' } }) }}
             {{ form_row(form.role, { attr: { 'data-model': 'form.role' } }) }}
 
-            {{ form_row(form.storyObjectType, { attr: { 'data-model': 'form.storyObjectType' } }) }}
-            {% if form.storyObject is defined %}
-                {{ form_row(form.storyObject, { attr: { 'data-model': 'norender|form.storyObject' } }) }}
+            {% if not isExisting %}
+                {{ form_row(form.storyObjectType, { attr: { 'data-model': 'form.storyObjectType' } }) }}
+                {% if form.storyObject is defined %}
+                    {{ form_row(form.storyObject, { attr: { 'data-model': 'norender|form.storyObject' } }) }}
+                {% endif %}
+                {{ form_row(form.url, { attr: { 'data-model': 'form.url' } }) }}
+
+            {% else %}
+                {% if form.vars.data.url is not empty %}
+                    <a href="{{ form.vars.data.url }}"
+                       target="_blank"
+                       rel="noopener"
+                       class="btn btn-outline-primary w-100 mt-3">
+                        🔗 {{ 'common.show_details'|trans }}
+                    </a>
+                {% endif %}
             {% endif %}
 
             {{ form_row(form.submit) }}
-            {{ form_end(form) }}
+{#            {{ form_row(form.delete) }}#}
+            {{ form_end(form, { render_rest: false }) }}
         </div>
     </div>
 

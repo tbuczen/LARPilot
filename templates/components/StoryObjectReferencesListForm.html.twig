@@ -2,7 +2,10 @@
 <div {{ attributes }}>
     <div class="row">
     {% for reference in this.getExistingReferences() %}
-
+        {{ component('StoryObjectReferenceForm', {
+            storyObject: storyObject,
+            initialFormData: reference,
+        }) }}
     {% endfor %}
 
     {% if additionalForms > 0 %}

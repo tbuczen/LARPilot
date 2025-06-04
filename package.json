@@ -20,6 +20,7 @@
     "dependencies": {
         "@hotwired/stimulus": "^3.2.2",
         "@symfony/stimulus-bundle": "^2.23.0",
-        "@symfony/ux-live-component": "^2.24.0"
+        "@symfony/ux-live-component": "^2.24.0",
+        "cytoscape": "^3.32.0"
     }
 }

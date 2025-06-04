@@ -22,6 +22,7 @@ readonly class ImportCharactersCommand
         public array $meta,
         public string $externalFileId,
         public bool $force = false,
+        public array $additionalFileData = [],
     ) {
     }
 }

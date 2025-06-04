@@ -44,11 +44,15 @@ class ThreadType extends AbstractType
                         ->where('f.larp = :larp')
                         ->setParameter('larp', $larp);
                 },
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
             ])
             ->add('involvedCharacters', EntityType::class, [
                 'class' => LarpCharacter::class,
                 'choice_label' => 'title',
-                'label' => 'form.thread.factions',
+                'label' => 'form.thread.characters',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
@@ -58,6 +62,10 @@ class ThreadType extends AbstractType
                         ->where('f.larp = :larp')
                         ->setParameter('larp', $larp);
                 },
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',

@@ -18,6 +18,27 @@ readonly class GoogleSpreadsheetIntegrationHelper
     ) {
     }
 
+    public function fetchSpreadsheetSheetIdByName(SharedFile $sharedFile, SpreadsheetMappingModel $mapping): string
+    {
+        $client = $this->googleClientManager->createServiceAccountClient();
+        $sheetsService = new Sheets($client);
+
+        $spreadsheet = $sheetsService->spreadsheets->get($sharedFile->getFileId());
+
+        foreach ($spreadsheet->getSheets() as $sheet) {
+            $properties = $sheet->getProperties();
+            if ($properties->getTitle() === $mapping->sheetName) {
+                return (string) $properties->getSheetId(); // This is the GID
+            }
+        }
+
+        throw new \RuntimeException(sprintf(
+            'Sheet "%s" not found in spreadsheet "%s".',
+            $mapping->sheetName,
+            $sharedFile->getFileId()
+        ));
+    }
+
     public function fetchSpreadsheetRows(SharedFile $sharedFile, SpreadsheetMappingModel $mapping): array
     {
         $client = $this->googleClientManager->createServiceAccountClient();

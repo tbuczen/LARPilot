@@ -92,6 +92,12 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         return $this->googleSpreadsheetIntegrationHelper->fetchSpreadsheetRows($sharedFile, $spreadsheetMapping);
     }
 
+    public function fetchSpreadsheetSheetIdByName(SharedFile $sharedFile, ObjectFieldMapping $mapping): string
+    {
+        $spreadsheetMapping = SpreadsheetMappingModel::fromEntity($mapping);
+        return $this->googleSpreadsheetIntegrationHelper->fetchSpreadsheetSheetIdByName($sharedFile, $spreadsheetMapping);
+    }
+
     public function getExternalFileUrl(LarpIntegration $integration, string $externalFileId): string
     {
         $client = $this->googleClientManager->createServiceAccountClient();
@@ -170,12 +176,14 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         // TODO: Implement syncStoryObjectDocument() method.
     }
 
-    public function createReferenceUrl(SharedFile $file, ReferenceType $referenceType, int|string $externalId): ?string
+    public function createReferenceUrl(SharedFile $file, ReferenceType $referenceType, int|string $externalId, array $additionalData = []): ?string
     {
         $baseUrl = $file->getUrl();
 
+        $baseUrl = preg_replace('/\?.*/', '', $baseUrl);
+        $sheetId = $additionalData['sheetId'] ?? 0; /* @see LarpCharactersController::importFromSelectedMapping */
         return match ($referenceType) {
-            ReferenceType::SpreadsheetRow => $baseUrl . "&range=$externalId:$externalId",
+            ReferenceType::SpreadsheetRow => $baseUrl . "#gid=$sheetId&range=$externalId:$externalId",
             ReferenceType::DocumentParagraph => $baseUrl . "#heading=$externalId",
             default => $baseUrl,
         };

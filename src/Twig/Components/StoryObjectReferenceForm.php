@@ -45,7 +45,8 @@ class StoryObjectReferenceForm extends AbstractController
     public function instantiateForm(): FormInterface
     {
         $formData = $this->initialFormData ?? (new ExternalReference())
-            ->setStoryObject($this->storyObject);
+            ->setStoryObject($this->storyObject)
+            ->setStoryObjectType($this->storyObject->getTargetType());
 
         return $this->createForm(ExternalReferenceType::class, $formData, [
             'larp' => $this->storyObject->getLarp(),

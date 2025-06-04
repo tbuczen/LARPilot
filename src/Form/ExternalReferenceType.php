@@ -32,15 +32,18 @@ class ExternalReferenceType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'form.external_reference.name',
             ])
+            ->add('url', TextType::class, [
+                'label' => 'form.external_reference.url',
+            ])
             ->add('referenceType', ChoiceType::class, [
-                'label' => 'form.external_reference.type',
+                'label' => 'form.external_reference.mapping_type',
                 'choices' => ReferenceType::cases(),
                 'choice_label' => fn(ReferenceType $choice) => $choice->name,
                 'choice_value' => fn(?ReferenceType $choice) => $choice?->value,
                 'required' => true,
             ])
             ->add('role', ChoiceType::class, [
-                'label' => 'form.external_reference.type',
+                'label' => 'form.external_reference.reference_type',
                 'choices' => ReferenceRole::cases(),
                 'choice_label' => fn(ReferenceRole $choice) => $choice->name,
                 'choice_value' => fn(?ReferenceRole $choice) => $choice?->value,
@@ -52,7 +55,6 @@ class ExternalReferenceType extends AbstractType
                 'choice_label' => fn(TargetType $type) => $type->name,
                 'choice_value' => fn(?TargetType $type) => $type?->value,
                 'required' => true,
-                'mapped' => false,
                 'placeholder' => 'form.choose',
             ])
             ->addDependent('storyObject', 'storyObjectType', function (DependentField $field, ?TargetType $type) use ($larp) {
@@ -89,6 +91,7 @@ class ExternalReferenceType extends AbstractType
         $resolver->setDefaults([
             'data_class' => ExternalReference::class,
             'translation_domain' => 'forms',
+            'csrf_protection' => false,
         ]);
         $resolver->setRequired('larp');
         $resolver->setAllowedTypes('larp', Larp::class);
