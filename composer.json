@@ -104,7 +104,9 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup",
+        "ecs": "vendor/bin/ecs check",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -128,6 +130,8 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^7.2",
         "symfony/stopwatch": "7.2.*",
-        "symfony/web-profiler-bundle": "7.2.*"
+        "symfony/web-profiler-bundle": "7.2.*",
+        "symplify/easy-coding-standard": "^12.5",
+        "phpstan/phpstan": "^2.1"
     }
 }
