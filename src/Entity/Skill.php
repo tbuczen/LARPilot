@@ -25,6 +25,6 @@ class Skill implements CreatorAwareInterface, Timestampable
     private string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private string $description;
+    private ?string $description = null;
 
 }
