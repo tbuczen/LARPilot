@@ -14,9 +14,6 @@ use App\Entity\Enum\TargetType;
 class Thread extends StoryObject
 {
 
-    #[ORM\ManyToOne(targetEntity: Larp::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    protected ?Larp $larp;
 
     /** @var Collection<Quest> */
     #[ORM\OneToMany(targetEntity: Quest::class, mappedBy: 'thread')]
@@ -95,15 +92,6 @@ class Thread extends StoryObject
         $this->involvedFactions = $involvedFactions;
     }
 
-    public function getLarp(): ?Larp
-    {
-        return $this->larp;
-    }
-
-    public function setLarp(?Larp $larp): void
-    {
-        $this->larp = $larp;
-    }
 
     public function getQuests(): Collection
     {

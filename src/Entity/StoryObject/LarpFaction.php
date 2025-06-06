@@ -3,7 +3,6 @@
 namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
-use App\Entity\Larp;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Repository\StoryObject\LarpFactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: LarpFactionRepository::class)]
 class LarpFaction extends StoryObject implements CreatorAwareInterface
 {
-    #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'factions')]
-    private ?Larp $larp;
 
     #[ORM\ManyToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
     private Collection $members;
@@ -92,10 +89,6 @@ class LarpFaction extends StoryObject implements CreatorAwareInterface
         return TargetType::Faction;
     }
 
-    public function getLarp(): ?Larp
-    {
-        return $this->larp;
-    }
 
     public function getQuests(): Collection
     {
@@ -117,9 +110,4 @@ class LarpFaction extends StoryObject implements CreatorAwareInterface
         $this->threads = $threads;
     }
 
-    public function setLarp(?Larp $larp): void
-    {
-        $this->larp = $larp;
-        $larp->addFaction($this);
-    }
 }
