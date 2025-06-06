@@ -11,24 +11,12 @@ use App\Entity\Enum\TargetType;
 class Place extends StoryObject
 {
 
-    #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'places')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected Larp $larp;
     
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function getLarp(): Larp
-    {
-        return $this->larp;
-    }
-
-    public function setLarp(Larp $larp): void
-    {
-        $this->larp = $larp;
-    }
 
     public static function getTargetType(): TargetType
     {

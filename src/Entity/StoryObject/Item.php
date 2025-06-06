@@ -3,7 +3,6 @@
 namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
-use App\Entity\Larp;
 use App\Repository\StoryObject\ItemRepository;
 use Money\Money;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,9 +12,6 @@ use Doctrine\ORM\Mapping\Embedded;
 class Item extends StoryObject
 {
 
-    #[ORM\ManyToOne(targetEntity: Larp::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    protected ?Larp $larp;
 
     /** @var StoryObject|null The item can be for specific quest, thread, character, faction */
     #[ORM\ManyToMany(targetEntity: StoryObject::class)]
@@ -34,15 +30,6 @@ class Item extends StoryObject
     #[Embedded]
     private Money $cost;
 
-    public function getLarp(): ?Larp
-    {
-        return $this->larp;
-    }
-
-    public function setLarp(?Larp $larp): void
-    {
-        $this->larp = $larp;
-    }
 
     public function isCrafted(): bool
     {

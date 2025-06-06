@@ -4,7 +4,6 @@ namespace App\Entity\StoryObject;
 
 
 use App\Entity\Enum\StoryTimeUnit;
-use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Repository\StoryObject\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,9 +15,6 @@ use App\Entity\Enum\TargetType;
 class Event extends StoryObject
 {
 
-    #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'events')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected Larp $larp;
 
     /** @var Collection<LarpParticipant> Participants (technical) needed for event to happen */
     #[ORM\ManyToMany(targetEntity: LarpParticipant::class)]
@@ -155,15 +151,6 @@ class Event extends StoryObject
         $this->storyTimeUnit = $storyTimeUnit;
     }
 
-    public function getLarp(): Larp
-    {
-        return $this->larp;
-    }
-
-    public function setLarp(Larp $larp): void
-    {
-        $this->larp = $larp;
-    }
 
     public static function getTargetType(): TargetType
     {

@@ -20,6 +20,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: StoryObjectRepository::class)]
 #[ORM\Index(columns: ['title'])]
+#[ORM\Index(columns: ['larp_id'])]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap([
@@ -48,6 +49,10 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
 
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
+
+    #[ORM\ManyToOne(targetEntity: Larp::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    protected ?Larp $larp = null;
 
     /** @var Collection<ExternalReference>  */
     #[ORM\OneToMany(targetEntity: ExternalReference::class, mappedBy: 'storyObject', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -86,6 +91,16 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
     {
         $this->description = $description;
         return $this;
+    }
+
+    public function getLarp(): ?Larp
+    {
+        return $this->larp;
+    }
+
+    public function setLarp(?Larp $larp): void
+    {
+        $this->larp = $larp;
     }
 
     public function getExternalReferences(): Collection

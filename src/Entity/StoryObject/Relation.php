@@ -11,9 +11,6 @@ use App\Entity\Enum\TargetType;
 class Relation extends StoryObject
 {
 
-    #[ORM\ManyToOne(targetEntity: Larp::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    protected ?Larp $larp = null;
 
     #[ORM\ManyToOne(targetEntity: StoryObject::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -26,15 +23,6 @@ class Relation extends StoryObject
     private ?TargetType $fromType = null;
     private ?TargetType $toType = null;
 
-    public function getLarp(): ?Larp
-    {
-        return $this->larp;
-    }
-
-    public function setLarp(?Larp $larp): void
-    {
-        $this->larp = $larp;
-    }
 
     public function getFrom(): ?StoryObject
     {

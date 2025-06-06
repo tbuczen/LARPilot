@@ -22,7 +22,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     fields: ['larp', 'title'],
     message: 'A character with this title already exists in this LARP.'
 )]
-#[ORM\Index(columns: ['larp_id'])]
 #[ORM\Index(columns: ['in_game_name'])]
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
 class LarpCharacter extends StoryObject
@@ -30,9 +29,6 @@ class LarpCharacter extends StoryObject
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $inGameName = null;
 
-    #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'characters')]
-    #[ORM\JoinColumn(nullable: false)]
-    protected ?Larp $larp = null;
 
     #[ORM\OneToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(name: "previous_character_id", referencedColumnName: "id", nullable: true)]
@@ -94,15 +90,6 @@ class LarpCharacter extends StoryObject
         $this->characterType = CharacterType::Player;
     }
 
-    public function getLarp(): ?Larp
-    {
-        return $this->larp;
-    }
-
-    public function setLarp(?Larp $larp): void
-    {
-        $this->larp = $larp;
-    }
 
     public function addThread(Thread $thread): self
     {

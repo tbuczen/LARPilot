@@ -15,9 +15,6 @@ use App\Entity\Enum\TargetType;
 class Quest extends StoryObject
 {
 
-    #[ORM\ManyToOne(targetEntity: Larp::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    protected ?Larp $larp;
 
     #[ORM\ManyToOne(targetEntity: Thread::class, inversedBy: 'quests')]
     #[ORM\JoinColumn(nullable: true)]
@@ -100,15 +97,6 @@ class Quest extends StoryObject
         $this->involvedFactions = $involvedFactions;
     }
 
-    public function setLarp(?Larp $larp): void
-    {
-        $this->larp = $larp;
-    }
-
-    public function getLarp(): ?Larp
-    {
-        return $this->larp;
-    }
 
     public static function getTargetType(): TargetType
     {
