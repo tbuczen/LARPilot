@@ -4,11 +4,10 @@ namespace App\Controller\Backoffice\Story;
 
 use App\Controller\BaseController;
 use App\Entity\Larp;
-use App\Entity\StoryObject\StoryObject;
+use App\Entity\StoryObject\Relation;
 use App\Form\Filter\StoryGraphFilterType;
 use App\Repository\StoryObject\StoryObjectRepository;
 use App\Service\Larp\StoryObjectRelationExplorer;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -29,6 +28,11 @@ class StoryController extends BaseController
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+
+        $qb->andWhere('c.larp = :larp')
+            ->setParameter('larp', $larp)
+            ->andWhere('c NOT INSTANCE OF ' . Relation::class)
+            ;
 
         $objects = $qb->getQuery()->getResult();
         return $this->render('backoffice/larp/story/main.html.twig', [

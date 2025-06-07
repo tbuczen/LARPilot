@@ -6,21 +6,36 @@ use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\StoryObject\Quest;
+use App\Entity\StoryObject\Relation;
 use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\Thread;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
-class StoryObjectRelationExplorer
+readonly class StoryObjectRelationExplorer
 {
+
+    public function __construct(
+        private EntityPreloader $preloader,
+    ) {
+    }
+
     public function getGraphFromResults(iterable $objects): array
     {
+        $objects = is_array($objects) ? $objects : [...$objects];
+        $this->preloadRelations($objects);
+
         $nodes = [];
         $edges = [];
         $seenEdges = [];
 
         /** @var StoryObject[] $objects */
         foreach ($objects as $object) {
+            if($object instanceof Relation){
+                continue;
+            }
+
             $id = 's_' . $object->getId();
 
             $nodes[$id] = [
@@ -34,26 +49,39 @@ class StoryObjectRelationExplorer
 
         foreach ($objects as $object) {
             $sourceId = 's_' . $object->getId();
-            $related = $this->getRelatedStoryObjects($object);
+            $relatedStoryObjects = $this->getRelatedStoryObjects($object);
 
-            foreach ($related as $target) {
-                $targetId = 's_' . $target->getId();
+            foreach ($relatedStoryObjects as $relatedStoryObject) {
+                $targetId = 's_' . $relatedStoryObject->getId();
 
                 // unikaj duplikatów (dwukierunkowe relacje)
-                $edgeKeyParts = [$sourceId, $targetId];
+                $edgeKeyParts = [$sourceId, $targetId]; //source + relation Id
                 sort($edgeKeyParts);
                 $edgeKey = implode('__', $edgeKeyParts);
-                if (isset($seenEdges[$edgeKey]) || !isset($nodes[$targetId])) {
+
+                if (isset($seenEdges[$edgeKey])) {
                     continue;
                 }
 
-                $edges[] = [
-                    'data' => [
-                        'source' => $sourceId,
-                        'target' => $targetId,
-                        'type' => 'related',
-                    ]
-                ];
+                if ($relatedStoryObject instanceof Relation) {
+                    $edges[] = [
+                        'data' => [
+                            'source' => $sourceId,
+                            'target' => 's_' . $relatedStoryObject->getTo()->getId()->toRfc4122(),
+                            'type' => 'related',
+                            'title' => $relatedStoryObject->getTitle(),
+                        ]
+                    ];
+                } else {
+                    $edges[] = [
+                        'data' => [
+                            'source' => $sourceId,
+                            'target' => $targetId,
+                            'type' => 'related',
+                            'description' => null,
+                        ]
+                    ];
+                }
                 $seenEdges[$edgeKey] = true;
             }
         }
@@ -64,20 +92,96 @@ class StoryObjectRelationExplorer
         ];
     }
 
+    /**
+     * @param StoryObject[] $objects
+     */
+    private function preloadRelations(array $objects): void
+    {
+        if ($objects === []) {
+            return;
+        }
+
+        $this->preloader->preload($objects, 'relationsFrom');
+        $this->preloader->preload($objects, 'relationsTo');
+
+        $relationsFrom = [];
+        $relationsTo = [];
+        $characters = [];
+        $factions = [];
+        $threads = [];
+        $quests = [];
+        $events = [];
+
+        foreach ($objects as $object) {
+            foreach ($object->getRelationsFrom() as $relation) {
+                $relationsFrom[] = $relation;
+            }
+            foreach ($object->getRelationsTo() as $relation) {
+                $relationsTo[] = $relation;
+            }
+
+            if ($object instanceof LarpCharacter) {
+                $characters[] = $object;
+            }
+            if ($object instanceof LarpFaction) {
+                $factions[] = $object;
+            }
+            if ($object instanceof Thread) {
+                $threads[] = $object;
+            }
+            if ($object instanceof Quest) {
+                $quests[] = $object;
+            }
+            if ($object instanceof Event) {
+                $events[] = $object;
+            }
+        }
+
+        $this->preloader->preload($relationsFrom, 'to');
+        $this->preloader->preload($relationsTo, 'from');
+
+        if ($characters !== []) {
+            $this->preloader->preload($characters, 'factions');
+            $this->preloader->preload($characters, 'quests');
+            $this->preloader->preload($characters, 'threads');
+        }
+
+        if ($factions !== []) {
+            $this->preloader->preload($factions, 'members');
+            $this->preloader->preload($factions, 'threads');
+            $this->preloader->preload($factions, 'quests');
+        }
+
+        if ($threads !== []) {
+            $this->preloader->preload($threads, 'quests');
+            $this->preloader->preload($threads, 'events');
+            $this->preloader->preload($threads, 'involvedCharacters');
+            $this->preloader->preload($threads, 'involvedFactions');
+        }
+
+        if ($quests !== []) {
+            $this->preloader->preload($quests, 'thread');
+            $this->preloader->preload($quests, 'involvedCharacters');
+            $this->preloader->preload($quests, 'involvedFactions');
+        }
+
+        if ($events !== []) {
+            $this->preloader->preload($events, 'thread');
+            $this->preloader->preload($events, 'involvedCharacters');
+            $this->preloader->preload($events, 'involvedFactions');
+        }
+    }
+
+    /**
+     * @param StoryObject $object
+     * @return Collection<StoryObject>
+     */
     public function getRelatedStoryObjects(StoryObject $object): Collection
     {
         $related = new ArrayCollection();
 
         foreach ($object->getRelationsFrom() as $relation) {
-            if ($relation->getTo()) {
-                $related->add($relation->getTo());
-            }
-        }
-
-        foreach ($object->getRelationsTo() as $relation) {
-            if ($relation->getFrom()) {
-                $related->add($relation->getFrom());
-            }
+            $related->add($relation);
         }
 
         if ($object instanceof LarpCharacter) {

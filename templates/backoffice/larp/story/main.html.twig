@@ -16,7 +16,12 @@
         <div class="card-body p-0">
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
 
-            <div>GRAPH</div>
+            {{ dump(graph) }}
+            <div
+                    data-controller="story-graph"
+                    data-story-graph-graph-value='{{ graph|json_encode }}'
+                    style="width: 100%; height: 600px;"
+            ></div>
         </div>
     </div>
 {% endblock %}

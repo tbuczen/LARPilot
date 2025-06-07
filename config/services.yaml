@@ -46,3 +46,5 @@ services:
     App\Service\Integrations\IntegrationServiceProvider:
         arguments:
             $integrationServices: !tagged_iterator app.integration
+
+    ShipMonk\DoctrineEntityPreloader\EntityPreloader: ~

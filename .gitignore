@@ -27,3 +27,7 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /google-service-account.json
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

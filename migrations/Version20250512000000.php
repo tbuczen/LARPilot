@@ -43,9 +43,9 @@ final class Version20250512000000 extends AbstractMigration
         $this->addSql(<<<'SQL'
             UPDATE story_object s SET larp_id = t.larp_id FROM thread t WHERE t.id = s.id
         SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE story_object ALTER COLUMN larp_id SET NOT NULL
-        SQL);
+//        $this->addSql(<<<'SQL'
+//            ALTER TABLE story_object ALTER COLUMN larp_id SET NOT NULL
+//        SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE story_object ADD CONSTRAINT FK_E7AE191E63FF2A01 FOREIGN KEY (larp_id) REFERENCES larp (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         SQL);

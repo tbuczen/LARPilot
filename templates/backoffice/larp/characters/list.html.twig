@@ -77,7 +77,7 @@
                 {% for character in characters %}
                     <tr>
                         <td>{{ character.title }}</td>
-                        <td>{{ character.gender }}</td>
+                        <td>{{ character.gender ? character.gender.value : ''}}</td>
                         <td>{{ character.description|default('-') }}</td>
                         <td>{{ character.factions|map(f => f.title)|join(', ')|default('-') }}</td>
                         <td>

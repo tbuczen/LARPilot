@@ -63,7 +63,6 @@ class Larp implements Timestampable, CreatorAwareInterface
     /** @var Collection<Event> */
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'larp')]
     private Collection $events;
-
     /** @var Collection<Skill> */
     #[ORM\OneToMany(targetEntity: Skill::class, mappedBy: 'larp')]
     private Collection $skills;
