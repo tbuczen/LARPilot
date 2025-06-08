@@ -26,15 +26,23 @@ class StoryController extends BaseController
     {
         $filterForm = $this->createForm(StoryGraphFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
-        $qb = $repository->createQueryBuilder('c');
-        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+//        $qb = $repository->createQueryBuilder('c');
+//        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+//        $qb->andWhere('c.larp = :larp')
+//            ->setParameter('larp', $larp)
+//            ->andWhere('c NOT INSTANCE OF ' . Relation::class)
+//            ;
+//        $objects = $qb->getQuery()->getResult();
 
-        $qb->andWhere('c.larp = :larp')
-            ->setParameter('larp', $larp)
-            ->andWhere('c NOT INSTANCE OF ' . Relation::class)
-            ;
+        $data = $filterForm->getData() ?: [];
 
-        $objects = $qb->getQuery()->getResult();
+        $objects = $repository->findForGraph(
+            $larp,
+            $data['thread'] ?? [],
+            $data['involvedCharacters'] ?? [],
+            $data['involvedFactions'] ?? [],
+        );
+
         return $this->render('backoffice/larp/story/main.html.twig', [
             'larp' => $larp,
             'filterForm' => $filterForm->createView(),

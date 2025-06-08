@@ -74,6 +74,20 @@ export default class extends Controller {
                         'background-color': '#d63384',
                     }
                 },
+
+                {
+                    selector: 'node[type="factionGroup"]',
+                    style: {
+                        'background-color': 'rgba(173,181,189,0.71)',
+                    }
+                },
+                {
+                    selector: 'node[type="threadGroup"]',
+                    style: {
+                        'background-color': '#4A976EFF',
+                    }
+                },
+
                 {
                     selector: 'edge',
                     style: {
@@ -97,10 +111,36 @@ export default class extends Controller {
                 },
             ],
             layout: {
-                name: 'cose',
                 animate: false,
                 nodeDimensionsIncludeLabels: true,
             }
         });
+
+        //TODO:: Align all factionGroup in one line
+        //TODO:: Make faction in the center of the group
+        this.cy.once('layoutstop', () => {
+            this.cy.nodes('[type="factionGroup"]').forEach((group) => {
+                const characters = group.children('[type="character"]');
+                const faction = group.children('[type="faction"]');
+                characters.layout({
+                    name: 'circle',
+                    // fit: true,
+                    padding: 5,
+                }).run();
+                if (faction.length) {
+                    console.debug(faction)
+                    console.debug(group.position())
+
+                    faction.position(group.position());
+                }
+            });
+        });
+
+        this.cy.layout({
+            name: 'breadthfirst',
+            orientation: 'vertical',
+            nodeDimensionsIncludeLabels: true,
+            spacingFactor: 1.2,
+        }).run();
     }
 }

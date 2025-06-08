@@ -22,6 +22,7 @@ readonly class StoryObjectRelationExplorer
     ) {
     }
 
+    //TODO: fix when filtering by faction - the related nodes are missing
     public function getGraphFromResults(iterable $objects): array
     {
         $objects = is_array($objects) ? $objects : [...$objects];
@@ -89,6 +90,7 @@ readonly class StoryObjectRelationExplorer
                 'data' => [
                     'id' => $id,
                     'title' => $parentNode->getTitle(),
+                    'type' => 'threadGroup',
                 ]
             ];
         }
@@ -98,6 +100,7 @@ readonly class StoryObjectRelationExplorer
                 'data' => [
                     'id' => $id,
                     'title' => $parentNode->getTitle(),
+                    'type' => 'factionGroup',
                 ]
             ];
         }
