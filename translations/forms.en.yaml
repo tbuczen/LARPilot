@@ -55,3 +55,13 @@ form:
     mapping_type: "Mapping Type"
     reference_type: "Type"
     url: "URL"
+  place:
+    name: "Unique Place Name"
+    description: "Place Description"
+  item:
+    name: "Unique Item Name"
+    description: "Item Description"
+    is_crafted: "Crafted"
+    is_purchased: "Purchased"
+    quantity: "Quantity"
+    cost: "Cost"

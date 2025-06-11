@@ -76,6 +76,16 @@
                            class="btn btn-primary {% if 'larp_story_event' in currentRoute %}active{% endif %}">
                             {{ 'backoffice.larp.events'|trans }}
                         </a>
+
+                        <a href="{{ path('backoffice_larp_story_place_list', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if 'larp_story_place' in currentRoute %}active{% endif %}">
+                            {{ 'backoffice.larp.place.list'|trans }}
+                        </a>
+
+                        <a href="{{ path('backoffice_larp_story_item_list', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if 'larp_story_item' in currentRoute %}active{% endif %}">
+                            {{ 'backoffice.larp.item.list'|trans }}
+                        </a>
                     </div>
                 {% endif %}
             </div>
