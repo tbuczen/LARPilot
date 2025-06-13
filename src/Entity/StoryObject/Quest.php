@@ -7,6 +7,7 @@ use App\Entity\Larp;
 use App\Repository\StoryObject\QuestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Enum\TargetType;
 
@@ -27,6 +28,9 @@ class Quest extends StoryObject
     /** @var Collection<LarpFaction> Specifically needed involved factions */
     #[ORM\ManyToMany(targetEntity: LarpFaction::class, mappedBy: 'quests')]
     private Collection $involvedFactions;
+
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
+    private ?array $decisionTree = null;
 
     public function __construct()
     {
@@ -95,6 +99,17 @@ class Quest extends StoryObject
     public function setInvolvedFactions(Collection $involvedFactions): void
     {
         $this->involvedFactions = $involvedFactions;
+    }
+
+    public function getDecisionTree(): ?array
+    {
+        return $this->decisionTree;
+    }
+
+    public function setDecisionTree(?array $decisionTree): self
+    {
+        $this->decisionTree = $decisionTree;
+        return $this;
     }
 
 
