@@ -7,6 +7,7 @@ use App\Entity\Larp;
 use App\Repository\StoryObject\ThreadRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Enum\TargetType;
 
@@ -30,6 +31,9 @@ class Thread extends StoryObject
     /** @var Collection<LarpFaction> Specifically needed involved factions */
     #[ORM\ManyToMany(targetEntity: LarpFaction::class, mappedBy: 'threads')]
     private Collection $involvedFactions;
+
+    #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
+    private ?array $decisionTree = null;
 
     public function __construct()
     {
@@ -111,6 +115,17 @@ class Thread extends StoryObject
     public function setEvents(Collection $events): void
     {
         $this->events = $events;
+    }
+
+    public function getDecisionTree(): ?array
+    {
+        return $this->decisionTree;
+    }
+
+    public function setDecisionTree(?array $decisionTree): self
+    {
+        $this->decisionTree = $decisionTree;
+        return $this;
     }
 
     public static function getTargetType(): TargetType
