@@ -31,6 +31,7 @@ use Symfony\Component\Uid\Uuid;
     TargetType::Relation->value  => Relation::class,
     TargetType::Faction->value  => LarpFaction::class,
     TargetType::Item->value  => Item::class,
+    TargetType::Place->value  => Place::class,
 ])]
 abstract class StoryObject implements CreatorAwareInterface, Timestampable, TargetableInterface, LarpAwareInterface
 {

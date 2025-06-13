@@ -29,7 +29,6 @@ class EventsController extends BaseController
         $sort = $request->query->get('sort', 'title');
         $dir = $request->query->get('dir', 'asc');
 
-        //todo if sort is collection field - order by first element
         $qb->orderBy('c.' . $sort, $dir);
         $qb->andWhere('c.larp = :larp')
             ->setParameter('larp', $larp);
