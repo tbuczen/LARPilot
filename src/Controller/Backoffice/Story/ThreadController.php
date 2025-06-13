@@ -86,6 +86,27 @@ class ThreadController extends BaseController
         return $this->render('backoffice/larp/thread/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
+            'thread' => $thread,
+        ]);
+    }
+
+    #[Route('{thread}/tree', name: 'tree', methods: ['GET', 'POST'])]
+    public function tree(
+        Request         $request,
+        Larp            $larp,
+        Thread          $thread,
+        ThreadRepository $threadRepository,
+    ): Response {
+        if ($request->isMethod('POST')) {
+            $treeData = $request->request->get('decisionTree', '[]');
+            $thread->setDecisionTree(json_decode($treeData, true) ?? []);
+            $threadRepository->save($thread);
+            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+        }
+
+        return $this->render('backoffice/larp/thread/tree.html.twig', [
+            'larp' => $larp,
+            'thread' => $thread,
         ]);
     }
 
