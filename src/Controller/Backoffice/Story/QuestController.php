@@ -72,6 +72,27 @@ class QuestController extends BaseController
         return $this->render('backoffice/larp/quest/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
+            'quest' => $quest,
+        ]);
+    }
+
+    #[Route('{quest}/tree', name: 'tree', methods: ['GET', 'POST'])]
+    public function tree(
+        Request         $request,
+        Larp            $larp,
+        Quest           $quest,
+        QuestRepository $questRepository,
+    ): Response {
+        if ($request->isMethod('POST')) {
+            $treeData = $request->request->get('decisionTree', '[]');
+            $quest->setDecisionTree(json_decode($treeData, true) ?? []);
+            $questRepository->save($quest);
+            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+        }
+
+        return $this->render('backoffice/larp/quest/tree.html.twig', [
+            'larp' => $larp,
+            'quest' => $quest,
         ]);
     }
 

@@ -6,6 +6,12 @@
         {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>
+    {% if quest is defined %}
+        <a href="{{ path('backoffice_larp_story_quest_tree', { larp: larp.id, quest: quest.id }) }}"
+           class="btn btn-secondary mt-3">
+            Decision Tree
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block title %}{{ ''|trans }}{% endblock %}
