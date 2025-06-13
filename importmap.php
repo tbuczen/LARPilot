@@ -44,4 +44,7 @@ return [
         'version' => '2.4.3',
         'type' => 'css',
     ],
+    'decision-tree-controller' => [
+        'path' => './assets/controllers/decision_tree_controller.js',
+    ],
 ];
