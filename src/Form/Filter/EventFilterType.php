@@ -29,6 +29,12 @@ class EventFilterType extends AbstractType
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
+            ->add('startTime', Filters\DateTimeFilterType::class, [
+                'widget' => 'single_text',
+            ])
+            ->add('endTime', Filters\DateTimeFilterType::class, [
+                'widget' => 'single_text',
+            ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,
                 'choice_label' => 'title',
