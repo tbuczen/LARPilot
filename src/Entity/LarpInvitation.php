@@ -123,5 +123,4 @@ class LarpInvitation
     {
         $this->invitedRole = $invitedRole;
     }
-
 }

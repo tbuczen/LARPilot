@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class AccountController extends BaseController
 {
     #[Route('/', name: 'settings', methods: ['GET', 'POST'])]
-    public function profile(Request $request,  EntityManagerInterface $entityManager): Response
+    public function profile(Request $request, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user @see security.yaml access_control */
         $user = $this->getUser();
@@ -31,7 +31,6 @@ class AccountController extends BaseController
         return $this->render('account/index.html.twig', [
             'form' => $form->createView(),
         ]);
-
     }
 
     #[Route('/social-accounts', name: 'social_accounts', methods: ['GET'])]
@@ -53,8 +52,7 @@ class AccountController extends BaseController
         UserSocialAccountRepository $socialAccountRepository,
         EntityManagerInterface $entityManager,
         Request $request
-    ): Response
-    {
+    ): Response {
         /** @var User $user @see security.yaml access_control */
         $user = $this->getUser();
 
@@ -82,5 +80,4 @@ class AccountController extends BaseController
         $this->addFlash('success', 'Social account unlinked successfully.');
         return $this->redirectToRoute('account_social_accounts');
     }
-
 }

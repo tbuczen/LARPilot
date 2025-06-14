@@ -14,7 +14,8 @@ final readonly class SaveFileMappingHandler
         private LarpRepository $larpRepository,
         private SharedFileRepository $sharedFileRepository,
         private ObjectFieldMappingRepository $mappingRepository
-    ) {}
+    ) {
+    }
 
     public function __invoke(SaveFileMappingCommand $command): void
     {

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-#[ORM\Entity(repositoryClass: ObjectFieldMappingRepository::class )]
+#[ORM\Entity(repositoryClass: ObjectFieldMappingRepository::class)]
 class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
@@ -23,7 +23,7 @@ class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
     #[ORM\JoinColumn(nullable: false)]
     private Larp $larp;
 
-    #[ORM\Column(type: 'string',  enumType: ResourceType::class)]
+    #[ORM\Column(type: 'string', enumType: ResourceType::class)]
     private ResourceType $fileType;
 
     #[ORM\ManyToOne(targetEntity: SharedFile::class, inversedBy: 'mappings')]

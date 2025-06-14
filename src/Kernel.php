@@ -14,7 +14,6 @@ class Kernel extends BaseKernel
     {
         parent::boot();
         // Ensure logger is available before any other logic would use it
-        // @phpstan-ignore-next-line
         $this->getContainer()->get(Logger::class);
     }
 }

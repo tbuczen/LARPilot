@@ -2,16 +2,14 @@
 
 namespace App\Entity\StoryObject;
 
+use App\Entity\Enum\TargetType;
 use App\Entity\Larp;
 use App\Repository\StoryObject\RelationRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Enum\TargetType;
 
 #[ORM\Entity(repositoryClass: RelationRepository::class)]
 class Relation extends StoryObject
 {
-
-
     #[ORM\ManyToOne(targetEntity: StoryObject::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?StoryObject $from = null;
@@ -54,7 +52,7 @@ class Relation extends StoryObject
 
     public static function getTargetType(): TargetType
     {
-       return TargetType::Relation;
+        return TargetType::Relation;
     }
 
     public function getFromType(): ?TargetType

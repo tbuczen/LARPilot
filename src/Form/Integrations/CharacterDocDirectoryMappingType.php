@@ -15,6 +15,6 @@ class CharacterDocDirectoryMappingType extends AbstractType
                 'label' => 'form.mapping.directory.group_by_faction',
                 'translation_domain' => 'forms',
             ])
-            ;
+        ;
     }
 }

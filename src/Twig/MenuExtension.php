@@ -16,9 +16,7 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
         private readonly UrlGeneratorInterface $router,
         private readonly Security              $security,
         private readonly TranslatorInterface   $translator,
-    )
-    {
-
+    ) {
     }
 
     public function getGlobals(): array

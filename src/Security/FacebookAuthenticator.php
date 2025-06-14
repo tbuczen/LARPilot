@@ -27,15 +27,13 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class FacebookAuthenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
 {
-
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
         private readonly RouterInterface $router,
         private readonly RegisterUserHandler           $registerUserHandler,
         private readonly AddSocialAccountToUserHandler $addSocialAccountToUserHandler,
         private readonly Security                      $security
-    )
-    {
+    ) {
     }
 
     public function supports(Request $request): ?bool
@@ -65,7 +63,6 @@ class FacebookAuthenticator extends OAuth2Authenticator implements Authenticatio
                 return $this->registerNewUser($providerEnum, $facebookUser);
             })
         );
-
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response

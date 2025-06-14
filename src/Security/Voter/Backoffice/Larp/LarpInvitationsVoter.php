@@ -38,6 +38,5 @@ class LarpInvitationsVoter extends Voter
         }
 
         return true;
-
     }
 }

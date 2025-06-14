@@ -22,7 +22,6 @@ use Webmozart\Assert\Assert;
 
 class ImportCharactersHandler
 {
-
     private array $cache;
     private ?IntegrationServiceInterface $integrationService;
 
@@ -33,8 +32,7 @@ class ImportCharactersHandler
         private readonly SharedFileRepository    $sharedFileRepository,
         private readonly IntegrationManager      $integrationManager,
         private readonly EntityManagerInterface  $entityManager
-    )
-    {
+    ) {
     }
 
     /**
@@ -60,7 +58,6 @@ class ImportCharactersHandler
         try {
             foreach ($chunks as $chunk) {
                 foreach ($chunk as $rowNo => $row) {
-
                     $characterName = $this->getFieldValue($row, $command->mapping, 'title');
                     if (!$characterName) {
                         continue; // Skip rows missing a character name.
@@ -124,7 +121,7 @@ class ImportCharactersHandler
     {
         $factionName = trim($value);
         if (!isset($this->cache[$factionName])) {
-            $faction = $this->factionRepository->findByOrCreate($factionName,$larpId);
+            $faction = $this->factionRepository->findByOrCreate($factionName, $larpId);
             $this->cache[$factionName] = $faction;
         }
         $character->addFaction($this->cache[$factionName]);
@@ -150,7 +147,7 @@ class ImportCharactersHandler
      */
     private function getExistingCharactersMap(?string $larpId): array
     {
-            $existingCharacters = $this->characterRepository->findBy(['larp' => Uuid::fromString($larpId)]);
+        $existingCharacters = $this->characterRepository->findBy(['larp' => Uuid::fromString($larpId)]);
         $existingMap = [];
         foreach ($existingCharacters as $char) {
             $existingMap[$char->getTitle()] = $char;

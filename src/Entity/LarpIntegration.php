@@ -146,5 +146,4 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     {
         return $this->owner;
     }
-
 }

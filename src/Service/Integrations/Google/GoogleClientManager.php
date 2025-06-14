@@ -15,8 +15,7 @@ readonly class GoogleClientManager
         private string                 $googleClientSecret,
         private string                 $serviceAccountJsonPath,
         private EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     public function createServiceAccountClient(): Client

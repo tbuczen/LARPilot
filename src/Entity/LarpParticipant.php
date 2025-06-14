@@ -72,7 +72,7 @@ class LarpParticipant
      */
     public function getRoles(): array
     {
-        return array_map(fn($role) => UserRole::from($role), $this->roles);
+        return array_map(fn ($role) => UserRole::from($role), $this->roles);
     }
 
     /**
@@ -82,7 +82,7 @@ class LarpParticipant
      */
     public function setRoles(array $roles): self
     {
-        $this->roles = array_map(fn($role) => $role instanceof UserRole ? $role->value : $role, $roles);
+        $this->roles = array_map(fn ($role) => $role instanceof UserRole ? $role->value : $role, $roles);
         return $this;
     }
 
@@ -103,16 +103,16 @@ class LarpParticipant
 
     public function isOrganizer(): bool
     {
-        $organizerRoles = array_map(fn($role) => $role->value, UserRole::getOrganizers());
-        $userRoles = array_map(fn($role) => $role->value, $this->getRoles());
+        $organizerRoles = array_map(fn ($role) => $role->value, UserRole::getOrganizers());
+        $userRoles = array_map(fn ($role) => $role->value, $this->getRoles());
 
         return !empty(array_intersect($organizerRoles, $userRoles));
     }
 
     public function isStoryWriter(): bool
     {
-        $storyWriters = array_map(fn($role) => $role->value, UserRole::getStoryWriters());
-        $userRoles = array_map(fn($role) => $role->value, $this->getRoles());
+        $storyWriters = array_map(fn ($role) => $role->value, UserRole::getStoryWriters());
+        $userRoles = array_map(fn ($role) => $role->value, $this->getRoles());
 
         return !empty(array_intersect($storyWriters, $userRoles));
     }

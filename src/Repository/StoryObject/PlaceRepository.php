@@ -21,5 +21,4 @@ class PlaceRepository extends BaseRepository
     {
         parent::__construct($registry, Place::class);
     }
-
 }

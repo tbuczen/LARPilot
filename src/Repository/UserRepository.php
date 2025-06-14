@@ -53,5 +53,4 @@ class UserRepository extends BaseRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
 }

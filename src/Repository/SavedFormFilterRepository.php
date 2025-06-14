@@ -39,7 +39,7 @@ class SavedFormFilterRepository extends BaseRepository
             ->setParameter('user', $user)
             ->orderBy('f.createdAt', 'DESC');
 
-        if($larpId) {
+        if ($larpId) {
             $qb->andWhere('f.larp = :larp')
                 ->setParameter('larp', $larpId);
         }
@@ -47,5 +47,4 @@ class SavedFormFilterRepository extends BaseRepository
         return $qb->getQuery()
         ->getResult();
     }
-
 }

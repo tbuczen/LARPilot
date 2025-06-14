@@ -6,7 +6,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 abstract class BaseRepository extends ServiceEntityRepository
 {
-
     public function save(object $entity, bool $flush = true): object
     {
         $this->getEntityManager()->persist($entity);

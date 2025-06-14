@@ -33,5 +33,4 @@ class LarpCharacterRepository extends BaseRepository implements ListableReposito
             ->andWhere('c.larp = :larp')
             ->setParameter('larp', $larp);
     }
-
 }

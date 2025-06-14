@@ -3,8 +3,8 @@
 namespace App\Domain\Larp\UseCase\GenerateInvitation;
 
 use App\Domain\Larp\DTO\GenerateInvitationDTO;
-use App\Entity\LarpInvitation;
 use App\Entity\Larp;
+use App\Entity\LarpInvitation;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class GenerateInvitationHandler

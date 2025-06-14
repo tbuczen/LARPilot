@@ -43,8 +43,7 @@ class SaveFilterForm extends AbstractController
     public function __construct(
         private readonly SavedFormFilterRepository $repository,
         private readonly Security $security
-    )
-    {
+    ) {
         $this->user = $this->security->getUser();
     }
 
@@ -130,7 +129,7 @@ class SaveFilterForm extends AbstractController
 
     private function dehydrateSavedFilter(SavedFormFilter|array $savedFormFilter): array
     {
-        if(is_array($savedFormFilter)){
+        if (is_array($savedFormFilter)) {
             return $savedFormFilter;
         }
 

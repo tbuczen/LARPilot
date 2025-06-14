@@ -38,6 +38,5 @@ class LarpIntegrationSettingsVoter extends Voter
         }
 
         return true;
-
     }
 }

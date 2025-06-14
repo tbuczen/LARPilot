@@ -56,7 +56,6 @@ class LarpController extends AbstractController
 
         if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash('error', 'Validation error occurred');
-
         }
 
         return $this->render('backoffice/larp/create.html.twig', [

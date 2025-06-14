@@ -4,7 +4,6 @@ namespace App\Entity\Enum;
 
 enum CharacterType: string
 {
-
     case Player = 'player';
     case LongNpc = 'long_npc';
     case ShortNpc = 'short_npc';

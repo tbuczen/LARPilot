@@ -7,6 +7,5 @@ use Doctrine\ORM\QueryBuilder;
 
 interface ListableRepositoryInterface
 {
-
     public function createListQueryBuilder(Larp $larp): QueryBuilder;
 }

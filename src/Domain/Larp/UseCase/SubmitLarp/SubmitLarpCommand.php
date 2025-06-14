@@ -11,5 +11,6 @@ readonly class SubmitLarpCommand
         public ?string    $location = null,
         public ?\DateTime $startDate = null,
         public ?\DateTime $endDate = null,
-    ) {}
+    ) {
+    }
 }

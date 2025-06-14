@@ -18,7 +18,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class QuestFilterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */

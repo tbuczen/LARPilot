@@ -13,12 +13,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsEventListener(event: KernelEvents::REQUEST, priority: 0)]
 readonly class LocaleListener
 {
-
     public function __construct(
         private Security $security,
         private TranslatorInterface $translator,
         private string $defaultLocale = 'en',
-    ) {}
+    ) {
+    }
 
     public function __invoke(RequestEvent $event): void
     {
@@ -38,5 +38,4 @@ readonly class LocaleListener
         $request->setLocale($locale);
         $this->translator->setLocale($locale);
     }
-
 }

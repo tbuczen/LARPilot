@@ -24,5 +24,4 @@ class LarpCharacterSkill
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $description = null;
-
 }

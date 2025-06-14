@@ -7,7 +7,6 @@ use App\Entity\ObjectFieldMapping;
 
 class SpreadsheetMappingModel extends ExternalResourceMappingModel
 {
-
     public function __construct(
         public ?ResourceType $mappingType = ResourceType::CHARACTER_LIST,
         public ?int          $startingRow = 2,
@@ -15,8 +14,7 @@ class SpreadsheetMappingModel extends ExternalResourceMappingModel
         public ?string       $endColumn = null,
         /** @var array<string, string> */
         public array         $mappings = []
-    )
-    {
+    ) {
         parent::__construct($mappingType, $mappings);
     }
 
@@ -36,5 +34,4 @@ class SpreadsheetMappingModel extends ExternalResourceMappingModel
             $mappingConfiguration ?? null
         );
     }
-
 }

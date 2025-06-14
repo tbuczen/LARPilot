@@ -7,5 +7,4 @@ use App\Entity\Larp;
 interface LarpAwareInterface
 {
     public function getLarp(): ?Larp;
-
 }

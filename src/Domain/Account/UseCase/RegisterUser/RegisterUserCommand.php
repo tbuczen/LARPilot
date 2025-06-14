@@ -12,5 +12,6 @@ readonly class RegisterUserCommand
         public string  $email,
         public ?string $username = null,
         public ?string $displayName = null
-    ) {}
+    ) {
+    }
 }

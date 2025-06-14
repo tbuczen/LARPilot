@@ -2,7 +2,6 @@
 
 namespace App\Form\Extension;
 
-
 use App\Entity\Enum\TargetType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractTypeExtension;
@@ -15,8 +14,7 @@ class FindOrCreateEntityExtension extends AbstractTypeExtension
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator
-    )
-    {
+    ) {
     }
 
     public static function getExtendedTypes(): iterable

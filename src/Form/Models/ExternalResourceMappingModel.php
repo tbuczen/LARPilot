@@ -7,14 +7,12 @@ use App\Entity\ObjectFieldMapping;
 
 class ExternalResourceMappingModel
 {
-
     public function __construct(
         public ?ResourceType $mappingType = ResourceType::CHARACTER_LIST,
         /** @var array<string, string> */
         public array         $mappings = [],
         public array         $meta = []
-    )
-    {
+    ) {
     }
 
     public static function fromEntity(?ObjectFieldMapping $mapping): self
@@ -29,5 +27,4 @@ class ExternalResourceMappingModel
             $mapping->getMetaConfiguration() ?? [],
         );
     }
-
 }

@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: LarpFactionRepository::class)]
 class LarpFaction extends StoryObject implements CreatorAwareInterface
 {
-
     #[ORM\ManyToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
     private Collection $members;
 
@@ -109,5 +108,4 @@ class LarpFaction extends StoryObject implements CreatorAwareInterface
     {
         $this->threads = $threads;
     }
-
 }

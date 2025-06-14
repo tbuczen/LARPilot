@@ -11,7 +11,8 @@ final readonly class GoogleDriveSharingService implements DriveSharingServiceInt
 {
     public function __construct(
         private GoogleClientManager $clientManager,
-    ) {}
+    ) {
+    }
 
     public function ensureShared(
         LarpIntegration $integration,

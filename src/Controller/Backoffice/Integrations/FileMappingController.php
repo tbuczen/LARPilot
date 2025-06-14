@@ -21,7 +21,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/larp/{larp}', name: 'backoffice_larp_integration_')]
 class FileMappingController extends BaseController
 {
-    #[Route('/integration/{provider}/file/{sharedFile}/mapping/{mapping}', name: 'file_mapping', defaults: ['mapping' => null]
+    #[Route(
+        '/integration/{provider}/file/{sharedFile}/mapping/{mapping}',
+        name: 'file_mapping',
+        defaults: ['mapping' => null]
     )]
     public function mappingConfiguration(
         Larp                  $larp,
@@ -30,8 +33,7 @@ class FileMappingController extends BaseController
         Request                 $request,
         SaveFileMappingHandler  $handler,
         ?ObjectFieldMapping     $mapping = null,
-    ): Response
-    {
+    ): Response {
         $mappingModel = ExternalResourceMappingModel::fromEntity($mapping);
         $form = $this->createForm(FileMappingType::class, $mappingModel, ['mimeType' => $sharedFile->getMimeType()]);
 
@@ -82,8 +84,7 @@ class FileMappingController extends BaseController
         LarpIntegrationProvider   $provider,
         IntegrationManager        $integrationManager,
         LarpIntegrationRepository $larpIntegrationRepository
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $integration = $larpIntegrationRepository->findByLarpAndProvider($larp->getId()->toRfc4122(), $provider);
         $integrationService = $integrationManager->getService($integration);
         $url = $integrationService->getExternalFileUrl($integration, $externalFileId);

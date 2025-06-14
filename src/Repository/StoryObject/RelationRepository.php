@@ -21,5 +21,4 @@ class RelationRepository extends BaseRepository
     {
         parent::__construct($registry, Relation::class);
     }
-
 }

@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-
 /*
 * ambicja
 autorytet
@@ -52,7 +51,6 @@ lojalność
 #[ORM\Entity]
 class Tag implements CreatorAwareInterface, Timestampable
 {
-
     use UuidTraitEntity;
     use TimestampableEntity;
     use CreatorAwareTrait;

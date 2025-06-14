@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventFilterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */
@@ -52,7 +51,7 @@ class EventFilterType extends AbstractType
                         ->setParameter('larp', $larp);
                 },
             ])
-            ;
+        ;
     }
 
     public function getBlockPrefix(): string

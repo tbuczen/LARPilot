@@ -2,20 +2,17 @@
 
 namespace App\Entity\StoryObject;
 
-
+use App\Entity\Enum\TargetType;
 use App\Entity\Larp;
 use App\Repository\StoryObject\ThreadRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Enum\TargetType;
 
 #[ORM\Entity(repositoryClass: ThreadRepository::class)]
 class Thread extends StoryObject
 {
-
-
     /** @var Collection<Quest> */
     #[ORM\OneToMany(targetEntity: Quest::class, mappedBy: 'thread')]
     private Collection $quests;

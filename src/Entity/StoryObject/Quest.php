@@ -2,21 +2,18 @@
 
 namespace App\Entity\StoryObject;
 
-
+use App\Entity\Enum\TargetType;
 use App\Entity\Larp;
 use App\Repository\StoryObject\QuestRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Enum\TargetType;
 
 #[ORM\Entity(repositoryClass: QuestRepository::class)]
 
 class Quest extends StoryObject
 {
-
-
     #[ORM\ManyToOne(targetEntity: Thread::class, inversedBy: 'quests')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Thread $thread = null;
@@ -117,6 +114,4 @@ class Quest extends StoryObject
     {
         return TargetType::Quest;
     }
-
-
 }

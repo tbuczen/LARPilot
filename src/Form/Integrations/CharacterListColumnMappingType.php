@@ -9,8 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CharacterListColumnMappingType extends AbstractType
 {
-
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

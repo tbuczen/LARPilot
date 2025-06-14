@@ -49,9 +49,7 @@ class QuestController extends BaseController
         Larp                    $larp,
         QuestRepository $questRepository,
         ?Quest          $quest = null,
-    ): Response
-    {
-
+    ): Response {
         $new = false;
         if (!$quest) {
             $quest = new Quest();
@@ -104,8 +102,7 @@ class QuestController extends BaseController
         Request                 $request,
         QuestRepository $questRepository,
         Quest           $quest,
-    ): Response
-    {
+    ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {

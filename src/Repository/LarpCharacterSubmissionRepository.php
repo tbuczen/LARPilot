@@ -20,5 +20,4 @@ class LarpCharacterSubmissionRepository extends BaseRepository
     {
         parent::__construct($registry, LarpCharacterSubmission::class);
     }
-
 }

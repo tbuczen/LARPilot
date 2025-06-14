@@ -27,17 +27,16 @@ class LarpIncidentVoter extends Voter
             return false;
         }
 
-//        $participants = $subject->getParticipants();
-//        /** @var LarpParticipant|null $userOrganizer */
-//        $userOrganizer = $participants->filter(function (LarpParticipant $participant) use ($user) {
-//            return $participant->getUser()->getId() === $user->getId() && $participant->isAdmin();
-//        })->first();
-//
-//        if (!$userOrganizer) {
-//            return false;
-//        }
+        //        $participants = $subject->getParticipants();
+        //        /** @var LarpParticipant|null $userOrganizer */
+        //        $userOrganizer = $participants->filter(function (LarpParticipant $participant) use ($user) {
+        //            return $participant->getUser()->getId() === $user->getId() && $participant->isAdmin();
+        //        })->first();
+        //
+        //        if (!$userOrganizer) {
+        //            return false;
+        //        }
 
         return true;
-
     }
 }

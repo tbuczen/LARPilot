@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-
 use App\Entity\ExternalReference;
 use App\Entity\StoryObject\StoryObject;
 use App\Form\ExternalReferenceType;
@@ -33,8 +32,7 @@ class StoryObjectReferenceForm extends AbstractController
     #[LiveAction]
     public function save(
         ExternalReferenceRepository $repo,
-    ): void
-    {
+    ): void {
         $this->submitForm();
         /** @var ExternalReference $reference */
         $reference = $this->getForm()->getData();
@@ -57,5 +55,4 @@ class StoryObjectReferenceForm extends AbstractController
     {
         return 'form';
     }
-
 }

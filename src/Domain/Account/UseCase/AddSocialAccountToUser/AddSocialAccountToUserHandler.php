@@ -12,8 +12,7 @@ readonly class AddSocialAccountToUserHandler
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserRepository         $userRepository,
-    )
-    {
+    ) {
     }
 
     public function handle(AddSocialAccountToUserCommand $command): UserInterface

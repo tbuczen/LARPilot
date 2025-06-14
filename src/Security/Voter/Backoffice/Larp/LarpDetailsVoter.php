@@ -40,6 +40,5 @@ class LarpDetailsVoter extends Voter
         }
 
         return true;
-
     }
 }

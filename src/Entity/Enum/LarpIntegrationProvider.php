@@ -14,7 +14,7 @@ enum LarpIntegrationProvider: string
 
     public function displayName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Google => 'Google Drive',
             self::Trello => 'Trello',
             self::Miro => 'Miro',
@@ -26,7 +26,7 @@ enum LarpIntegrationProvider: string
 
     public function descriptionKey(): ?string
     {
-        return match($this) {
+        return match ($this) {
             self::Google => 'backoffice.larp.integration.googleDriveDescription',
             self::Trello => 'backoffice.larp.integration.trelloDescription',
             self::Miro => 'backoffice.larp.integration.miroDescription',
@@ -38,7 +38,7 @@ enum LarpIntegrationProvider: string
 
     public function integrationSettingsTemplate(): ?string
     {
-        return match($this) {
+        return match ($this) {
             self::Google => 'partials/_googleDriveIntegration.html.twig',
             default => null,
         };

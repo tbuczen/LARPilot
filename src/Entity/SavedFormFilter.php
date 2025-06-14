@@ -13,7 +13,6 @@ use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
-
 #[ORM\Entity(repositoryClass: SavedFormFilterRepository::class)]
 class SavedFormFilter implements CreatorAwareInterface, Timestampable, LarpAwareInterface
 {

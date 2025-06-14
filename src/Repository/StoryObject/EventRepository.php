@@ -21,5 +21,4 @@ class EventRepository extends BaseRepository
     {
         parent::__construct($registry, Event::class);
     }
-
 }

@@ -14,7 +14,7 @@ enum LarpStageStatus: string
 
     public function isVisibleForEveryone(): bool
     {
-        return match($this) {
+        return match ($this) {
             self::PUBLISHED, self::INQUIRIES, self::CONFIRMED, self::COMPLETED => true,
             default => false,
         };
@@ -22,11 +22,10 @@ enum LarpStageStatus: string
 
     public function isVisibleForOrganizers(): bool
     {
-        return match($this) {
+        return match ($this) {
             self::WIP, self::PUBLISHED, self::INQUIRIES, self::CONFIRMED, self::COMPLETED => true,
             // Perhaps DRAFT is visible only to admins, and CANCELLED remains hidden for organizers.
             default => false,
         };
     }
-
 }

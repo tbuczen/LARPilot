@@ -9,5 +9,6 @@ readonly class UserDTO
         public string $userId,
         public string $email,
         public array  $roles // e.g. list of role strings or enum values
-    ) {}
+    ) {
+    }
 }
