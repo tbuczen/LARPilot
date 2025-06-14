@@ -28,15 +28,13 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
 {
-
     public function __construct(
         private readonly ClientRegistry                $clientRegistry,
         private readonly RouterInterface               $router,
         private readonly RegisterUserHandler           $registerUserHandler,
         private readonly AddSocialAccountToUserHandler $addSocialAccountToUserHandler,
         private readonly Security                      $security,
-    )
-    {
+    ) {
     }
 
     public function supports(Request $request): ?bool
@@ -72,7 +70,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $session = $request->getSession();
-        $targetUrl =  $session->get('redirect_to_after_login') ?? $this->router->generate('public_larp_list');
+        $targetUrl = $session->get('redirect_to_after_login') ?? $this->router->generate('public_larp_list');
         return new RedirectResponse($targetUrl);
     }
 

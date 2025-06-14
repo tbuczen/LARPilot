@@ -21,5 +21,4 @@ class ThreadRepository extends BaseRepository
     {
         parent::__construct($registry, Thread::class);
     }
-
 }

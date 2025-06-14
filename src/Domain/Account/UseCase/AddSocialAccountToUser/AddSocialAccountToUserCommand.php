@@ -13,5 +13,6 @@ readonly class AddSocialAccountToUserCommand
         public string  $userId,
         public ?string $username = null,
         public ?string $displayName = null
-    ) {}
+    ) {
+    }
 }

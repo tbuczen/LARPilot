@@ -43,8 +43,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         private LarpRepository            $larpRepository,
         private LarpIntegrationRepository $larpIntegrationRepository,
         private GoogleSpreadsheetIntegrationHelper $googleSpreadsheetIntegrationHelper
-    )
-    {
+    ) {
     }
 
     public function supports(LarpIntegrationProvider $provider): bool
@@ -67,7 +66,8 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
                 'redirect_uri' => $this->urlGenerator->generate('backoffice_larp_connect_integration_check', [
                     'provider' => LarpIntegrationProvider::Google->value,
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]);
+            ]
+        );
     }
 
     /**
@@ -123,8 +123,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         AccessToken $accessToken,
         ResourceOwnerInterface $owner,
         string $larpId
-    ): LarpIntegration
-    {
+    ): LarpIntegration {
         $larp = $this->larpRepository->find($larpId);
         Assert::notNull($larp);
         $integrationOwnerName = $this->getOwnerNameFromOwner($owner);
@@ -188,5 +187,4 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
             default => $baseUrl,
         };
     }
-
 }

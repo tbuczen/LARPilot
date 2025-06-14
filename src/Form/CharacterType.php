@@ -18,7 +18,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CharacterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */
@@ -34,8 +33,8 @@ class CharacterType extends AbstractType
             ->add('gender', ChoiceType::class, [
                 'label' => 'form.character.gender',
                 'choices' => Gender::cases(),
-                'choice_label' => fn(Gender $gender) => $gender->name,
-                'choice_value' => fn(?Gender $gender) => $gender?->value,
+                'choice_label' => fn (Gender $gender) => $gender->name,
+                'choice_value' => fn (?Gender $gender) => $gender?->value,
                 'required' => true,
             ])
             ->add('description', TextareaType::class, [
@@ -50,7 +49,6 @@ class CharacterType extends AbstractType
                 'autocomplete' => true,
                 'placeholder' => 'form.character.choose_faction',
                 'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
-
                     return $repo->createQueryBuilder('f')
                         ->where('f.larp = :larp')
                         ->setParameter('larp', $larp);

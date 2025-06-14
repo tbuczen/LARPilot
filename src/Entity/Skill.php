@@ -12,7 +12,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 #[ORM\Entity]
 class Skill implements CreatorAwareInterface, Timestampable
 {
-
     use UuidTraitEntity;
     use TimestampableEntity;
     use CreatorAwareTrait;
@@ -26,5 +25,4 @@ class Skill implements CreatorAwareInterface, Timestampable
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
-
 }

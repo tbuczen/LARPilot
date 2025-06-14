@@ -10,7 +10,6 @@ readonly class GenerateInvitationCommand
         public string    $larpId,
         public \DateTimeImmutable $validTo,
         public UserRole $invitedRole = UserRole::STAFF
-    )
-    {
+    ) {
     }
 }

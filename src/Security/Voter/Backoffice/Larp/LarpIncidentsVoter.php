@@ -42,6 +42,5 @@ class LarpIncidentsVoter extends Voter
         }
 
         return true;
-
     }
 }

@@ -25,17 +25,16 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap([
     TargetType::Character->value => LarpCharacter::class,
-    TargetType::Thread->value  => Thread::class,
-    TargetType::Quest->value  => Quest::class,
-    TargetType::Event->value  => Event::class,
-    TargetType::Relation->value  => Relation::class,
-    TargetType::Faction->value  => LarpFaction::class,
-    TargetType::Item->value  => Item::class,
-    TargetType::Place->value  => Place::class,
+    TargetType::Thread->value => Thread::class,
+    TargetType::Quest->value => Quest::class,
+    TargetType::Event->value => Event::class,
+    TargetType::Relation->value => Relation::class,
+    TargetType::Faction->value => LarpFaction::class,
+    TargetType::Item->value => Item::class,
+    TargetType::Place->value => Place::class,
 ])]
 abstract class StoryObject implements CreatorAwareInterface, Timestampable, TargetableInterface, LarpAwareInterface
 {
-
     use UuidTraitEntity;
     use TimestampableEntity;
     use CreatorAwareTrait;
@@ -123,5 +122,4 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
     {
         return $this->relationsTo;
     }
-
 }

@@ -13,10 +13,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FactionType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         $builder
             ->add('title', TextType::class, [
                 'label' => 'form.faction.name',

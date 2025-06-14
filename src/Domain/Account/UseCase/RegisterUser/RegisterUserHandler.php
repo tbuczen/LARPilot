@@ -16,7 +16,8 @@ readonly class RegisterUserHandler
         private EntityManagerInterface  $entityManager,
         private UserRepository          $userRepository,
         private UserSocialAccountRepository $socialAccountRepository
-    ) {}
+    ) {
+    }
 
     public function handle(RegisterUserCommand $command): UserInterface
     {

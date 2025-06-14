@@ -11,8 +11,8 @@ use App\Entity\SharedFile;
 use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpRepository;
 use App\Service\Integrations\Exceptions\ReAuthenticationNeededException;
-use App\Service\Integrations\IntegrationServiceProvider;
 use App\Service\Integrations\IntegrationManager;
+use App\Service\Integrations\IntegrationServiceProvider;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,20 +26,17 @@ use Webmozart\Assert\Assert;
 #[Route('/larp', name: 'backoffice_larp_')]
 class LarpIntegrationsSettingsController extends AbstractController
 {
-
     public function __construct(
         private readonly IntegrationManager    $larpIntegrationManager,
         private readonly UrlGeneratorInterface $urlGenerator,
-    )
-    {
+    ) {
     }
 
     #[Route('/{larp}/integration-settings', name: 'integration_settings', methods: ['GET', 'POST'])]
     public function integrationsSettings(
         Larp                      $larp,
         LarpIntegrationRepository $larpIntegrationRepository,
-    ): Response
-    {
+    ): Response {
         $integrations = $larpIntegrationRepository->findAllByLarp($larp);
         try {
             $this->larpIntegrationManager->decorateIntegrationsWithClient($integrations);
@@ -59,8 +56,7 @@ class LarpIntegrationsSettingsController extends AbstractController
         LarpRepository          $larpRepository,
         IntegrationManager      $integrationManager,
         SessionInterface        $session,
-    ): Response
-    {
+    ): Response {
         $session->set('current_larp_id', $id);
         $larp = $larpRepository->find($id);
         $integrationService = $integrationManager->getService($provider);
@@ -74,8 +70,7 @@ class LarpIntegrationsSettingsController extends AbstractController
         SessionInterface           $session,
         ClientRegistry             $clientRegistry,
         IntegrationServiceProvider $integrationServiceProvider,
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $larpId = $session->get('current_larp_id');
         $client = $clientRegistry->getClient($provider);
 
@@ -104,8 +99,7 @@ class LarpIntegrationsSettingsController extends AbstractController
         string                       $integrationId,
         Request                      $request,
         ApplyFilesPermissionsHandler $handler
-    ): RedirectResponse
-    {
+    ): RedirectResponse {
         $selectedFilesJson = $request->request->get('selectedFiles', '[]');
         $files = json_decode($selectedFilesJson, true) ?? [];
         $command = new ApplyFilesPermissionsCommand($integrationId, $files);
@@ -119,8 +113,7 @@ class LarpIntegrationsSettingsController extends AbstractController
         Larp            $larp,
         LarpIntegration $integration,
         ?SharedFile     $sharedFile = null,
-    ): Response
-    {
+    ): Response {
         if ($sharedFile === null) {
             /** @var SharedFile[] $files */
             $files = $integration->getSharedFiles();
@@ -130,5 +123,4 @@ class LarpIntegrationsSettingsController extends AbstractController
 
         return $this->render('backoffice/larp/integrations/externalResourceMapping.html.twig', ['larp' => $larp, 'files' => $files]);
     }
-
 }

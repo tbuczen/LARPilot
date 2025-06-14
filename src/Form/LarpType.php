@@ -3,14 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Larp;
+use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LarpType extends AbstractType
@@ -37,7 +37,7 @@ class LarpType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('recaptcha', EWZRecaptchaType::class, [
-                'mapped'      => false,
+                'mapped' => false,
                 'constraints' => array(
                     new RecaptchaTrue()
                 ),

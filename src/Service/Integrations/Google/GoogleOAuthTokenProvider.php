@@ -12,7 +12,8 @@ readonly class GoogleOAuthTokenProvider implements OAuthTokenProviderInterface
     public function __construct(
         private LarpIntegrationRepository $integrationRepository,
         private GoogleClientManager       $googleClientManager
-    ) {}
+    ) {
+    }
 
     public function getTokenForIntegration(string $integrationId): ?string
     {
@@ -33,7 +34,7 @@ readonly class GoogleOAuthTokenProvider implements OAuthTokenProviderInterface
             }
             $integration->setAccessToken($token['access_token']);
             $integration->setRefreshToken($token['refresh_token']);
-            $integration->setExpiresAt((new \DateTime())->setTimestamp($token['expires_at']) );
+            $integration->setExpiresAt((new \DateTime())->setTimestamp($token['expires_at']));
             $this->integrationRepository->save($integration);
         }
 

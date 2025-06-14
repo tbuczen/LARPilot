@@ -16,14 +16,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 readonly class LarpManager
 {
-
     public function __construct(
         private LarpRepository            $larpRepository,
         private LarpIntegrationRepository $larpIntegrationRepository,
         private LarpInvitationRepository $larpInvitationRepository,
         private LarpParticipantRepository $larpParticipantRepository,
-    )
-    {
+    ) {
     }
 
     public function getLarp(string $larpId): ?Larp
@@ -46,12 +44,10 @@ readonly class LarpManager
 
     public function getLarpCharacters(Larp $larp)
     {
-
     }
 
     public function acceptInvitation(LarpInvitation $invitation, ?User $user): void
     {
-
         if ($invitation->getValidTo() < new \DateTimeImmutable()) {
             throw new \DomainException('Invitation expired.');
         }
@@ -76,6 +72,4 @@ readonly class LarpManager
         $this->larpParticipantRepository->save($participant, false);
         $this->larpInvitationRepository->save($invitation);
     }
-
-
 }

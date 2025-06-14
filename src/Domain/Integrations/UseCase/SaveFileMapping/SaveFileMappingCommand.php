@@ -4,7 +4,6 @@ namespace App\Domain\Integrations\UseCase\SaveFileMapping;
 
 final readonly class SaveFileMappingCommand
 {
-
     public function __construct(
         public string $larpId,
         public string $provider,
@@ -12,5 +11,6 @@ final readonly class SaveFileMappingCommand
         public string $sharedFileId,
         public array  $fields, // e.g. title, factionColumn, etc.
         public array  $meta, // e.g. startingRow, endColumn, etc.
-    ) {}
+    ) {
+    }
 }

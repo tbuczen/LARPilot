@@ -28,15 +28,13 @@ use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 /** @see https://discord.com/developers/docs/topics/oauth2 */
 class DiscordAuthenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
 {
-
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
         private readonly RouterInterface $router,
         private readonly RegisterUserHandler           $registerUserHandler,
         private readonly AddSocialAccountToUserHandler $addSocialAccountToUserHandler,
         private readonly Security                      $security
-    )
-    {
+    ) {
     }
 
     public function supports(Request $request): ?bool
@@ -66,7 +64,6 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
                 return $this->registerNewUser($providerEnum, $user);
             })
         );
-
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response

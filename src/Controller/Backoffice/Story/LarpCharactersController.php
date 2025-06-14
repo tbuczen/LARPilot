@@ -33,8 +33,7 @@ class LarpCharactersController extends BaseController
         Larp $larp,
         LarpManager $larpManager,
         LarpCharacterRepository $repository,
-    ): Response
-    {
+    ): Response {
         $filterForm = $this->createForm(LarpCharacterFilterType::class, options: ['larp' => $larp]);
         $filterForm->handleRequest($request);
         $qb = $this->getListQueryBuilder($repository, $larp, $filterForm, $request);
@@ -59,9 +58,7 @@ class LarpCharactersController extends BaseController
         Larp                    $larp,
         LarpCharacterRepository $characterRepository,
         ?LarpCharacter          $character = null,
-    ): Response
-    {
-
+    ): Response {
         $new = false;
         if (!$character) {
             $character = new LarpCharacter();
@@ -96,8 +93,7 @@ class LarpCharactersController extends BaseController
         Request                 $request,
         LarpCharacterRepository $characterRepository,
         LarpCharacter           $character,
-    ): Response
-    {
+    ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {
@@ -136,8 +132,7 @@ class LarpCharactersController extends BaseController
         Larp                    $larp,
         LarpManager             $larpManager,
         LarpIntegrationProvider $provider
-    ): Response
-    {
+    ): Response {
         $integration = $larpManager->getIntegrationTypeForLarp($larp, $provider);
         Assert::notNull($integration, sprintf('Integration %s not found for LARP %s', $provider->value, $larp->getId()->toRfc4122()));
 
@@ -157,8 +152,7 @@ class LarpCharactersController extends BaseController
         ObjectFieldMapping      $mapping,
         IntegrationManager      $integrationManager,
         ImportCharactersHandler $handler
-    ): Response
-    {
+    ): Response {
         $integrationService = $integrationManager->getService($provider);
 
         $rows = $integrationService->fetchSpreadsheetRows($sharedFile, $mapping);
@@ -189,6 +183,5 @@ class LarpCharactersController extends BaseController
                 'provider' => $provider->value
             ]),
         };
-
     }
 }

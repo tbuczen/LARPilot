@@ -12,7 +12,6 @@ use Google\Service\Sheets\ValueRange;
 
 readonly class GoogleSpreadsheetIntegrationHelper
 {
-
     public function __construct(
         private GoogleClientManager $googleClientManager,
     ) {
@@ -255,7 +254,6 @@ readonly class GoogleSpreadsheetIntegrationHelper
             }
 
             return count($rows) + 1;
-
         }
 
         throw new \RuntimeException('Sheet not found: ' . $sheetName);

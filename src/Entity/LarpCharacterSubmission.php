@@ -91,5 +91,4 @@ class LarpCharacterSubmission implements Timestampable, CreatorAwareInterface
     {
         $this->user = $user;
     }
-
 }

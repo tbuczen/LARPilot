@@ -20,7 +20,6 @@ use Symfonycasts\DynamicForms\DynamicFormBuilder;
 
 class ExternalReferenceType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */
@@ -38,22 +37,22 @@ class ExternalReferenceType extends AbstractType
             ->add('referenceType', ChoiceType::class, [
                 'label' => 'form.external_reference.mapping_type',
                 'choices' => ReferenceType::cases(),
-                'choice_label' => fn(ReferenceType $choice) => $choice->name,
-                'choice_value' => fn(?ReferenceType $choice) => $choice?->value,
+                'choice_label' => fn (ReferenceType $choice) => $choice->name,
+                'choice_value' => fn (?ReferenceType $choice) => $choice?->value,
                 'required' => true,
             ])
             ->add('role', ChoiceType::class, [
                 'label' => 'form.external_reference.reference_type',
                 'choices' => ReferenceRole::cases(),
-                'choice_label' => fn(ReferenceRole $choice) => $choice->name,
-                'choice_value' => fn(?ReferenceRole $choice) => $choice?->value,
+                'choice_label' => fn (ReferenceRole $choice) => $choice->name,
+                'choice_value' => fn (?ReferenceRole $choice) => $choice?->value,
                 'required' => true,
             ])
             ->add('storyObjectType', ChoiceType::class, [
                 'label' => 'form.external_reference.toType',
                 'choices' => TargetType::cases(),
-                'choice_label' => fn(TargetType $type) => $type->name,
-                'choice_value' => fn(?TargetType $type) => $type?->value,
+                'choice_label' => fn (TargetType $type) => $type->name,
+                'choice_value' => fn (?TargetType $type) => $type?->value,
                 'required' => true,
                 'placeholder' => 'form.choose',
             ])

@@ -10,14 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LarpFactionFilterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
-            ;
+        ;
     }
 
     public function getBlockPrefix(): string
@@ -33,6 +32,5 @@ class LarpFactionFilterType extends AbstractType
             'method' => 'GET',
             'translation_domain' => 'forms',
         ]);
-
     }
 }

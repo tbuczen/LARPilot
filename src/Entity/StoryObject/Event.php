@@ -2,21 +2,18 @@
 
 namespace App\Entity\StoryObject;
 
-
 use App\Entity\Enum\StoryTimeUnit;
+use App\Entity\Enum\TargetType;
 use App\Entity\LarpParticipant;
 use App\Repository\StoryObject\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Enum\TargetType;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event extends StoryObject
 {
-
-
     /** @var Collection<LarpParticipant> Participants (technical) needed for event to happen */
     #[ORM\ManyToMany(targetEntity: LarpParticipant::class)]
     private Collection $techParticipants;

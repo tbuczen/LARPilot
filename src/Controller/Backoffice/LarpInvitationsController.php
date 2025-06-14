@@ -14,11 +14,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/larp/{larp}', name: 'backoffice_larp_invitations_')]
 class LarpInvitationsController extends BaseController
 {
-
     #[Route('/invitations', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request, Larp $larp, LarpInvitationRepository $invitationRepository, ?LarpInvitation $invitation = null): Response
     {
-
         if ($invitation !== null) {
             $invitation = new LarpInvitation();
             $invitation->setLarp($larp);
@@ -47,9 +45,7 @@ class LarpInvitationsController extends BaseController
         Larp                     $larp,
         LarpInvitationRepository $invitationRepository,
         ?LarpInvitation          $invitation = null,
-    ): Response
-    {
-
+    ): Response {
         if (!$invitation) {
             $invitation = new LarpInvitation();
         }
@@ -74,8 +70,7 @@ class LarpInvitationsController extends BaseController
         Larp                     $larp,
         LarpInvitationRepository $invitationRepository,
         LarpInvitation           $invitation,
-    ): Response
-    {
+    ): Response {
         $invitationRepository->remove($invitation);
         $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
 
@@ -83,5 +78,4 @@ class LarpInvitationsController extends BaseController
             'larp' => $larp->getId(),
         ]);
     }
-
 }

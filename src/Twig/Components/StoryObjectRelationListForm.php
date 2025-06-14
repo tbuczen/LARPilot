@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-
 use App\Entity\StoryObject\StoryObject;
 use App\Repository\StoryObject\RelationRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -17,7 +16,8 @@ class StoryObjectRelationListForm
 
     public function __construct(
         private readonly RelationRepository $relationRepository,
-    ) {}
+    ) {
+    }
 
     #[LiveProp]
     public StoryObject $storyObject;
