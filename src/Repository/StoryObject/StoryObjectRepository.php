@@ -176,7 +176,7 @@ class StoryObjectRepository extends BaseRepository
             ->setParameters($parameters)
             ->getSingleColumnResult();
 
-        return array_map(static fn($id) => $id instanceof Uuid ? $id->toRfc4122() : (string) $id, $rows);
+        return array_map(static fn ($id) => $id instanceof Uuid ? $id->toRfc4122() : (string) $id, $rows);
     }
 
     /**
@@ -196,5 +196,4 @@ class StoryObjectRepository extends BaseRepository
 
         return array_values(array_unique($base));
     }
-
 }

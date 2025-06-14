@@ -3,9 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Larp;
+use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
-use App\Entity\StoryObject\Event;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Repository\StoryObject\LarpFactionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -19,10 +19,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         /** @var Larp $larp */
         $larp = $options['larp'];
 

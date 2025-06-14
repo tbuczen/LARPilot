@@ -15,6 +15,6 @@ class EventListColumnMappingType extends AbstractType
             ->add('eventName', TextType::class)
             ->add('description', TextType::class)
             ->add('factions', TextType::class)
-            ;
+        ;
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
+
 class PublicCommonController extends AbstractController
 {
     #[Route('/switch-locale/{_locale}', name: 'switch_locale')]

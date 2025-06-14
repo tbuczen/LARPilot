@@ -31,8 +31,7 @@ class BaseController extends AbstractController
         protected readonly FilterBuilderUpdaterInterface $filterBuilderUpdater,
         protected readonly PaginatorInterface $paginator,
         protected readonly EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
         $this->entityPreloader = new EntityPreloader($entityManager);
     }
 
@@ -71,8 +70,10 @@ class BaseController extends AbstractController
     protected function processIntegrationsForStoryObject(
         LarpManager        $larpManager,
         Larp               $larp,
-        IntegrationManager $integrationManager, bool $new, ?StoryObject $storyObject): void
-    {
+        IntegrationManager $integrationManager,
+        bool $new,
+        ?StoryObject $storyObject
+    ): void {
         $integrations = $larpManager->getIntegrationsForLarp($larp);
         foreach ($integrations as $integration) {
             try {

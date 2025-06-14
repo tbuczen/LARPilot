@@ -8,5 +8,6 @@ readonly class SubmitLarpDTO
         public string $larpId,
         public string $status,
         public string $name,
-    ) {}
+    ) {
+    }
 }

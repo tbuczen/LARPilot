@@ -11,7 +11,6 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class IntegrationManager
 {
-
     public function __construct(
         private ClientRegistry            $clientRegistry,
         private LarpIntegrationRepository $larpIntegrationRepository,
@@ -51,5 +50,4 @@ final readonly class IntegrationManager
 
         return $this->integrationServiceProvider->getServiceForIntegration($provider);
     }
-
 }

@@ -12,7 +12,8 @@ final readonly class DriveSharingServiceProvider
      */
     public function __construct(
         private iterable $services,
-    ) {}
+    ) {
+    }
 
     public function getServiceFor(LarpIntegration $integration): DriveSharingServiceInterface
     {

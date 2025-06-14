@@ -21,5 +21,4 @@ class ItemRepository extends BaseRepository
     {
         parent::__construct($registry, Item::class);
     }
-
 }

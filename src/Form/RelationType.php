@@ -20,7 +20,6 @@ use Symfonycasts\DynamicForms\DynamicFormBuilder;
 
 class RelationType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */
@@ -43,8 +42,8 @@ class RelationType extends AbstractType
             ->add('fromType', ChoiceType::class, [
                 'label' => 'form.relation.fromType',
                 'choices' => TargetType::getAvailableForRelations(),
-                'choice_label' => fn(TargetType $type) => $type->name,
-                'choice_value' => fn(?TargetType $type) => $type?->value,
+                'choice_label' => fn (TargetType $type) => $type->name,
+                'choice_value' => fn (?TargetType $type) => $type?->value,
                 'required' => true,
                 'placeholder' => 'form.choose',
                 'disabled' => $disableFrom
@@ -53,8 +52,8 @@ class RelationType extends AbstractType
             ->add('toType', ChoiceType::class, [
                 'label' => 'form.relation.toType',
                 'choices' => TargetType::getAvailableForRelations(),
-                'choice_label' => fn(TargetType $type) => $type->name,
-                'choice_value' => fn(?TargetType $type) => $type?->value,
+                'choice_label' => fn (TargetType $type) => $type->name,
+                'choice_value' => fn (?TargetType $type) => $type?->value,
                 'required' => true,
                 'placeholder' => 'form.choose',
                 'disabled' => $disableTo

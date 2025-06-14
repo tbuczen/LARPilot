@@ -1,4 +1,5 @@
 <?php
+
 // src/Controller/Backoffice/DashboardController.php
 namespace App\Controller\Backoffice;
 

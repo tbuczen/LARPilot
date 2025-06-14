@@ -5,8 +5,8 @@ namespace App\Controller\Backoffice\Story;
 use App\Controller\BaseController;
 use App\Entity\Larp;
 use App\Entity\StoryObject\Event;
-use App\Form\Filter\EventFilterType;
 use App\Form\EventType;
+use App\Form\Filter\EventFilterType;
 use App\Helper\Logger;
 use App\Repository\StoryObject\EventRepository;
 use App\Service\Integrations\IntegrationManager;
@@ -48,9 +48,7 @@ class EventsController extends BaseController
         Larp               $larp,
         EventRepository    $eventRepository,
         ?Event             $event = null,
-    ): Response
-    {
-
+    ): Response {
         $new = false;
         if (!$event) {
             $event = new Event();
@@ -84,8 +82,7 @@ class EventsController extends BaseController
         Request                 $request,
         EventRepository $eventRepository,
         Event           $event,
-    ): Response
-    {
+    ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {

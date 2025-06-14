@@ -33,5 +33,4 @@ class SharedFileRepository extends BaseRepository
                 ->getQuery()
                 ->getOneOrNullResult() !== null;
     }
-
 }

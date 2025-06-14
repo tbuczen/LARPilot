@@ -48,9 +48,7 @@ class ThreadController extends BaseController
         Larp               $larp,
         ThreadRepository   $threadRepository,
         ?Thread            $thread = null,
-    ): Response
-    {
-
+    ): Response {
         $new = false;
         if (!$thread) {
             $thread = new Thread();
@@ -118,8 +116,7 @@ class ThreadController extends BaseController
         Request            $request,
         ThreadRepository   $threadRepository,
         Thread             $thread,
-    ): Response
-    {
+    ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {
