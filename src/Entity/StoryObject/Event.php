@@ -5,6 +5,7 @@ namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\StoryTimeUnit;
 use App\Entity\LarpParticipant;
+use App\Entity\StoryObject\Place;
 use App\Repository\StoryObject\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,6 +32,10 @@ class Event extends StoryObject
     #[ORM\ManyToOne(targetEntity: Thread::class, inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Thread $thread = null;
+
+    #[ORM\ManyToOne(targetEntity: Place::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Place $place = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $storyMoment = null;
@@ -119,6 +124,16 @@ class Event extends StoryObject
     public function setThread(?Thread $thread): void
     {
         $this->thread = $thread;
+    }
+
+    public function getPlace(): ?Place
+    {
+        return $this->place;
+    }
+
+    public function setPlace(?Place $place): void
+    {
+        $this->place = $place;
     }
 
     public function getStoryMoment(): ?string

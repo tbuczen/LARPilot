@@ -65,3 +65,11 @@ form:
     is_purchased: "Purchased"
     quantity: "Quantity"
     cost: "Cost"
+  event:
+    name: "Event Name"
+    description: "Event Description"
+    place: "Place"
+    choose_place: "Choose a place..."
+    factions: "Factions involved in event"
+    characters: "Characters involved in event"
+    choose_faction: "Choose a faction..."
