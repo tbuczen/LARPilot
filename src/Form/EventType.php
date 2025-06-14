@@ -10,6 +10,7 @@ use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Repository\StoryObject\LarpFactionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -31,6 +32,16 @@ class EventType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.event.description',
+            ])
+            ->add('startTime', DateTimeType::class, [
+                'label' => 'form.event.start_time',
+                'widget' => 'single_text',
+                'required' => false,
+            ])
+            ->add('endTime', DateTimeType::class, [
+                'label' => 'form.event.end_time',
+                'widget' => 'single_text',
+                'required' => false,
             ])
             ->add('involvedFactions', EntityType::class, [
                 'class' => LarpFaction::class,
