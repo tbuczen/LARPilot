@@ -1,0 +1,7 @@
+  incident:
+    report_code: "Kod uczestnika"
+    description: "Opisz zdarzenie"
+    allow_feedback: "Chcę informację zwrotną"
+    contact_accused: "Pozwól na kontakt z oskarżonym"
+    allow_mediator: "Zgadzam się na mediatora"
+    stay_anonymous: "Pozostań anonimowy"

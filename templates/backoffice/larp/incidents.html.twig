@@ -4,4 +4,15 @@
 
 {% block larp_content %}
     <h1>{{ 'common.incidents'|trans }}</h1>
+    <ul>
+        {% for incident in incidents %}
+            <li>
+                <a href="{{ path('backoffice_larp_incident_view', {larp: larp.id, incident: incident.id}) }}">
+                    {{ incident.caseId }} - {{ incident.status.value }}
+                </a>
+            </li>
+        {% else %}
+            <li>{{ 'common.empty_list'|trans }}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
