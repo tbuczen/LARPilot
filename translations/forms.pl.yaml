@@ -1,3 +1,4 @@
+form:
   incident:
     report_code: "Kod uczestnika"
     description: "Opisz zdarzenie"
