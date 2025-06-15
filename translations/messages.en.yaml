@@ -173,3 +173,8 @@ character_type:
   short_npc: "Short NPC"
   gm: "Game Master"
   generic_npc: "Generic NPC"
+relation_type:
+  friend: "Friend"
+  enemy: "Enemy"
+  family: "Family"
+  ally: "Ally"
