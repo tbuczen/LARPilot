@@ -6,8 +6,11 @@ use App\Entity\Larp;
 use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Event;
+use App\Entity\StoryObject\Place;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\PlaceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -31,6 +34,19 @@ class EventType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'form.event.description',
             ])
+            ->add('place', EntityType::class, [
+                'class' => Place::class,
+                'choice_label' => 'title',
+                'label' => 'form.event.place',
+                'required' => false,
+                'multiple' => false,
+                'autocomplete' => true,
+                'placeholder' => 'form.event.choose_place',
+                'query_builder' => function (PlaceRepository $repo) use ($larp) {
+                    return $repo->createQueryBuilder('p')
+                        ->where('p.larp = :larp')
+                        ->setParameter('larp', $larp);
+                },
             ->add('startTime', DateTimeType::class, [
                 'label' => 'form.event.start_time',
                 'widget' => 'single_text',

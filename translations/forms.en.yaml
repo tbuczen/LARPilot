@@ -66,8 +66,12 @@ form:
     quantity: "Quantity"
     cost: "Cost"
   event:
-    name: 'Event Name'
-    description: 'Event Description'
+    name: "Event Name"
+    description: "Event Description"
+    place: "Place"
+    choose_place: "Choose a place..."
+    factions: "Factions involved in event"
+    characters: "Characters involved in event"
     start_time: 'Start Time'
     end_time: 'End Time'
     factions: 'Factions involved in event'
