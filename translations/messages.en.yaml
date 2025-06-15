@@ -181,3 +181,12 @@ relation_type:
   enemy: "Enemy"
   family: "Family"
   ally: "Ally"
+backoffice:
+  recruitment:
+    open: "Open recruitments"
+    none: "No recruitments"
+  proposal:
+    list: "Proposals"
+    accept: "Accept"
+    reject: "Reject"
+    none: "No proposals"

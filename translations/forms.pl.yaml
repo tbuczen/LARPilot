@@ -6,3 +6,10 @@ form:
     contact_accused: "Pozwól na kontakt z oskarżonym"
     allow_mediator: "Zgadzam się na mediatora"
     stay_anonymous: "Pozostań anonimowy"
+  recruitment:
+    number: "Liczba potrzebnych"
+    type: "Typ"
+    notes: "Notatki"
+  proposal:
+    character: "Postać"
+    comment: "Komentarz"

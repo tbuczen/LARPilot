@@ -135,3 +135,12 @@ file_select:
 login_page:
   info: Wenn du bereits registriert bist, melde dich an und verbinde Konten in deinen Kontoeinstellungen.
   title: Registrierung / Anmeldung
+backoffice:
+  recruitment:
+    open: "Offene Rekrutierungen"
+    none: "Keine Rekrutierungen"
+  proposal:
+    list: "Vorschläge"
+    accept: "Annehmen"
+    reject: "Ablehnen"
+    none: "Keine Vorschläge"
