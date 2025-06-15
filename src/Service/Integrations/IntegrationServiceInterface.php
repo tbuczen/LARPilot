@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface IntegrationServiceInterface
 {
-
     public function supports(LarpIntegrationProvider $provider): bool;
 
     public function getClient(LarpIntegration $integration): object;
@@ -47,5 +46,4 @@ interface IntegrationServiceInterface
     public function createStoryObject(LarpIntegration $integration, StoryObject $storyObject);
 
     public function fetchSpreadsheetSheetIdByName(SharedFile $sharedFile, ObjectFieldMapping $mapping): string;
-
 }

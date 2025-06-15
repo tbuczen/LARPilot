@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -22,5 +23,4 @@ class OAuthDiscordController extends AbstractController
         // This route is used by the OAuth2 client bundle to handle the callback.
         // You can leave it empty; the bundle will intercept the request and handle authentication.
     }
-
 }

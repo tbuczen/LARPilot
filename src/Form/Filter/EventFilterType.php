@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventFilterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */
@@ -28,6 +27,12 @@ class EventFilterType extends AbstractType
         $builder
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
+            ])
+            ->add('startTime', Filters\DateTimeFilterType::class, [
+                'widget' => 'single_text',
+            ])
+            ->add('endTime', Filters\DateTimeFilterType::class, [
+                'widget' => 'single_text',
             ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,
@@ -46,7 +51,7 @@ class EventFilterType extends AbstractType
                         ->setParameter('larp', $larp);
                 },
             ])
-            ;
+        ;
     }
 
     public function getBlockPrefix(): string

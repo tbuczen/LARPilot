@@ -22,7 +22,6 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ExternalReferenceRepository::class)]
 class ExternalReference implements CreatorAwareInterface, Timestampable
 {
-
     use UuidTraitEntity;
     use CreatorAwareTrait;
     use TimestampableEntity;
@@ -132,5 +131,4 @@ class ExternalReference implements CreatorAwareInterface, Timestampable
         $this->storyObjectType = $storyObjectType;
         return $this;
     }
-
 }

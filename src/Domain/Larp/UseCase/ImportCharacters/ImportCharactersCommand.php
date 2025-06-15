@@ -2,10 +2,8 @@
 
 namespace App\Domain\Larp\UseCase\ImportCharacters;
 
-
 readonly class ImportCharactersCommand
 {
-
     /**
      * @param string $larpId The LARP identifier.
      * @param array $rows An array of data rows to import.

@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/incident', name: 'incident_')]
 class LarpIncidentsController extends AbstractController
 {
-
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(): Response
     {

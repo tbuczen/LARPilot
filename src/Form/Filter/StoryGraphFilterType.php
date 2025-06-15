@@ -16,7 +16,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StoryGraphFilterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */
@@ -72,7 +71,7 @@ class StoryGraphFilterType extends AbstractType
                         ->setParameter('larp', $larp);
                 },
             ]);
-            ;
+        ;
     }
 
     public function getBlockPrefix(): string

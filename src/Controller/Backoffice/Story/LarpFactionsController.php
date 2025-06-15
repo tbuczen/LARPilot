@@ -48,9 +48,7 @@ class LarpFactionsController extends BaseController
         Larp                    $larp,
         LarpFactionRepository $factionRepository,
         ?LarpFaction          $faction = null,
-    ): Response
-    {
-
+    ): Response {
         $new = false;
         if (!$faction) {
             $faction = new LarpFaction();
@@ -98,8 +96,7 @@ class LarpFactionsController extends BaseController
         Request                 $request,
         LarpFactionRepository $factionRepository,
         LarpFaction           $faction,
-    ): Response
-    {
+    ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {

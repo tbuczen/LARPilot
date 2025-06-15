@@ -2,21 +2,19 @@
 
 namespace App\Entity\StoryObject;
 
-
 use App\Entity\Enum\StoryTimeUnit;
+use App\Entity\Enum\TargetType;
 use App\Entity\LarpParticipant;
 use App\Entity\StoryObject\Place;
 use App\Repository\StoryObject\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Enum\TargetType;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event extends StoryObject
 {
-
-
     /** @var Collection<LarpParticipant> Participants (technical) needed for event to happen */
     #[ORM\ManyToMany(targetEntity: LarpParticipant::class)]
     private Collection $techParticipants;
@@ -45,6 +43,12 @@ class Event extends StoryObject
 
     #[ORM\Column(length: 20, nullable: true, enumType: StoryTimeUnit::class)]
     private ?StoryTimeUnit $storyTimeUnit = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $startTime = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $endTime = null;
 
     public function __construct()
     {
@@ -164,6 +168,26 @@ class Event extends StoryObject
     public function setStoryTimeUnit(?StoryTimeUnit $storyTimeUnit): void
     {
         $this->storyTimeUnit = $storyTimeUnit;
+    }
+
+    public function getStartTime(): ?\DateTimeInterface
+    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(?\DateTimeInterface $startTime): void
+    {
+        $this->startTime = $startTime;
+    }
+
+    public function getEndTime(): ?\DateTimeInterface
+    {
+        return $this->endTime;
+    }
+
+    public function setEndTime(?\DateTimeInterface $endTime): void
+    {
+        $this->endTime = $endTime;
     }
 
 

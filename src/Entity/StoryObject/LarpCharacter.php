@@ -16,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-
 #[Gedmo\Loggable]
 #[UniqueEntity(
     fields: ['larp', 'title'],
@@ -33,6 +32,10 @@ class LarpCharacter extends StoryObject
     #[ORM\OneToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(name: "previous_character_id", referencedColumnName: "id", nullable: true)]
     private ?LarpCharacter $previousCharacter = null;
+
+    #[ORM\OneToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(name: "continuation_character_id", referencedColumnName: "id", nullable: true)]
+    private ?LarpCharacter $continuation = null;
 
     #[Gedmo\Versioned]
     #[ORM\Column(type: "text", nullable: true)]
@@ -65,7 +68,7 @@ class LarpCharacter extends StoryObject
     private Collection $skills;
 
     //items that character should start the game with (each item should be defined in the system, crafted by crafters or bought by the organizers)
-    #[ORM\OneToMany(targetEntity: LarpCharacterItem::class,  mappedBy: 'character')]
+    #[ORM\OneToMany(targetEntity: LarpCharacterItem::class, mappedBy: 'character')]
     #[ORM\JoinTable(name: "larp_character_item")]
     private Collection $items;
 
@@ -150,7 +153,7 @@ class LarpCharacter extends StoryObject
     {
         if (!$this->factions->contains($larpFaction)) {
             $this->factions[] = $larpFaction;
-//            $larpFaction->addMember($this);
+            //            $larpFaction->addMember($this);
         }
         return $this;
     }
@@ -310,5 +313,4 @@ class LarpCharacter extends StoryObject
     {
         return TargetType::Character;
     }
-
 }

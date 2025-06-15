@@ -72,4 +72,7 @@ form:
     choose_place: "Choose a place..."
     factions: "Factions involved in event"
     characters: "Characters involved in event"
-    choose_faction: "Choose a faction..."
+    start_time: 'Start Time'
+    end_time: 'End Time'
+    factions: 'Factions involved in event'
+    choose_faction: 'Choose a faction...'

@@ -9,7 +9,6 @@ use App\Entity\StoryObject\StoryObject;
 
 abstract readonly class BaseIntegrationService
 {
-
     public function createStoryObject(LarpIntegration $integration, StoryObject $storyObject): void
     {
         //all mappings configured for this LarpIntegration for this type of story object
@@ -22,15 +21,14 @@ abstract readonly class BaseIntegrationService
                 $this->createStoryObjectDocument($mapping, $storyObject);
             }
         }
-//add
-//        ReferenceType
+        //add
+        //        ReferenceType
     }
 
     public function removeStoryObject(LarpIntegration $integration, StoryObject $storyObject): void
     {
-//      TODO:: get  $externalReferences, iterate over and do magic
+        //      TODO:: get  $externalReferences, iterate over and do magic
         throw new \RuntimeException('Not implemented yet');
-
     }
 
     public function syncStoryObject(LarpIntegration $integration, StoryObject $storyObject): void
@@ -57,7 +55,6 @@ abstract readonly class BaseIntegrationService
         return $matching;
     }
 
-    protected abstract function createStoryObjectList(ObjectFieldMapping $mapping, StoryObject $storyObject);
-    protected abstract function createStoryObjectDocument(ObjectFieldMapping $mapping, StoryObject $storyObject);
-
+    abstract protected function createStoryObjectList(ObjectFieldMapping $mapping, StoryObject $storyObject);
+    abstract protected function createStoryObjectDocument(ObjectFieldMapping $mapping, StoryObject $storyObject);
 }

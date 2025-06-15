@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-
 use App\Entity\StoryObject\StoryObject;
 use App\Repository\ExternalReferenceRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -17,7 +16,8 @@ class StoryObjectReferencesListForm
 
     public function __construct(
         private readonly ExternalReferenceRepository $externalReferenceRepository,
-    ) {}
+    ) {
+    }
 
     #[LiveProp]
     public StoryObject $storyObject;

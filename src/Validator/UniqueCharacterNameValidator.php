@@ -8,7 +8,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueCharacterNameValidator extends ConstraintValidator
 {
-    public function __construct(private readonly LarpCharacterRepository $repository) {}
+    public function __construct(private readonly LarpCharacterRepository $repository)
+    {
+    }
 
     public function validate(mixed $value, Constraint $constraint): void
     {

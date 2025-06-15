@@ -16,7 +16,6 @@ use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
 readonly class StoryObjectRelationExplorer
 {
-
     public function __construct(
         private EntityPreloader $preloader,
     ) {
@@ -56,14 +55,14 @@ readonly class StoryObjectRelationExplorer
                 $faction = $object->getFactions()->first();
                 if ($faction instanceof LarpFaction) {
                     $nodes[$id]['data']['parent'] = $faction->getId()->toBase32();
-                    if(!in_array($faction->getId()->toBase32(), $parentFactionGroups)) {
+                    if (!in_array($faction->getId()->toBase32(), $parentFactionGroups)) {
                         $parentFactionGroups[$faction->getId()->toBase32()] = $faction;
                     }
                 }
             }
             if ($object instanceof LarpFaction) {
                 $nodes[$id]['data']['parent'] = $object->getId()->toBase32();
-                if(!in_array($object->getId()->toBase32(), $parentFactionGroups)) {
+                if (!in_array($object->getId()->toBase32(), $parentFactionGroups)) {
                     $parentFactionGroups[$object->getId()->toBase32()] = $object;
                 }
             }
@@ -73,13 +72,13 @@ readonly class StoryObjectRelationExplorer
             if ($object instanceof Quest || $object instanceof Event) {
                 $thread = $object->getThread();
                 $nodes[$id]['data']['parent'] = $thread->getId()->toBase32();
-                if(!in_array($thread->getId()->toBase32(), $parentThreadGroups)) {
+                if (!in_array($thread->getId()->toBase32(), $parentThreadGroups)) {
                     $parentThreadGroups[$thread->getId()->toBase32()] = $thread;
                 }
             }
             if ($object instanceof Thread) {
                 $nodes[$id]['data']['parent'] = $object->getId()->toBase32();
-                if(!in_array($object->getId()->toBase32(), $parentThreadGroups)) {
+                if (!in_array($object->getId()->toBase32(), $parentThreadGroups)) {
                     $parentThreadGroups[$object->getId()->toBase32()] = $object;
                 }
             }
@@ -281,5 +280,4 @@ readonly class StoryObjectRelationExplorer
             $target->add($item);
         }
     }
-
 }

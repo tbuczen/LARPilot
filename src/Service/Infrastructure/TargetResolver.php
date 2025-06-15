@@ -10,11 +10,11 @@ use Symfony\Component\Uid\Uuid;
 
 final readonly class TargetResolver
 {
-
     public function __construct(
         private LarpCharacterRepository $characterRepository,
         private LarpFactionRepository   $factionRepository,
-    ) {}
+    ) {
+    }
 
     public function resolve(TargetType $type, Uuid $id): ?TargetableInterface
     {
@@ -30,5 +30,4 @@ final readonly class TargetResolver
 
         return null;
     }
-
 }

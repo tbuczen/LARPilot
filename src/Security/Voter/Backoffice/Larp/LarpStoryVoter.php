@@ -44,6 +44,5 @@ class LarpStoryVoter extends Voter
         }
 
         return true;
-
     }
 }

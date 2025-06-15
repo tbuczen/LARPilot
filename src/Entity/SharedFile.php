@@ -14,7 +14,6 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: SharedFileRepository::class)]
 class SharedFile
 {
-
     use UuidTraitEntity;
     use TimestampableEntity;
 
@@ -131,5 +130,4 @@ class SharedFile
     {
         $this->url = $url;
     }
-
 }

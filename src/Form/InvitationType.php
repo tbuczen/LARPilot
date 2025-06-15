@@ -26,8 +26,8 @@ class InvitationType extends AbstractType
             ->add('invitedRole', ChoiceType::class, [
                 'label' => 'form.invitation.role',
                 'choices' => UserRole::cases(),
-                'choice_label' => fn(UserRole $role) => $role->name,
-                'choice_value' => fn(?UserRole $role) => $role?->value,
+                'choice_label' => fn (UserRole $role) => $role->name,
+                'choice_value' => fn (?UserRole $role) => $role?->value,
                 'required' => true,
             ])
             ->add('validTo', DateTimeType::class, [
@@ -42,7 +42,7 @@ class InvitationType extends AbstractType
                 if (!$role) {
                     return;
                 }
-                if($role === UserRole::PLAYER) {
+                if ($role === UserRole::PLAYER) {
                     $field->add(EntityType::class, [
                         'class' => LarpCharacter::class,
                         'choice_label' => 'name',

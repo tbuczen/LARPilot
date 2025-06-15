@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-
 use App\Entity\Enum\TargetType;
 use App\Entity\StoryObject\Relation;
 use App\Entity\StoryObject\StoryObject;
@@ -34,8 +33,7 @@ class StoryObjectRelationForm extends AbstractController
     #[LiveAction]
     public function save(
         RelationRepository $repo,
-    ): void
-    {
+    ): void {
         $this->submitForm();
         /** @var Relation $relation */
         $relation = $this->getForm()->getData();
@@ -59,5 +57,4 @@ class StoryObjectRelationForm extends AbstractController
     {
         return 'form';
     }
-
 }

@@ -21,5 +21,4 @@ class QuestRepository extends BaseRepository
     {
         parent::__construct($registry, Quest::class);
     }
-
 }

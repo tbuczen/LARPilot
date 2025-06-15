@@ -54,5 +54,4 @@ class AutocompleteController extends BaseController
             'title' => $object->getTitle(),
         ]);
     }
-
 }

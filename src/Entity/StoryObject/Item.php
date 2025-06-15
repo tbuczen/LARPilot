@@ -4,15 +4,13 @@ namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
 use App\Repository\StoryObject\ItemRepository;
-use Money\Money;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Embedded;
+use Money\Money;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item extends StoryObject
 {
-
-
     /** @var StoryObject|null The item can be for specific quest, thread, character, faction */
     #[ORM\ManyToMany(targetEntity: StoryObject::class)]
     #[ORM\JoinColumn(nullable: false)]

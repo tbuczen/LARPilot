@@ -79,8 +79,7 @@ class LarpController extends AbstractController
         string $code,
         string $slug,
         LarpManager $larpManager
-    ): Response
-    {
+    ): Response {
         $larp = $larpRepository->findOneBy(['slug' => $slug]);
         if ($larp === null) {
             throw $this->createAccessDeniedException();
@@ -101,5 +100,4 @@ class LarpController extends AbstractController
         $this->addFlash('success', $this->translator->trans('public.larp.invitation.accepted'));
         return $this->redirectToRoute('public_larp_details', ['slug' => $invitation->getLarp()->getSlug()]);
     }
-
 }

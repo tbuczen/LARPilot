@@ -45,6 +45,14 @@
                         field: 'title',
                         label: 'common.name'|trans
                     } %}
+                    {% include 'includes/sort_th.html.twig' with {
+                        field: 'startTime',
+                        label: 'form.event.start_time'|trans({}, 'forms')
+                    } %}
+                    {% include 'includes/sort_th.html.twig' with {
+                        field: 'endTime',
+                        label: 'form.event.end_time'|trans({}, 'forms')
+                    } %}
                     <th>{{ 'common.description'|trans }}</th>
                     <th>{{ 'common.actions'|trans }}</th>
                 </tr>
@@ -53,6 +61,8 @@
                 {% for event in events %}
                     <tr>
                         <td>{{ event.title }}</td>
+                        <td>{{ event.startTime ? event.startTime|date('Y-m-d H:i') : '-' }}</td>
+                        <td>{{ event.endTime ? event.endTime|date('Y-m-d H:i') : '-' }}</td>
                         <td>{{ event.description|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_event_modify', { larp: larp.id, event: event.id }) }}"

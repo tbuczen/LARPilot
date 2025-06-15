@@ -16,7 +16,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ThreadFilterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Larp $larp */
@@ -58,7 +57,7 @@ class ThreadFilterType extends AbstractType
                         ->setParameter('larp', $larp);
                 },
             ])
-            ;
+        ;
     }
 
     public function getBlockPrefix(): string

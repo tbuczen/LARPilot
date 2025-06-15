@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Larp;
+use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\StoryObject\Event;
@@ -12,6 +13,7 @@ use App\Repository\StoryObject\LarpFactionRepository;
 use App\Repository\StoryObject\PlaceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,10 +22,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         /** @var Larp $larp */
         $larp = $options['larp'];
 
@@ -47,6 +47,15 @@ class EventType extends AbstractType
                         ->where('p.larp = :larp')
                         ->setParameter('larp', $larp);
                 },
+            ->add('startTime', DateTimeType::class, [
+                'label' => 'form.event.start_time',
+                'widget' => 'single_text',
+                'required' => false,
+            ])
+            ->add('endTime', DateTimeType::class, [
+                'label' => 'form.event.end_time',
+                'widget' => 'single_text',
+                'required' => false,
             ])
             ->add('involvedFactions', EntityType::class, [
                 'class' => LarpFaction::class,

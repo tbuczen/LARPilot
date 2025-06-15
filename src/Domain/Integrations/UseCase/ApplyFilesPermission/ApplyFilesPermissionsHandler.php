@@ -19,8 +19,7 @@ readonly class ApplyFilesPermissionsHandler
         private SharedFileRepository        $sharedFileRepository,
         private DriveSharingServiceProvider $sharingServiceProvider,
         private EntityManagerInterface      $entityManager,
-    )
-    {
+    ) {
     }
 
     public function handle(ApplyFilesPermissionsCommand $command): void
@@ -41,7 +40,6 @@ readonly class ApplyFilesPermissionsHandler
                     if (!$this->sharedFileRepository->existsForIntegration($integration, $file['fileId'])) {
                         $this->createSharedFile($integration, $file);
                     }
-
                 } catch (\Throwable $e) {
                     // log or notify admin
                     throw $e;
@@ -52,7 +50,7 @@ readonly class ApplyFilesPermissionsHandler
         });
     }
 
-    function createSharedFile(LarpIntegration $integration, array $file): void
+    public function createSharedFile(LarpIntegration $integration, array $file): void
     {
         $integrationService = $this->integrationManager->getService($integration);
         $url = $integrationService->getExternalFileUrl($integration, $file['fileId']);
