@@ -6,7 +6,6 @@ use App\Entity\Larp;
 use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
-use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\Place;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Repository\StoryObject\LarpFactionRepository;
@@ -46,7 +45,8 @@ class EventType extends AbstractType
                     return $repo->createQueryBuilder('p')
                         ->where('p.larp = :larp')
                         ->setParameter('larp', $larp);
-                },
+                }
+            ])
             ->add('startTime', DateTimeType::class, [
                 'label' => 'form.event.start_time',
                 'widget' => 'single_text',

@@ -75,5 +75,4 @@ form:
     characters: "Characters involved in event"
     start_time: 'Start Time'
     end_time: 'End Time'
-    factions: 'Factions involved in event'
     choose_faction: 'Choose a faction...'
