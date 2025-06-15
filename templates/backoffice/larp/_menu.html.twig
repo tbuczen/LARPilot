@@ -31,6 +31,10 @@
                             {{ 'backoffice.larp.invitations'|trans }}
                         </a>
                     {% endif %}
+                    <a href="{{ path('backoffice_larp_submissions_list', {'larp': larp.id}) }}"
+                       class="btn btn-primary {% if 'larp_submissions' in currentRoute %}active{% endif %}">
+                        {{ 'backoffice.larp.submissions.title'|trans }}
+                    </a>
 
                     {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
                         <a href="{{ path('backoffice_larp_incidents', {'id': larp.id}) }}"
