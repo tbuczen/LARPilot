@@ -46,6 +46,7 @@ form:
   relation:
     name: "Relation Name"
     description: "Description of the relation"
+    type: "Relation Type"
     fromType: "Type of owning side of relation"
     from: "Relation Owner"
     toType: "Type of target side of relation"

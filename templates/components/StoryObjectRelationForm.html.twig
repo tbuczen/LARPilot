@@ -10,6 +10,7 @@
             }) }}
             {{ form_row(form.title, { attr: { 'data-model': 'norender|form.title' } }) }}
             {{ form_row(form.description, { attr: { 'data-model': 'norender|form.description' } }) }}
+            {{ form_row(form.type, { attr: { 'data-model': 'form.type' } }) }}
             {{ form_row(form.fromType, { attr: { 'data-model': 'form.fromType' } }) }}
             {% if form.from is defined %}
                 {{ form_row(form.from, { attr: { 'data-model': 'norender|form.from' } }) }}

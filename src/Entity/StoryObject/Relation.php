@@ -3,6 +3,7 @@
 namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
+use App\Entity\Enum\RelationType;
 use App\Entity\Larp;
 use App\Repository\StoryObject\RelationRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +21,9 @@ class Relation extends StoryObject
 
     private ?TargetType $fromType = null;
     private ?TargetType $toType = null;
+
+    #[ORM\Column(name: 'relation_type', enumType: RelationType::class)]
+    private RelationType $type = RelationType::Friend;
 
 
     public function getFrom(): ?StoryObject
@@ -74,6 +78,17 @@ class Relation extends StoryObject
     public function setToType(?TargetType $toType): self
     {
         $this->toType = $toType;
+        return $this;
+    }
+
+    public function getType(): RelationType
+    {
+        return $this->type;
+    }
+
+    public function setType(RelationType $type): self
+    {
+        $this->type = $type;
         return $this;
     }
 }

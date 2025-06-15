@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Enum\TargetType;
+use App\Entity\Enum\RelationType as RelationKind;
 use App\Entity\Larp;
 use App\Entity\StoryObject\Relation;
 use App\Entity\StoryObject\StoryObject;
@@ -37,6 +38,13 @@ class RelationType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.relation.description',
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'form.relation.type',
+                'choices' => RelationKind::cases(),
+                'choice_label' => fn(RelationKind $type) => $type->name,
+                'choice_value' => fn(?RelationKind $type) => $type?->value,
+                'required' => true,
             ])
 
             ->add('fromType', ChoiceType::class, [
