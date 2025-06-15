@@ -82,3 +82,10 @@ form:
   priority: 'Priority'
   justification: 'Justification'
   visual: 'Visual ideas'
+  incident:
+    report_code: "Participant code"
+    description: "Describe what happened"
+    allow_feedback: "I want feedback"
+    contact_accused: "Allow contacting accused"
+    allow_mediator: "Allow mediator"
+    stay_anonymous: "Stay anonymous"

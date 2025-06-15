@@ -1,0 +1,8 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block title %}{{ 'common.incident'|trans }}{% endblock %}
+
+{% block larp_content %}
+    <h1>{{ incident.caseId }}</h1>
+    <p>{{ incident.description }}</p>
+{% endblock %}
