@@ -15,6 +15,13 @@ form:
     valid_to: "Invitation code valid to"
     role: "Role"
     character: "Choose a character..."
+  recruitment:
+    number: "Required number"
+    type: "Type"
+    notes: "Notes"
+  proposal:
+    character: "Character"
+    comment: "Comment"
   mapping:
     spreadsheet:
       sheet_name: "Spreadsheet Name"
