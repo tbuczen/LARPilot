@@ -1,4 +1,4 @@
-.PHONY: ecs phpstan prepush
+.PHONY: ecs phpstan phpunit prepush
 
 ecs:
 	vendor/bin/ecs check
@@ -6,4 +6,7 @@ ecs:
 phpstan:
 	vendor/bin/phpstan analyse -c phpstan.neon
 
-prepush: ecs phpstan
+phpunit:
+	vendor/bin/phpunit -c phpunit.xml.dist
+
+prepush: ecs phpstan phpunit
