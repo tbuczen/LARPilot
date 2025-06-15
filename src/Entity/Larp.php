@@ -48,6 +48,9 @@ class Larp implements Timestampable, CreatorAwareInterface
     #[ORM\Column(length: 255)]
     private ?LarpStageStatus $status = null;
 
+    #[ORM\Column(type: Types::SMALLINT)]
+    private int $maxCharacterChoices = 1;
+
     /** @var Collection<LarpCharacter> */
     #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larp')]
     private Collection $characters;
@@ -165,6 +168,18 @@ class Larp implements Timestampable, CreatorAwareInterface
     public function setStatus(LarpStageStatus $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getMaxCharacterChoices(): int
+    {
+        return $this->maxCharacterChoices;
+    }
+
+    public function setMaxCharacterChoices(int $maxCharacterChoices): static
+    {
+        $this->maxCharacterChoices = $maxCharacterChoices;
 
         return $this;
     }

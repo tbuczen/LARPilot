@@ -118,6 +118,9 @@ backoffice:
       title: 'Select files to share with LARPPilot'
       open_picker_desc: 'Open the google file picker to choose files You want to share with LarpPilot'
     threads: 'Threads'
+    submissions:
+      title: 'Character Submissions'
+      missing: 'Characters without submissions: %count%'
     relation:
       list: 'Relations'
       add: 'Add Relation'
