@@ -95,6 +95,11 @@
                            class="btn btn-primary {% if 'larp_story_item' in currentRoute %}active{% endif %}">
                             {{ 'backoffice.larp.item.list'|trans }}
                         </a>
+
+                        <a href="{{ path('backoffice_larp_story_tag_list', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if 'larp_story_tag' in currentRoute %}active{% endif %}">
+                            {{ 'backoffice.larp.tag.list'|trans }}
+                        </a>
                     </div>
                 {% endif %}
             </div>
