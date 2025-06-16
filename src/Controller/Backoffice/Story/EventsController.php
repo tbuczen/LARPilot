@@ -122,6 +122,35 @@ class EventsController extends BaseController
         return new Response('TODO:: Import from file csv/xlsx');
     }
 
+    #[Route('recruitments', name: 'recruitment_list', methods: ['GET'])]
+    public function recruitmentList(Larp $larp, StoryRecruitmentRepository $recruitmentRepository): Response
+    {
+        $recruitments = $recruitmentRepository->createQueryBuilder('r')
+            ->join('r.storyObject', 'o')
+            ->andWhere('o INSTANCE OF ' . Event::class)
+            ->andWhere('o.larp = :larp')
+            ->setParameter('larp', $larp)
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('backoffice/larp/recruitment/list.html.twig', [
+            'recruitments' => $recruitments,
+            'larp' => $larp,
+            'modify_route' => 'backoffice_larp_story_event_recruitment',
+        ]);
+    }
+
+    #[Route('recruitment/{recruitment}/proposals', name: 'proposal_list', methods: ['GET'])]
+    public function proposalList(StoryRecruitment $recruitment): Response
+    {
+        return $this->render('backoffice/larp/proposal/list.html.twig', [
+            'proposals' => $recruitment->getProposals(),
+            'larp' => $recruitment->getStoryObject()->getLarp(),
+            'accept_route' => 'backoffice_larp_story_event_proposal_accept',
+            'reject_route' => 'backoffice_larp_story_event_proposal_reject',
+        ]);
+    }
+
     #[Route('{event}/recruitment', name: 'recruitment', defaults: ['recruitment' => null], methods: ['GET', 'POST'])]
     public function recruitment(
         Request                    $request,
