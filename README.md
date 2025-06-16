@@ -81,3 +81,29 @@ yarn dev-server
 yarn build
 ```
 
+## Story recruitment module
+
+### Business purpose
+
+Historia każdego LARPa wymaga konkretnych postaci lub pomocników do
+wypełnienia wydarzeń i wątków. Funkcjonalność **StoryRecruitment** pozwala
+organizatorom określić zapotrzebowanie na uczestników (liczbę i typ roli) oraz
+zbierać zgłoszenia od innych fabularzystów (gracze nie mają do tego dostępu).
+Dzięki temu można w jednym miejscu śledzić, kto zaproponował swoją postać i
+czy została ona zaakceptowana.
+
+### Implementation details
+
+* `StoryRecruitment` – encja powiązana z `StoryObject` (np. `Thread`, `Quest`,
+  `Event`). Przechowuje pola `requiredNumber`, `type` i opcjonalne `notes` oraz
+  kolekcję zgłoszeń.
+* `RecruitmentProposal` – reprezentuje zgłoszenie konkretnej postaci do
+  rekrutacji i posiada status z wyliczenia
+  `RecruitmentProposalStatus` (`pending`, `accepted`, `rejected`).
+* `StoryRecruitmentType` – formularz do tworzenia i edycji rekrutacji.
+* Kontrolery w katalogu `Backoffice/Story` umożliwiają listowanie rekrutacji,
+  przegląd zgłoszeń oraz akceptację lub odrzucanie propozycji.
+
+Podobne sekcje w dokumentacji dla innych modułów ułatwiają szybkie poznanie
+ich roli i głównych klas.
+
