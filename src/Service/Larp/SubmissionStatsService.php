@@ -5,16 +5,22 @@ namespace App\Service\Larp;
 use App\Entity\Larp;
 use App\Entity\LarpCharacterSubmission;
 use App\Repository\LarpCharacterSubmissionRepository;
+use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
 readonly class SubmissionStatsService
 {
-    public function __construct(private LarpCharacterSubmissionRepository $repository)
-    {
+    public function __construct(
+        private LarpCharacterSubmissionRepository $repository,
+        private EntityPreloader $preloader,
+    ) {
     }
 
     public function getStatsForLarp(Larp $larp): array
     {
         $submissions = $this->repository->findBy(['larp' => $larp]);
+        $this->preloader->preload($submissions, 'choices');
+        $this->preloader->preload($submissions, 'choices.character');
+        $this->preloader->preload($larp->getFactions(), 'members');
 
         $charactersWithSubmission = [];
         foreach ($submissions as $submission) {

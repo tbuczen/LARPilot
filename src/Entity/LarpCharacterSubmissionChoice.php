@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
+#[ORM\Index(columns: ['submission_id'])]
+#[ORM\Index(columns: ['character_id'])]
 class LarpCharacterSubmissionChoice
 {
     use UuidTraitEntity;

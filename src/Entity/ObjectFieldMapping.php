@@ -13,6 +13,9 @@ use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: ObjectFieldMappingRepository::class)]
+#[ORM\Index(columns: ['larp_id'])]
+#[ORM\Index(columns: ['created_by_id'])]
+#[ORM\Index(columns: ['external_file_id'])]
 class ObjectFieldMapping implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;

@@ -15,6 +15,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entity joining User with Larp and its Character
  */
 #[ORM\Entity(repositoryClass: LarpParticipantRepository::class)]
+#[ORM\Index(columns: ['user_id'])]
+#[ORM\Index(columns: ['larp_id'])]
+#[ORM\Index(columns: ['larp_character_id'])]
 class LarpParticipant
 {
     use UuidTraitEntity;
@@ -140,6 +143,4 @@ class LarpParticipant
     {
         $this->larpCharacterSubmission = $larpCharacterSubmission;
     }
-
-
 }

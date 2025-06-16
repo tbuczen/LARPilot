@@ -14,6 +14,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SavedFormFilterRepository::class)]
+#[ORM\Index(columns: ['larp_id'])]
+#[ORM\Index(columns: ['created_by_id'])]
 class SavedFormFilter implements CreatorAwareInterface, Timestampable, LarpAwareInterface
 {
     use UuidTraitEntity;

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: LarpInvitationRepository::class)]
+#[ORM\Index(columns: ['larp_id'])]
 class LarpInvitation
 {
     use UuidTraitEntity;
@@ -20,7 +21,7 @@ class LarpInvitation
     #[ORM\JoinColumn(nullable: false)]
     private ?Larp $larp = null;
 
-    #[ORM\Column(type: 'string', length: 64)]
+    #[ORM\Column(type: 'string', length: 64, unique: true)]
     private ?string $code = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]

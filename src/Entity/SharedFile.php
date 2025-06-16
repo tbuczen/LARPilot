@@ -12,6 +12,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SharedFileRepository::class)]
+#[ORM\Index(columns: ['integration_id'])]
 class SharedFile
 {
     use UuidTraitEntity;
