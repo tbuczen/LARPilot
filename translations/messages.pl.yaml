@@ -75,6 +75,7 @@ backoffice:
       delete_title: Usuń postać "%name%"?
       delete_only_larpilot: Usuń tylko w LARPilot
       delete_larpilot_and_integrations: Usuń w LARPilot oraz wszystkich powiązanych integracjach
+    marketplace: Marketplace
     factions: Frakcje
     quests: Zadania
     relations: Powiązania
@@ -110,6 +111,10 @@ backoffice:
   recruitment:
     open: "Otwarte rekrutacje"
     none: "Brak rekrutacji"
+  marketplace:
+    available: "Dostępne postacie"
+    toggle: "Przełącz"
+    view_recruitments: "Zobacz rekrutacje"
   proposal:
     list: "Propozycje"
     accept: "Akceptuj"

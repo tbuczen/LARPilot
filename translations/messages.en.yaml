@@ -118,6 +118,7 @@ backoffice:
       title: 'Select files to share with LARPPilot'
       open_picker_desc: 'Open the google file picker to choose files You want to share with LarpPilot'
     threads: 'Threads'
+    marketplace: 'Marketplace'
     submissions:
       title: 'Character Submissions'
       missing: 'Characters without submissions: %count%'
@@ -145,6 +146,10 @@ backoffice:
   recruitment:
     open: "Open recruitments"
     none: "No recruitments"
+  marketplace:
+    available: "Available Characters"
+    toggle: "Toggle"
+    view_recruitments: "View Recruitments"
   proposal:
     list: "Proposals"
     accept: "Accept"
