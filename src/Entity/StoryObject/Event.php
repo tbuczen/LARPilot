@@ -6,6 +6,7 @@ use App\Entity\Enum\StoryTimeUnit;
 use App\Entity\Enum\TargetType;
 use App\Entity\LarpParticipant;
 use App\Entity\StoryObject\Place;
+use App\Entity\Tag;
 use App\Repository\StoryObject\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,6 +27,11 @@ class Event extends StoryObject
     /** @var Collection<LarpFaction> Specifically needed involved factions */
     #[ORM\ManyToMany(targetEntity: LarpFaction::class)]
     private Collection $involvedFactions;
+
+    /** @var Collection<Tag> */
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\JoinTable(name: 'event_tags')]
+    private Collection $tags;
 
     #[ORM\ManyToOne(targetEntity: Thread::class, inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: true)]
@@ -56,6 +62,7 @@ class Event extends StoryObject
         $this->techParticipants = new ArrayCollection();
         $this->involvedCharacters = new ArrayCollection();
         $this->involvedFactions = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getTechParticipants(): Collection
@@ -188,6 +195,27 @@ class Event extends StoryObject
     public function setEndTime(?\DateTimeInterface $endTime): void
     {
         $this->endTime = $endTime;
+    }
+
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        $this->tags->removeElement($tag);
+
+        return $this;
     }
 
 

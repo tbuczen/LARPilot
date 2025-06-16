@@ -6,8 +6,10 @@ use App\Entity\Larp;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\StoryObject\Thread;
+use App\Entity\Tag;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -59,6 +61,23 @@ class ThreadType extends AbstractType
                 'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
                     return $repo->createQueryBuilder('f')
                         ->where('f.larp = :larp')
+                        ->setParameter('larp', $larp);
+                },
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => 'name',
+                'label' => 'form.thread.tags',
+                'required' => false,
+                'multiple' => true,
+                'autocomplete' => true,
+                'query_builder' => function (TagRepository $repo) use ($larp) {
+                    return $repo->createQueryBuilder('t')
+                        ->where('t.larp = :larp')
                         ->setParameter('larp', $larp);
                 },
                 'tom_select_options' => [
