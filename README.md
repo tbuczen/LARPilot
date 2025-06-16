@@ -2,6 +2,35 @@
 
 This project uses Symfony and requires PHP, Composer, Node.js and Yarn.
 
+## Opis projektu
+
+LARPilot jest platformą do zarządzania grami terenowymi (LARP). System łączy w
+sobie narzędzia dla graczy oraz organizatorów i integruje się z usługami
+Google (Sheets, Docs, Calendar). Najważniejsze moduły obejmują:
+
+- **Panel dla graczy** – rejestracja na larpy, przegląd własnych wydarzeń oraz
+  dostęp do kart postaci i udostępnionych informacji.
+- **Panel organizatora** – logowanie z użyciem kont Google/Facebook,
+  definiowanie ról organizacyjnych (główny fabularzysta, mistrz gry,
+  crafter itd.), zarządzanie zgłoszeniami graczy oraz przypisywanie ich do
+  wakatów.
+- **Moduł fabularny** – przejrzyste tworzenie wątków i postaci wraz z ich
+  powiązaniami. Umożliwia wizualizację relacji, dodawanie zadań oraz
+  wymagań dotyczących NPC i scenografii.
+- **Moduł crafterski** – listy zadań w stylu kanban do koordynacji prac
+  nad rekwizytami i scenografią.
+- **Moduł zaufania** – bezpieczne zgłaszanie incydentów podczas gry z opcją
+  anonimowości, mediacji i eskalacji zgodnie z procedurą opisującą kody
+  uczestników oraz śledzenie statusu sprawy.
+- **Moduł zapisów** – obsługa zgłoszeń graczy, konflikty między graczami,
+  dynamiczne ceny biletów i możliwość zwolnienia roli w przypadku rezygnacji.
+- **Moduł księgowości** – ewidencja kosztów (wynajem terenu, scenografia,
+  gastronomia) i przychodów z biletów.
+
+Te funkcje odpowiadają na potrzeby organizatorów, którzy oczekują jednego
+miejsca do planowania wątków, zarządzania kartami postaci i komunikacji z
+uczestnikami, a także narzędzia do raportowania i obsługi incydentów.
+
 ## Prerequisites
 
 - **PHP**: 8.2 or higher with required extensions (`ctype`, `iconv`).
