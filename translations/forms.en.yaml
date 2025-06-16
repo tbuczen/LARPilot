@@ -5,6 +5,7 @@ form:
     name: "Unique Character Name"
     in_game_name: "In-Game Name"
     description: "Character Description"
+    available_for_recruitment: "Available for recruitment"
     faction: "Faction"
     choose_faction: "Choose a faction..."
   faction:

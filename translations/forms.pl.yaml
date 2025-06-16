@@ -13,3 +13,5 @@ form:
   proposal:
     character: "Postać"
     comment: "Komentarz"
+  character:
+    available_for_recruitment: "Dostępny do rekrutacji"

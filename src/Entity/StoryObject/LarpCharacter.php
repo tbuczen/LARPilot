@@ -44,6 +44,9 @@ class LarpCharacter extends StoryObject
     #[ORM\Column(length: 255, nullable: true, enumType: Gender::class)]
     private ?Gender $gender = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $availableForRecruitment = false;
+
     #[ORM\ManyToOne(targetEntity: LarpParticipant::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?LarpParticipant $storyWriter = null;
@@ -183,6 +186,16 @@ class LarpCharacter extends StoryObject
     {
         $this->gender = $gender;
         return $this;
+    }
+
+    public function isAvailableForRecruitment(): bool
+    {
+        return $this->availableForRecruitment;
+    }
+
+    public function setAvailableForRecruitment(bool $availableForRecruitment): void
+    {
+        $this->availableForRecruitment = $availableForRecruitment;
     }
 
     public function getTags(): Collection

@@ -56,6 +56,11 @@
                             {{ 'backoffice.larp.character.list'|trans }}
                         </a>
 
+                        <a href="{{ path('backoffice_larp_story_marketplace_list', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if 'larp_story_marketplace' in currentRoute %}active{% endif %}">
+                            {{ 'backoffice.larp.marketplace'|trans }}
+                        </a>
+
                         <a href="{{ path('backoffice_larp_story_faction_list', {'larp': larp.id}) }}"
                            class="btn btn-primary {% if 'larp_story_faction' in currentRoute %}active{% endif %}">
                             {{ 'backoffice.larp.faction.list'|trans }}

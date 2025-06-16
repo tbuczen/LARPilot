@@ -9,6 +9,7 @@ use App\Entity\StoryObject\LarpFaction;
 use App\Repository\StoryObject\LarpFactionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -39,6 +40,10 @@ class CharacterType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.character.description',
+            ])
+            ->add('availableForRecruitment', CheckboxType::class, [
+                'label' => 'form.character.available_for_recruitment',
+                'required' => false,
             ])
             ->add('factions', EntityType::class, [
                 'class' => LarpFaction::class,
