@@ -107,7 +107,14 @@ backoffice:
     success_save: Änderungen erfolgreich gespeichert
     success_delete: Erfolgreich entfernt
     confirmation: Bist du sicher, dass du fortfahren möchtest? Diese Aktion kann nicht rückgängig gemacht werden.
-
+  recruitment:
+    open: "Offene Rekrutierungen"
+    none: "Keine Rekrutierungen"
+  proposal:
+    list: "Vorschläge"
+    accept: "Annehmen"
+    reject: "Ablehnen"
+    none: "Keine Vorschläge"
 # Konto-bezogene Übersetzungen
 account:
   larp:
@@ -135,12 +142,3 @@ file_select:
 login_page:
   info: Wenn du bereits registriert bist, melde dich an und verbinde Konten in deinen Kontoeinstellungen.
   title: Registrierung / Anmeldung
-backoffice:
-  recruitment:
-    open: "Offene Rekrutierungen"
-    none: "Keine Rekrutierungen"
-  proposal:
-    list: "Vorschläge"
-    accept: "Annehmen"
-    reject: "Ablehnen"
-    none: "Keine Vorschläge"

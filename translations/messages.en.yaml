@@ -142,7 +142,14 @@ backoffice:
     success_save: "Successfully saved changes"
     success_delete: "Successfully removed"
     confirmation: "Are you sure you want to proceed? This action cannot be undone."
-
+  recruitment:
+    open: "Open recruitments"
+    none: "No recruitments"
+  proposal:
+    list: "Proposals"
+    accept: "Accept"
+    reject: "Reject"
+    none: "No proposals"
 #Account related translations for both player and organizers
 account:
   larp:
@@ -181,12 +188,3 @@ relation_type:
   enemy: "Enemy"
   family: "Family"
   ally: "Ally"
-backoffice:
-  recruitment:
-    open: "Open recruitments"
-    none: "No recruitments"
-  proposal:
-    list: "Proposals"
-    accept: "Accept"
-    reject: "Reject"
-    none: "No proposals"

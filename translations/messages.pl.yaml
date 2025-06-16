@@ -107,6 +107,14 @@ backoffice:
     success_save: Zmiany zapisane pomyślnie
     success_delete: Usunięto pomyślnie
     confirmation: Czy na pewno chcesz kontynuować? Tej operacji nie można cofnąć.
+  recruitment:
+    open: "Otwarte rekrutacje"
+    none: "Brak rekrutacji"
+  proposal:
+    list: "Propozycje"
+    accept: "Akceptuj"
+    reject: "Odrzuć"
+    none: "Brak propozycji"
 
 # Tłumaczenia konta gracza/organizatora
 account:
@@ -135,12 +143,3 @@ file_select:
 login_page:
   info: Jeśli już masz konto, zaloguj się i połącz konta w ustawieniach konta.
   title: Rejestracja / Logowanie
-backoffice:
-  recruitment:
-    open: "Otwarte rekrutacje"
-    none: "Brak rekrutacji"
-  proposal:
-    list: "Propozycje"
-    accept: "Akceptuj"
-    reject: "Odrzuć"
-    none: "Brak propozycji"
