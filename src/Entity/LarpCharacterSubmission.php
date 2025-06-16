@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Enum\SubmissionStatus;
-use App\Entity\LarpCharacterSubmissionChoice;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
@@ -52,8 +51,16 @@ class LarpCharacterSubmission implements Timestampable, CreatorAwareInterface
     private ?User $user = null;
 
     /** @var Collection<LarpCharacterSubmissionChoice> */
-    #[ORM\OneToMany(mappedBy: 'submission', targetEntity: LarpCharacterSubmissionChoice::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: LarpCharacterSubmissionChoice::class, mappedBy: 'submission', cascade: ['persist'], orphanRemoval: true)]
     private Collection $choices;
+
+    /** @var Collection<Tag> */
+    #[ORM\ManyToOne(targetEntity: Tag::class)]
+    private Collection $preferredTags;
+
+    /** @var Collection<Tag> */
+    #[ORM\ManyToOne(targetEntity: Tag::class)]
+    private Collection $unwantedTags;
 
     public function getStatus(): ?SubmissionStatus
     {

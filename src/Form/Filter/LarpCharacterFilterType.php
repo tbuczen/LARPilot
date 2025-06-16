@@ -89,7 +89,7 @@ class LarpCharacterFilterType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'choice_label' => 'title',
+                'choice_label' => 'name',
                 'multiple' => true,
                 'required' => false,
                 'autocomplete' => true,

@@ -33,6 +33,10 @@ class LarpParticipant
     #[ORM\JoinColumn(nullable: true)]
     private ?LarpCharacter $larpCharacter = null;
 
+    #[ORM\OneToOne(targetEntity: LarpCharacterSubmission::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?LarpCharacterSubmission $larpCharacterSubmission = null;
+
     // Store an array of role strings (which correspond to UserRole enum values)
     /** @see UserRole */
     #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
@@ -126,4 +130,16 @@ class LarpParticipant
     {
         $this->larpCharacter = $larpCharacter;
     }
+
+    public function getLarpCharacterSubmission(): ?LarpCharacterSubmission
+    {
+        return $this->larpCharacterSubmission;
+    }
+
+    public function setLarpCharacterSubmission(?LarpCharacterSubmission $larpCharacterSubmission): void
+    {
+        $this->larpCharacterSubmission = $larpCharacterSubmission;
+    }
+
+
 }
