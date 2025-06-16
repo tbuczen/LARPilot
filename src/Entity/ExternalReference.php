@@ -20,6 +20,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[Gedmo\Loggable]
 #[ORM\Entity(repositoryClass: ExternalReferenceRepository::class)]
+#[ORM\Index(columns: ['created_by_id'])]
 class ExternalReference implements CreatorAwareInterface, Timestampable
 {
     use UuidTraitEntity;

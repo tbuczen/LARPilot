@@ -15,6 +15,10 @@ use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: LarpCharacterSubmissionRepository::class)]
+#[ORM\Index(columns: ['larp_id'])]
+#[ORM\Index(columns: ['user_id'])]
+#[ORM\Index(columns: ['preferred_tags_id'])]
+#[ORM\Index(columns: ['unwanted_tags_id'])]
 class LarpCharacterSubmission implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;

@@ -14,6 +14,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 
 #[ORM\Entity(repositoryClass: LarpIntegrationRepository::class)]
+#[ORM\Index(columns: ['larp_id'])]
+#[ORM\Index(columns: ['created_by_id'])]
 class LarpIntegration implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
