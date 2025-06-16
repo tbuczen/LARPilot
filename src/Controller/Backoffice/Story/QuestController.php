@@ -3,13 +3,19 @@
 namespace App\Controller\Backoffice\Story;
 
 use App\Controller\BaseController;
+use App\Entity\Enum\RecruitmentProposalStatus;
 use App\Entity\Larp;
 use App\Entity\StoryObject\Quest;
+use App\Entity\StoryObject\RecruitmentProposal;
 use App\Entity\StoryObject\StoryObject;
+use App\Entity\StoryObject\StoryRecruitment;
 use App\Form\Filter\QuestFilterType;
 use App\Form\QuestType;
+use App\Form\StoryRecruitmentType;
 use App\Helper\Logger;
 use App\Repository\StoryObject\QuestRepository;
+use App\Repository\StoryObject\RecruitmentProposalRepository;
+use App\Repository\StoryObject\StoryRecruitmentRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -134,5 +140,59 @@ class QuestController extends BaseController
     public function importFile(Larp $larp, LarpManager $larpManager): Response
     {
         return new Response('TODO:: Import from file csv/xlsx');
+    }
+
+    #[Route('{quest}/recruitment', name: 'recruitment', defaults: ['recruitment' => null], methods: ['GET', 'POST'])]
+    public function recruitment(
+        Request                    $request,
+        Larp                       $larp,
+        Quest                      $quest,
+        StoryRecruitmentRepository $recruitmentRepository,
+        ?StoryRecruitment          $recruitment = null,
+    ): Response {
+        if (!$recruitment) {
+            $recruitment = new StoryRecruitment();
+            $recruitment->setStoryObject($quest);
+            $recruitment->setCreatedBy($this->getUser());
+        }
+
+        $form = $this->createForm(StoryRecruitmentType::class, $recruitment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $recruitmentRepository->save($recruitment);
+            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+
+            return $this->redirectToRoute('backoffice_larp_story_quest_list', [
+                'larp' => $larp->getId(),
+            ]);
+        }
+
+        return $this->render('backoffice/larp/recruitment/modify.html.twig', [
+            'form' => $form->createView(),
+            'larp' => $larp,
+        ]);
+    }
+
+    #[Route('proposal/{proposal}/accept', name: 'proposal_accept', methods: ['POST'])]
+    public function acceptProposal(RecruitmentProposal $proposal, RecruitmentProposalRepository $proposalRepository): Response
+    {
+        $proposal->setStatus(RecruitmentProposalStatus::ACCEPTED);
+        $proposalRepository->save($proposal);
+
+        return $this->redirectToRoute('backoffice_larp_story_quest_list', [
+            'larp' => $proposal->getRecruitment()->getStoryObject()->getLarp()->getId(),
+        ]);
+    }
+
+    #[Route('proposal/{proposal}/reject', name: 'proposal_reject', methods: ['POST'])]
+    public function rejectProposal(RecruitmentProposal $proposal, RecruitmentProposalRepository $proposalRepository): Response
+    {
+        $proposal->setStatus(RecruitmentProposalStatus::REJECTED);
+        $proposalRepository->save($proposal);
+
+        return $this->redirectToRoute('backoffice_larp_story_quest_list', [
+            'larp' => $proposal->getRecruitment()->getStoryObject()->getLarp()->getId(),
+        ]);
     }
 }

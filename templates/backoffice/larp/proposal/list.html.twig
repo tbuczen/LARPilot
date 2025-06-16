@@ -1,0 +1,19 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    <h2>{{ 'backoffice.proposal.list'|trans }}</h2>
+    <ul>
+        {% for proposal in proposals %}
+            <li>{{ proposal.character.title }} - {{ proposal.status.value }}
+                <form method="post" action="{{ path(accept_route, {larp: larp.id, id: proposal.id}) }}" style="display:inline">
+                    <button class="btn btn-sm btn-success" type="submit">{{ 'backoffice.proposal.accept'|trans }}</button>
+                </form>
+                <form method="post" action="{{ path(reject_route, {larp: larp.id, id: proposal.id}) }}" style="display:inline">
+                    <button class="btn btn-sm btn-danger" type="submit">{{ 'backoffice.proposal.reject'|trans }}</button>
+                </form>
+            </li>
+        {% else %}
+            <li>{{ 'backoffice.proposal.none'|trans }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

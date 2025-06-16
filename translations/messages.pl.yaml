@@ -135,3 +135,12 @@ file_select:
 login_page:
   info: Jeśli już masz konto, zaloguj się i połącz konta w ustawieniach konta.
   title: Rejestracja / Logowanie
+backoffice:
+  recruitment:
+    open: "Otwarte rekrutacje"
+    none: "Brak rekrutacji"
+  proposal:
+    list: "Propozycje"
+    accept: "Akceptuj"
+    reject: "Odrzuć"
+    none: "Brak propozycji"
