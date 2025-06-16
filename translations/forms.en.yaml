@@ -74,6 +74,10 @@ form:
     is_purchased: "Purchased"
     quantity: "Quantity"
     cost: "Cost"
+  tag:
+    name: "Tag Name"
+    description: "Tag Description"
+    target: "Target"
   event:
     name: "Event Name"
     description: "Event Description"
