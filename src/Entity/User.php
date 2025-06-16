@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\LarpApplication;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\Locale;
 use App\Repository\UserRepository;
@@ -26,9 +27,9 @@ class User implements UserInterface
     #[ORM\Column(length: 180)]
     private ?string $contactEmail = null;
 
-    /** @var Collection<LarpCharacterSubmission> */
-    #[ORM\OneToMany(targetEntity: LarpCharacterSubmission::class, mappedBy: 'user')]
-    private Collection $submissions;
+    /** @var Collection<LarpApplication> */
+    #[ORM\OneToMany(targetEntity: LarpApplication::class, mappedBy: 'user')]
+    private Collection $applications;
 
     #[ORM\Column(nullable: true, enumType: Locale::class)]
     private ?Locale $preferredLocale = null;
@@ -49,7 +50,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->id = Uuid::v4();
-        $this->submissions = new ArrayCollection();
+        $this->applications = new ArrayCollection();
         $this->larpParticipants = new ArrayCollection();
         $this->socialAccounts = new ArrayCollection();
     }

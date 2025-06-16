@@ -3,35 +3,35 @@
 namespace App\Service\Larp;
 
 use App\Entity\Larp;
-use App\Entity\LarpCharacterSubmission;
-use App\Repository\LarpCharacterSubmissionRepository;
+use App\Entity\LarpApplication;
+use App\Repository\LarpApplicationRepository;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
 readonly class SubmissionStatsService
 {
     public function __construct(
-        private LarpCharacterSubmissionRepository $repository,
+        private LarpApplicationRepository $repository,
         private EntityPreloader $preloader,
     ) {
     }
 
     public function getStatsForLarp(Larp $larp): array
     {
-        $submissions = $this->repository->findBy(['larp' => $larp]);
-        $this->preloader->preload($submissions, 'choices');
-        $this->preloader->preload($submissions, 'choices.character');
+        $applications = $this->repository->findBy(['larp' => $larp]);
+        $this->preloader->preload($applications, 'choices');
+        $this->preloader->preload($applications, 'choices.character');
         $this->preloader->preload($larp->getFactions(), 'members');
 
-        $charactersWithSubmission = [];
-        foreach ($submissions as $submission) {
-            foreach ($submission->getChoices() as $choice) {
-                $charactersWithSubmission[$choice->getCharacter()->getId()->toRfc4122()] = true;
+        $charactersWithApplication = [];
+        foreach ($applications as $application) {
+            foreach ($application->getChoices() as $choice) {
+                $charactersWithApplication[$choice->getCharacter()->getId()->toRfc4122()] = true;
             }
         }
 
         $missing = 0;
         foreach ($larp->getCharacters() as $character) {
-            if (!isset($charactersWithSubmission[$character->getId()->toRfc4122()])) {
+            if (!isset($charactersWithApplication[$character->getId()->toRfc4122()])) {
                 $missing++;
             }
         }
@@ -44,7 +44,7 @@ readonly class SubmissionStatsService
             }
             $with = 0;
             foreach ($faction->getMembers() as $member) {
-                if (isset($charactersWithSubmission[$member->getId()->toRfc4122()])) {
+                if (isset($charactersWithApplication[$member->getId()->toRfc4122()])) {
                     $with++;
                 }
             }
@@ -55,7 +55,7 @@ readonly class SubmissionStatsService
         }
 
         return [
-            'submissions' => $submissions,
+            'applications' => $applications,
             'missing' => $missing,
             'factionStats' => $factionStats,
         ];

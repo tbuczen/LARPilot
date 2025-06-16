@@ -119,9 +119,9 @@ backoffice:
       open_picker_desc: 'Open the google file picker to choose files You want to share with LarpPilot'
     threads: 'Threads'
     marketplace: 'Marketplace'
-    submissions:
-      title: 'Character Submissions'
-      missing: 'Characters without submissions: %count%'
+    applications:
+      title: 'Character Applications'
+      missing: 'Characters without applications: %count%'
     relation:
       list: 'Relations'
       add: 'Add Relation'

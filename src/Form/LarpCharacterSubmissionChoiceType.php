@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Larp;
-use App\Entity\LarpCharacterSubmissionChoice;
+use App\Entity\LarpApplicationChoice;
 use App\Entity\StoryObject\LarpCharacter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -46,7 +46,7 @@ class LarpCharacterSubmissionChoiceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => LarpCharacterSubmissionChoice::class,
+            'data_class' => LarpApplicationChoice::class,
             'translation_domain' => 'forms',
             'larp' => null,
         ]);
