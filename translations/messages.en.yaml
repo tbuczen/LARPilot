@@ -155,6 +155,7 @@ backoffice:
     accept: "Accept"
     reject: "Reject"
     none: "No proposals"
+    create: "Create Proposal"
 #Account related translations for both player and organizers
 account:
   larp:

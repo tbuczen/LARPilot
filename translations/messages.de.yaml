@@ -115,6 +115,7 @@ backoffice:
     accept: "Annehmen"
     reject: "Ablehnen"
     none: "Keine Vorschläge"
+    create: "Vorschlag erstellen"
 # Konto-bezogene Übersetzungen
 account:
   larp:

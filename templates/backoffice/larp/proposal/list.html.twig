@@ -2,6 +2,11 @@
 
 {% block larp_content %}
     <h2>{{ 'backoffice.proposal.list'|trans }}</h2>
+    {% if create_route is defined %}
+        <a href="{{ path(create_route, { larp: larp.id, recruitment: recruitment.id }) }}" class="btn btn-success mb-3">
+            {{ 'backoffice.proposal.create'|trans }}
+        </a>
+    {% endif %}
     <ul>
         {% for proposal in proposals %}
             <li>{{ proposal.character.title }} - {{ proposal.status.value }}
