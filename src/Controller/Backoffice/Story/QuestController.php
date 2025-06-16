@@ -112,18 +112,10 @@ class QuestController extends BaseController
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    $integrationService->removeStoryObject($integration, $quest);
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Quest not deleted.');
-                    return $this->redirectToRoute('backoffice_larp_story_quest_list', [
-                        'larp' => $larp->getId(),
-                    ]);
-                }
+            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $quest, 'Quest')) {
+                return $this->redirectToRoute('backoffice_larp_story_quest_list', [
+                    'larp' => $larp->getId(),
+                ]);
             }
         }
 

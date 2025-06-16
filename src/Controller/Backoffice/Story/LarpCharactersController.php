@@ -97,18 +97,10 @@ class LarpCharactersController extends BaseController
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    $integrationService->removeStoryObject($integration, $character);
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Character not deleted.');
-                    return $this->redirectToRoute('backoffice_larp_story_character_list', [
-                        'larp' => $larp->getId(),
-                    ]);
-                }
+            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $character, 'Character')) {
+                return $this->redirectToRoute('backoffice_larp_story_character_list', [
+                    'larp' => $larp->getId(),
+                ]);
             }
         }
 

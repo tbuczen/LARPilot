@@ -92,18 +92,10 @@ class EventsController extends BaseController
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    $integrationService->removeStoryObject($integration, $event);
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Event not deleted.');
-                    return $this->redirectToRoute('backoffice_larp_story_event_list', [
-                        'larp' => $larp->getId(),
-                    ]);
-                }
+            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $event, 'Event')) {
+                return $this->redirectToRoute('backoffice_larp_story_event_list', [
+                    'larp' => $larp->getId(),
+                ]);
             }
         }
 
