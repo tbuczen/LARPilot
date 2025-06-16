@@ -68,20 +68,7 @@ class ThreadController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $threadRepository->save($thread);
 
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    if ($new) {
-                        $integrationService->createStoryObject($integration, $thread);
-                    } else {
-                        $integrationService->syncStoryObject($integration, $thread);
-                    }
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('warning', 'Failed to sync with ' . $integration->getProvider()->name);
-                }
-            }
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $thread);
 
             $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
             return $this->redirectToRoute('backoffice_larp_story_thread_list', ['larp' => $larp->getId()]);
@@ -126,18 +113,10 @@ class ThreadController extends BaseController
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
         if ($deleteIntegrations) {
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    $integrationService->removeStoryObject($integration, $thread);
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Thread not deleted.');
-                    return $this->redirectToRoute('backoffice_larp_story_thread_list', [
-                        'larp' => $larp->getId(),
-                    ]);
-                }
+            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $thread, 'Thread')) {
+                return $this->redirectToRoute('backoffice_larp_story_thread_list', [
+                    'larp' => $larp->getId(),
+                ]);
             }
         }
 

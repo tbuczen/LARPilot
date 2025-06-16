@@ -81,16 +81,8 @@ class PlaceController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
         if ($deleteIntegrations) {
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    $integrationService->removeStoryObject($integration, $place);
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Place not deleted.');
-                    return $this->redirectToRoute('backoffice_larp_story_place_list', [ 'larp' => $larp->getId() ]);
-                }
+            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $place, 'Place')) {
+                return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
             }
         }
 

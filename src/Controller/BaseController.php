@@ -89,4 +89,27 @@ class BaseController extends AbstractController
             }
         }
     }
+
+    protected function removeStoryObjectFromIntegrations(
+        LarpManager        $larpManager,
+        Larp               $larp,
+        IntegrationManager $integrationManager,
+        StoryObject        $storyObject,
+        string             $objectName
+    ): bool {
+        $integrations = $larpManager->getIntegrationsForLarp($larp);
+        foreach ($integrations as $integration) {
+            try {
+                $integrationService = $integrationManager->getService($integration);
+                $integrationService->removeStoryObject($integration, $storyObject);
+            } catch (\Throwable $e) {
+                Logger::get()->error($e->getMessage(), $e->getTrace());
+                $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. ' . $objectName . ' not deleted.');
+
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

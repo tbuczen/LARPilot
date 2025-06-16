@@ -84,16 +84,8 @@ class ItemController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
         if ($deleteIntegrations) {
-            $integrations = $larpManager->getIntegrationsForLarp($larp);
-            foreach ($integrations as $integration) {
-                try {
-                    $integrationService = $integrationManager->getService($integration);
-                    $integrationService->removeStoryObject($integration, $item);
-                } catch (\Throwable $e) {
-                    Logger::get()->error($e->getMessage(), $e->getTrace());
-                    $this->addFlash('danger', 'Failed to remove from ' . $integration->getProvider()->name . '. Item not deleted.');
-                    return $this->redirectToRoute('backoffice_larp_story_item_list', [ 'larp' => $larp->getId() ]);
-                }
+            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $item, 'Item')) {
+                return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
             }
         }
 
