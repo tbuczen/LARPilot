@@ -6,7 +6,7 @@ use App\Entity\Enum\SubmissionStatus;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
-use App\Repository\LarpCharacterSubmissionRepository;
+use App\Repository\LarpApplicationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -14,12 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
-#[ORM\Entity(repositoryClass: LarpCharacterSubmissionRepository::class)]
+#[ORM\Entity(repositoryClass: LarpApplicationRepository::class)]
 #[ORM\Index(columns: ['larp_id'])]
 #[ORM\Index(columns: ['user_id'])]
 #[ORM\Index(columns: ['preferred_tags_id'])]
 #[ORM\Index(columns: ['unwanted_tags_id'])]
-class LarpCharacterSubmission implements Timestampable, CreatorAwareInterface
+class LarpApplication implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
     use TimestampableEntity;
@@ -46,16 +46,16 @@ class LarpCharacterSubmission implements Timestampable, CreatorAwareInterface
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $contactEmail = null;
 
-    #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'submissions')]
+    #[ORM\ManyToOne(targetEntity: Larp::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Larp $larp = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'submissions')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    /** @var Collection<LarpCharacterSubmissionChoice> */
-    #[ORM\OneToMany(targetEntity: LarpCharacterSubmissionChoice::class, mappedBy: 'submission', cascade: ['persist'], orphanRemoval: true)]
+    /** @var Collection<LarpApplicationChoice> */
+    #[ORM\OneToMany(targetEntity: LarpApplicationChoice::class, mappedBy: 'application', cascade: ['persist'], orphanRemoval: true)]
     private Collection $choices;
 
     /** @var Collection<Tag> */
@@ -147,24 +147,24 @@ class LarpCharacterSubmission implements Timestampable, CreatorAwareInterface
     }
 
     /**
-     * @return Collection<int, LarpCharacterSubmissionChoice>
+     * @return Collection<int, LarpApplicationChoice>
      */
     public function getChoices(): Collection
     {
         return $this->choices;
     }
 
-    public function addChoice(LarpCharacterSubmissionChoice $choice): static
+    public function addChoice(LarpApplicationChoice $choice): static
     {
         if (!$this->choices->contains($choice)) {
             $this->choices->add($choice);
-            $choice->setSubmission($this);
+            $choice->setApplication($this);
         }
 
         return $this;
     }
 
-    public function removeChoice(LarpCharacterSubmissionChoice $choice): static
+    public function removeChoice(LarpApplicationChoice $choice): static
     {
         if ($this->choices->removeElement($choice)) {
             // orphanRemoval will handle deletion

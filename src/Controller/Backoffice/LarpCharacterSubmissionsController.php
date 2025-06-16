@@ -8,7 +8,7 @@ use App\Service\Larp\SubmissionStatsService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/larp/{larp}/submissions', name: 'backoffice_larp_submissions_')]
+#[Route('/larp/{larp}/applications', name: 'backoffice_larp_applications_')]
 class LarpCharacterSubmissionsController extends BaseController
 {
     #[Route('', name: 'list', methods: ['GET'])]
@@ -16,9 +16,9 @@ class LarpCharacterSubmissionsController extends BaseController
     {
         $stats = $statsService->getStatsForLarp($larp);
 
-        return $this->render('backoffice/larp/submission/list.html.twig', [
+        return $this->render('backoffice/larp/application/list.html.twig', [
             'larp' => $larp,
-            'submissions' => $stats['submissions'],
+            'applications' => $stats['applications'],
             'missing' => $stats['missing'],
             'factionStats' => $stats['factionStats'],
         ]);

@@ -1,8 +1,8 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <h2>{{ 'backoffice.larp.submissions'|trans }}</h2>
-    <p>{{ 'backoffice.larp.submissions.missing'|trans({'%count%': missing}) }}</p>
+    <h2>{{ 'backoffice.larp.applications.title'|trans }}</h2>
+    <p>{{ 'backoffice.larp.applications.missing'|trans({'%count%': missing}) }}</p>
     <ul>
         {% for stat in factionStats %}
             <li>{{ stat.faction.title }} - {{ stat.percentage }}%</li>
@@ -18,12 +18,12 @@
         </tr>
         </thead>
         <tbody>
-        {% for submission in submissions %}
+        {% for application in applications %}
             <tr>
-                <td>{{ submission.user.username }}</td>
-                <td>{{ submission.contactEmail }}</td>
-                <td>{{ submission.favouriteStyle }}</td>
-                <td>{{ submission.triggers }}</td>
+                <td>{{ application.user.username }}</td>
+                <td>{{ application.contactEmail }}</td>
+                <td>{{ application.favouriteStyle }}</td>
+                <td>{{ application.triggers }}</td>
             </tr>
         {% endfor %}
         </tbody>

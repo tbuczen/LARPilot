@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enum\LarpStageStatus;
+use App\Entity\LarpApplication;
 use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
@@ -55,9 +56,9 @@ class Larp implements Timestampable, CreatorAwareInterface
     #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larp')]
     private Collection $characters;
 
-    /** @var Collection<LarpCharacterSubmission> */
-    #[ORM\OneToMany(targetEntity: LarpCharacterSubmission::class, mappedBy: 'larp')]
-    private Collection $submissions;
+    /** @var Collection<LarpApplication> */
+    #[ORM\OneToMany(targetEntity: LarpApplication::class, mappedBy: 'larp')]
+    private Collection $applications;
 
     /** @var Collection<LarpParticipant> */
     #[ORM\OneToMany(targetEntity: LarpParticipant::class, mappedBy: 'larp')]
@@ -82,7 +83,7 @@ class Larp implements Timestampable, CreatorAwareInterface
     {
         $this->id = Uuid::v4();
         $this->characters = new ArrayCollection();
-        $this->submissions = new ArrayCollection();
+        $this->applications = new ArrayCollection();
         $this->larpParticipants = new ArrayCollection();
         $this->factions = new ArrayCollection();
         $this->integrations = new ArrayCollection();

@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Larp;
-use App\Entity\LarpCharacterSubmission;
+use App\Entity\LarpApplication;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -50,7 +50,7 @@ class LarpCharacterSubmissionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => LarpCharacterSubmission::class,
+            'data_class' => LarpApplication::class,
             'translation_domain' => 'forms',
             'larp' => null,
         ]);

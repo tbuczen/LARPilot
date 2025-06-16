@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enum\UserRole;
+use App\Entity\LarpApplication;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpParticipantRepository;
@@ -36,9 +37,9 @@ class LarpParticipant
     #[ORM\JoinColumn(nullable: true)]
     private ?LarpCharacter $larpCharacter = null;
 
-    #[ORM\OneToOne(targetEntity: LarpCharacterSubmission::class)]
+    #[ORM\OneToOne(targetEntity: LarpApplication::class)]
     #[ORM\JoinColumn(nullable: true)]
-    private ?LarpCharacterSubmission $larpCharacterSubmission = null;
+    private ?LarpApplication $larpApplication = null;
 
     // Store an array of role strings (which correspond to UserRole enum values)
     /** @see UserRole */
@@ -134,13 +135,13 @@ class LarpParticipant
         $this->larpCharacter = $larpCharacter;
     }
 
-    public function getLarpCharacterSubmission(): ?LarpCharacterSubmission
+    public function getLarpApplication(): ?LarpApplication
     {
-        return $this->larpCharacterSubmission;
+        return $this->larpApplication;
     }
 
-    public function setLarpCharacterSubmission(?LarpCharacterSubmission $larpCharacterSubmission): void
+    public function setLarpApplication(?LarpApplication $larpApplication): void
     {
-        $this->larpCharacterSubmission = $larpCharacterSubmission;
+        $this->larpApplication = $larpApplication;
     }
 }

@@ -8,15 +8,15 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Index(columns: ['submission_id'])]
+#[ORM\Index(columns: ['application_id'])]
 #[ORM\Index(columns: ['character_id'])]
-class LarpCharacterSubmissionChoice
+class LarpApplicationChoice
 {
     use UuidTraitEntity;
 
-    #[ORM\ManyToOne(targetEntity: LarpCharacterSubmission::class, inversedBy: 'choices')]
+    #[ORM\ManyToOne(targetEntity: LarpApplication::class, inversedBy: 'choices')]
     #[ORM\JoinColumn(nullable: false)]
-    private LarpCharacterSubmission $submission;
+    private LarpApplication $application;
 
     #[ORM\ManyToOne(targetEntity: LarpCharacter::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -31,14 +31,14 @@ class LarpCharacterSubmissionChoice
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $visual = null;
 
-    public function getSubmission(): LarpCharacterSubmission
+    public function getApplication(): LarpApplication
     {
-        return $this->submission;
+        return $this->application;
     }
 
-    public function setSubmission(LarpCharacterSubmission $submission): void
+    public function setApplication(LarpApplication $application): void
     {
-        $this->submission = $submission;
+        $this->application = $application;
     }
 
     public function getCharacter(): LarpCharacter
