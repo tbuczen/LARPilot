@@ -120,6 +120,7 @@ backoffice:
     accept: "Akceptuj"
     reject: "Odrzuć"
     none: "Brak propozycji"
+    create: "Utwórz propozycję"
 
 # Tłumaczenia konta gracza/organizatora
 account:

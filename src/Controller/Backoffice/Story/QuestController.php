@@ -11,6 +11,7 @@ use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\StoryRecruitment;
 use App\Form\Filter\QuestFilterType;
 use App\Form\QuestType;
+use App\Form\RecruitmentProposalType;
 use App\Form\StoryRecruitmentType;
 use App\Helper\Logger;
 use App\Repository\StoryObject\QuestRepository;
@@ -149,6 +150,7 @@ class QuestController extends BaseController
             'recruitments' => $recruitments,
             'larp' => $larp,
             'modify_route' => 'backoffice_larp_story_quest_recruitment',
+            'proposal_route' => 'backoffice_larp_story_quest_proposal',
         ]);
     }
 
@@ -160,6 +162,36 @@ class QuestController extends BaseController
             'larp' => $recruitment->getStoryObject()->getLarp(),
             'accept_route' => 'backoffice_larp_story_quest_proposal_accept',
             'reject_route' => 'backoffice_larp_story_quest_proposal_reject',
+            'create_route' => 'backoffice_larp_story_quest_proposal',
+            'recruitment' => $recruitment,
+        ]);
+    }
+
+    #[Route('recruitment/{recruitment}/proposal', name: 'proposal', methods: ['GET', 'POST'])]
+    public function proposal(
+        Request                      $request,
+        Larp                         $larp,
+        StoryRecruitment             $recruitment,
+        RecruitmentProposalRepository $proposalRepository,
+    ): Response {
+        $proposal = new RecruitmentProposal();
+        $proposal->setRecruitment($recruitment);
+
+        $form = $this->createForm(RecruitmentProposalType::class, $proposal, ['larp' => $larp]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $proposalRepository->save($proposal);
+
+            return $this->redirectToRoute('backoffice_larp_story_quest_proposal_list', [
+                'larp' => $larp->getId(),
+                'recruitment' => $recruitment->getId(),
+            ]);
+        }
+
+        return $this->render('backoffice/larp/proposal/modify.html.twig', [
+            'form' => $form->createView(),
+            'larp' => $larp,
         ]);
     }
 

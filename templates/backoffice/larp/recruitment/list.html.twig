@@ -7,6 +7,11 @@
             <li>
                 {{ recruitment.type }} ({{ recruitment.requiredNumber }})
                 <a href="{{ path(modify_route, {larp: larp.id, id: recruitment.id}) }}" class="btn btn-sm btn-secondary">{{ 'common.edit'|trans }}</a>
+                {% if proposal_route is defined %}
+                    <a href="{{ path(proposal_route, {larp: larp.id, recruitment: recruitment.id}) }}" class="btn btn-sm btn-primary">
+                        {{ 'backoffice.proposal.create'|trans }}
+                    </a>
+                {% endif %}
             </li>
         {% else %}
             <li>{{ 'backoffice.recruitment.none'|trans }}</li>
