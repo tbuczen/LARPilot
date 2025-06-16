@@ -46,11 +46,13 @@ form:
     thread: "Assign to Thread"
     factions: "Factions involved in quest"
     characters: "Characters involved in quest"
+    tags: "Tags"
   thread:
     name: "Unique Thread Name"
     description: "Thread Description"
     factions: "Factions involved in thread"
     characters: "Characters involved in thread"
+    tags: "Tags"
   relation:
     name: "Relation Name"
     description: "Description of the relation"
@@ -85,6 +87,7 @@ form:
     choose_place: "Choose a place..."
     factions: "Factions involved in event"
     characters: "Characters involved in event"
+    tags: "Tags"
     start_time: 'Start Time'
     end_time: 'End Time'
     choose_faction: 'Choose a faction...'

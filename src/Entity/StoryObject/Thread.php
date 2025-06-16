@@ -4,6 +4,7 @@ namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
 use App\Entity\Larp;
+use App\Entity\Tag;
 use App\Repository\StoryObject\ThreadRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,6 +30,11 @@ class Thread extends StoryObject
     #[ORM\ManyToMany(targetEntity: LarpFaction::class, mappedBy: 'threads')]
     private Collection $involvedFactions;
 
+    /** @var Collection<Tag> */
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\JoinTable(name: 'thread_tags')]
+    private Collection $tags;
+
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
     private ?array $decisionTree = null;
 
@@ -39,6 +45,7 @@ class Thread extends StoryObject
         $this->events = new ArrayCollection();
         $this->involvedFactions = new ArrayCollection();
         $this->involvedCharacters = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getInvolvedCharacters(): Collection
@@ -122,6 +129,27 @@ class Thread extends StoryObject
     public function setDecisionTree(?array $decisionTree): self
     {
         $this->decisionTree = $decisionTree;
+        return $this;
+    }
+
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        $this->tags->removeElement($tag);
+
         return $this;
     }
 
