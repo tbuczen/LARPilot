@@ -3,6 +3,7 @@
 {% block larp_content %}
     <h2>{{ 'backoffice.larp.applications.title'|trans }}</h2>
     <p>{{ 'backoffice.larp.applications.missing'|trans({'%count%': missing}) }}</p>
+    {% include 'includes/filter_form.html.twig' with { form: filterForm, larp: larp } %}
     <ul>
         {% for stat in factionStats %}
             <li>{{ stat.faction.title }} - {{ stat.percentage }}%</li>

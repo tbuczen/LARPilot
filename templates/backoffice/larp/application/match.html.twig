@@ -1,0 +1,38 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    <h2>{{ 'backoffice.larp.applications.match'|trans }}</h2>
+    {% for data in choices %}
+        <h3>{{ data.character.title }}</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{ 'common.user'|trans }}</th>
+                <th>{{ 'form.priority'|trans }}</th>
+                <th>{{ 'form.justification'|trans }}</th>
+                <th>{{ 'form.visual'|trans }}</th>
+                <th>{{ 'common.votes'|trans }}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for choice in data.choices %}
+                <tr>
+                    <td>{{ choice.application.user.username }}</td>
+                    <td>{{ choice.priority }}</td>
+                    <td>{{ choice.justification|default('-') }}</td>
+                    <td>{{ choice.visual|default('-') }}</td>
+                    <td>{{ choice.votes }}</td>
+                    <td>
+                        <form method="post" action="{{ path('backoffice_larp_applications_vote', {larp: larp.id, choice: choice.id}) }}">
+                            <button class="btn btn-sm btn-primary" type="submit">+</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{{ 'common.empty_list'|trans }}</p>
+    {% endfor %}
+{% endblock %}

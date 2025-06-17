@@ -31,6 +31,9 @@ class LarpApplicationChoice
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $visual = null;
 
+    #[ORM\Column(type: 'integer')]
+    private int $votes = 0;
+
     public function getApplication(): LarpApplication
     {
         return $this->application;
@@ -79,5 +82,15 @@ class LarpApplicationChoice
     public function setVisual(?string $visual): void
     {
         $this->visual = $visual;
+    }
+
+    public function getVotes(): int
+    {
+        return $this->votes;
+    }
+
+    public function setVotes(int $votes): void
+    {
+        $this->votes = $votes;
     }
 }
