@@ -27,6 +27,11 @@ class LarpCharacterSubmissionController extends BaseController
             throw $this->createAccessDeniedException();
         }
 
+        if ($repository->findOneBy(['larp' => $larp, 'user' => $this->getUser()])) {
+            $this->addFlash('error', 'backoffice.larp.applications.already_submitted');
+            return $this->redirectToRoute('public_larp_details', ['slug' => $larp->getSlug()]);
+        }
+
         $application = new LarpApplication();
         $application->setLarp($larp);
         $application->setUser($this->getUser());

@@ -122,6 +122,9 @@ backoffice:
     applications:
       title: 'Character Applications'
       missing: 'Characters without applications: %count%'
+      already_submitted: 'You have already submitted an application.'
+      match: 'Application Matching'
+      vote_success: 'Vote recorded'
     relation:
       list: 'Relations'
       add: 'Add Relation'
@@ -143,6 +146,7 @@ backoffice:
     success_save: "Successfully saved changes"
     success_delete: "Successfully removed"
     confirmation: "Are you sure you want to proceed? This action cannot be undone."
+    votes: "Votes"
   recruitment:
     open: "Open recruitments"
     none: "No recruitments"
