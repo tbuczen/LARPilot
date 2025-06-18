@@ -46,6 +46,12 @@ class LarpCharacterSubmissionController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($application->getChoices()->toArray() as $choice) {
+                if (null === $choice->getCharacter()) {
+                    $application->removeChoice($choice);
+                }
+            }
+
             $repository->save($application);
             $this->addFlash('success', 'Application created');
             return $this->redirectToRoute('public_larp_details', ['slug' => $larp->getSlug()]);
