@@ -31,6 +31,9 @@ class ThreadType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.thread.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('involvedFactions', EntityType::class, [
                 'class' => LarpFaction::class,

@@ -32,6 +32,21 @@ class StoryObjectRepository extends BaseRepository
     }
 
     /**
+     * @return StoryObject[]
+     */
+    public function searchByTitle(Larp $larp, string $query, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.larp = :larp')
+            ->andWhere('LOWER(o.title) LIKE :q')
+            ->setParameter('larp', $larp)
+            ->setParameter('q', '%' . strtolower($query) . '%')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param Larp                $larp
      * @param Collection<int, Thread>|Thread[]       $threads
      * @param Collection<int, LarpCharacter>|LarpCharacter[] $characters
