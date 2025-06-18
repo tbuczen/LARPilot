@@ -54,6 +54,7 @@ class ThreadController extends BaseController
         Request            $request,
         Larp               $larp,
         ThreadRepository   $threadRepository,
+        \App\Service\StoryObject\StoryObjectTextLinker $textLinker,
         ?Thread            $thread = null,
     ): Response {
         $new = false;
@@ -67,6 +68,9 @@ class ThreadController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $thread->setDescription(
+                $textLinker->finalizeMentions((string) $thread->getDescription(), $larp)
+            );
             $threadRepository->save($thread);
 
             $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $thread);

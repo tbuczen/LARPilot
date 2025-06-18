@@ -47,4 +47,7 @@ return [
     'decision-tree-controller' => [
         'path' => './assets/controllers/decision_tree_controller.js',
     ],
+    'wysiwyg-controller' => [
+        'path' => './assets/controllers/wysiwyg_controller.js',
+    ],
 ];
