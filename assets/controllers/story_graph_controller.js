@@ -23,6 +23,7 @@ export default class extends Controller {
                         'text-halign': 'center',
                         'font-size': '10px',
                         'shape': 'roundrectangle',
+                        'cursor': 'pointer',
                     }
                 },
                 {
@@ -87,6 +88,13 @@ export default class extends Controller {
                         'background-color': '#4A976EFF',
                     }
                 },
+                {
+                    selector: 'node.hovered',
+                    style: {
+                        'border-color': '#ffa500',
+                        'border-width': 3,
+                    }
+                },
 
                 {
                     selector: 'edge',
@@ -142,5 +150,20 @@ export default class extends Controller {
             nodeDimensionsIncludeLabels: true,
             spacingFactor: 1.2,
         }).run();
+
+        this.cy.on('tap', 'node', (event) => {
+            const node = event.target;
+            console.log(`Clicked node type=${node.data('type')} id=${node.id()}`);
+        });
+
+        this.cy.on('mouseover', 'node', (event) => {
+            event.target.addClass('hovered');
+            this.cy.container().style.cursor = 'pointer';
+        });
+
+        this.cy.on('mouseout', 'node', (event) => {
+            event.target.removeClass('hovered');
+            this.cy.container().style.cursor = 'default';
+        });
     }
 }
