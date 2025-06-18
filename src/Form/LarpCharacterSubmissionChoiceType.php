@@ -29,6 +29,7 @@ class LarpCharacterSubmissionChoiceType extends AbstractType
                 'label' => 'form.character.name',
                 'placeholder' => 'form.choose',
                 'autocomplete' => true,
+                'required' => false,
             ])
             ->add('priority', IntegerType::class, [
                 'label' => 'form.priority',
