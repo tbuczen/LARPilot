@@ -1,0 +1,15 @@
+{# templates/components/StoryObjectVersionHistory.html.twig #}
+<div {{ attributes }}>
+    <ul class="list-unstyled">
+        {% for item in this.getHistory() %}
+            <li class="mb-3">
+                <strong>{{ item.entry.loggedAt|date('Y-m-d H:i') }} - {{ item.entry.username }}</strong>
+                <ul>
+                    {% for field, change in item.diff %}
+                        <li>{{ field }}: {{ change.old }} -> {{ change.new }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

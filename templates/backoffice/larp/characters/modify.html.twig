@@ -127,6 +127,13 @@
             </div>
         </div>
     </div>
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header">Version history</div>
+        <div class="card-body">
+            {{ component('StoryObjectVersionHistory', { storyObject: character }) }}
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block title %}{{ larp.name }} - {{ character.getTitle() ?? 'common.new'|trans }}{% endblock %}
