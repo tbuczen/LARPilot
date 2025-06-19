@@ -5,6 +5,7 @@ namespace App\Entity\StoryObject;
 use App\Entity\Enum\TargetType;
 use App\Entity\ExternalReference;
 use App\Entity\Larp;
+use App\Entity\StoryObjectLogEntry;
 use App\Entity\TargetableInterface;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
@@ -14,6 +15,7 @@ use App\Repository\StoryObject\StoryObjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
@@ -33,6 +35,7 @@ use Symfony\Component\Uid\Uuid;
     TargetType::Item->value => Item::class,
     TargetType::Place->value => Place::class,
 ])]
+#[Gedmo\Loggable(logEntryClass: StoryObjectLogEntry::class)]
 abstract class StoryObject implements CreatorAwareInterface, Timestampable, TargetableInterface, LarpAwareInterface
 {
     use UuidTraitEntity;
@@ -44,12 +47,15 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, Targ
     * It should be unique within the context of the LARP - title of the vacancy, thread, quest name, etc.
     *
     */
+    #[Gedmo\Versioned]
     #[ORM\Column(length: 255)]
     protected ?string $title = null;
 
+    #[Gedmo\Versioned]
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
+    #[Gedmo\Versioned]
     #[ORM\ManyToOne(targetEntity: Larp::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected ?Larp $larp = null;

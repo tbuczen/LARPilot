@@ -16,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[Gedmo\Loggable]
 #[UniqueEntity(
     fields: ['larp', 'title'],
     message: 'A character with this title already exists in this LARP.'
@@ -25,6 +24,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
 class LarpCharacter extends StoryObject
 {
+    #[Gedmo\Versioned]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $inGameName = null;
 
@@ -41,6 +41,7 @@ class LarpCharacter extends StoryObject
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $postLarpFate = null;
     
+    #[Gedmo\Versioned]
     #[ORM\Column(length: 255, nullable: true, enumType: Gender::class)]
     private ?Gender $gender = null;
 

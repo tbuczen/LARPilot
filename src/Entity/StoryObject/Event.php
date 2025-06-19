@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event extends StoryObject
@@ -41,6 +42,7 @@ class Event extends StoryObject
     #[ORM\JoinColumn(nullable: true)]
     private ?Place $place = null;
 
+    #[Gedmo\Versioned]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $storyMoment = null;
 
@@ -50,9 +52,11 @@ class Event extends StoryObject
     #[ORM\Column(length: 20, nullable: true, enumType: StoryTimeUnit::class)]
     private ?StoryTimeUnit $storyTimeUnit = null;
 
+    #[Gedmo\Versioned]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $startTime = null;
 
+    #[Gedmo\Versioned]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endTime = null;
 
