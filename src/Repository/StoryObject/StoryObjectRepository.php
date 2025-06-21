@@ -110,6 +110,19 @@ class StoryObjectRepository extends BaseRepository
                     'SELECT e.id FROM ' . Event::class . ' e JOIN e.involvedFactions f WHERE e.larp = :larp AND f.id = :f',
                     ['larp' => $larp, 'f' => $fid]
                 ));
+                // include objects linked through faction members
+                $ids = array_merge($ids, $this->fetchIds(
+                    'SELECT t.id FROM ' . Thread::class . ' t JOIN t.involvedCharacters c JOIN c.factions f WHERE t.larp = :larp AND f.id = :f',
+                    ['larp' => $larp, 'f' => $fid]
+                ));
+                $ids = array_merge($ids, $this->fetchIds(
+                    'SELECT q.id FROM ' . Quest::class . ' q JOIN q.involvedCharacters c JOIN c.factions f WHERE q.larp = :larp AND f.id = :f',
+                    ['larp' => $larp, 'f' => $fid]
+                ));
+                $ids = array_merge($ids, $this->fetchIds(
+                    'SELECT e2.id FROM ' . Event::class . ' e2 JOIN e2.involvedCharacters c JOIN c.factions f WHERE e2.larp = :larp AND f.id = :f',
+                    ['larp' => $larp, 'f' => $fid]
+                ));
                 $factionSets[] = array_unique($ids);
             }
             $sets[] = $this->intersectSets($factionSets);
