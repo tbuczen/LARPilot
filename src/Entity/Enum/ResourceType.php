@@ -3,8 +3,10 @@
 namespace App\Entity\Enum;
 
 use App\Form\Integrations\CharacterDocDirectoryMappingType;
+use App\Form\Integrations\CharacterDocMappingType;
 use App\Form\Integrations\CharacterListColumnMappingType;
 use App\Form\Integrations\DocumentMetaFormType;
+use App\Form\Integrations\EventDocMappingType;
 use App\Form\Integrations\EventListColumnMappingType;
 use App\Form\Integrations\SpreadsheetMetaFormType;
 use Symfony\Component\Form\AbstractType;
@@ -26,8 +28,8 @@ enum ResourceType: string
             self::CHARACTER_LIST => CharacterListColumnMappingType::class,
             self::EVENT_LIST => EventListColumnMappingType::class,
             self::CHARACTER_DOC_DIRECTORY => CharacterDocDirectoryMappingType::class,
-            self::CHARACTER_DOC => throw new \Exception('To be implemented'),
-            self::EVENT_DOC => throw new \Exception('To be implemented'),
+            self::CHARACTER_DOC => CharacterDocMappingType::class,
+            self::EVENT_DOC => EventDocMappingType::class,
         };
     }
 
@@ -38,7 +40,7 @@ enum ResourceType: string
     {
         return match ($this) {
             self::CHARACTER_LIST, self::EVENT_LIST => SpreadsheetMetaFormType::class,
-            self::CHARACTER_DOC => DocumentMetaFormType::class,
+            self::CHARACTER_DOC, self::EVENT_DOC => DocumentMetaFormType::class,
             default => null,
             // etc.
         };
