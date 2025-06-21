@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import cytoscape from 'cytoscape';
+import { applyFactionGroupLayout } from '../utils/factionGroupLayout.js';
 
 export default class extends Controller {
     static values = {
@@ -124,24 +125,8 @@ export default class extends Controller {
             }
         });
 
-        //TODO:: Align all factionGroup in one line
-        //TODO:: Make faction in the center of the group
         this.cy.once('layoutstop', () => {
-            this.cy.nodes('[type="factionGroup"]').forEach((group) => {
-                const characters = group.children('[type="character"]');
-                const faction = group.children('[type="faction"]');
-                characters.layout({
-                    name: 'circle',
-                    // fit: true,
-                    padding: 5,
-                }).run();
-                if (faction.length) {
-                    console.debug(faction)
-                    console.debug(group.position())
-
-                    faction.position(group.position());
-                }
-            });
+            applyFactionGroupLayout(this.cy);
         });
 
         this.cy.layout({
