@@ -20,7 +20,7 @@ readonly class SubmissionStatsService
         $applications = $this->repository->findBy(['larp' => $larp]);
         $this->preloader->preload($applications, 'choices');
         $this->preloader->preload($applications, 'choices.character');
-        $this->preloader->preload($larp->getFactions(), 'members');
+        $this->preloader->preload($larp->getFactions()->toArray(), 'members');
 
         $charactersWithApplication = [];
         foreach ($applications as $application) {
