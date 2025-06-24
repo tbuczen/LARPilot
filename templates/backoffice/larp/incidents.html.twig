@@ -4,6 +4,9 @@
 
 {% block larp_content %}
     <h1>{{ 'common.incidents'|trans }}</h1>
+    {% if filterForm is defined %}
+        {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+    {% endif %}
     <ul>
         {% for incident in incidents %}
             <li>
