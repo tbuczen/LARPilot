@@ -1,4 +1,3 @@
-# Wszystkie wspólne tłumaczenia
 common:
   actions: Akcje
   save: Zapisz zmiany
@@ -42,8 +41,19 @@ common:
   valid_until: Ważne do
   accept: Akceptuj
   account: Konto
-
-# Tłumaczenia dla części publicznej aplikacji
+  choose: Choose...
+  gender: Gender
+  sort_by: Sort by
+  manage_filters: Manage Filters
+  show_edit: Show / Edit
+  clear: Clear
+  valid_to: Valid To
+  save_filter: Save Filter
+  new: New
+  saved_filter:
+    saved: Filter saved
+  faction: Faction
+  filter: Filter
 public:
   larp:
     list: Lista LARPów
@@ -54,8 +64,6 @@ public:
       you_are_invited: Zaproszono Cię do udziału jako
       accepted: Zostałeś dodany jako uczestnik LARPa!
       login_to_accept: Zaloguj się, aby zaakceptować zaproszenie
-
-# Tłumaczenia dla Panelu Organizatora (Backoffice)
 backoffice:
   main_title: Panel Administracyjny LARPilot
   larp:
@@ -74,7 +82,8 @@ backoffice:
       list: Postacie
       delete_title: Usuń postać "%name%"?
       delete_only_larpilot: Usuń tylko w LARPilot
-      delete_larpilot_and_integrations: Usuń w LARPilot oraz wszystkich powiązanych integracjach
+      delete_larpilot_and_integrations: Usuń w LARPilot oraz wszystkich powiązanych
+        integracjach
     marketplace: Marketplace
     factions: Frakcje
     quests: Zadania
@@ -84,7 +93,9 @@ backoffice:
     integrationSettings: Ustawienia Integracji
     integration:
       googleDrive: Integracja Google Drive
-      googleDriveDescription: Połącz swoje konto Google Drive, aby umożliwić LARPilot dostęp do Twoich plików. Umożliwi to przeglądanie i potencjalne zarządzanie wybranym folderem.
+      googleDriveDescription: Połącz swoje konto Google Drive, aby umożliwić LARPilot
+        dostęp do Twoich plików. Umożliwi to przeglądanie i potencjalne zarządzanie
+        wybranym folderem.
       googleDriveConnect: Połącz z Google Drive
       current: Aktualne integracje
       expired: Integracja wygasła, aby dalej korzystać - połącz ponownie
@@ -96,6 +107,38 @@ backoffice:
     file_select:
       title: Wybierz pliki do udostępnienia LARPilot
       open_picker_desc: Otwórz selektor plików Google, aby wybrać pliki do udostępnienia
+    story:
+      main_title: Story
+    applications:
+      title: Character Applications
+      missing: 'Characters without applications: %count%'
+      already_submitted: You have already submitted an application.
+      vote_success: Vote recorded
+      match: Application Matching
+    quest:
+      delete_only_larpilot: Delete only in LARPilot
+      name: Quest
+      list: Quests
+    character:
+      delete_only_larpilot: Delete only in LARPilot
+      name: Character
+      list: Characters
+      delete_larpilot_and_integrations: Delete in LARPilot and all connected integrations
+      delete_title: Delete character "%name%"?
+    threads: Threads
+    faction:
+      delete_title: Delete faction "%name%"?
+      list: Factions
+      delete_larpilot_and_integrations: Delete in LARPilot and all connected integrations
+      delete_only_larpilot: Delete only in LARPilot
+      name: Faction
+    relation:
+      list: Relations
+      add: Add Relation
+    thread:
+      list: Threads
+    reference:
+      list: External References
   google_drive_folders:
     title: Foldery Google Drive
     heading: Foldery Google Drive
@@ -108,21 +151,20 @@ backoffice:
     success_save: Zmiany zapisane pomyślnie
     success_delete: Usunięto pomyślnie
     confirmation: Czy na pewno chcesz kontynuować? Tej operacji nie można cofnąć.
+    votes: Votes
   recruitment:
-    open: "Otwarte rekrutacje"
-    none: "Brak rekrutacji"
+    open: Otwarte rekrutacje
+    none: Brak rekrutacji
   marketplace:
-    available: "Dostępne postacie"
-    toggle: "Przełącz"
-    view_recruitments: "Zobacz rekrutacje"
+    available: Dostępne postacie
+    toggle: Przełącz
+    view_recruitments: Zobacz rekrutacje
   proposal:
-    list: "Propozycje"
-    accept: "Akceptuj"
-    reject: "Odrzuć"
-    none: "Brak propozycji"
-    create: "Utwórz propozycję"
-
-# Tłumaczenia konta gracza/organizatora
+    list: Propozycje
+    accept: Akceptuj
+    reject: Odrzuć
+    none: Brak propozycji
+    create: Utwórz propozycję
 account:
   larp:
     list: Twoje LARPy
@@ -132,7 +174,6 @@ account:
   link_another_social: Połącz inne konto społecznościowe
   unlink: Odłącz
   confirm_unlink: Czy na pewno chcesz odłączyć to konto? Tej operacji nie można cofnąć.
-
 integrations:
   file_select:
     title: Wybierz plik
@@ -142,10 +183,19 @@ integrations:
     shared: Już udostępnione pliki
     existing_mappings: Istniejące mapowania
     use_mapping: Importuj używając tego mapowania
-
 file_select:
   no_folders: Brak zasobów
-
 login_page:
   info: Jeśli już masz konto, zaloguj się i połącz konta w ustawieniach konta.
   title: Rejestracja / Logowanie
+character_type:
+  gm: Game Master
+  long_npc: Long NPC
+  generic_npc: Generic NPC
+  player: Player
+  short_npc: Short NPC
+relation_type:
+  friend: Friend
+  ally: Ally
+  family: Family
+  enemy: Enemy

@@ -1,17 +1,106 @@
 form:
   incident:
-    report_code: "Kod uczestnika"
-    description: "Opisz zdarzenie"
-    allow_feedback: "Chcę informację zwrotną"
-    contact_accused: "Pozwól na kontakt z oskarżonym"
-    allow_mediator: "Zgadzam się na mediatora"
-    stay_anonymous: "Pozostań anonimowy"
+    report_code: Kod uczestnika
+    description: Opisz zdarzenie
+    allow_feedback: Chcę informację zwrotną
+    contact_accused: Pozwól na kontakt z oskarżonym
+    allow_mediator: Zgadzam się na mediatora
+    stay_anonymous: Pozostań anonimowy
   recruitment:
-    number: "Liczba potrzebnych"
-    type: "Typ"
-    notes: "Notatki"
+    number: Liczba potrzebnych
+    type: Typ
+    notes: Notatki
   proposal:
-    character: "Postać"
-    comment: "Komentarz"
+    character: Postać
+    comment: Komentarz
   character:
-    available_for_recruitment: "Dostępny do rekrutacji"
+    available_for_recruitment: Dostępny do rekrutacji
+    in_game_name: In-Game Name
+    choose_faction: Choose a faction...
+    description: Character Description
+    name: Unique Character Name
+    faction: Faction
+  invitation:
+    character: Choose a character...
+    valid_to: Invitation code valid to
+    role: Role
+    name: Name
+  larp:
+    end_date: End Date
+    start_date: Start Date
+    description: Description
+    story: Story
+    create: Create new DRAFT Larp
+    integrations: Integrations
+    name: Name
+    invitations: Invitations
+    location: Location
+  relation:
+    fromType: Type of owning side of relation
+    to: Related
+    from: Relation Owner
+    description: Description of the relation
+    toType: Type of target side of relation
+    type: Relation Type
+    name: Relation Name
+  event:
+    name: Event Name
+    factions: Factions involved in event
+    end_time: End Time
+    tags: Tags
+    description: Event Description
+    choose_place: Choose a place...
+    start_time: Start Time
+    place: Place
+    choose_faction: Choose a faction...
+    characters: Characters involved in event
+  quest:
+    thread: Assign to Thread
+    tags: Tags
+    name: Unique Quest Name
+    factions: Factions involved in quest
+    characters: Characters involved in quest
+    description: Quest Description
+  place:
+    name: Unique Place Name
+    description: Place Description
+  item:
+    is_purchased: Purchased
+    name: Unique Item Name
+    description: Item Description
+    quantity: Quantity
+    is_crafted: Crafted
+    cost: Cost
+  tag:
+    target: Target
+    name: Tag Name
+    description: Tag Description
+  thread:
+    tags: Tags
+    factions: Factions involved in thread
+    characters: Characters involved in thread
+    name: Unique Thread Name
+    description: Thread Description
+  choose: Choose...
+  external_reference:
+    mapping_type: Mapping Type
+    url: URL
+    reference_type: Type
+    name: Name
+  contact_email: Contact email
+  priority: Priority
+  mapping:
+    spreadsheet:
+      sheet_name: Spreadsheet Name
+      end_column: End Column
+      starting_row: Starting Row
+    document:
+  faction:
+    name: Unique Faction Name
+    description: Faction Description
+  favourite_style: Favourite play style
+  submit: Submit
+  save_filter_name: Filter name
+  triggers: Triggers / things to avoid
+  justification: Justification
+  visual: Visual ideas
