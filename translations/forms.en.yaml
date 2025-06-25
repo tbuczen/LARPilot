@@ -91,6 +91,9 @@ form:
     start_time: 'Start Time'
     end_time: 'End Time'
     choose_faction: 'Choose a faction...'
+  kanban:
+    title: "Task title"
+    description: "Task description"
   contact_email: 'Contact email'
   favourite_style: 'Favourite play style'
   triggers: 'Triggers / things to avoid'
