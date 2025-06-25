@@ -19,8 +19,8 @@ Google (Sheets, Docs, Calendar). Najważniejsze moduły obejmują:
   wymagań dotyczących NPC i scenografii.
 - **Moduł crafterski** – listy zadań w stylu kanban do koordynacji prac
   nad rekwizytami i scenografią. Tablice mogą również służyć do
-  monitorowania innych zadań organizacyjnych, np. zamówień na toalety
-  czy planowania cateringu.
+  monitorowania innych zadań organizacyjnych, np. planowania cateringu, 
+  organizacji terenu, umów, etc.
 - **Moduł zaufania** – bezpieczne zgłaszanie incydentów podczas gry z opcją
   anonimowości, mediacji i eskalacji zgodnie z procedurą opisującą kody
   uczestników oraz śledzenie statusu sprawy.
