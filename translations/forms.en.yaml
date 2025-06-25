@@ -88,6 +88,9 @@ form:
     factions: "Factions involved in event"
     characters: "Characters involved in event"
     tags: "Tags"
+  kanban:
+    title: "Task title"
+    description: "Task description"
     start_time: 'Start Time'
     end_time: 'End Time'
     choose_faction: 'Choose a faction...'

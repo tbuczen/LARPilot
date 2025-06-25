@@ -1,0 +1,26 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    <div data-controller="kanban" data-kanban-update-url-value="{{ path('backoffice_larp_kanban_task_update', {id: 'ID'}) }}">
+        <div class="row">
+            {% for status in ['TODO','IN_PROGRESS','DONE'] %}
+                <div class="col" data-kanban-target="column" data-status="{{ status }}">
+                    <h5 class="text-center">{{ status|trans({}, 'messages') }}</h5>
+                    <ul class="list-group min-vh-25">
+                        {% for task in tasks if task.status.value == status %}
+                            <li class="list-group-item" data-task-id="{{ task.id }}">
+                                <strong>{{ task.title }}</strong><br>
+                                {{ task.description }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+        {{ form_start(form) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

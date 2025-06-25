@@ -7,6 +7,7 @@ import CustomAutocompleteController from "./controllers/custom-autocomplete_cont
 import StoryGraphController from "./controllers/story_graph_controller.js";
 import DecisionTreeController from "./controllers/decision_tree_controller.js";
 import WysiwygController from "./controllers/wysiwyg_controller.js";
+import KanbanController from "./controllers/kanban_controller.js";
 
 const app = startStimulusApp();
 app.register('live', LiveController);
@@ -16,3 +17,4 @@ app.register("custom-autocomplete", CustomAutocompleteController);
 app.register("story-graph", StoryGraphController);
 app.register("decision-tree", DecisionTreeController);
 app.register("wysiwyg", WysiwygController);
+app.register("kanban", KanbanController);
