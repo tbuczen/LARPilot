@@ -47,13 +47,7 @@ uczestnikami, a także narzędzia do raportowania i obsługi incydentów.
    composer install
    ```
 2. Set up js env
-   - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-   - nvm install 22.14
-   - npm 10.9.2
-   - npm install -g yarn
-   - yarn set version 1.22.4
-   - yarn install
-   - yarn build
+   - php bin/console importmap:install
    - php ./bin/console asset-map:compile
 
 3. Configure your environment variables. Copy `.env` to `.env.local` and update database credentials and API keys as needed. Example variables are included in `.env`.
@@ -114,4 +108,8 @@ czy została ona zaakceptowana.
 
 Podobne sekcje w dokumentacji dla innych modułów ułatwiają szybkie poznanie
 ich roli i głównych klas.
+
+
+### TomSelect 
+[TomSelect and AJAX creation of data](./docs/tom-select_ajax.md)
 
