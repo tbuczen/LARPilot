@@ -46,10 +46,16 @@ uczestnikami, a także narzędzia do raportowania i obsługi incydentów.
    ```bash
    composer install
    ```
-2. Install JavaScript dependencies:
-   ```bash
-   yarn install
-   ```
+2. Set up js env
+   - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+   - nvm install 22.14
+   - npm 10.9.2
+   - npm install -g yarn
+   - yarn set version 1.22.4
+   - yarn install
+   - yarn build
+   - php ./bin/console asset-map:compile
+
 3. Configure your environment variables. Copy `.env` to `.env.local` and update database credentials and API keys as needed. Example variables are included in `.env`.
 4. Run database migrations:
    ```bash

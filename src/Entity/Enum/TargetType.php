@@ -25,6 +25,7 @@ enum TargetType: string
 
     case Place = 'place'; // a location in the larp world, can be a place of interest, a quest location, etc.
     case Relation = 'relation'; // describes relation between players/factions, can be anything starting from friendship, family to rivalry
+    case Tag = 'tag';
 
     //Both storyline -> threads -> events and quests can have a decision tree
     public function getEntityClass(): string
@@ -38,6 +39,7 @@ enum TargetType: string
             self::Faction => \App\Entity\StoryObject\LarpFaction::class,
             self::Item => \App\Entity\StoryObject\Item::class,
             self::Place => \App\Entity\StoryObject\Place::class,
+            self::Tag => \App\Entity\Tag::class,
         };
     }
 
