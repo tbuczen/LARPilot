@@ -46,10 +46,10 @@ uczestnikami, a także narzędzia do raportowania i obsługi incydentów.
    ```bash
    composer install
    ```
-2. Install JavaScript dependencies:
-   ```bash
-   yarn install
-   ```
+2. Set up js env
+   - php bin/console importmap:install
+   - php ./bin/console asset-map:compile
+
 3. Configure your environment variables. Copy `.env` to `.env.local` and update database credentials and API keys as needed. Example variables are included in `.env`.
 4. Run database migrations:
    ```bash
@@ -108,4 +108,8 @@ czy została ona zaakceptowana.
 
 Podobne sekcje w dokumentacji dla innych modułów ułatwiają szybkie poznanie
 ich roli i głównych klas.
+
+
+### TomSelect 
+[TomSelect and AJAX creation of data](./docs/tom-select_ajax.md)
 

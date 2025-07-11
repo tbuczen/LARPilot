@@ -3,10 +3,16 @@
 namespace App\Repository;
 
 use App\Entity\Tag;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends BaseRepository<Tag>
+ * @extends ServiceEntityRepository<Tag>
+ *
+ * @method null|Tag find($id, $lockMode = null, $lockVersion = null)
+ * @method null|Tag findOneBy(array $criteria, array $orderBy = null)
+ * @method Tag[]    findAll()
+ * @method Tag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class TagRepository extends BaseRepository
 {

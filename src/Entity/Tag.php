@@ -6,6 +6,7 @@ use App\Entity\Enum\TargetType;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
+use App\Repository\TagRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -48,8 +49,8 @@ przemoc
 lojalność
 
 */
-#[ORM\Entity]
-class Tag implements CreatorAwareInterface, Timestampable
+#[ORM\Entity(repositoryClass: TagRepository::class)]
+class Tag implements CreatorAwareInterface, Timestampable, TargetableInterface
 {
     use UuidTraitEntity;
     use TimestampableEntity;
@@ -63,7 +64,7 @@ class Tag implements CreatorAwareInterface, Timestampable
     private ?TargetType $target = null;
 
     #[ORM\Column(length: 100)]
-    private string $name;
+    private string $title;
 
     #[ORM\Column(length: 255)]
     private string $description;
@@ -88,14 +89,14 @@ class Tag implements CreatorAwareInterface, Timestampable
         $this->target = $target;
     }
 
-    public function getName(): string
+    public function getTitle(): string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): void
+    public function setTitle(string $title): void
     {
-        $this->name = $name;
+        $this->title = $title;
     }
 
     public function getDescription(): string
@@ -106,5 +107,10 @@ class Tag implements CreatorAwareInterface, Timestampable
     public function setDescription(string $description): void
     {
         $this->description = $description;
+    }
+
+    public static function getTargetType(): TargetType
+    {
+        return TargetType::Tag;
     }
 }

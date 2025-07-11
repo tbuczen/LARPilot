@@ -1,3 +1,4 @@
+
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
@@ -23,14 +24,16 @@ export default class extends Controller {
         this.textarea.parentNode.insertBefore(this.editor, this.textarea);
         this._createDropdown();
         this.editor.addEventListener('keyup', (e) => this._onKeyUp(e));
-        this.textarea.form?.addEventListener('submit', () => this._onSubmit());
+        this.editor.addEventListener('input', () => this._onInput());
+        this.textarea.form?.addEventListener('submit', (e) => this._onSubmit(e));
     }
 
     disconnect() {
         this.editor.removeEventListener('keyup', (e) => this._onKeyUp(e));
-        this.textarea.form?.removeEventListener('submit', () => this._onSubmit());
+        this.editor.removeEventListener('input', () => this._onInput());
+        this.textarea.form?.removeEventListener('submit', (e) => this._onSubmit(e));
         this.textarea.style.display = '';
-        this._onSubmit();
+        this._syncContent();
         this.dropdown.remove();
     }
 
@@ -93,7 +96,27 @@ export default class extends Controller {
         this.dropdown.style.display = 'none';
     }
 
-    _onSubmit() {
+    _onInput() {
+        this._syncContent();
+    }
+
+    _onSubmit(event) {
+        this._syncContent();
+
+        // Check if the textarea is required and empty
+        if (this.textarea.hasAttribute('required') && this.textarea.value.trim() === '') {
+            event.preventDefault();
+            // Show the textarea temporarily to allow focusing
+            this.textarea.style.display = 'block';
+            this.textarea.focus();
+            this.textarea.style.display = 'none';
+            // Focus the editor instead
+            this.editor.focus();
+            return false;
+        }
+    }
+
+    _syncContent() {
         this.textarea.value = this.editor.innerHTML;
     }
 }
