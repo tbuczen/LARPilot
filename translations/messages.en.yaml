@@ -132,6 +132,7 @@ backoffice:
       list: 'Threads'
     reference:
       list: 'External References'
+      add: 'Add External Reference'
     story:
       main_title: 'Story'
   google_drive_folders:

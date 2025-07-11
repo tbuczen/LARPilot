@@ -96,6 +96,9 @@ backoffice:
     file_select:
       title: Wybierz pliki do udostępnienia LARPilot
       open_picker_desc: Otwórz selektor plików Google, aby wybrać pliki do udostępnienia
+    reference:
+      list: 'Referencje zewnętrzne'
+      add: 'Dodaj referencję zewnętrzną'
   google_drive_folders:
     title: Foldery Google Drive
     heading: Foldery Google Drive

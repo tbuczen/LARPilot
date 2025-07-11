@@ -53,6 +53,7 @@ form:
     factions: "Factions involved in thread"
     characters: "Characters involved in thread"
     tags: "Tags"
+    choose_faction: "Choose a faction..."
   relation:
     name: "Relation Name"
     description: "Description of the relation"
@@ -66,6 +67,7 @@ form:
     mapping_type: "Mapping Type"
     reference_type: "Type"
     url: "URL"
+    toType: "Target Type"
   place:
     name: "Unique Place Name"
     description: "Place Description"

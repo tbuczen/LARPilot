@@ -1,11 +1,21 @@
 form:
-  incident:
-    report_code: "Kod uczestnika"
-    description: "Opisz zdarzenie"
-    allow_feedback: "Chcę informację zwrotną"
-    contact_accused: "Pozwól na kontakt z oskarżonym"
-    allow_mediator: "Zgadzam się na mediatora"
-    stay_anonymous: "Pozostań anonimowy"
+  submit: "Zatwierdź"
+  choose: "Wybierz..."
+  character:
+    name: "Unikalna nazwa postaci"
+    in_game_name: "Imię w grze"
+    description: "Opis postaci"
+    available_for_recruitment: "Dostępny do rekrutacji"
+    faction: "Frakcja"
+    choose_faction: "Wybierz frakcję..."
+  faction:
+    name: "Unikalna nazwa frakcji"
+    description: "Opis frakcji"
+  invitation:
+    name: "Nazwa"
+    valid_to: "Kod zaproszenia ważny do"
+    role: "Rola"
+    character: "Wybierz postać..."
   recruitment:
     number: "Liczba potrzebnych"
     type: "Typ"
@@ -13,5 +23,89 @@ form:
   proposal:
     character: "Postać"
     comment: "Komentarz"
-  character:
-    available_for_recruitment: "Dostępny do rekrutacji"
+  mapping:
+    spreadsheet:
+      sheet_name: "Nazwa arkusza"
+      end_column: "Kolumna końcowa"
+      starting_row: "Wiersz startowy"
+    document:
+  larp:
+    create: "Stwórz nowy DRAFT LARP"
+    name: "Nazwa"
+    description: "Opis"
+    location: "Lokalizacja"
+    start_date: "Data rozpoczęcia"
+    end_date: "Data zakończenia"
+    integrations: "Integracje"
+    invitations: "Zaproszenia"
+    story: "Historia"
+  save_filter_name: "Nazwa filtru"
+  quest:
+    name: "Unikalna nazwa zadania"
+    description: "Opis zadania"
+    thread: "Przypisz do wątku"
+    factions: "Frakcje zaangażowane w zadanie"
+    characters: "Postacie zaangażowane w zadanie"
+    tags: "Tagi"
+  thread:
+    name: "Unikalna nazwa wątku"
+    description: "Opis wątku"
+    factions: "Frakcje zaangażowane w wątek"
+    characters: "Postacie zaangażowane w wątek"
+    tags: "Tagi"
+    choose_faction: "Wybierz frakcję..."
+  relation:
+    name: "Nazwa relacji"
+    description: "Opis relacji"
+    type: "Typ relacji"
+    fromType: "Typ strony posiadającej relację"
+    from: "Właściciel relacji"
+    toType: "Typ strony docelowej relacji"
+    to: "Powiązany"
+  external_reference:
+    name: "Nazwa"
+    mapping_type: "Typ mapowania"
+    reference_type: "Typ"
+    url: "URL"
+    toType: "Typ docelowy"
+  place:
+    name: "Unikalna nazwa miejsca"
+    description: "Opis miejsca"
+  item:
+    name: "Unikalna nazwa przedmiotu"
+    description: "Opis przedmiotu"
+    is_crafted: "Wytworzony"
+    is_purchased: "Kupiony"
+    quantity: "Ilość"
+    cost: "Koszt"
+  tag:
+    name: "Nazwa tagu"
+    description: "Opis tagu"
+    target: "Cel"
+  event:
+    name: "Nazwa wydarzenia"
+    description: "Opis wydarzenia"
+    place: "Miejsce"
+    choose_place: "Wybierz miejsce..."
+    factions: "Frakcje zaangażowane w wydarzenie"
+    characters: "Postacie zaangażowane w wydarzenie"
+    tags: "Tagi"
+    start_time: 'Czas rozpoczęcia'
+    end_time: 'Czas zakończenia'
+    choose_faction: 'Wybierz frakcję...'
+  kanban:
+    title: "Tytuł zadania"
+    description: "Opis zadania"
+  contact_email: 'Email kontaktowy'
+  favourite_style: 'Ulubiony styl gry'
+  triggers: 'Triggery / rzeczy do unikania'
+  priority: 'Priorytet'
+  justification: 'Uzasadnienie'
+  visual: 'Pomysły wizualne'
+  incident:
+    report_code: "Kod uczestnika"
+    description: "Opisz zdarzenie"
+    allow_feedback: "Chcę informację zwrotną"
+    contact_accused: "Pozwól na kontakt z oskarżonym"
+    allow_mediator: "Zgadzam się na mediatora"
+    stay_anonymous: "Pozostań anonimowy"
