@@ -81,3 +81,7 @@ a.nav-link.active {
 .transition {
     transition: transform 0.3s ease;
 }
+
+.badge {
+    color: #000 !important;
+}

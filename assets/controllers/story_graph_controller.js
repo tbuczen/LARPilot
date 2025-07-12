@@ -25,6 +25,9 @@ export default class extends Controller {
                         'font-size': '10px',
                         'shape': 'roundrectangle',
                         'cursor': 'pointer',
+                        'width': 'label',
+                        'height': 'label',
+                        'padding': '8px',
                     }
                 },
                 {
@@ -118,6 +121,28 @@ export default class extends Controller {
                         'text-background-padding': 2,
                     }
                 },
+                {
+                    selector: 'edge[type="relation"]',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ff6b6b',
+                        'target-arrow-color': '#ff6b6b',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier',
+                        'line-style': 'solid'
+                    }
+                },
+                {
+                    selector: 'edge[type="related"]',
+                    style: {
+                        'width': 1,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier',
+                        'line-style': 'dashed'
+                    }
+                }
             ],
             layout: {
                 animate: false,

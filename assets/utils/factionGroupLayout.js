@@ -4,23 +4,80 @@ export function applyFactionGroupLayout(cy) {
         return;
     }
 
-    groups.forEach((group) => {
+    // First pass: calculate all radii and find the maximum
+    const groupData = [];
+    let maxRadius = 0;
+    
+    groups.forEach((group, index) => {
         const characters = group.children('[type="character"]');
-        if (characters.length) {
-            characters.layout({
-                name: 'circle',
-                padding: 5,
-            }).run();
-        }
-    });
-
-    const baseY = groups[0].position('y');
-
-    groups.forEach((group) => {
-        group.position('y', baseY);
         const faction = group.children('[type="faction"]');
-        if (faction.length) {
-            faction.position(group.position());
+        const characterCount = characters.length;
+        
+        // Calculate flexible circle radius based on number of characters
+        const minRadius = 50;
+        const maxRadiusLimit = 300;
+        
+        // Better radius calculation: logarithmic growth to handle large numbers
+        let circleRadius;
+        if (characterCount <= 1) {
+            circleRadius = minRadius;
+        } else if (characterCount <= 5) {
+            circleRadius = minRadius + (characterCount - 1) * 20; // 20px per character for small groups
+        } else {
+            // For larger groups, use logarithmic scaling
+            circleRadius = minRadius + 80 + Math.log(characterCount - 4) * 30;
+            circleRadius = Math.min(circleRadius, maxRadiusLimit);
+        }
+        
+        maxRadius = Math.max(maxRadius, circleRadius);
+        
+        groupData.push({
+            group,
+            characters,
+            faction,
+            characterCount,
+            circleRadius,
+            index
+        });
+        
+        console.log(`Group ${index}: ${characterCount} characters, radius: ${circleRadius}`);
+    });
+    
+    // Calculate spacing based on the largest radius to ensure no overlap
+    const groupSpacing = Math.max(400, maxRadius * 2.8);
+    console.log(`Using groupSpacing: ${groupSpacing}, maxRadius: ${maxRadius}`);
+    
+    // Second pass: position all groups
+    groupData.forEach((data) => {
+        const { group, characters, faction, circleRadius, index } = data;
+        
+        // Calculate group position (spread horizontally)
+        const groupX = index * groupSpacing;
+        const groupY = 0;
+        
+        // Position the faction group container
+        group.position({ x: groupX, y: groupY });
+        
+        if (faction.length > 0) {
+            // Position faction node at the center of the group
+            faction.position({ x: groupX, y: groupY });
+        }
+        
+        if (characters.length > 0) {
+            // Create circle layout for characters around the faction
+            const angleStep = (2 * Math.PI) / characters.length;
+            
+            characters.forEach((character, charIndex) => {
+                const angle = charIndex * angleStep;
+                const charX = groupX + Math.cos(angle) * circleRadius;
+                const charY = groupY + Math.sin(angle) * circleRadius;
+                
+                character.position({ x: charX, y: charY });
+            });
         }
     });
+    
+    console.log("Faction groups layout applied");
+    // Fit the view to show all groups
+    cy.fit(groups, 50); // 50px padding
 }

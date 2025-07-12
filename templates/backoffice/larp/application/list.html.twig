@@ -1,32 +1,239 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <h2>{{ 'backoffice.larp.applications.title'|trans }}</h2>
-    <p>{{ 'backoffice.larp.applications.missing'|trans({'%count%': missing}) }}</p>
-    {% include 'includes/filter_form.html.twig' with { form: filterForm, larp: larp } %}
-    <ul>
-        {% for stat in factionStats %}
-            <li>{{ stat.faction.title }} - {{ stat.percentage }}%</li>
-        {% endfor %}
-    </ul>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>{{ 'common.user'|trans }}</th>
-            <th>{{ 'form.contact_email'|trans }}</th>
-            <th>{{ 'form.favourite_style'|trans }}</th>
-            <th>{{ 'form.triggers'|trans }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for application in applications %}
-            <tr>
-                <td>{{ application.user.username }}</td>
-                <td>{{ application.contactEmail }}</td>
-                <td>{{ application.favouriteStyle }}</td>
-                <td>{{ application.triggers }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{{ 'backoffice.larp.applications.character_submissions'|trans }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">{{ 'backoffice.larp.applications.overview'|trans }} {{ larp.name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.applications.total'|trans }}</h6>
+                    <h3 class="text-primary">{{ dashboard.total_applications }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'backoffice.larp.applications.review_pending'|trans }}</h6>
+                    <h3 class="text-warning">{{ dashboard.pending_applications }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'backoffice.larp.applications.approved'|trans }}</h6>
+                    <h3 class="text-success">{{ dashboard.approved_applications }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'backoffice.larp.applications.total_choices'|trans }}</h6>
+                    <h3 class="text-info">{{ dashboard.total_choices }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Popularity and Faction Distribution -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.most_wanted'|trans }}</h6>
+                </div>
+                <div class="card-body">
+                    {% if dashboard.character_stats is not empty %}
+                        <div class="list-group list-group-flush">
+                            {% for characterId, count in dashboard.character_stats %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{ 'common.character'|trans }} #{{ characterId|slice(0,8) }}</span>
+                                    <span class="badge badge-primary">{{ count }} {{ count != 1 ? 'backoffice.larp.applications.choices'|trans : 'backoffice.larp.applications.choice'|trans }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">{{ 'backoffice.larp.applications.no_character_choices'|trans }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.faction_interest'|trans }}</h6>
+                </div>
+                <div class="card-body">
+                    {% if dashboard.faction_distribution is not empty %}
+                        <div class="list-group list-group-flush">
+                            {% for factionName, count in dashboard.faction_distribution %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{ factionName }}</span>
+                                    <span class="badge badge-info">{{ count }} {{ count != 1 ? 'backoffice.larp.applications.choices'|trans : 'backoffice.larp.applications.choice'|trans }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">{{ 'backoffice.larp.applications.no_faction_data'|trans }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Priority Distribution -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.choice_priority'|trans }}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for priority, count in dashboard.priority_distribution %}
+                            <div class="col-md-2 text-center">
+                                <div class="mb-2">
+                                    <span class="badge badge-{{ priority == 1 ? 'success' : (priority == 2 ? 'info' : 'secondary') }} fs-6">
+                                        {{ 'backoffice.larp.applications.priority'|trans }} {{ priority }}
+                                    </span>
+                                </div>
+                                <h4 class="text-muted">{{ count }}</h4>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'common.quick_actions'|trans }}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="btn-group" role="group">
+                        {% if dashboard.pending_applications > 0 %}
+                            <a href="#" class="btn btn-warning">
+                                {{ 'common.applications.review'|trans }} ({{ dashboard.pending_applications }})
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-primary">
+                            {{ 'backoffice.larp.applications.character_matching'|trans }}
+                        </a>
+                        <a href="#" class="btn btn-success">{{ 'backoffice.larp.applications.export_applications'|trans }}</a>
+                        <a href="#" class="btn btn-info">{{ 'backoffice.larp.applications.generate_reports'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.filter_applications'|trans }}</h6>
+                </div>
+                <div class="card-body">
+                    {% include 'includes/filter_form.html.twig' with { form: filterForm, larp: larp } %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.title'|trans }} ({{ applications|length }})</h6>
+                </div>
+                <div class="card-body">
+                    {% if applications is not empty %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'backoffice.larp.applications.applicant'|trans }}</th>
+                                        <th>{{ 'backoffice.larp.applications.status'|trans }}</th>
+                                        <th>{{ 'backoffice.larp.applications.character_choices'|trans }}</th>
+                                        <th>{{ 'backoffice.larp.applications.applied'|trans }}</th>
+                                        <th>{{ 'common.actions'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications %}
+                                        <tr>
+                                            <td>{{ application.user.email }}</td>
+                                            <td>
+                                                {% if application.status is defined %}
+                                                    <span class="badge badge-{{ application.status == 'pending' ? 'warning' : (application.status == 'approved' ? 'success' : 'danger') }}">
+                                                        {{ application.status|upper }}
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge badge-secondary">UNKNOWN</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% for choice in application.choices %}
+                                                    <span class="badge badge-info">{{ choice.character.title }}</span>
+                                                {% endfor %}
+                                            </td>
+                                            <td>{{ application.createdAt|date('Y-m-d H:i') }}</td>
+                                            <td>
+                                                <a href="#" class="btn btn-sm btn-primary">{{ 'backoffice.larp.applications.view'|trans }}</a>
+                                                <a href="#" class="btn btn-sm btn-success">{{ 'backoffice.larp.applications.approve'|trans }}</a>
+                                                <a href="#" class="btn btn-sm btn-danger">{{ 'backoffice.larp.applications.reject'|trans }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">{{ 'common.empty_list'|trans }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legacy Stats for Compatibility -->
+    {% if missing is defined and missing is not empty %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.missing_applications'|trans }}</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for user in missing %}
+                                <div class="list-group-item">{{ user.email }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

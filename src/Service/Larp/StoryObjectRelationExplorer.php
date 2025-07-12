@@ -2,12 +2,13 @@
 
 namespace App\Service\Larp;
 
+use App\Entity\StoryObject\Relation;
+use App\Repository\StoryObject\RelationRepository;
 use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\Item;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\StoryObject\Quest;
-use App\Entity\StoryObject\Relation;
 use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\Thread;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,10 +19,10 @@ readonly class StoryObjectRelationExplorer
 {
     public function __construct(
         private EntityPreloader $preloader,
+        private RelationRepository $relationRepository, // Add this
     ) {
     }
 
-    //TODO: fix when filtering by faction - the related nodes are missing
     public function getGraphFromResults(iterable $objects): array
     {
         $objects = is_array($objects) ? $objects : [...$objects];
@@ -102,6 +103,32 @@ readonly class StoryObjectRelationExplorer
                     'type' => 'factionGroup',
                 ]
             ];
+        }
+
+        // Get all relations between the filtered objects
+        $objectIds = array_map(fn($obj) => $obj->getId()->toRfc4122(), $objects);
+        $relations = $this->relationRepository->findRelationsBetweenObjects($objectIds);
+
+        // Add relations as edges
+        foreach ($relations as $relation) {
+            $sourceId = $relation->getFrom()->getId()->toRfc4122();
+            $targetId = $relation->getTo()->getId()->toRfc4122();
+            
+            // Only add edge if both source and target are in our filtered objects
+            if (in_array($sourceId, $objectIds) && in_array($targetId, $objectIds)) {
+                $edgeKey = $sourceId . '__' . $targetId;
+                if (!isset($seenEdges[$edgeKey])) {
+                    $edges[] = [
+                        'data' => [
+                            'source' => $sourceId,
+                            'target' => $targetId,
+                            'type' => 'relation',
+                            'title' => $relation->getTitle(),
+                        ]
+                    ];
+                    $seenEdges[$edgeKey] = true;
+                }
+            }
         }
 
         foreach ($objects as $object) {

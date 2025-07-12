@@ -21,4 +21,25 @@ class RelationRepository extends BaseRepository
     {
         parent::__construct($registry, Relation::class);
     }
+
+    /**
+     * Find all relations where both source and target are in the given object IDs
+     * @param string[] $objectIds
+     * @return Relation[]
+     */
+    public function findRelationsBetweenObjects(array $objectIds): array
+    {
+        if (empty($objectIds)) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('r')
+            ->join('r.from', 'f')
+            ->join('r.to', 't')
+            ->where('f.id IN (:ids)')
+            ->andWhere('t.id IN (:ids)')
+            ->setParameter('ids', $objectIds)
+            ->getQuery()
+            ->getResult();
+    }
 }

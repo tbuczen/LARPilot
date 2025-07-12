@@ -1,6 +1,236 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <div>{{ larp.description }}</div>
-    <div>Here will be some kind of dashboard</div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{{ larp.name }} - {{ 'common.dashboard'|trans }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">{{ larp.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Information Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.event.status'|trans }}</h6>
+                    <span class="badge badge-{{ larp.status.value == 'draft' ? 'secondary' : (larp.status.value == 'active' ? 'success' : 'primary') }} fs-6">
+                        {{ larp.status.value|upper }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.event.days_until'|trans }}</h6>
+                    <h4 class="text-{{ dashboard.timing.daysUntilEvent < 0 ? 'danger' : (dashboard.timing.daysUntilEvent < 7 ? 'warning' : 'success') }}">
+                        {% if dashboard.timing.daysUntilEvent is not null %}
+                            {{ dashboard.timing.daysUntilEvent < 0 ? ('common.event.passed'|trans) : dashboard.timing.daysUntilEvent ~ ' ' ~ 'common.days'|trans }}
+                        {% else %}
+                            {{ 'common.not_set'|trans }}
+                        {% endif %}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.event.duration'|trans }}</h6>
+                    <h4 class="text-info">
+                        {% if dashboard.timing.duration is not null %}
+                            {{ dashboard.timing.duration }} {{ dashboard.timing.duration != 1 ? 'common.days'|trans : 'common.day'|trans }}
+                        {% else %}
+                            {{ 'common.not_set'|trans }}
+                        {% endif %}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.location'|trans }}</h6>
+                    <p class="mb-0">{{ larp.location ?: ('common.not_set'|trans) }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participation Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.applications.total'|trans }}</h6>
+                    <h3 class="text-primary">{{ dashboard.applications.total }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.applications.pending'|trans }}</h6>
+                    <h3 class="text-warning">{{ dashboard.applications.pending }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.participants.confirmed'|trans }}</h6>
+                    <h3 class="text-success">{{ dashboard.participants.total }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.participants.max_character_choices'|trans }}</h6>
+                    <h3 class="text-info">{{ dashboard.participants.maxChoices }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character & Gameplay Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.characters.total'|trans }}</h6>
+                    <h3 class="text-primary">{{ dashboard.characters.total }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.characters.assigned'|trans }}</h6>
+                    <h3 class="text-success">{{ dashboard.characters.assigned }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.characters.available'|trans }}</h6>
+                    <h3 class="text-warning">{{ dashboard.characters.unassigned }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.factions.active'|trans }}</h6>
+                    <h3 class="text-info">{{ dashboard.factions.total }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.skills.available'|trans }}</h6>
+                    <h3 class="text-primary">{{ dashboard.skills.total }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.events.sub'|trans }}</h6>
+                    <h3 class="text-success">{{ dashboard.events.total }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.integrations.count'|trans }}</h6>
+                    <h3 class="text-info">{{ dashboard.integrations.total }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">{{ 'common.event.dates'|trans }}</h6>
+                    <small class="text-muted">
+                        {% if larp.startDate %}
+                            {{ larp.startDate|date('M d, Y') }}
+                            {% if larp.endDate and larp.endDate != larp.startDate %}
+                                - {{ larp.endDate|date('M d, Y') }}
+                            {% endif %}
+                        {% else %}
+                            {{ 'common.not_set'|trans }}
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Faction Distribution -->
+    {% if dashboard.factions.stats|length > 0 %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'common.factions.distribution'|trans }}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for faction in dashboard.factions.stats %}
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>{{ faction.name }}</span>
+                                <span class="badge badge-primary">{{ faction.participants }} {{ 'common.participants.list'|trans }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">{{ 'common.quick_actions'|trans }}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="btn-group" role="group">
+                        {% if dashboard.applications.pending > 0 %}
+                        <a href="#" class="btn btn-warning">
+                            {{ 'common.applications.review'|trans }} ({{ dashboard.applications.pending }})
+                        </a>
+                        {% endif %}
+                        {% if dashboard.characters.unassigned > 0 %}
+                        <a href="#" class="btn btn-info">
+                            {{ 'common.characters.assign'|trans }} ({{ dashboard.characters.unassigned }})
+                        </a>
+                        {% endif %}
+                        <a href="#" class="btn btn-primary">{{ 'common.participants.manage'|trans }}</a>
+                        <a href="#" class="btn btn-success">{{ 'common.send_announcement'|trans }}</a>
+                        <a href="#" class="btn btn-outline-secondary">{{ 'common.generate_reports'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -55,6 +55,43 @@ common:
   new: 'New'
   faction: 'Faction'
   manage_filters: 'Manage Filters'
+  dashboard: 'Dashboard'
+  location: 'Location'
+  not_set: 'Not Set'
+  days: 'days'
+  day: 'day'
+  event:
+    passed: 'Event Passed'
+    status: 'Event Status'
+    days_until: 'Days Until Event'
+    duration: 'Duration'
+    dates: 'Event Dates'
+  applications:
+    total: 'Total Applications'
+    pending: 'Pending Applications'
+    review: 'Review Applications'
+  participants:
+    list: 'Participants'
+    confirmed: 'Confirmed Participants'
+    manage: 'Manage Participants'
+    max_character_choices: 'Max Character Choices'
+  characters:
+    total: 'Total Characters'
+    assigned: 'Assigned Characters'
+    available: 'Available Characters'
+    assign: 'Assign Characters'
+  factions:
+    active: 'Active Factions'
+    distribution: 'Faction Distribution'
+  skills:
+    available: 'Skills Available'
+  events:
+    sub: 'Sub-Events'
+  integrations:
+    count: 'Integrations'
+  quick_actions: 'Quick Actions'
+  send_announcement: 'Send Announcement'
+  generate_reports: 'Generate Reports'
 
 #Translations specific to public part of the app
 public:
@@ -83,6 +120,8 @@ backoffice:
     create: 'Create LARP'
     preview: 'Preview in public website'
     list: 'My LARPs'
+    dashboard:
+      title: 'Dashboard'
     faction:
       name: 'Faction'
       list: 'Factions'
@@ -125,6 +164,31 @@ backoffice:
       already_submitted: 'You have already submitted an application.'
       match: 'Application Matching'
       vote_success: 'Vote recorded'
+      character_submissions: 'Character Submissions Dashboard'
+      overview: 'Overview of all character applications for'
+      most_wanted: 'Most Wanted Characters'
+      no_character_choices: 'No character choices yet'
+      faction_interest: 'Faction Interest'
+      no_faction_data: 'No faction data available'
+      choice: 'choice'
+      choices: 'choices'
+      choice_priority: 'Choice Priority Distribution'
+      priority: 'Priority'
+      approved: 'Approved'
+      review_pending: 'Review Pending'
+      character_matching: 'Character Matching'
+      export_applications: 'Export Applications'
+      generate_reports: 'Generate Reports'
+      filter_applications: 'Filter Applications'
+      applicant: 'Applicant'
+      status: 'Status'
+      character_choices: 'Character Choices'
+      applied: 'Applied'
+      view: 'View'
+      approve: 'Approve'
+      reject: 'Reject'
+      missing_applications: 'Missing Applications'
+      total_choices: 'Total Choices'
     relation:
       list: 'Relations'
       add: 'Add Relation'
@@ -135,6 +199,12 @@ backoffice:
       add: 'Add External Reference'
     story:
       main_title: 'Story'
+    place:
+      list: 'Places'
+    item:
+      list: 'Items'
+    tag:
+      list: 'Tags'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"

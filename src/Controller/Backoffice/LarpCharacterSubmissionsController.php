@@ -6,8 +6,8 @@ use App\Controller\BaseController;
 use App\Entity\Larp;
 use App\Entity\LarpApplicationChoice;
 use App\Form\Filter\LarpApplicationFilterType;
-use App\Repository\LarpApplicationChoiceRepository;
 use App\Repository\LarpApplicationRepository;
+use App\Service\Larp\LarpApplicationDashboardService;
 use App\Service\Larp\SubmissionStatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,11 +22,13 @@ class LarpCharacterSubmissionsController extends BaseController
         Request $request,
         Larp $larp,
         LarpApplicationRepository $repository,
+        LarpApplicationDashboardService $dashboardService,
         SubmissionStatsService $statsService
     ): Response {
         $filterForm = $this->createForm(LarpApplicationFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
 
+        // Build a query with filters
         $qb = $repository->createQueryBuilder('a')
             ->leftJoin('a.choices', 'choice')
             ->leftJoin('choice.character', 'character')
@@ -36,17 +38,24 @@ class LarpCharacterSubmissionsController extends BaseController
             ->setParameter('larp', $larp);
 
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
-
         $qb->orderBy('a.createdAt', 'DESC');
 
+        // Get applications with preloading
+        $applications = $dashboardService->getApplicationsWithPreloading($larp, $qb);
+
+        // Get dashboard statistics
+        $dashboardStats = $dashboardService->getDashboardStats($larp, $applications);
+
+        // Get legacy stats for compatibility
         $stats = $statsService->getStatsForLarp($larp);
 
         return $this->render('backoffice/larp/application/list.html.twig', [
             'larp' => $larp,
             'filterForm' => $filterForm->createView(),
-            'applications' => $qb->getQuery()->getResult(),
+            'applications' => $applications,
             'missing' => $stats['missing'],
             'factionStats' => $stats['factionStats'],
+            'dashboard' => $dashboardStats,
         ]);
     }
 

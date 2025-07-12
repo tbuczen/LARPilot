@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Form\LarpType;
 use App\Repository\LarpRepository;
 use App\Security\Voter\Backoffice\Larp\LarpDetailsVoter;
+use App\Service\Larp\LarpDashboardService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,15 +65,22 @@ class LarpController extends AbstractController
     }
 
     #[Route('/{id}', name: 'details', methods: ['GET'])]
-    public function details(string $id, LarpRepository $larpRepository): Response
-    {
+    public function details(
+        string $id,
+        LarpRepository $larpRepository,
+        LarpDashboardService $dashboardService
+    ): Response {
         $larp = $larpRepository->find($id);
+        
         if (!$this->isGranted(LarpDetailsVoter::VIEW, $larp)) {
             return $this->redirectToRoute('public_larp_list', [], 403);
         }
 
+        $dashboard = $dashboardService->getDashboardData($larp);
+
         return $this->render('backoffice/larp/details.html.twig', [
             'larp' => $larp,
+            'dashboard' => $dashboard,
         ]);
     }
 }

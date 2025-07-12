@@ -260,6 +260,56 @@ class Larp implements Timestampable, CreatorAwareInterface
         return $this->larpParticipants;
     }
 
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function setApplications(Collection $applications): void
+    {
+        $this->applications = $applications;
+    }
+
+    public function getLarpParticipants(): Collection
+    {
+        return $this->larpParticipants;
+    }
+
+    public function setLarpParticipants(Collection $larpParticipants): void
+    {
+        $this->larpParticipants = $larpParticipants;
+    }
+
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function setEvents(Collection $events): void
+    {
+        $this->events = $events;
+    }
+
+    public function getSkills(): Collection
+    {
+        return $this->skills;
+    }
+
+    public function setSkills(Collection $skills): void
+    {
+        $this->skills = $skills;
+    }
+
+    public function getIntegrations(): Collection
+    {
+        return $this->integrations;
+    }
+
+    public function setIntegrations(Collection $integrations): void
+    {
+        $this->integrations = $integrations;
+    }
+
     public function __toString(): string
     {
         return $this->name;

@@ -1,0 +1,60 @@
+// WYSIWYG Editor Styles
+
+.wysiwyg-editor {
+  min-height: 150px;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  color: #212529;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  overflow: auto;
+  line-height: 1.5;
+
+  &:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+
+  // Style for mentions
+  .mention {
+    display: inline-block;
+    padding: 0 0.25rem;
+    margin: 0 0.125rem;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 0.25rem;
+    color: #0d6efd;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: default;
+    user-select: all;
+  }
+}
+
+// Mention dropdown styles
+.mention-dropdown {
+  position: absolute;
+  z-index: 1050;
+  min-width: 200px;
+  max-width: 350px;
+  max-height: 250px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+  .mention-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+
+    &:hover, &.selected {
+      background-color: #f8f9fa;
+    }
+
+    &.selected {
+      background-color: rgba(13, 110, 253, 0.1);
+    }
+  }
+}
