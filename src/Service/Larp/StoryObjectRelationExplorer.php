@@ -2,303 +2,221 @@
 
 namespace App\Service\Larp;
 
-use App\Entity\StoryObject\Relation;
-use App\Repository\StoryObject\RelationRepository;
 use App\Entity\StoryObject\Event;
-use App\Entity\StoryObject\Item;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\Thread;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Repository\StoryObject\RelationRepository;
 use Doctrine\Common\Collections\Collection;
-use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
 readonly class StoryObjectRelationExplorer
 {
     public function __construct(
-        private EntityPreloader $preloader,
-        private RelationRepository $relationRepository, // Add this
+        private RelationRepository $relationRepository,
     ) {
     }
 
     public function getGraphFromResults(iterable $objects): array
     {
         $objects = is_array($objects) ? $objects : [...$objects];
-        $this->preloadRelations($objects);
-
+        
+        // Create nodes and track grouping
         $nodes = [];
-        $edges = [];
-        $seenEdges = [];
-
+        $validNodeIds = [];
         $parentFactionGroups = [];
         $parentThreadGroups = [];
-
-        /** @var StoryObject[] $objects */
+        
+        // Separate tracking for actual objects vs group nodes
+        $actualObjectIds = [];
+        
         foreach ($objects as $object) {
-            if ($object instanceof Relation) {
-                continue;
-            }
-
             $id = $object->getId()->toRfc4122();
-
-            $nodes[$id] = [
+            $validNodeIds[$id] = true;
+            $actualObjectIds[] = $id; // Track actual object IDs for relations
+            
+            $nodeData = [
                 'data' => [
                     'id' => $id,
                     'title' => $object->getTitle(),
                     'type' => $object->getTargetType()->value,
                 ]
             ];
-
-            //Factions grouping
+            
+            // Faction grouping
             if ($object instanceof LarpCharacter) {
                 $faction = $object->getFactions()->first();
                 if ($faction instanceof LarpFaction) {
-                    $nodes[$id]['data']['parent'] = $faction->getId()->toBase32();
-                    if (!in_array($faction->getId()->toBase32(), $parentFactionGroups)) {
-                        $parentFactionGroups[$faction->getId()->toBase32()] = $faction;
+                    $parentId = $faction->getId()->toBase32();
+                    $nodeData['data']['parent'] = $parentId;
+                    if (!isset($parentFactionGroups[$parentId])) {
+                        $parentFactionGroups[$parentId] = $faction;
                     }
                 }
             }
+            
             if ($object instanceof LarpFaction) {
-                $nodes[$id]['data']['parent'] = $object->getId()->toBase32();
-                if (!in_array($object->getId()->toBase32(), $parentFactionGroups)) {
-                    $parentFactionGroups[$object->getId()->toBase32()] = $object;
+                $parentId = $object->getId()->toBase32();
+                $nodeData['data']['parent'] = $parentId;
+                if (!isset($parentFactionGroups[$parentId])) {
+                    $parentFactionGroups[$parentId] = $object;
                 }
             }
-
-
-            //Thread grouping
+            
+            // Thread grouping
             if ($object instanceof Quest || $object instanceof Event) {
                 $thread = $object->getThread();
-                $nodes[$id]['data']['parent'] = $thread->getId()->toBase32();
-                if (!in_array($thread->getId()->toBase32(), $parentThreadGroups)) {
-                    $parentThreadGroups[$thread->getId()->toBase32()] = $thread;
+                if ($thread) {
+                    $parentId = $thread->getId()->toBase32();
+                    $nodeData['data']['parent'] = $parentId;
+                    if (!isset($parentThreadGroups[$parentId])) {
+                        $parentThreadGroups[$parentId] = $thread;
+                    }
                 }
             }
+            
             if ($object instanceof Thread) {
-                $nodes[$id]['data']['parent'] = $object->getId()->toBase32();
-                if (!in_array($object->getId()->toBase32(), $parentThreadGroups)) {
-                    $parentThreadGroups[$object->getId()->toBase32()] = $object;
+                $parentId = $object->getId()->toBase32();
+                $nodeData['data']['parent'] = $parentId;
+                if (!isset($parentThreadGroups[$parentId])) {
+                    $parentThreadGroups[$parentId] = $object;
                 }
             }
+            
+            $nodes[] = $nodeData;
         }
-
-        foreach ($parentThreadGroups as $id => $parentNode) {
-            $nodes[$id] = [
+        
+        // Add parent group nodes
+        foreach ($parentFactionGroups as $id => $faction) {
+            $validNodeIds[$id] = true;
+            $nodes[] = [
                 'data' => [
                     'id' => $id,
-                    'title' => $parentNode->getTitle(),
-                    'type' => 'threadGroup',
-                ]
-            ];
-        }
-
-        foreach ($parentFactionGroups as $id => $parentNode) {
-            $nodes[$id] = [
-                'data' => [
-                    'id' => $id,
-                    'title' => $parentNode->getTitle(),
+                    'title' => $faction->getTitle(),
                     'type' => 'factionGroup',
                 ]
             ];
         }
-
-        // Get all relations between the filtered objects
-        $objectIds = array_map(fn($obj) => $obj->getId()->toRfc4122(), $objects);
-        $relations = $this->relationRepository->findRelationsBetweenObjects($objectIds);
-
-        // Add relations as edges
+        
+        foreach ($parentThreadGroups as $id => $thread) {
+            $validNodeIds[$id] = true;
+            $nodes[] = [
+                'data' => [
+                    'id' => $id,
+                    'title' => $thread->getTitle(),
+                    'type' => 'threadGroup',
+                ]
+            ];
+        }
+        
+        // Create edges
+        $edges = [];
+        $seenEdges = [];
+        
+        // 1. Direct relations between actual objects (not group nodes)
+        $relations = $this->relationRepository->findRelationsBetweenObjects($actualObjectIds);
+        
         foreach ($relations as $relation) {
             $sourceId = $relation->getFrom()->getId()->toRfc4122();
             $targetId = $relation->getTo()->getId()->toRfc4122();
             
-            // Only add edge if both source and target are in our filtered objects
-            if (in_array($sourceId, $objectIds) && in_array($targetId, $objectIds)) {
-                $edgeKey = $sourceId . '__' . $targetId;
-                if (!isset($seenEdges[$edgeKey])) {
-                    $edges[] = [
-                        'data' => [
-                            'source' => $sourceId,
-                            'target' => $targetId,
-                            'type' => 'relation',
-                            'title' => $relation->getTitle(),
-                        ]
-                    ];
-                    $seenEdges[$edgeKey] = true;
-                }
-            }
-        }
-
-        foreach ($objects as $object) {
-            $relatedStoryObjects = $this->getRelatedStoryObjects($object);
-
-            foreach ($relatedStoryObjects as $relatedStoryObject) {
-                $edgeKeyParts = [$object->getId()->toRfc4122(), $relatedStoryObject->getId()->toRfc4122()];
-                sort($edgeKeyParts);
-                $edgeKey = implode('__', $edgeKeyParts);
-                if (isset($seenEdges[$edgeKey])) {
-                    continue;
-                }
-
-                if ($relatedStoryObject instanceof Relation) {
-                    $edges[] = [
-                        'data' => [
-                            'source' => $object->getId()->toRfc4122(),
-                            'target' => $relatedStoryObject->getTo()->getId()->toRfc4122(),
-                            'type' => 'related',
-                            'title' => $relatedStoryObject->getTitle(),
-                        ]
-                    ];
-                } else {
-                    $edges[] = [
-                        'data' => [
-                            'source' => $object->getId()->toRfc4122(),
-                            'target' => $relatedStoryObject->getId()->toRfc4122(),
-                            'type' => 'related',
-                            'title' => null,
-                        ]
-                    ];
-                }
+            $edgeKey = $sourceId . '__' . $targetId;
+            if (!isset($seenEdges[$edgeKey])) {
+                $edges[] = [
+                    'data' => [
+                        'source' => $sourceId,
+                        'target' => $targetId,
+                        'type' => 'relation',
+                        'title' => $relation->getTitle(),
+                    ]
+                ];
                 $seenEdges[$edgeKey] = true;
             }
         }
-
+        
+        // 2. Implicit relationships (membership, involvement, etc.)
+        foreach ($objects as $object) {
+            $this->addImplicitEdges($object, $validNodeIds, $edges, $seenEdges);
+        }
+        
         return [
-            'nodes' => array_values($nodes),
+            'nodes' => $nodes,
             'edges' => $edges,
         ];
     }
 
-    /**
-     * @param StoryObject[] $objects
-     */
-    private function preloadRelations(array $objects): void
+    private function addImplicitEdges(StoryObject $object, array $validNodeIds, array &$edges, array &$seenEdges): void
     {
-        if ($objects === []) {
-            return;
-        }
-
-        $this->preloader->preload($objects, 'relationsFrom');
-        $this->preloader->preload($objects, 'relationsTo');
-
-        $relationsFrom = [];
-        $relationsTo = [];
-        $characters = [];
-        $factions = [];
-        $threads = [];
-        $quests = [];
-        $events = [];
-
-        foreach ($objects as $object) {
-            foreach ($object->getRelationsFrom() as $relation) {
-                $relationsFrom[] = $relation;
+        $sourceId = $object->getId()->toRfc4122();
+        
+        if ($object instanceof LarpCharacter) {
+            // Character -> Faction edges (only if faction is not grouped)
+            foreach ($object->getFactions() as $faction) {
+                $factionId = $faction->getId()->toRfc4122();
+                // Only add edge if faction is not acting as a parent group
+                if (isset($validNodeIds[$factionId])) {
+                    $this->addEdgeIfValid($sourceId, $factionId, 'membership', null, $validNodeIds, $edges, $seenEdges);
+                }
             }
-            foreach ($object->getRelationsTo() as $relation) {
-                $relationsTo[] = $relation;
+            
+            // Character -> Thread/Quest/Event edges
+            foreach ($object->getThreads() as $thread) {
+                $this->addEdgeIfValid($sourceId, $thread->getId()->toRfc4122(), 'involvement', null, $validNodeIds, $edges, $seenEdges);
             }
-
-            if ($object instanceof LarpCharacter) {
-                $characters[] = $object;
-            }
-            if ($object instanceof LarpFaction) {
-                $factions[] = $object;
-            }
-            if ($object instanceof Thread) {
-                $threads[] = $object;
-            }
-            if ($object instanceof Quest) {
-                $quests[] = $object;
-            }
-            if ($object instanceof Event) {
-                $events[] = $object;
+            foreach ($object->getQuests() as $quest) {
+                $this->addEdgeIfValid($sourceId, $quest->getId()->toRfc4122(), 'involvement', null, $validNodeIds, $edges, $seenEdges);
             }
         }
-
-        $this->preloader->preload($relationsFrom, 'to');
-        $this->preloader->preload($relationsTo, 'from');
-
-        if ($characters !== []) {
-            $this->preloader->preload($characters, 'factions');
-            $this->preloader->preload($characters, 'quests');
-            $this->preloader->preload($characters, 'threads');
+        
+        if ($object instanceof LarpFaction) {
+            // Faction -> Thread/Quest edges
+            foreach ($object->getThreads() as $thread) {
+                $this->addEdgeIfValid($sourceId, $thread->getId()->toRfc4122(), 'involvement', null, $validNodeIds, $edges, $seenEdges);
+            }
+            foreach ($object->getQuests() as $quest) {
+                $this->addEdgeIfValid($sourceId, $quest->getId()->toRfc4122(), 'involvement', null, $validNodeIds, $edges, $seenEdges);
+            }
         }
-
-        if ($factions !== []) {
-            $this->preloader->preload($factions, 'members');
-            $this->preloader->preload($factions, 'threads');
-            $this->preloader->preload($factions, 'quests');
+        
+        if ($object instanceof Quest && $object->getThread()) {
+            $threadId = $object->getThread()->getId()->toRfc4122();
+            // Only add edge if thread is not acting as a parent group
+            if (isset($validNodeIds[$threadId])) {
+                $this->addEdgeIfValid($sourceId, $threadId, 'contains', null, $validNodeIds, $edges, $seenEdges);
+            }
         }
-
-        if ($threads !== []) {
-            $this->preloader->preload($threads, 'quests');
-            $this->preloader->preload($threads, 'events');
-            $this->preloader->preload($threads, 'involvedCharacters');
-            $this->preloader->preload($threads, 'involvedFactions');
-        }
-
-        if ($quests !== []) {
-            $this->preloader->preload($quests, 'thread');
-            $this->preloader->preload($quests, 'involvedCharacters');
-            $this->preloader->preload($quests, 'involvedFactions');
-        }
-
-        if ($events !== []) {
-            $this->preloader->preload($events, 'thread');
-            $this->preloader->preload($events, 'involvedCharacters');
-            $this->preloader->preload($events, 'involvedFactions');
+        
+        if ($object instanceof Event && $object->getThread()) {
+            $threadId = $object->getThread()->getId()->toRfc4122();
+            // Only add edge if thread is not acting as a parent group
+            if (isset($validNodeIds[$threadId])) {
+                $this->addEdgeIfValid($sourceId, $threadId, 'contains', null, $validNodeIds, $edges, $seenEdges);
+            }
         }
     }
 
-    /**
-     * @param StoryObject $object
-     * @return Collection<StoryObject>
-     */
-    public function getRelatedStoryObjects(StoryObject $object): Collection
+    private function addEdgeIfValid(string $sourceId, string $targetId, string $type, ?string $title, array $validNodeIds, array &$edges, array &$seenEdges): void
     {
-        $related = new ArrayCollection();
-
-        foreach ($object->getRelationsFrom() as $relation) {
-            $related->add($relation);
+        if (!isset($validNodeIds[$sourceId]) || !isset($validNodeIds[$targetId])) {
+            return;
         }
-
-        if ($object instanceof LarpCharacter) {
-            $this->addFromCollection($object->getFactions(), $related);
-            $this->addFromCollection($object->getQuests(), $related);
-            $this->addFromCollection($object->getThreads(), $related);
+        
+        $edgeKeyParts = [$sourceId, $targetId];
+        sort($edgeKeyParts);
+        $edgeKey = implode('__', $edgeKeyParts);
+        
+        if (!isset($seenEdges[$edgeKey])) {
+            $edges[] = [
+                'data' => [
+                    'source' => $sourceId,
+                    'target' => $targetId,
+                    'type' => $type,
+                    'title' => $title,
+                ]
+            ];
+            $seenEdges[$edgeKey] = true;
         }
-
-        if ($object instanceof LarpFaction) {
-            $this->addFromCollection($object->getMembers(), $related);
-            $this->addFromCollection($object->getThreads(), $related);
-            $this->addFromCollection($object->getQuests(), $related);
-        }
-
-        if ($object instanceof Thread) {
-            $this->addFromCollection($object->getQuests(), $related);
-            $this->addFromCollection($object->getEvents(), $related);
-            $this->addFromCollection($object->getInvolvedCharacters(), $related);
-            $this->addFromCollection($object->getInvolvedFactions(), $related);
-        }
-
-        if ($object instanceof Quest) {
-            if ($object->getThread()) {
-                $related->add($object->getThread());
-            }
-            $this->addFromCollection($object->getInvolvedCharacters(), $related);
-            $this->addFromCollection($object->getInvolvedFactions(), $related);
-        }
-
-        if ($object instanceof Event) {
-            if ($object->getThread()) {
-                $related->add($object->getThread());
-            }
-            $this->addFromCollection($object->getInvolvedCharacters(), $related);
-            $this->addFromCollection($object->getInvolvedFactions(), $related);
-        }
-
-        return $related;
     }
 
     private function addFromCollection(Collection $source, Collection $target): void
