@@ -23,7 +23,7 @@ class Relation extends StoryObject
     private ?TargetType $toType = null;
 
     #[ORM\Column(name: 'relation_type', enumType: RelationType::class)]
-    private RelationType $type = RelationType::Friend;
+    private RelationType $relationType = RelationType::Friend;
 
 
     public function getFrom(): ?StoryObject
@@ -81,14 +81,14 @@ class Relation extends StoryObject
         return $this;
     }
 
-    public function getType(): RelationType
+    public function getRelationType(): RelationType
     {
-        return $this->type;
+        return $this->relationType;
     }
 
-    public function setType(RelationType $type): self
+    public function setRelationType(RelationType $relationType): self
     {
-        $this->type = $type;
+        $this->relationType = $relationType;
         return $this;
     }
 }

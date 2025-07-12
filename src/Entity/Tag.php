@@ -60,14 +60,14 @@ class Tag implements CreatorAwareInterface, Timestampable, TargetableInterface
     #[ORM\JoinColumn(nullable: false)]
     private Larp $larp;
 
-    #[ORM\Column(type: 'string', enumType: TargetType::class)]
+    #[ORM\Column(type: 'string', nullable: true, enumType: TargetType::class)]
     private ?TargetType $target = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private string $title;
 
-    #[ORM\Column(length: 255)]
-    private string $description;
+    #[ORM\Column(type: 'text', length: 1000, nullable: true)]
+    private ?string $description = null;
 
     public function getLarp(): Larp
     {
