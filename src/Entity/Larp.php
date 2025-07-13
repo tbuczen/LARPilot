@@ -327,6 +327,24 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->integrations = $integrations;
     }
 
+
+    /**
+     * Get the marking (status) as string for workflow
+     */
+    public function getMarking(): string
+    {
+        return $this->status?->value ?? LarpStageStatus::DRAFT->value;
+    }
+
+    /**
+     * Set the marking (status) from string for workflow
+     */
+    public function setMarking(string $marking): void
+    {
+        $this->status = LarpStageStatus::from($marking);
+    }
+
+
     public function __toString(): string
     {
         return $this->name;

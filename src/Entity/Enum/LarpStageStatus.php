@@ -28,4 +28,5 @@ enum LarpStageStatus: string
             default => false,
         };
     }
+
 }

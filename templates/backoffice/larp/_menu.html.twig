@@ -18,6 +18,12 @@
                         {{ 'common.general'|trans }}
                     </a>
 
+                    {% if is_granted('MANAGE_LARP_GENERAL_SETTINGS', larp) %}
+                    <a href="{{ path('backoffice_larp_status_index', {larp: larp.id}) }}" class="btn btn-primary">
+                        {{ 'backoffice.larp.status.manage'|trans }}
+                    </a>
+                    {% endif %}
+
                     {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
                         <a href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
                            class="btn btn-primary {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}">

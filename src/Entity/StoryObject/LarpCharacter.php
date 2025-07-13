@@ -28,7 +28,6 @@ class LarpCharacter extends StoryObject
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $inGameName = null;
 
-
     #[ORM\OneToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(name: "previous_character_id", referencedColumnName: "id", nullable: true)]
     private ?LarpCharacter $previousCharacter = null;
@@ -51,6 +50,10 @@ class LarpCharacter extends StoryObject
     #[ORM\ManyToOne(targetEntity: LarpParticipant::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?LarpParticipant $storyWriter = null;
+
+    #[ORM\ManyToOne(targetEntity: LarpParticipant::class, inversedBy: 'larpCharacters')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?LarpParticipant $larpParticipant = null;
 
     //notes - internal notes for the character
     #[ORM\Column(type: 'text', nullable: true)]
@@ -321,6 +324,16 @@ class LarpCharacter extends StoryObject
     public function setThreads(Collection $threads): void
     {
         $this->threads = $threads;
+    }
+
+    public function getLarpParticipant(): ?LarpParticipant
+    {
+        return $this->larpParticipant;
+    }
+
+    public function setLarpParticipant(?LarpParticipant $larpParticipant): void
+    {
+        $this->larpParticipant = $larpParticipant;
     }
 
     public static function getTargetType(): TargetType

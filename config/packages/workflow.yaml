@@ -1,0 +1,45 @@
+framework:
+    workflows:
+        larp_stage_status:
+            type: 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'marking'
+            supports:
+                - App\Entity\Larp
+            initial_marking: DRAFT
+            places:
+                - DRAFT
+                - WIP
+                - PUBLISHED
+                - INQUIRIES
+                - CONFIRMED
+                - CANCELLED
+                - COMPLETED
+            transitions:
+                to_wip:
+                    from: DRAFT
+                    to: WIP
+                to_published:
+                    from: [WIP, DRAFT]
+                    to: PUBLISHED
+                to_inquiries:
+                    from: PUBLISHED
+                    to: INQUIRIES
+                to_confirmed:
+                    from: [INQUIRIES, PUBLISHED]
+                    to: CONFIRMED
+                to_cancelled:
+                    from: [CONFIRMED, INQUIRIES, PUBLISHED]
+                    to: CANCELLED
+                to_completed:
+                    from: CONFIRMED
+                    to: COMPLETED
+                back_to_draft:
+                    from: [WIP, PUBLISHED]
+                    to: DRAFT
+                back_to_wip:
+                    from: PUBLISHED
+                    to: WIP

@@ -92,6 +92,8 @@ common:
   quick_actions: 'Quick Actions'
   send_announcement: 'Send Announcement'
   generate_reports: 'Generate Reports'
+  yes: 'Yes'
+  no: 'No'
 
 #Translations specific to public part of the app
 public:
@@ -118,7 +120,7 @@ backoffice:
     valid_until: "Valid Until"
     no_invitations: "No invitations have been generated."
     create: 'Create LARP'
-    preview: 'Preview in public website'
+    preview: 'Preview'
     list: 'My LARPs'
     dashboard:
       title: 'Dashboard'
@@ -205,6 +207,8 @@ backoffice:
       list: 'Items'
     tag:
       list: 'Tags'
+    status:
+      manage: 'Manage'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"
@@ -269,3 +273,32 @@ relation_type:
   enemy: "Enemy"
   family: "Family"
   ally: "Ally"
+
+larp:
+  status:
+    management: "Status Management"
+    current: "Current Status"
+    available_transitions: "Available Actions"
+    no_transitions: "No status changes are available at this time."
+    confirm_transition: "Are you sure you want to %transition%?"
+    workflow: "Workflow Overview"
+    visibility: "Visibility Settings"
+    visible_everyone: "Visible to Everyone"
+    visible_organizers: "Visible to Organizers"
+    manage: "Manage Status"
+
+    draft: "Draft"
+    wip: "Work in Progress"
+    published: "Published"
+    inquiries: "Open for Inquiries"
+    confirmed: "Confirmed"
+    cancelled: "Cancelled"
+    completed: "Completed"
+
+    draft.description: "Initial state, only visible to admins"
+    wip.description: "Work in progress, visible to organizers"
+    published.description: "Published and visible to everyone"
+    inquiries.description: "Collecting player applications"
+    confirmed.description: "Event confirmed and will happen"
+    cancelled.description: "Event has been cancelled"
+    completed.description: "Event has been completed"

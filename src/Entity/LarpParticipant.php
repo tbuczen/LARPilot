@@ -7,6 +7,8 @@ use App\Entity\LarpApplication;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -18,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: LarpParticipantRepository::class)]
 #[ORM\Index(columns: ['user_id'])]
 #[ORM\Index(columns: ['larp_id'])]
-#[ORM\Index(columns: ['larp_character_id'])]
 class LarpParticipant
 {
     use UuidTraitEntity;
@@ -33,9 +34,8 @@ class LarpParticipant
     #[ORM\JoinColumn(nullable: false)]
     private ?Larp $larp = null;
 
-    #[ORM\ManyToOne(targetEntity: LarpCharacter::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?LarpCharacter $larpCharacter = null;
+    #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larpParticipant')]
+    private ?Collection $larpCharacters = null;
 
     #[ORM\OneToOne(targetEntity: LarpApplication::class)]
     #[ORM\JoinColumn(nullable: true)]
@@ -45,6 +45,12 @@ class LarpParticipant
     /** @see UserRole */
     #[ORM\Column(type: Types::JSON, options: ['jsonb' => true])]
     private array $roles = [];
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->larpCharacters = new ArrayCollection();
+    }
 
     public function getUser(): ?User
     {
@@ -125,15 +131,7 @@ class LarpParticipant
         return !empty(array_intersect($storyWriters, $userRoles));
     }
 
-    public function getLarpCharacter(): ?LarpCharacter
-    {
-        return $this->larpCharacter;
-    }
-
-    public function setLarpCharacter(?LarpCharacter $larpCharacter): void
-    {
-        $this->larpCharacter = $larpCharacter;
-    }
+ 
 
     public function getLarpApplication(): ?LarpApplication
     {
@@ -143,5 +141,35 @@ class LarpParticipant
     public function setLarpApplication(?LarpApplication $larpApplication): void
     {
         $this->larpApplication = $larpApplication;
+    }
+
+    /**
+     * @return Collection<int, LarpCharacter>
+     */
+    public function getLarpCharacters(): Collection
+    {
+        return $this->larpCharacters;
+    }
+
+    public function addLarpCharacter(LarpCharacter $larpCharacter): self
+    {
+        if (!$this->larpCharacters->contains($larpCharacter)) {
+            $this->larpCharacters->add($larpCharacter);
+            $larpCharacter->setLarpParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLarpCharacter(LarpCharacter $larpCharacter): self
+    {
+        if ($this->larpCharacters->removeElement($larpCharacter)) {
+            // set the owning side to null (unless already changed)
+            if ($larpCharacter->getLarpParticipant() === $this) {
+                $larpCharacter->setLarpParticipant(null);
+            }
+        }
+
+        return $this;
     }
 }

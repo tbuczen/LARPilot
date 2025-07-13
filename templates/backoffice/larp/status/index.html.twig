@@ -1,0 +1,120 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block title %}{{ 'larp.status.management'|trans }} - {{ larp.name }}{% endblock %}
+
+{% block larp_content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">{{ 'larp.status.current'|trans }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge badge-{{ currentStatus.value == 'DRAFT' ? 'secondary' : (currentStatus.value == 'CONFIRMED' ? 'success' : 'primary') }} fs-5 me-3">
+                        {{ currentStatus.value }}
+                    </span>
+                    <div>
+                        <h6 class="mb-0">{{ ('larp.status.' ~ currentStatus.value|lower)|trans }}</h6>
+                        <small class="text-muted">{{ ('larp.status.' ~ currentStatus.value|lower ~ '.description')|trans }}</small>
+                    </div>
+                </div>
+
+                {% if availableTransitions|length > 0 %}
+                <div class="mt-4">
+                    <h6>{{ 'larp.status.available_transitions'|trans }}</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for transition in availableTransitions %}
+                        <form method="post" action="{{ path('backoffice_larp_status_transition', {larp: larp.id, transitionName: transition.name}) }}" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('larp_transition_' ~ larp.id) }}">
+                            <button type="submit" 
+                                    class="btn btn-sm btn-outline-primary"
+                                    onclick="return confirm('{{ 'larp.status.confirm_transition'|trans({'%transition%': transition.label}) }}')">
+                                {{ transition.label }}
+                                {% if transition.to %}
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span class="badge badge-light">{{ transition.to }}</span>
+                                {% endif %}
+                            </button>
+                        </form>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    {{ 'larp.status.no_transitions'|trans }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">{{ 'larp.status.workflow'|trans }}</h6>
+            </div>
+            <div class="card-body">
+                <div class="workflow-diagram">
+                    {% for status in allStatuses %}
+                    <div class="workflow-step {{ status == currentStatus ? 'active' : '' }}">
+                        <span class="badge badge-{{ status.value == currentStatus.value ? 'primary' : 'light' }}">
+                            {{ status.value }}
+                        </span>
+                        <small class="d-block mt-1">{{ ('larp.status.' ~ status.value|lower)|trans }}</small>
+                    </div>
+                    {% if not loop.last %}
+                    <div class="workflow-arrow">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">{{ 'larp.status.visibility'|trans }}</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <strong>{{ 'larp.status.visible_everyone'|trans }}:</strong>
+                    <span class="badge badge-{{ currentStatus.isVisibleForEveryone() ? 'success' : 'secondary' }}">
+                        {{ currentStatus.isVisibleForEveryone() ? 'common.yes'|trans : 'common.no'|trans }}
+                    </span>
+                </div>
+                <div>
+                    <strong>{{ 'larp.status.visible_organizers'|trans }}:</strong>
+                    <span class="badge badge-{{ currentStatus.isVisibleForOrganizers() ? 'success' : 'secondary' }}">
+                        {{ currentStatus.isVisibleForOrganizers() ? 'common.yes'|trans : 'common.no'|trans }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.workflow-diagram {
+    text-align: center;
+}
+
+.workflow-step {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.workflow-step.active {
+    background-color: #e3f2fd;
+    border: 2px solid #2196f3;
+}
+
+.workflow-arrow {
+    color: #666;
+    margin: 5px 0;
+}
+</style>
+{% endblock %}
