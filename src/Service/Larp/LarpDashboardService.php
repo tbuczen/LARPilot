@@ -3,6 +3,7 @@
 namespace App\Service\Larp;
 
 use App\Entity\Larp;
+use App\Entity\LarpParticipant;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
 class LarpDashboardService
@@ -92,12 +93,12 @@ class LarpDashboardService
         
         $factionStats = [];
         foreach ($factions as $faction) {
-            $factionParticipants = $participants->filter(function($participant) use ($faction) {
-                return method_exists($participant, 'getFaction') && $participant->getFaction() === $faction;
+            $factionParticipants = $participants->filter(function(LarpParticipant $participant) use ($faction) {
+                return $participant->getLarpCharacter()?->belongsToFaction($faction);
             })->count();
             
             $factionStats[] = [
-                'name' => method_exists($faction, 'getName') ? $faction->getName() : 'Unknown',
+                'title' => $faction->getTitle() ?: 'Unknown',
                 'participants' => $factionParticipants,
             ];
         }

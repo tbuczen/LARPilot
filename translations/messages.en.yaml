@@ -159,7 +159,7 @@ backoffice:
     threads: 'Threads'
     marketplace: 'Marketplace'
     applications:
-      title: 'Character Applications'
+      title: 'Applications'
       missing: 'Characters without applications: %count%'
       already_submitted: 'You have already submitted an application.'
       match: 'Application Matching'

@@ -215,7 +215,9 @@ class Larp implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
-    // Add appropriate getter and helper methods:
+    /**
+     * @return Collection<LarpFaction>
+     */
     public function getFactions(): Collection
     {
         return $this->factions;
@@ -255,11 +257,17 @@ class Larp implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
+    /**
+     * @return Collection<LarpParticipant>
+     */
     public function getParticipants(): Collection
     {
         return $this->larpParticipants;
     }
 
+    /**
+     * @return Collection<LarpApplication>
+     */
     public function getApplications(): Collection
     {
         return $this->applications;
@@ -270,6 +278,9 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->applications = $applications;
     }
 
+    /**
+     * @return Collection<LarpParticipant>
+     */
     public function getLarpParticipants(): Collection
     {
         return $this->larpParticipants;
@@ -280,6 +291,9 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->larpParticipants = $larpParticipants;
     }
 
+    /**
+     * @return Collection<Event>
+     */
     public function getEvents(): Collection
     {
         return $this->events;
@@ -290,6 +304,9 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->events = $events;
     }
 
+    /**
+     * @return Collection<Skill>
+     */
     public function getSkills(): Collection
     {
         return $this->skills;

@@ -327,4 +327,9 @@ class LarpCharacter extends StoryObject
     {
         return TargetType::Character;
     }
+
+    public function belongsToFaction(LarpFaction $faction): bool
+    {
+        return $this->factions->contains($faction);
+    }
 }
