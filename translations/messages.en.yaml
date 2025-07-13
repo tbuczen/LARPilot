@@ -98,6 +98,8 @@ common:
   start_date: 'Start Date'
   end_date: 'End Date'
   status: 'Status'
+  user: 'User'
+
 
 #Translations specific to public part of the app
 public:
@@ -122,7 +124,11 @@ public:
     submit_application: 'Submit Application'
     application_form_description: 'Use this form to apply for the most interesting roles, please select tags that are interesting for You to play and the tags that You would like to omit in Your gameplay (triggers)'
     application_deadline: 'Deadline of application stage'
-
+    application:
+      priority: 'Priority'
+      justification: 'Justification'
+      visual: 'Visual'
+      votes: 'Votes'
 
 #Translations specific for Larp Organizers backoffice
 backoffice:
@@ -208,6 +214,26 @@ backoffice:
       reject: 'Reject'
       missing_applications: 'Missing Applications'
       total_choices: 'Total Choices'
+      least_wanted: 'Least Wanted Characters'
+      no_applications: 'No applications'
+      high_interest: 'High Interest'
+      moderate_interest: 'Moderate Interest'
+      low_interest: 'Low Interest'
+      very_low_interest: 'Very Low Interest'
+      cast_vote: 'Cast Vote'
+      vote_type: 'Vote Type'
+      vote_justification: 'Justification'
+      vote_justification_placeholder: 'Please explain your reasoning for this vote...'
+      submit_vote: 'Submit Vote'
+      upvote: 'Upvote'
+      downvote: 'Downvote'
+      vote_score: 'Vote Score'
+      vote_details: 'Vote Details'
+      view_vote_details: 'View Vote Details'
+      vote_recorded: 'Vote recorded successfully'
+      invalid_vote: 'Invalid vote value'
+      login_required: 'You must be logged in to vote'
+      no_votes_yet: 'No votes have been cast yet'
     relation:
       list: 'Relations'
       add: 'Add Relation'

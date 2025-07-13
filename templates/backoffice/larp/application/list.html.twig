@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <!-- Character Popularity and Faction Distribution -->
+    <!-- Character Popularity Row -->
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card">
@@ -58,12 +58,16 @@
                     <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.most_wanted'|trans }}</h6>
                 </div>
                 <div class="card-body">
-                    {% if dashboard.character_stats is not empty %}
+                    {% if dashboard.most_wanted_characters is not empty %}
                         <div class="list-group list-group-flush">
-                            {% for characterId, count in dashboard.character_stats %}
+                            {% for characterId, data in dashboard.most_wanted_characters %}
                                 <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>{{ 'common.character'|trans }} #{{ characterId|slice(0,8) }}</span>
-                                    <span class="badge badge-primary">{{ count }} {{ count != 1 ? 'backoffice.larp.applications.choices'|trans : 'backoffice.larp.applications.choice'|trans }}</span>
+                                    <span>
+                                        <a href="{{ path('backoffice_larp_story_character_modify', {'larp': larp.id, 'character': data.character.id}) }}" class="text-decoration-none">
+                                            {{ data.character.title }}
+                                        </a>
+                                    </span>
+                                    <span class="badge badge-primary">{{ data.count }} {{ data.count != 1 ? 'backoffice.larp.applications.choices'|trans : 'backoffice.larp.applications.choice'|trans }}</span>
                                 </div>
                             {% endfor %}
                         </div>
@@ -76,71 +80,93 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.faction_interest'|trans }}</h6>
+                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.least_wanted'|trans }}</h6>
                 </div>
                 <div class="card-body">
-                    {% if dashboard.faction_distribution is not empty %}
+                    {% if dashboard.least_wanted_characters is not empty %}
                         <div class="list-group list-group-flush">
-                            {% for factionName, count in dashboard.faction_distribution %}
+                            {% for characterId, data in dashboard.least_wanted_characters %}
                                 <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>{{ factionName }}</span>
-                                    <span class="badge badge-info">{{ count }} {{ count != 1 ? 'backoffice.larp.applications.choices'|trans : 'backoffice.larp.applications.choice'|trans }}</span>
+                                    <span>
+                                        <a href="{{ path('backoffice_larp_story_character_modify', {'larp': larp.id, 'character': data.character.id}) }}" class="text-decoration-none">
+                                            {{ data.character.title }}
+                                        </a>
+                                    </span>
+                                    <span class="badge {{ data.count == 0 ? 'badge-danger' : 'badge-secondary' }}">
+                                        {% if data.count == 0 %}
+                                            {{ 'backoffice.larp.applications.no_applications'|trans }}
+                                        {% else %}
+                                            {{ data.count }} {{ data.count != 1 ? 'backoffice.larp.applications.choices'|trans : 'backoffice.larp.applications.choice'|trans }}
+                                        {% endif %}
+                                    </span>
                                 </div>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p class="text-muted">{{ 'backoffice.larp.applications.no_faction_data'|trans }}</p>
+                        <p class="text-muted">{{ 'backoffice.larp.applications.no_character_choices'|trans }}</p>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Priority Distribution -->
+    <!-- Faction Interest Row (Full Width with Visual Representation) -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.choice_priority'|trans }}</h6>
+                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.faction_interest'|trans }}</h6>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        {% for priority, count in dashboard.priority_distribution %}
-                            <div class="col-md-2 text-center">
-                                <div class="mb-2">
-                                    <span class="badge badge-{{ priority == 1 ? 'success' : (priority == 2 ? 'info' : 'secondary') }} fs-6">
-                                        {{ 'backoffice.larp.applications.priority'|trans }} {{ priority }}
-                                    </span>
+                    {% if dashboard.faction_distribution is not empty %}
+                        <div class="row">
+                            {% for factionName, data in dashboard.faction_distribution %}
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="card-title mb-0">{{ factionName }}</h6>
+                                                <span class="badge badge-info">{{ data.count }} {{ data.count != 1 ? 'backoffice.larp.applications.choices'|trans : 'backoffice.larp.applications.choice'|trans }}</span>
+                                            </div>
+                                            
+                                            <!-- Progress Bar -->
+                                            <div class="progress mb-2" style="height: 20px;">
+                                                <div class="progress-bar 
+                                                    {% if data.percentage >= 25 %}bg-success
+                                                    {% elseif data.percentage >= 15 %}bg-warning
+                                                    {% elseif data.percentage >= 5 %}bg-info
+                                                    {% else %}bg-secondary{% endif %}"
+                                                    role="progressbar" 
+                                                    style="width: {{ data.percentage }}%"
+                                                    aria-valuenow="{{ data.percentage }}" 
+                                                    aria-valuemin="0" 
+                                                    aria-valuemax="100">
+                                                    {{ data.percentage }}%
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Visual Interest Level -->
+                                            <div class="text-center">
+                                                <small class="text-muted">
+                                                    {% if data.percentage >= 25 %}
+                                                        <i class="bi bi-fire text-success"></i> {{ 'backoffice.larp.applications.high_interest'|trans }}
+                                                    {% elseif data.percentage >= 15 %}
+                                                        <i class="bi bi-star-fill text-warning"></i> {{ 'backoffice.larp.applications.moderate_interest'|trans }}
+                                                    {% elseif data.percentage >= 5 %}
+                                                        <i class="bi bi-star text-info"></i> {{ 'backoffice.larp.applications.low_interest'|trans }}
+                                                    {% else %}
+                                                        <i class="bi bi-star text-secondary"></i> {{ 'backoffice.larp.applications.very_low_interest'|trans }}
+                                                    {% endif %}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h4 class="text-muted">{{ count }}</h4>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">{{ 'common.quick_actions'|trans }}</h6>
-                </div>
-                <div class="card-body">
-                    <div class="btn-group" role="group">
-                        {% if dashboard.pending_applications > 0 %}
-                            <a href="#" class="btn btn-warning">
-                                {{ 'common.applications.review'|trans }} ({{ dashboard.pending_applications }})
-                            </a>
-                        {% endif %}
-                        <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-primary">
-                            {{ 'backoffice.larp.applications.character_matching'|trans }}
-                        </a>
-                        <a href="#" class="btn btn-success">{{ 'backoffice.larp.applications.export_applications'|trans }}</a>
-                        <a href="#" class="btn btn-info">{{ 'backoffice.larp.applications.generate_reports'|trans }}</a>
-                    </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">{{ 'backoffice.larp.applications.no_faction_data'|trans }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -183,11 +209,11 @@
                                 <tbody>
                                     {% for application in applications %}
                                         <tr>
-                                            <td>{{ application.user.email }}</td>
+                                            <td>{{ application.contactEmail }}</td>
                                             <td>
                                                 {% if application.status is defined %}
                                                     <span class="badge badge-{{ application.status == 'pending' ? 'warning' : (application.status == 'approved' ? 'success' : 'danger') }}">
-                                                        {{ application.status|upper }}
+                                                        {{ application.status.value|upper }}
                                                     </span>
                                                 {% else %}
                                                     <span class="badge badge-secondary">UNKNOWN</span>
@@ -217,23 +243,4 @@
         </div>
     </div>
 
-    <!-- Legacy Stats for Compatibility -->
-    {% if missing is defined and missing is not empty %}
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.missing_applications'|trans }}</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group">
-                            {% for user in missing %}
-                                <div class="list-group-item">{{ user.email }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
 {% endblock %}

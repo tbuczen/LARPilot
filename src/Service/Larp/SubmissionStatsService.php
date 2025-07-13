@@ -10,29 +10,22 @@ use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 readonly class SubmissionStatsService
 {
     public function __construct(
-        private LarpApplicationRepository $repository,
-        private EntityPreloader $preloader,
+        private LarpApplicationRepository $applicationRepository,
+        private EntityPreloader           $preloader,
     ) {
     }
 
     public function getStatsForLarp(Larp $larp): array
     {
-        $applications = $this->repository->findBy(['larp' => $larp]);
+        $applications = $this->applicationRepository->findBy(['larp' => $larp]);
         $this->preloader->preload($applications, 'choices');
-        $this->preloader->preload($applications, 'choices.character');
+//        $this->preloader->preload($applications, 'choices.character');
         $this->preloader->preload($larp->getFactions()->toArray(), 'members');
 
         $charactersWithApplication = [];
         foreach ($applications as $application) {
             foreach ($application->getChoices() as $choice) {
                 $charactersWithApplication[$choice->getCharacter()->getId()->toRfc4122()] = true;
-            }
-        }
-
-        $missing = 0;
-        foreach ($larp->getCharacters() as $character) {
-            if (!isset($charactersWithApplication[$character->getId()->toRfc4122()])) {
-                $missing++;
             }
         }
 
@@ -56,7 +49,6 @@ readonly class SubmissionStatsService
 
         return [
             'applications' => $applications,
-            'missing' => $missing,
             'factionStats' => $factionStats,
         ];
     }

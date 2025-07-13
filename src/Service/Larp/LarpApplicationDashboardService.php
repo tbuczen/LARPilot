@@ -3,6 +3,7 @@
 namespace App\Service\Larp;
 
 use App\Entity\Larp;
+use App\Entity\LarpApplication;
 use App\Repository\LarpApplicationRepository;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
@@ -52,6 +53,9 @@ class LarpApplicationDashboardService
         return $applications;
     }
 
+    /**
+     * @param LarpApplication[] $applications
+     */
     public function getDashboardStats(Larp $larp, array $applications = null): array
     {
         if ($applications === null) {
@@ -64,11 +68,11 @@ class LarpApplicationDashboardService
             'approved_applications' => 0,
             'rejected_applications' => 0,
             'total_choices' => 0,
-            'priority_distribution' => [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0],
         ];
 
         $characterChoices = [];
         $factionChoices = [];
+        $charactersWithApplications = [];
 
         foreach ($applications as $application) {
             // Count application statuses
@@ -92,35 +96,88 @@ class LarpApplicationDashboardService
                 $stats['total_choices']++;
                 
                 // Count character popularity
-                $characterId = $choice->getCharacter()->getId()->toRfc4122();
-                $characterChoices[$characterId] = ($characterChoices[$characterId] ?? 0) + 1;
+                $character = $choice->getCharacter();
+                $characterId = $character->getId()->toRfc4122();
+                
+                if (!isset($characterChoices[$characterId])) {
+                    $characterChoices[$characterId] = [
+                        'character' => $character,
+                        'count' => 0
+                    ];
+                }
+                $characterChoices[$characterId]['count']++;
+                $charactersWithApplications[$characterId] = $character;
                 
                 // Count faction distribution
-                $character = $choice->getCharacter();
                 if ($character->getFactions()->count() > 0) {
                     foreach ($character->getFactions() as $faction) {
-                        $factionName = method_exists($faction, 'getName') ? $faction->getName() : 'Unknown';
-                        $factionChoices[$factionName] = ($factionChoices[$factionName] ?? 0) + 1;
-                    }
-                }
-                
-                // Count priority distribution
-                if (method_exists($choice, 'getPriority')) {
-                    $priority = $choice->getPriority();
-                    if ($priority >= 1 && $priority <= 5) {
-                        $stats['priority_distribution'][$priority]++;
+                        if (!isset($factionChoices[$faction->getTitle()])) {
+                            $factionChoices[$faction->getTitle()] = [
+                                'faction' => $faction,
+                                'count' => 0
+                            ];
+                        }
+                        $factionChoices[$faction->getTitle()]['count']++;
                     }
                 }
             }
         }
 
-        // Sort character stats by popularity
-        arsort($characterChoices);
-        $stats['character_stats'] = array_slice($characterChoices, 0, 10); // Top 10 most wanted characters
+        // Sort character stats by popularity (most wanted)
+        uasort($characterChoices, function($a, $b) {
+            return $b['count'] <=> $a['count'];
+        });
+        $mostWantedCharacters = array_slice($characterChoices, 0, 10);
+        $stats['most_wanted_characters'] = $mostWantedCharacters;
 
-        // Sort faction distribution
-        arsort($factionChoices);
-        $stats['faction_distribution'] = $factionChoices;
+        // Get least wanted characters (exclude those in most wanted)
+        $leastWantedCharacters = [];
+        $mostWantedIds = array_keys($mostWantedCharacters);
+        
+        // First, add characters with applications but not in most wanted (sorted by lowest count)
+        $sortedByLeastWanted = $characterChoices;
+        uasort($sortedByLeastWanted, function($a, $b) {
+            return $a['count'] <=> $b['count'];
+        });
+        
+        foreach ($sortedByLeastWanted as $characterId => $data) {
+            if (!in_array($characterId, $mostWantedIds)) {
+                $leastWantedCharacters[$characterId] = $data;
+            }
+        }
+        
+        // Then, add characters with no applications at all
+        foreach ($larp->getCharacters() as $character) {
+            $characterId = $character->getId()->toRfc4122();
+            if (!isset($charactersWithApplications[$characterId])) {
+                $leastWantedCharacters[$characterId] = [
+                    'character' => $character,
+                    'count' => 0
+                ];
+            }
+        }
+        
+        $stats['least_wanted_characters'] = array_slice($leastWantedCharacters, 0, 10);
+
+        // Calculate faction distribution with percentages for visual representation
+        $totalFactionChoices = array_sum(array_column($factionChoices, 'count'));
+        $factionDistribution = [];
+        
+        foreach ($factionChoices as $factionName => $data) {
+            $percentage = $totalFactionChoices > 0 ? round(($data['count'] / $totalFactionChoices) * 100, 1) : 0;
+            $factionDistribution[$factionName] = [
+                'faction' => $data['faction'],
+                'count' => $data['count'],
+                'percentage' => $percentage
+            ];
+        }
+        
+        // Sort faction distribution by count (descending)
+        uasort($factionDistribution, function($a, $b) {
+            return $b['count'] <=> $a['count'];
+        });
+        
+        $stats['faction_distribution'] = $factionDistribution;
 
         return $stats;
     }

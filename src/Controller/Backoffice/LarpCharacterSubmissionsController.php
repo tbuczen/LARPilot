@@ -5,11 +5,13 @@ namespace App\Controller\Backoffice;
 use App\Controller\BaseController;
 use App\Entity\Larp;
 use App\Entity\LarpApplicationChoice;
+use App\Entity\LarpApplicationVote;
 use App\Form\Filter\LarpApplicationFilterType;
 use App\Repository\LarpApplicationRepository;
 use App\Service\Larp\LarpApplicationDashboardService;
 use App\Service\Larp\SubmissionStatsService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -53,7 +55,6 @@ class LarpCharacterSubmissionsController extends BaseController
             'larp' => $larp,
             'filterForm' => $filterForm->createView(),
             'applications' => $applications,
-            'missing' => $stats['missing'],
             'factionStats' => $stats['factionStats'],
             'dashboard' => $dashboardStats,
         ]);
@@ -84,19 +85,140 @@ class LarpCharacterSubmissionsController extends BaseController
             $grouped[$id]['choices'][] = $choice;
         }
 
+        // Get voting data for current user
+        $voteRepository = $em->getRepository(LarpApplicationVote::class);
+        $userVotes = [];
+        if ($this->getUser()) {
+            $votes = $voteRepository->findBy(['user' => $this->getUser()]);
+            foreach ($votes as $vote) {
+                $userVotes[$vote->getChoice()->getId()->toRfc4122()] = $vote;
+            }
+        }
+
+        // Calculate vote statistics for each choice
+        $voteStats = [];
+        foreach (array_merge(...array_column($grouped, 'choices')) as $choice) {
+            $choiceId = $choice->getId()->toRfc4122();
+            $votes = $voteRepository->findBy(['choice' => $choice]);
+            
+            $upvotes = 0;
+            $downvotes = 0;
+            $voteDetails = [];
+            
+            foreach ($votes as $vote) {
+                if ($vote->isUpvote()) {
+                    $upvotes++;
+                } else {
+                    $downvotes++;
+                }
+                
+                $voteDetails[] = [
+                    'user' => $vote->getUser()->getUsername(),
+                    'vote' => $vote->getVote(),
+                    'justification' => $vote->getJustification(),
+                    'createdAt' => $vote->getCreatedAt()
+                ];
+            }
+            
+            $voteStats[$choiceId] = [
+                'upvotes' => $upvotes,
+                'downvotes' => $downvotes,
+                'total' => $upvotes - $downvotes,
+                'details' => $voteDetails
+            ];
+        }
+
         return $this->render('backoffice/larp/application/match.html.twig', [
             'larp' => $larp,
             'choices' => $grouped,
+            'userVotes' => $userVotes,
+            'voteStats' => $voteStats,
         ]);
     }
 
     #[Route('vote/{choice}', name: 'vote', methods: ['POST'])]
-    public function vote(Larp $larp, LarpApplicationChoice $choice, EntityManagerInterface $em): Response
-    {
-        $choice->setVotes($choice->getVotes() + 1);
+    public function vote(
+        Larp $larp,
+        LarpApplicationChoice $choice,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $voteValue = (int) $request->request->get('vote'); // 1 for upvote, -1 for downvote
+        $justification = $request->request->get('justification', '');
+
+        if (!in_array($voteValue, [1, -1])) {
+            $this->addFlash('error', 'backoffice.larp.applications.invalid_vote');
+            return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
+        }
+
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'backoffice.larp.applications.login_required');
+            return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
+        }
+
+        // Check if user has already voted on this choice
+        $voteRepository = $em->getRepository(LarpApplicationVote::class);
+        $existingVote = $voteRepository->findOneBy([
+            'choice' => $choice,
+            'user' => $user
+        ]);
+
+        if ($existingVote) {
+            // Update existing vote
+            $existingVote->setVote($voteValue);
+            $existingVote->setJustification($justification);
+            $existingVote->setCreatedAt(new \DateTime());
+        } else {
+            // Create new vote
+            $vote = new LarpApplicationVote();
+            $vote->setChoice($choice);
+            $vote->setUser($user);
+            $vote->setVote($voteValue);
+            $vote->setJustification($justification);
+            $em->persist($vote);
+        }
+
+        // Update the choice's total votes (for backward compatibility)
+        $allVotes = $voteRepository->findBy(['choice' => $choice]);
+        $totalScore = 0;
+        foreach ($allVotes as $vote) {
+            $totalScore += $vote->getVote();
+        }
+        $choice->setVotes($totalScore);
+
         $em->flush();
 
-        $this->addFlash('success', 'backoffice.larp.applications.vote_success');
+        $voteType = $voteValue > 0 ? 'upvote' : 'downvote';
+        $this->addFlash('success', 'backoffice.larp.applications.vote_recorded');
+        
         return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
+    }
+
+    #[Route('vote/{choice}/details', name: 'vote_details', methods: ['GET'])]
+    public function voteDetails(
+        Larp $larp,
+        LarpApplicationChoice $choice,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $voteRepository = $em->getRepository(LarpApplicationVote::class);
+        $votes = $voteRepository->findBy(['choice' => $choice], ['createdAt' => 'DESC']);
+        
+        $voteDetails = [];
+        foreach ($votes as $vote) {
+            $voteDetails[] = [
+                'user' => $vote->getUser()->getUsername(),
+                'vote' => $vote->getVote(),
+                'justification' => $vote->getJustification(),
+                'createdAt' => $vote->getCreatedAt()->format('Y-m-d H:i:s'),
+                'isUpvote' => $vote->isUpvote()
+            ];
+        }
+        
+        return new JsonResponse([
+            'votes' => $voteDetails,
+            'character' => $choice->getCharacter()->getTitle(),
+            'applicant' => $choice->getApplication()->getContactEmail()
+        ]);
     }
 }
