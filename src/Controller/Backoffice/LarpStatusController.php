@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class LarpStatusController extends AbstractController
 {
     public function __construct(
-        private LarpWorkflowService $workflowService,
+        private readonly LarpWorkflowService $workflowService,
     ) {
     }
 
@@ -38,8 +38,19 @@ class LarpStatusController extends AbstractController
     #[Route('/transition/{transitionName}', name: 'transition', methods: ['POST'])]
     public function transition(Larp $larp, string $transitionName, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('MANAGE_LARP_GENERAL_SETTINGS', $larp);
+
         if (!$this->isCsrfTokenValid('larp_transition_' . $larp->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Invalid CSRF token.');
+            return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);
+        }
+
+        // Check validation errors
+        $validationErrors = $this->workflowService->getTransitionValidationErrors($larp, $transitionName);
+        if (!empty($validationErrors)) {
+            foreach ($validationErrors as $error) {
+                $this->addFlash('error', $error);
+            }
             return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);
         }
 

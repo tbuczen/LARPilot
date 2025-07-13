@@ -32,7 +32,7 @@ class LarpTransitionGuardService
     {
         return $this->hasRequiredBasicInfo($larp) && 
                $this->hasAllCharactersWithShortDescription($larp) &&
-               $this->hasConfirmedApplicationsForAllCharacters($larp);
+               $this->hasAllCharactersAssigned($larp);
     }
 
     /**
@@ -80,7 +80,6 @@ class LarpTransitionGuardService
         }
 
         foreach ($characters as $character) {
-            // Assuming LarpCharacter has a shortDescription property
             if (empty($character->getDescription())) {
                 return false;
             }
@@ -90,9 +89,9 @@ class LarpTransitionGuardService
     }
 
     /**
-     * Check if there are confirmed applications for all characters
+     * Check if all characters have participants assigned
      */
-    private function hasConfirmedApplicationsForAllCharacters(Larp $larp): bool
+    private function hasAllCharactersAssigned(Larp $larp): bool
     {
         $characters = $larp->getCharacters();
 
@@ -100,26 +99,30 @@ class LarpTransitionGuardService
             return false;
         }
 
-        $confirmedApplications = $larp->getApplications()->filter(function(LarpApplication $application) {
-            return $application->getStatus() === SubmissionStatus::CONSIDER ||
-                $application->getStatus() === SubmissionStatus::ACCEPTED; // Adjust based on your actual status values
-        });
-        //OR
-        $emptyCharacters = [];
-
         foreach ($characters as $character) {
-            if($character->getLarpParticipant() === null) {
-                $emptyCharacters[] = $character->getId()->toRfc4122();
+            if ($character->getLarpParticipant() === null) {
+                return false;
             }
         }
 
-        if(!empty($emptyCharacters)) {
-            return false;
+        return true;
+    }
+
+    /**
+     * Get count of unassigned characters
+     */
+    private function getUnassignedCharactersCount(Larp $larp): int
+    {
+        $characters = $larp->getCharacters();
+        $unassignedCount = 0;
+
+        foreach ($characters as $character) {
+            if ($character->getLarpParticipant() === null) {
+                $unassignedCount++;
+            }
         }
 
-        // Check if we have enough confirmed applications
-        // This logic might need adjustment based on your business rules
-        return $confirmedApplications->count() >= $characters->count();
+        return $unassignedCount;
     }
 
     /**
@@ -160,12 +163,12 @@ class LarpTransitionGuardService
         }
 
         $charactersWithoutDescription = $larp->getCharacters()->filter(function($character) {
-            return empty($character->getShortDescription());
+            return empty($character->getDescription());
         });
 
         if (!$charactersWithoutDescription->isEmpty()) {
             $errors[] = sprintf(
-                '%d character(s) are missing short descriptions',
+                '%d character(s) are missing descriptions',
                 $charactersWithoutDescription->count()
             );
         }
@@ -180,19 +183,13 @@ class LarpTransitionGuardService
     {
         $errors = $this->getInquiriesValidationErrors($larp);
 
-        $confirmedApplications = $larp->getApplications()->filter(function($application) {
-            return $application->getStatus() === 'confirmed';
-        });
-
         $charactersCount = $larp->getCharacters()->count();
-        $confirmedCount = $confirmedApplications->count();
+        $unassignedCount = $this->getUnassignedCharactersCount($larp);
 
-        if ($confirmedCount < $charactersCount) {
+        if ($unassignedCount > 0) {
             $errors[] = sprintf(
-                'Need %d more confirmed applications (%d confirmed, %d characters)',
-                $charactersCount - $confirmedCount,
-                $confirmedCount,
-                $charactersCount
+                '%d character(s) still need participants assigned',
+                $unassignedCount
             );
         }
 

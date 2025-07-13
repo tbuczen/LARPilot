@@ -11,8 +11,9 @@ use Doctrine\ORM\EntityManagerInterface;
 class LarpWorkflowService
 {
     public function __construct(
-        private WorkflowInterface $larpStageStatusStateMachine,
-        private EntityManagerInterface $entityManager
+        private readonly WorkflowInterface      $larpStageStatusStateMachine,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly LarpTransitionGuardService $guardService
     ) {
     }
 
@@ -63,7 +64,7 @@ class LarpWorkflowService
     }
 
     /**
-     * Get available transitions with their labels
+     * Get available transitions with their labels and validation status
      */
     public function getAvailableTransitionsWithLabels(Larp $larp): array
     {
@@ -71,14 +72,27 @@ class LarpWorkflowService
         $result = [];
 
         foreach ($transitions as $transition) {
-            $result[$transition->getName()] = [
-                'name' => $transition->getName(),
-                'label' => $this->getTransitionLabel($transition->getName()),
+            $transitionName = $transition->getName();
+            $validationErrors = $this->guardService->getValidationErrors($larp, $transitionName);
+            
+            $result[$transitionName] = [
+                'name' => $transitionName,
+                'label' => $this->getTransitionLabel($transitionName),
                 'to' => $transition->getTos()[0] ?? null,
+                'canExecute' => empty($validationErrors),
+                'validationErrors' => $validationErrors,
             ];
         }
 
         return $result;
+    }
+
+    /**
+     * Get validation errors for a specific transition
+     */
+    public function getTransitionValidationErrors(Larp $larp, string $transitionName): array
+    {
+        return $this->guardService->getValidationErrors($larp, $transitionName);
     }
 
     /**

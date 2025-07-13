@@ -25,6 +25,7 @@
                     <h6>{{ 'larp.status.available_transitions'|trans }}</h6>
                     <div class="d-flex flex-wrap gap-2">
                         {% for transition in availableTransitions %}
+                        {% if transition.canExecute %}
                         <form method="post" action="{{ path('backoffice_larp_status_transition', {larp: larp.id, transitionName: transition.name}) }}" class="d-inline">
                             <input type="hidden" name="_token" value="{{ csrf_token('larp_transition_' ~ larp.id) }}">
                             <button type="submit" 
@@ -37,6 +38,26 @@
                                 {% endif %}
                             </button>
                         </form>
+                        {% else %}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
+                                {{ transition.label }}
+                                {% if transition.to %}
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span class="badge badge-light">{{ transition.to }}</span>
+                                {% endif %}
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><h6 class="dropdown-header">Requirements:</h6></li>
+                                {% for error in transition.validationErrors %}
+                                <li><span class="dropdown-item-text text-danger"><i class="fas fa-exclamation-circle"></i> {{ error }}</span></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -115,6 +136,10 @@
 .workflow-arrow {
     color: #666;
     margin: 5px 0;
+}
+
+.btn-group .dropdown-menu {
+    min-width: 300px;
 }
 </style>
 {% endblock %}
