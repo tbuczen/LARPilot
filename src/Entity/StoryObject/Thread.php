@@ -23,11 +23,13 @@ class Thread extends StoryObject
     private Collection $events;
 
     /** @var Collection<LarpCharacter> Specifically needed involved characters */
-    #[ORM\ManyToMany(targetEntity: LarpCharacter::class, mappedBy: 'threads')]
+    #[ORM\ManyToMany(targetEntity: LarpCharacter::class)]
+    #[ORM\JoinTable(name: 'thread_involved_characters')]
     private Collection $involvedCharacters;
 
     /** @var Collection<LarpFaction> Specifically needed involved factions */
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class, mappedBy: 'threads')]
+    #[ORM\ManyToMany(targetEntity: LarpFaction::class)]
+    #[ORM\JoinTable(name: 'thread_involved_factions')]
     private Collection $involvedFactions;
 
     /** @var Collection<Tag> */

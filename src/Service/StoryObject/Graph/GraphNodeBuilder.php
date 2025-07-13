@@ -75,7 +75,7 @@ readonly class GraphNodeBuilder
             return $object->getId()->toBase32();
         }
 
-        // Thread grouping
+        // Thread grouping - only if thread has quests or events
         if ($object instanceof Quest || $object instanceof Event) {
             $thread = $object->getThread();
             if ($thread) {
@@ -84,7 +84,11 @@ readonly class GraphNodeBuilder
         }
 
         if ($object instanceof Thread) {
-            return $object->getId()->toBase32();
+            // Only create group if thread has quests or events
+            if ($object->getQuests()->count() > 0 || $object->getEvents()->count() > 0) {
+                return $object->getId()->toBase32();
+            }
+            // If thread has no quests/events, don't create a group - it will be standalone
         }
 
         return null;

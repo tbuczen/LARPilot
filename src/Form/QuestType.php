@@ -91,7 +91,7 @@ class QuestType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'choice_label' => 'name',
+                'choice_label' => 'title',
                 'label' => 'form.quest.tags',
                 'required' => false,
                 'multiple' => true,

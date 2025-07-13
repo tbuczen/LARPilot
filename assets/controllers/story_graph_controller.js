@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import cytoscape from 'cytoscape';
 import { applyFactionGroupLayout } from '../utils/factionGroupLayout.js';
+import { applyThreadGroupLayout } from '../utils/threadGroupLayout.js';
 
 export default class extends Controller {
     static values = {
@@ -79,7 +80,6 @@ export default class extends Controller {
                         'background-color': '#d63384',
                     }
                 },
-
                 {
                     selector: 'node[type="factionGroup"]',
                     style: {
@@ -89,7 +89,7 @@ export default class extends Controller {
                 {
                     selector: 'node[type="threadGroup"]',
                     style: {
-                        'background-color': '#4A976EFF',
+                        'background-color': 'rgba(25,135,84,0.3)',
                     }
                 },
                 {
@@ -99,7 +99,6 @@ export default class extends Controller {
                         'border-width': 3,
                     }
                 },
-
                 {
                     selector: 'edge',
                     style: {
@@ -133,6 +132,39 @@ export default class extends Controller {
                     }
                 },
                 {
+                    selector: 'edge[type="involvement"]',
+                    style: {
+                        'width': 2,
+                        'line-color': '#28a745',
+                        'target-arrow-color': '#28a745',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier',
+                        'line-style': 'solid'
+                    }
+                },
+                {
+                    selector: 'edge[type="belongs_to"]',
+                    style: {
+                        'width': 1,
+                        'line-color': '#6c757d',
+                        'target-arrow-color': '#6c757d',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier',
+                        'line-style': 'dashed'
+                    }
+                },
+                {
+                    selector: 'edge[type="membership"]',
+                    style: {
+                        'width': 2,
+                        'line-color': '#007bff',
+                        'target-arrow-color': '#007bff',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier',
+                        'line-style': 'solid'
+                    }
+                },
+                {
                     selector: 'edge[type="related"]',
                     style: {
                         'width': 1,
@@ -152,6 +184,7 @@ export default class extends Controller {
 
         this.cy.once('layoutstop', () => {
             applyFactionGroupLayout(this.cy);
+            applyThreadGroupLayout(this.cy);
         });
 
         this.cy.layout({

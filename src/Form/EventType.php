@@ -89,7 +89,7 @@ class EventType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'choice_label' => 'name',
+                'choice_label' => 'title',
                 'label' => 'form.event.tags',
                 'required' => false,
                 'multiple' => true,

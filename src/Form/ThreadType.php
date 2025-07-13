@@ -73,7 +73,7 @@ class ThreadType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'choice_label' => 'name',
+                'choice_label' => 'title',
                 'label' => 'form.thread.tags',
                 'required' => false,
                 'multiple' => true,
