@@ -7,13 +7,11 @@ use App\Entity\Enum\RecruitmentProposalStatus;
 use App\Entity\Larp;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\RecruitmentProposal;
-use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\StoryRecruitment;
 use App\Form\Filter\QuestFilterType;
 use App\Form\QuestType;
 use App\Form\RecruitmentProposalType;
 use App\Form\StoryRecruitmentType;
-use App\Helper\Logger;
 use App\Repository\StoryObject\QuestRepository;
 use App\Repository\StoryObject\RecruitmentProposalRepository;
 use App\Repository\StoryObject\StoryRecruitmentRepository;
@@ -24,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}/story/quest/', name: 'backoffice_larp_story_quest_')]
-
 class QuestController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]

@@ -94,7 +94,9 @@ class LarpDashboardService
         $factionStats = [];
         foreach ($factions as $faction) {
             $factionParticipants = $participants->filter(function(LarpParticipant $participant) use ($faction) {
-                return $participant->getLarpCharacter()?->belongsToFaction($faction);
+                foreach ($participant->getLarpCharacters() as $larpCharacter) {
+                    return $larpCharacter?->belongsToFaction($faction);
+                }
             })->count();
             
             $factionStats[] = [

@@ -14,7 +14,7 @@ class TagFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', Filters\TextFilterType::class, [
+            ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
             ->add('target', Filters\EnumFilterType::class, [

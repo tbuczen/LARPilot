@@ -22,7 +22,7 @@ class TagController extends BaseController
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('t');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
-        $sort = $request->query->get('sort', 'name');
+        $sort = $request->query->get('sort', 'title');
         $dir = $request->query->get('dir', 'asc');
         $qb->orderBy('t.' . $sort, $dir);
         $qb->andWhere('t.larp = :larp')->setParameter('larp', $larp);

@@ -4,7 +4,6 @@ namespace App\Controller\Backoffice\Story;
 
 use App\Controller\BaseController;
 use App\Entity\Larp;
-use App\Entity\StoryObject\Relation;
 use App\Form\Filter\StoryGraphFilterType;
 use App\Repository\StoryObject\StoryObjectRepository;
 use App\Service\Larp\StoryObjectRelationExplorer;

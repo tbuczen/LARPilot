@@ -12,7 +12,6 @@ use App\Form\Filter\ThreadFilterType;
 use App\Form\RecruitmentProposalType;
 use App\Form\StoryRecruitmentType;
 use App\Form\ThreadType;
-use App\Helper\Logger;
 use App\Repository\StoryObject\RecruitmentProposalRepository;
 use App\Repository\StoryObject\StoryRecruitmentRepository;
 use App\Repository\StoryObject\ThreadRepository;
@@ -23,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}/story/thread/', name: 'backoffice_larp_story_thread_')]
-
 class ThreadController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]

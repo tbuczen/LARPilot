@@ -54,6 +54,8 @@ security:
     - { path: ^/player, roles: [ 'ROLE_USER' ] }
     - { path: ^/account, roles: [ 'ROLE_USER' ] }
     - { path: ^/api, roles: [ 'ROLE_API_USER' ] }
+    # LARP Backoffice Access Control
+    - { path: ^/backoffice/larp/[^/]+/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
   security:

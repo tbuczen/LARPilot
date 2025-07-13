@@ -18,8 +18,6 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: LarpApplicationRepository::class)]
 #[ORM\Index(columns: ['larp_id'])]
 #[ORM\Index(columns: ['user_id'])]
-#[ORM\Index(columns: ['preferred_tags_id'])]
-#[ORM\Index(columns: ['unwanted_tags_id'])]
 class LarpApplication implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
@@ -42,6 +40,7 @@ class LarpApplication implements Timestampable, CreatorAwareInterface
         $this->choices = new ArrayCollection();
         $this->preferredTags = new ArrayCollection();
         $this->unwantedTags = new ArrayCollection();
+        $this->status = SubmissionStatus::NEW;
     }
 
     #[ORM\Column(length: 50)]
@@ -210,10 +209,7 @@ class LarpApplication implements Timestampable, CreatorAwareInterface
 
     public function removeChoice(LarpApplicationChoice $choice): static
     {
-        if ($this->choices->removeElement($choice)) {
-            // orphanRemoval will handle deletion
-        }
-
+        $this->choices->removeElement($choice);
         return $this;
     }
 }

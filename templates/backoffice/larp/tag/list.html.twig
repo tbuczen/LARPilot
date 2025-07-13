@@ -26,7 +26,7 @@
                 <tbody>
                 {% for tag in tags %}
                     <tr>
-                        <td>{{ tag.name }}</td>
+                        <td>{{ tag.title }}</td>
                         <td>{{ tag.description|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_tag_modify', { larp: larp.id, tag: tag.id }) }}"
@@ -36,7 +36,7 @@
                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#globalDeleteTagModal"
                                     data-delete-text=" {{ 'common.delete'|trans }}"
-                                    data-character-id="{{ tag.id }}" data-character-name="{{ tag.name }}"
+                                    data-character-id="{{ tag.id }}" data-character-name="{{ tag.title }}"
                                     data-delete-url-base="{{ path('backoffice_larp_story_tag_delete', { larp: larp.id, tag: 'CHARACTER_ID' }) }}">
                                 {{ 'common.delete'|trans }}
                             </button>

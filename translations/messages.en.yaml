@@ -120,6 +120,8 @@ public:
     apply_for_character: 'Apply for character'
     application_form: 'Application Form'
     submit_application: 'Submit Application'
+    application_form_description: 'Use this form to apply for the most interesting roles, please select tags that are interesting for You to play and the tags that You would like to omit in Your gameplay (triggers)'
+    application_deadline: 'Deadline of application stage'
 
 
 #Translations specific for Larp Organizers backoffice
@@ -317,3 +319,5 @@ larp:
     confirmed.description: "Event confirmed and will happen"
     cancelled.description: "Event has been cancelled"
     completed.description: "Event has been completed"
+form:
+  character_choice: 'messages'

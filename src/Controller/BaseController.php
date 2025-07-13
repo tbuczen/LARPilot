@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Larp;
 use App\Entity\StoryObject\StoryObject;
 use App\Helper\Logger;
-use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Repository\StoryObject\ListableRepositoryInterface;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;

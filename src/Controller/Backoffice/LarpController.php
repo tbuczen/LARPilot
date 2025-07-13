@@ -64,14 +64,12 @@ class LarpController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'details', methods: ['GET'])]
+    #[Route('/{larp}', name: 'details', methods: ['GET'])]
     public function details(
-        string $id,
-        LarpRepository $larpRepository,
+        Larp $larp,
         LarpDashboardService $dashboardService
     ): Response {
-        $larp = $larpRepository->find($id);
-        
+
         if (!$this->isGranted(LarpDetailsVoter::VIEW, $larp)) {
             return $this->redirectToRoute('public_larp_list', [], 403);
         }

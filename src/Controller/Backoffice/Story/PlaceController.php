@@ -7,7 +7,6 @@ use App\Entity\Larp;
 use App\Entity\StoryObject\Place;
 use App\Form\Filter\PlaceFilterType;
 use App\Form\PlaceType;
-use App\Helper\Logger;
 use App\Repository\StoryObject\PlaceRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;

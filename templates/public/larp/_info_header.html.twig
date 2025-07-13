@@ -1,0 +1,71 @@
+
+{#
+    Parameters:
+    - larp: The LARP entity
+    - subtitle: Optional subtitle text to display under the title
+    - showManageButton: Optional boolean to show/hide manage button (defaults to true)
+#}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h1 class="card-title mb-0">
+            <i class="bi bi-dice-6 me-2"></i>{{ larp.name }}
+        </h1>
+        {% if (showManageButton is not defined or showManageButton) and is_granted('VIEW_BO_LARP_DETAILS', larp) %}
+            <div class="mt-2">
+                <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-gear me-1"></i>{{ 'common.manage'|trans }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <h6 class="text-muted mb-2">{{ 'common.description'|trans }}</h6>
+                <p class="mb-3">{{ larp.description }}</p>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body p-3">
+                        <h6 class="card-title text-primary mb-3">{{ 'common.details'|trans }}</h6>
+                        <ul class="list-unstyled mb-0 small">
+                            <li class="mb-2">
+                                <i class="bi bi-geo-alt text-muted me-2"></i>
+                                <strong>{{ 'common.location'|trans }}:</strong><br>
+                                <span class="ms-3">{{ larp.location }}</span>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-calendar-event text-muted me-2"></i>
+                                <strong>{{ 'common.start_date'|trans }}:</strong><br>
+                                <span class="ms-3">{{ larp.startDate|date('Y-m-d H:i') }}</span>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-calendar-event text-muted me-2"></i>
+                                <strong>{{ 'common.end_date'|trans }}:</strong><br>
+                                <span class="ms-3">{{ larp.endDate|date('Y-m-d H:i') }}</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-info-circle text-muted me-2"></i>
+                                <strong>{{ 'common.status'|trans }}:</strong><br>
+                                <span class="ms-3">
+                                    {% if larp.status.value == 'INQUIRIES' %}
+                                        <span class="badge bg-success">{{ larp.status.value }}</span>
+                                    {% elseif larp.status.value == 'PUBLISHED' %}
+                                        <span class="badge bg-info">{{ larp.status.value }}</span>
+                                    {% elseif larp.status.value == 'CONFIRMED' %}
+                                        <span class="badge bg-primary">{{ larp.status.value }}</span>
+                                    {% elseif larp.status.value == 'COMPLETED' %}
+                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">{{ larp.status.value }}</span>
+                                    {% endif %}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
