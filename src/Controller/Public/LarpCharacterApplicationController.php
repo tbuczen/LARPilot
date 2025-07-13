@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}', name: 'public_larp_application_')]
-class LarpCharacterSubmissionController extends BaseController
+class LarpCharacterApplicationController extends BaseController
 {
     #[Route('/submit', name: 'create', methods: ['GET', 'POST'])]
     public function create(

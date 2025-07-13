@@ -64,6 +64,9 @@ return [
     './controllers/csrf_protection_controller.js' => [
         'path' => './assets/controllers/csrf_protection_controller.js',
     ],
+    './controllers/sortable_character_choices_controller.js' => [
+        'path' => './assets/controllers/sortable_character_choices_controller.js',
+    ],
     './utils/factionGroupLayout.js' => [
         'path' => './assets/utils/factionGroupLayout.js',
     ],
@@ -109,5 +112,15 @@ return [
     '@fortawesome/fontawesome-free/css/all.css' => [
         'version' => '6.7.2',
         'type' => 'css',
+    ],
+    'select2' => [
+        'version' => '4.1.0-rc.0',
+    ],
+    'select2/dist/css/select2.min.css' => [
+        'version' => '4.1.0-rc.0',
+        'type' => 'css',
+    ],
+    'jquery-ui' => [
+        'version' => '1.14.1',
     ],
 ];

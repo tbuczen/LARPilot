@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LarpApplicationRepository::class)]
 #[ORM\Index(columns: ['larp_id'])]
@@ -25,10 +26,22 @@ class LarpApplication implements Timestampable, CreatorAwareInterface
     use TimestampableEntity;
     use CreatorAwareTrait;
 
+    /** @var Collection<Tag> */
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\JoinTable(name: 'larp_application_preferred_tags')]
+    private Collection $preferredTags;
+
+    /** @var Collection<Tag> */
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\JoinTable(name: 'larp_application_unwanted_tags')]
+    private Collection $unwantedTags;
+
     public function __construct()
     {
-        $this->id = \Symfony\Component\Uid\Uuid::v4();
+        $this->id = Uuid::v4();
         $this->choices = new ArrayCollection();
+        $this->preferredTags = new ArrayCollection();
+        $this->unwantedTags = new ArrayCollection();
     }
 
     #[ORM\Column(length: 50)]
@@ -58,13 +71,44 @@ class LarpApplication implements Timestampable, CreatorAwareInterface
     #[ORM\OneToMany(targetEntity: LarpApplicationChoice::class, mappedBy: 'application', cascade: ['persist'], orphanRemoval: true)]
     private Collection $choices;
 
-    /** @var Collection<Tag> */
-    #[ORM\ManyToOne(targetEntity: Tag::class)]
-    private Collection $preferredTags;
+    // Add these methods for tag management
+    public function getPreferredTags(): Collection
+    {
+        return $this->preferredTags;
+    }
 
-    /** @var Collection<Tag> */
-    #[ORM\ManyToOne(targetEntity: Tag::class)]
-    private Collection $unwantedTags;
+    public function addPreferredTag(Tag $tag): static
+    {
+        if (!$this->preferredTags->contains($tag)) {
+            $this->preferredTags->add($tag);
+        }
+        return $this;
+    }
+
+    public function removePreferredTag(Tag $tag): static
+    {
+        $this->preferredTags->removeElement($tag);
+        return $this;
+    }
+
+    public function getUnwantedTags(): Collection
+    {
+        return $this->unwantedTags;
+    }
+
+    public function addUnwantedTag(Tag $tag): static
+    {
+        if (!$this->unwantedTags->contains($tag)) {
+            $this->unwantedTags->add($tag);
+        }
+        return $this;
+    }
+
+    public function removeUnwantedTag(Tag $tag): static
+    {
+        $this->unwantedTags->removeElement($tag);
+        return $this;
+    }
 
     public function getStatus(): ?SubmissionStatus
     {

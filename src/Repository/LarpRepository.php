@@ -59,8 +59,17 @@ class LarpRepository extends BaseRepository
         $qb = $this->createQueryBuilder('l')
             ->orderBy('l.startDate', 'ASC');
 
+        // Use the statuses that are visible for everyone
+        $visibleStatuses = [
+            LarpStageStatus::PUBLISHED->value,
+            LarpStageStatus::INQUIRIES->value,
+            LarpStageStatus::CONFIRMED->value,
+            LarpStageStatus::COMPLETED->value,
+            LarpStageStatus::CANCELLED->value,
+        ];
+
         $upcoming = $qb->expr()->andX(
-            $qb->expr()->eq('l.status', ':published'),
+            $qb->expr()->in('l.status', ':visibleStatuses'),
             $qb->expr()->gte('l.startDate', ':now')
         );
 
@@ -79,11 +88,11 @@ class LarpRepository extends BaseRepository
             );
             $qb->setParameter('currentUser', $currentUser);
         } else {
-            // If no user is logged in, only published upcoming larps are shown.
+            // If no user is logged in, only visible upcoming larps are shown.
             $qb->where($upcoming);
         }
 
-        $qb->setParameter('published', LarpStageStatus::PUBLISHED->value)
+        $qb->setParameter('visibleStatuses', $visibleStatuses)
             ->setParameter('now', $now);
 
         return $qb->getQuery()->getResult();

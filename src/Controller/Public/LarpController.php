@@ -4,6 +4,7 @@ namespace App\Controller\Public;
 
 use App\Entity\Larp;
 use App\Entity\LarpInvitation;
+use App\Repository\LarpApplicationRepository;
 use App\Repository\LarpInvitationRepository;
 use App\Repository\LarpRepository;
 use App\Repository\UserSocialAccountRepository;
@@ -39,11 +40,36 @@ class LarpController extends AbstractController
     }
 
     #[Route('/larp/{slug}', name: 'details', methods: ['GET'])]
-    public function details(string $slug, LarpRepository $larpRepository): Response
+    public function details(
+        string $slug,
+        LarpRepository $larpRepository,
+        LarpApplicationRepository $applicationRepository
+    ): Response
     {
         $larp = $larpRepository->findOneBy(['slug' => $slug]);
+        
+        if (!$larp) {
+            throw $this->createNotFoundException('LARP not found');
+        }
+        
+        $user = $this->getUser();
+        $userIsParticipant = false;
+        $userHasApplication = false;
+        
+        if ($user) {
+            // Check if user is already a participant
+            $userIsParticipant = $larp->getParticipants()->exists(function($key, $participant) use ($user) {
+                return $participant->getUser() === $user;
+            });
+        
+            // Check if user already has an application
+            $userHasApplication = $applicationRepository->findOneBy(['larp' => $larp, 'user' => $user]) !== null;
+        }
+        
         return $this->render('public/larp/details.html.twig', [
             'larp' => $larp,
+            'userIsParticipant' => $userIsParticipant,
+            'userHasApplication' => $userHasApplication,
         ]);
     }
 

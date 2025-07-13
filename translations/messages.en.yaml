@@ -94,6 +94,10 @@ common:
   generate_reports: 'Generate Reports'
   yes: 'Yes'
   no: 'No'
+  details: 'Details'
+  start_date: 'Start Date'
+  end_date: 'End Date'
+  status: 'Status'
 
 #Translations specific to public part of the app
 public:
@@ -106,6 +110,17 @@ public:
       you_are_invited: 'You are invited to join as'
       accepted: 'You have been added as participant for the larp!'
       login_to_accept: 'Log in to accept the invitation'
+    character_application: 'Apply for LARP'
+    already_participant: 'You are already participating!'
+    login_required_to_apply: 'You need to be logged in to apply'
+    login_required_description: 'messages'
+    application_already_submitted: 'You have already submitted application'
+    application_open: 'Application form is open'
+    application_open_description: 'LARP is ready to collect Your application'
+    apply_for_character: 'Apply for character'
+    application_form: 'Application Form'
+    submit_application: 'Submit Application'
+
 
 #Translations specific for Larp Organizers backoffice
 backoffice:

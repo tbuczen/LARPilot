@@ -1,12 +1,121 @@
 {% extends 'public/base.html.twig' %}
 
 {% block body %}
-    <h1>LARP {{ larp.name }}</h1>
-    {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
-        <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}" class="btn btn-secondary">
-            {{ 'common.manage'|trans }}
-        </a>
-    {% endif %}
-
-
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="card-title mb-0">{{ larp.name }}</h1>
+                        {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
+                            <div class="mt-2">
+                                <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}" class="btn btn-light btn-sm">
+                                    <i class="fas fa-cog me-1"></i>{{ 'common.manage'|trans }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="text-muted mb-3">{{ 'common.description'|trans }}</h5>
+                                <p class="mb-4">{{ larp.description }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary">{{ 'common.details'|trans }}</h6>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2">
+                                                <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                                                <strong>{{ 'common.location'|trans }}:</strong><br>
+                                                <span class="ms-3">{{ larp.location }}</span>
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                                <strong>{{ 'common.start_date'|trans }}:</strong><br>
+                                                <span class="ms-3">{{ larp.startDate|date('Y-m-d H:i') }}</span>
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                                <strong>{{ 'common.end_date'|trans }}:</strong><br>
+                                                <span class="ms-3">{{ larp.endDate|date('Y-m-d H:i') }}</span>
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-info-circle text-muted me-2"></i>
+                                                <strong>{{ 'common.status'|trans }}:</strong><br>
+                                                <span class="ms-3">
+                                                    {% if larp.status.value == 'INQUIRIES' %}
+                                                        <span class="badge bg-success">{{ larp.status.value }}</span>
+                                                    {% elseif larp.status.value == 'PUBLISHED' %}
+                                                        <span class="badge bg-info">{{ larp.status.value }}</span>
+                                                    {% elseif larp.status.value == 'CONFIRMED' %}
+                                                        <span class="badge bg-primary">{{ larp.status.value }}</span>
+                                                    {% elseif larp.status.value == 'COMPLETED' %}
+                                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning">{{ larp.status.value }}</span>
+                                                    {% endif %}
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if larp.status.value == 'INQUIRIES' %}
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header bg-success text-white">
+                            <h3 class="card-title mb-0">
+                                <i class="fas fa-user-plus me-2"></i>{{ 'public.larp.character_application'|trans }}
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            {% if not app.user %}
+                                <div class="text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-sign-in-alt fa-3x text-primary mb-3"></i>
+                                        <h5 class="text-muted">{{ 'public.larp.login_required_to_apply'|trans }}</h5>
+                                        <p class="text-muted">{{ 'public.larp.login_required_description'|trans }}</p>
+                                    </div>
+                                    <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-sign-in-alt me-2"></i>{{ 'common.login'|trans }}
+                                    </a>
+                                </div>
+                            {% elseif userIsParticipant %}
+                                <div class="text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                        <h5 class="text-success">{{ 'public.larp.already_participant'|trans }}</h5>
+                                    </div>
+                                </div>
+                            {% elseif userHasApplication %}
+                                <div class="text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-hourglass-half fa-3x text-warning mb-3"></i>
+                                        <h5 class="text-warning">{{ 'public.larp.application_already_submitted'|trans }}</h5>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-user-plus fa-3x text-success mb-3"></i>
+                                        <h5 class="text-success">{{ 'public.larp.application_open'|trans }}</h5>
+                                        <p class="text-muted">{{ 'public.larp.application_open_description'|trans }}</p>
+                                    </div>
+                                    <a href="{{ path('public_larp_application_create', {'larp': larp.id}) }}" class="btn btn-success btn-lg">
+                                        <i class="fas fa-paper-plane me-2"></i>{{ 'public.larp.apply_for_character'|trans }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
