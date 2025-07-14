@@ -6,7 +6,7 @@
         {% if larps|length > 0 %}
             <div class="list-group">
                 {% for larp in larps %}
-                    <a href="{{ path('backoffice_larp_details', {'id': larp.id}) }}" class="list-group-item list-group-item-action">
+                    <a href="{{ path('backoffice_larp_details', {'larp': larp.id}) }}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <div><small>{{ larp.status.value }}</small><h5 class="mb-1">{{ larp.name }}</h5></div>
                             <small>{{ larp.startDate|date('Y-m-d') }}</small>

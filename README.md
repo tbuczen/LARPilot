@@ -48,6 +48,7 @@ uczestnikami, a także narzędzia do raportowania i obsługi incydentów.
    ```
 2. Set up js env
    - php bin/console importmap:install
+   - php bin/console sass:build
    - php ./bin/console asset-map:compile
 
 3. Configure your environment variables. Copy `.env` to `.env.local` and update database credentials and API keys as needed. Example variables are included in `.env`.

@@ -1,5 +1,12 @@
+// Import component stylesheets
+@import "./components/sidebar_menu";
+@import "./components/character_choice_styles";
+@import "./components/folder_browser";
+@import "./components/wysiwyg";
+
+
 body {
-    background-color: skyblue;
+    background-color: red;
 }
 
 header {
@@ -10,28 +17,11 @@ header {
 a.nav-link.active {
     font-weight: bold;
 }
+
 #flashMessages {
     position: absolute;
     right: 0;
     bottom: 0;
-}
-
-#sidebarMenuButton {
-    position: fixed;
-    top: 1.75rem;
-    right: 1rem;
-    z-index: 1100;
-}
-#sidebarMenu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 300px; /* Adjust width as needed */
-    height: 100%;
-    background: #fff;
-    border-left: 1px solid #ddd;
-    overflow-y: auto;
-    z-index: 1050; /* Above main content */
 }
 
 :root {
@@ -74,10 +64,10 @@ a.nav-link.active {
     }
 }
 
-
 .toggleIcon.rotate {
     transform: rotate(180deg);
 }
+
 .transition {
     transition: transform 0.3s ease;
 }

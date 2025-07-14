@@ -52,7 +52,7 @@ class LarpController extends AbstractController
 
             $this->addFlash('success', 'Larp created as DRAFT.');
 
-            return $this->redirectToRoute('backoffice_larp_details', ['id' => $dto->larpId]);
+            return $this->redirectToRoute('backoffice_larp_details', ['larp' => $dto->larpId]);
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {

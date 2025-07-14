@@ -432,6 +432,9 @@
             "./config/packages/workflow.yaml"
         ]
     },
+    "symfonycasts/sass-bundle": {
+        "version": "v0.8.2"
+    },
     "twig/extra-bundle": {
         "version": "v3.20.0"
     },

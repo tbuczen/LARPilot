@@ -28,18 +28,18 @@ return [
     'sortablejs' => [
         'path' => './assets/vendor/sortable.esm.js',
     ],
-    './styles/app.css' => [
-        'path' => './assets/styles/app.css',
+    './styles/app.scss' => [
+        'path' => './assets/styles/app.scss',
         'type' => 'css',
     ],
-    './styles/folder_browser.css' => [
-        'path' => './assets/styles/folder_browser.css',
-        'type' => 'css',
-    ],
-    './styles/wysiwyg.css' => [
-        'path' => './assets/styles/wysiwyg.css',
-        'type' => 'css',
-    ],
+//    './styles/folder_browser.css' => [
+//        'path' => './assets/styles/folder_browser.css',
+//        'type' => 'css',
+//    ],
+//    './styles/wysiwyg.css' => [
+//        'path' => './assets/styles/wysiwyg.css',
+//        'type' => 'css',
+//    ],
     './controllers/integrations/folder_browser_controller.js' => [
         'path' => './assets/controllers/integrations/folder_browser_controller.js',
     ],
