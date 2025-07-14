@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Enum\LarpCharacterSystem;
+use App\Entity\Enum\LarpSetting;
 use App\Entity\Enum\LarpStageStatus;
-use App\Entity\LarpApplication;
+use App\Entity\Enum\LarpType;
 use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Entity\StoryObject\LarpFaction;
@@ -28,9 +30,9 @@ class Larp implements Timestampable, CreatorAwareInterface
     use CreatorAwareTrait;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $title = null;
 
-    #[Gedmo\Slug(fields: ['name'])]
+    #[Gedmo\Slug(fields: ['title'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
@@ -43,14 +45,24 @@ class Larp implements Timestampable, CreatorAwareInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $location = null;
+    #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'larps')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Location $location = null;
 
     #[ORM\Column(length: 255)]
     private ?LarpStageStatus $status = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
     private int $maxCharacterChoices = 1;
+
+    #[ORM\Column(nullable: true, enumType: LarpSetting::class)]
+    private ?LarpSetting $setting = null;
+
+    #[ORM\Column(nullable: true, enumType: LarpType::class)]
+    private ?LarpType $type = null;
+
+    #[ORM\Column(nullable: true, enumType: LarpCharacterSystem::class)]
+    private ?LarpCharacterSystem $characterSystem = null;
 
     /** @var Collection<LarpCharacter> */
     #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larp')]
@@ -67,6 +79,7 @@ class Larp implements Timestampable, CreatorAwareInterface
     /** @var Collection<Event> */
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'larp')]
     private Collection $events;
+
     /** @var Collection<Skill> */
     #[ORM\OneToMany(targetEntity: Skill::class, mappedBy: 'larp')]
     private Collection $skills;
@@ -91,15 +104,14 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->events = new ArrayCollection();
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): static
+    public function setTitle(string $title): static
     {
-        $this->name = $name;
-
+        $this->title = $title;
         return $this;
     }
 
@@ -121,7 +133,6 @@ class Larp implements Timestampable, CreatorAwareInterface
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -133,7 +144,6 @@ class Larp implements Timestampable, CreatorAwareInterface
     public function setStartDate(\DateTimeInterface $startDate): static
     {
         $this->startDate = $startDate;
-
         return $this;
     }
 
@@ -145,19 +155,17 @@ class Larp implements Timestampable, CreatorAwareInterface
     public function setEndDate(\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
-
         return $this;
     }
 
-    public function getLocation(): ?string
+    public function getLocation(): ?Location
     {
         return $this->location;
     }
 
-    public function setLocation(string $location): static
+    public function setLocation(?Location $location): static
     {
         $this->location = $location;
-
         return $this;
     }
 
@@ -169,7 +177,6 @@ class Larp implements Timestampable, CreatorAwareInterface
     public function setStatus(LarpStageStatus $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -181,8 +188,54 @@ class Larp implements Timestampable, CreatorAwareInterface
     public function setMaxCharacterChoices(int $maxCharacterChoices): static
     {
         $this->maxCharacterChoices = $maxCharacterChoices;
-
         return $this;
+    }
+
+    public function getSetting(): ?LarpSetting
+    {
+        return $this->setting;
+    }
+
+    public function setSetting(?LarpSetting $setting): static
+    {
+        $this->setting = $setting;
+        return $this;
+    }
+
+    public function getType(): ?LarpType
+    {
+        return $this->type;
+    }
+
+    public function setType(?LarpType $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getCharacterSystem(): ?LarpCharacterSystem
+    {
+        return $this->characterSystem;
+    }
+
+    public function setCharacterSystem(?LarpCharacterSystem $characterSystem): static
+    {
+        $this->characterSystem = $characterSystem;
+        return $this;
+    }
+
+    public function getDuration(): int
+    {
+        if (!$this->startDate || !$this->endDate) {
+            return 0;
+        }
+        
+        return $this->endDate->diff($this->startDate)->days + 1;
+    }
+
+    public function getCoordinates(): ?array
+    {
+        return $this->location?->getCoordinates();
     }
 
     /**
@@ -199,19 +252,16 @@ class Larp implements Timestampable, CreatorAwareInterface
             $this->characters->add($character);
             $character->setLarp($this);
         }
-
         return $this;
     }
 
     public function removeCharacter(LarpCharacter $character): static
     {
         if ($this->characters->removeElement($character)) {
-            // set the owning side to null (unless already changed)
             if ($character->getLarp() === $this) {
                 $character->setLarp(null);
             }
         }
-
         return $this;
     }
 
@@ -257,17 +307,11 @@ class Larp implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
-    /**
-     * @return Collection<LarpParticipant>
-     */
     public function getParticipants(): Collection
     {
         return $this->larpParticipants;
     }
 
-    /**
-     * @return Collection<LarpApplication>
-     */
     public function getApplications(): Collection
     {
         return $this->applications;
@@ -278,9 +322,6 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->applications = $applications;
     }
 
-    /**
-     * @return Collection<LarpParticipant>
-     */
     public function getLarpParticipants(): Collection
     {
         return $this->larpParticipants;
@@ -291,9 +332,6 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->larpParticipants = $larpParticipants;
     }
 
-    /**
-     * @return Collection<Event>
-     */
     public function getEvents(): Collection
     {
         return $this->events;
@@ -304,9 +342,6 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->events = $events;
     }
 
-    /**
-     * @return Collection<Skill>
-     */
     public function getSkills(): Collection
     {
         return $this->skills;
@@ -327,26 +362,18 @@ class Larp implements Timestampable, CreatorAwareInterface
         $this->integrations = $integrations;
     }
 
-
-    /**
-     * Get the marking (status) as string for workflow
-     */
     public function getMarking(): string
     {
         return $this->status?->value ?? LarpStageStatus::DRAFT->value;
     }
 
-    /**
-     * Set the marking (status) from string for workflow
-     */
     public function setMarking(string $marking): void
     {
         $this->status = LarpStageStatus::from($marking);
     }
 
-
     public function __toString(): string
     {
-        return $this->name;
+        return $this->title ?? '';
     }
 }

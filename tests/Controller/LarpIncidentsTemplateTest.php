@@ -5,6 +5,7 @@ namespace App\Tests\Controller;
 use App\Entity\Enum\LarpIncidentStatus;
 use App\Entity\Larp;
 use App\Entity\LarpIncident;
+use App\Entity\Location;
 use App\Form\Filter\LarpIncidentFilterType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -19,12 +20,12 @@ class LarpIncidentsTemplateTest extends KernelTestCase
         $container->get('request_stack')->push(new \Symfony\Component\HttpFoundation\Request());
 
         $larp = new Larp();
-        $larp->setName('Test');
+        $larp->setTitle('Test');
         $larp->setSlug('test');
         $larp->setDescription('d');
         $larp->setStartDate(new \DateTime());
         $larp->setEndDate(new \DateTime());
-        $larp->setLocation('loc');
+        $larp->setLocation(new Location());
 
         $incident = new LarpIncident();
         $incident->setLarp($larp);
@@ -50,7 +51,7 @@ class LarpIncidentsTemplateTest extends KernelTestCase
         ]);
 
         $larp = new Larp();
-        $larp->setName('Test');
+        $larp->setTitle('Test');
 
         $incidentA = new LarpIncident();
         $incidentA->setLarp($larp);

@@ -24,6 +24,10 @@ readonly class LarpBackofficeSecurityListener
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
         // Check if this is a LARP backoffice route
+        if ($route === 'backoffice_larp_list' || $route === 'backoffice_larp_create') {
+            return;
+        }
+
         if (!$route || !str_starts_with($route, 'backoffice_larp_')) {
             return;
         }

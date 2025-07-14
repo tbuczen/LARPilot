@@ -25,9 +25,9 @@ class LarpCharacterRepository extends BaseRepository implements ListableReposito
         parent::__construct($registry, LarpCharacter::class);
     }
 
-    public function createListQueryBuilder(Larp $larp): QueryBuilder
+    public function decorateLarpListQueryBuilder(QueryBuilder $qb, Larp $larp): QueryBuilder
     {
-        return $this->createQueryBuilder('c')
+        return $qb
             ->innerJoin('c.larp', 'l')
             ->innerJoin(StoryObject::class, 's', 'WITH', 'c.id = s.id')
             ->andWhere('c.larp = :larp')

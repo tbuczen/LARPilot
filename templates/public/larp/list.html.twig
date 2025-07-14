@@ -3,27 +3,101 @@
 {% block title %}{{ 'public.larp.list'|trans }}{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1 class="mb-4">{{ 'public.larp.list'|trans }}</h1>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">{{ 'public.larp.list'|trans }}</h1>
 
-        {% if larps|length > 0 %}
-            <div class="list-group">
+            {% if filterForm is defined %}
+                {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+            {% endif %}
+
+            <div class="row">
                 {% for larp in larps %}
-                    <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <div><small>{{ larp.status.value }}</small><h5 class="mb-1">{{ larp.name }}</h5></div>
-                            <small>{{ larp.startDate|date('Y-m-d') }}</small>
-                        </div>
-                        <p class="mb-1">{{ larp.description|striptags|slice(0, 150) ~ '...' }}</p>
-                        <small>{{ larp.location }}</small>
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ larp.title }}</h5>
+                                <p class="card-text">{{ larp.description }}</p>
 
-                    </a>
+                                <div class="mb-2">
+                                    <strong>Status:</strong>
+                                    <span class="badge bg-{{ larp.status.value == 'PUBLISHED' ? 'primary' : (larp.status.value == 'CONFIRMED' ? 'success' : 'secondary') }}">
+                                        {{ larp.status.value|title }}
+                                    </span>
+                                </div>
+
+                                {% if larp.setting %}
+                                    <div class="mb-2">
+                                        <strong>Setting:</strong>
+                                        <span class="badge bg-info">{{ larp.setting.label }}</span>
+                                    </div>
+                                {% endif %}
+
+                                {% if larp.type %}
+                                    <div class="mb-2">
+                                        <strong>Type:</strong>
+                                        <span class="badge bg-warning">{{ larp.type.label }}</span>
+                                    </div>
+                                {% endif %}
+
+                                {% if larp.characterSystem %}
+                                    <div class="mb-2">
+                                        <strong>Characters:</strong>
+                                        <span class="badge bg-dark">{{ larp.characterSystem.label }}</span>
+                                    </div>
+                                {% endif %}
+
+                                <div class="mb-2">
+                                    <strong>Date:</strong> {{ larp.startDate|date('Y-m-d') }} - {{ larp.endDate|date('Y-m-d') }}
+                                </div>
+
+                                <div class="mb-2">
+                                    <strong>Duration:</strong> {{ larp.duration }} day{{ larp.duration > 1 ? 's' : '' }}
+                                </div>
+
+                                {% if larp.location %}
+                                    <div class="mb-2">
+                                        <strong>Location:</strong>
+                                        <a href="{{ path('public_location_details', {'slug': larp.location.slug}) }}" class="text-decoration-none">
+                                            {{ larp.location.title }}
+                                        </a>
+                                        <br><small class="text-muted">{{ larp.location.city }}{% if larp.location.country %}, {{ larp.location.country }}{% endif %}</small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-primary">
+                                    View Details
+                                </a>
+{#                                {% if larp.location %}#}
+{#                                    <a href="{{ path('public_location_details', {'slug': larp.location.slug}) }}" class="btn btn-outline-secondary btn-sm">#}
+{#                                        <i class="bi bi-geo-alt"></i> Location#}
+{#                                    </a>#}
+{#                                {% endif %}#}
+                                {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
+                                    <a href="{{ path('backoffice_larp_details', {'larp': larp.id}) }}" class="btn btn-secondary">
+                                        <i class="bi bi-gear me-1"></i>{{ 'common.manage'|trans }}
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> No LARPs found matching your criteria.
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
-        {% else %}
-            <div class="alert alert-info">
-                {{ 'public.larp.no_larps'|trans }}
+
+            <!-- Pagination -->
+            <div class="mt-3 d-flex justify-content-center">
+                {{ knp_pagination_render(larps) }}
             </div>
-        {% endif %}
+        </div>
     </div>
+</div>
+
 {% endblock %}

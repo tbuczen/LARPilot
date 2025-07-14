@@ -19,7 +19,7 @@ readonly class SubmitLarpHandler
     public function handle(SubmitLarpCommand $command): SubmitLarpDTO
     {
         $larp = new Larp();
-        $larp->setName($command->name);
+        $larp->setTitle($command->name);
         $larp->setDescription($command->description);
         if ($command->location !== null) {
             $larp->setLocation($command->location);
@@ -36,7 +36,7 @@ readonly class SubmitLarpHandler
         return new SubmitLarpDTO(
             $larp->getId()->toRfc4122(),
             $larp->getStatus()->value,
-            $larp->getName(),
+            $larp->getTitle(),
         );
     }
 

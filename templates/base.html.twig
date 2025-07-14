@@ -58,12 +58,14 @@
             function openSidebar() {
                 sidebar.classList.add('open');
                 sidebarOverlay.classList.add('active');
+                sidebarButton.classList.add('hidden'); // Hide the button
                 document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
             }
             
             function closeSidebar() {
                 sidebar.classList.remove('open');
                 sidebarOverlay.classList.remove('active');
+                sidebarButton.classList.remove('hidden'); // Show the button
                 document.body.style.overflow = '';
             }
             

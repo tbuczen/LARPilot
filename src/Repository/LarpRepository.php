@@ -2,57 +2,31 @@
 
 namespace App\Repository;
 
+use App\Entity\Enum\LarpCharacterSystem;
+use App\Entity\Enum\LarpSetting;
 use App\Entity\Enum\LarpStageStatus;
+use App\Entity\Enum\LarpType;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Larp>
- *
- * @method null|Larp find($id, $lockMode = null, $lockVersion = null)
- * @method null|Larp findOneBy(array $criteria, array $orderBy = null)
- * @method Larp[]    findAll()
- * @method Larp[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class LarpRepository extends BaseRepository
+class LarpRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Larp::class);
     }
 
-    //    /**
-    //     * @return Larp[] Returns an array of Larp objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('l.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Larp
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
-
     /**
      * @return Larp[]
      */
-    public function findAllUpcomingPublished(?User $currentUser = null): array
+    public function findAllUpcomingPublished(?UserInterface $currentUser = null): QueryBuilder
     {
         $now = new \DateTimeImmutable();
 
@@ -95,24 +69,55 @@ class LarpRepository extends BaseRepository
         $qb->setParameter('visibleStatuses', $visibleStatuses)
             ->setParameter('now', $now);
 
-        return $qb->getQuery()->getResult();
+        return $qb;
     }
 
-    public function findAllWhereParticipating(User $user): array
+    private function applyFilters(QueryBuilder $qb, array $filters): void
     {
-        $qb = $this->createQueryBuilder('l');
+        if (!empty($filters['status'])) {
+            $qb->andWhere('l.status = :status')
+               ->setParameter('status', $filters['status']);
+        }
 
-        $subQb = $this->getEntityManager()->createQueryBuilder();
-        $subQb->select('1')
-            ->from(LarpParticipant::class, 'lp')
-            ->where('lp.larp = l')
-            ->andWhere('lp.user = :currentUser');
+        if (!empty($filters['setting'])) {
+            $qb->andWhere('l.setting = :setting')
+               ->setParameter('setting', $filters['setting']);
+        }
 
-        $qb->where(
-            $qb->expr()->exists($subQb->getDQL())
-        );
-        $qb->setParameter('currentUser', $user);
+        if (!empty($filters['type'])) {
+            $qb->andWhere('l.type = :type')
+               ->setParameter('type', $filters['type']);
+        }
 
-        return $qb->getQuery()->getResult();
+        if (!empty($filters['characterSystem'])) {
+            $qb->andWhere('l.characterSystem = :characterSystem')
+               ->setParameter('characterSystem', $filters['characterSystem']);
+        }
+
+        if (!empty($filters['location'])) {
+            $qb->andWhere('loc.city LIKE :location OR loc.country LIKE :location OR loc.title LIKE :location OR loc.address LIKE :location')
+               ->setParameter('location', '%' . $filters['location'] . '%');
+        }
+
+        if (!empty($filters['dateFrom'])) {
+            $qb->andWhere('l.startDate >= :dateFrom')
+               ->setParameter('dateFrom', $filters['dateFrom']);
+        }
+
+        if (!empty($filters['dateTo'])) {
+            $qb->andWhere('l.endDate <= :dateTo')
+               ->setParameter('dateTo', $filters['dateTo']);
+        }
+
+        if (!empty($filters['minDuration'])) {
+            $qb->andWhere('DATEDIFF(l.endDate, l.startDate) + 1 >= :minDuration')
+               ->setParameter('minDuration', $filters['minDuration']);
+        }
+
+        if (!empty($filters['maxDuration'])) {
+            $qb->andWhere('DATEDIFF(l.endDate, l.startDate) + 1 <= :maxDuration')
+               ->setParameter('maxDuration', $filters['maxDuration']);
+        }
     }
+
 }

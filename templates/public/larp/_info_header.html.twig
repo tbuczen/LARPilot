@@ -7,7 +7,7 @@
 #}
 <div class="card shadow-sm">
     <div class="card-header bg-primary text-white">
-        <h1 class="card-title mb-0">{{ larp.name }}</h1>
+        <h1 class="card-title mb-0">{{ larp.title }}</h1>
         {% if (showManageButton is not defined or showManageButton) and is_granted('VIEW_BO_LARP_DETAILS', larp) %}
             <div class="mt-2">
                 <a href="{{ path('backoffice_larp_details', {'larp': larp.id}) }}" class="btn btn-light btn-sm">

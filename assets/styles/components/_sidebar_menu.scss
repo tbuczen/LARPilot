@@ -22,6 +22,19 @@ $desktop-min: 769px;
     top: 1.75rem;
     right: 1rem;
     z-index: 1100;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    // Hide button when sidebar is open
+    &.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+// Alternative approach: Lower z-index when sidebar is open
+.sidebar-menu.open ~ #sidebarMenuButton {
+    z-index: 1040; // Lower than sidebar
 }
 
 // Sidebar menu main container
@@ -40,6 +53,7 @@ $desktop-min: 769px;
 
     &.open {
         right: 0; // Show sidebar
+        z-index: 1060; // Higher than button when open
     }
 }
 

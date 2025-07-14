@@ -9,6 +9,7 @@ use App\Repository\StoryObject\ListableRepositoryInterface;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
@@ -47,9 +48,13 @@ class BaseController extends AbstractController
         }
     }
 
-    protected function getListQueryBuilder(ListableRepositoryInterface $repository, Larp $larp, FormInterface $filterForm, Request $request): QueryBuilder
+    protected function getListQueryBuilder(EntityRepository $repo, FormInterface $filterForm, Request $request, ?Larp $larp = null): QueryBuilder
     {
-        $qb = $repository->createListQueryBuilder($larp);
+        $qb = $repo->createQueryBuilder('c');
+        if ($larp !== null && $repo instanceof ListableRepositoryInterface) {
+            $qb = $repo->decorateLarpListQueryBuilder($qb, $larp);
+        }
+
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
         $sort = $request->query->get('sort', 'title');
         $dir = $request->query->get('dir', 'asc');

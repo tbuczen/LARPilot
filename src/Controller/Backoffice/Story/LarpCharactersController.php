@@ -36,7 +36,7 @@ class LarpCharactersController extends BaseController
     ): Response {
         $filterForm = $this->createForm(LarpCharacterFilterType::class, options: ['larp' => $larp]);
         $filterForm->handleRequest($request);
-        $qb = $this->getListQueryBuilder($repository, $larp, $filterForm, $request);
+        $qb = $this->getListQueryBuilder($repository, $filterForm, $request, $larp);
         $pagination = $this->getPagination($qb, $request);
         $this->entityPreloader->preload($pagination->getItems(), 'factions');
         $this->entityPreloader->preload($pagination->getItems(), 'storyWriter');

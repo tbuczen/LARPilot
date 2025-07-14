@@ -2,26 +2,19 @@
 
 namespace App\Controller\Public;
 
-use App\Entity\Larp;
-use App\Entity\LarpInvitation;
+use App\Controller\BaseController;
+use App\Form\Filter\LarpPublicFilterType;
 use App\Repository\LarpApplicationRepository;
 use App\Repository\LarpInvitationRepository;
 use App\Repository\LarpRepository;
-use App\Repository\UserSocialAccountRepository;
 use App\Service\Larp\LarpManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/', name: 'public_larp_')]
-class LarpController extends AbstractController
+class LarpController extends BaseController
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
 
     #[Route('/terms', name: 'terms', methods: ['GET'])]
     public function terms(): Response
@@ -31,11 +24,16 @@ class LarpController extends AbstractController
     }
 
     #[Route('/', name: 'list', methods: ['GET'])]
-    public function list(LarpRepository $larpRepository): Response
+    public function list(Request $request, LarpRepository $larpRepository): Response
     {
-        $larps = $larpRepository->findAllUpcomingPublished($this->getUser());
+        $filterForm = $this->createForm(LarpPublicFilterType::class);
+        $filterForm->handleRequest($request);
+        $qb = $this->getListQueryBuilder($larpRepository, $filterForm, $request);
+        $pagination = $this->getPagination($qb, $request);
+
         return $this->render('public/larp/list.html.twig', [
-            'larps' => $larps,
+            'larps' => $pagination,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 

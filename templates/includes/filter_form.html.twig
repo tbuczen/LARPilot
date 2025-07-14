@@ -16,6 +16,7 @@
                     <button type="submit" class="btn btn-outline-primary">{{ 'common.filter'|trans }}</button>
                     <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
                        class="btn btn-outline-secondary">{{ 'common.clear'|trans }}</a>
+                    {% if larp is defined %}
                     <div class="d-inline-block">
                         {{ component('SaveFilterForm', {
                             formName: form.vars.name,
@@ -23,6 +24,7 @@
                             larpId: larp.id
                         }) }}
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
