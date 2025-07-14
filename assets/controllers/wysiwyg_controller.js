@@ -17,19 +17,22 @@ export default class extends Controller {
         this.searchCache = new Map(); // Cache search results
         
             // Check if the CSRF token is available in the page
-            this.csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        this.csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-            // Get the LARP ID from the data attribute or from the URL
-            if (!this.hasLarpValue) {
-                const match = window.location.pathname.match(/\/larp\/([^/]+)/);
-                if (match) {
-                    this.larpValue = match[1];
-                } else {
-                    console.error('WYSIWYG Editor: No LARP ID provided');
-                    return; // Don't initialize if no LARP ID is available
+        // Get the LARP ID from the data attribute or from the URL, if possible
+        if (!this.hasLarpValue) {
+            const match = window.location.pathname.match(/\/larp\/([^/]+)/);
+            if (match) {
+                this.larpValue = match[1];
+            } else {
+                // LARP ID not available - continue without mention search
+                this.larpValue = null;
             }
         }
-        this.searchUrl = this.searchUrlValue.replace('__larp__', this.larpValue);
+
+        if (this.larpValue) {
+            this.searchUrl = this.searchUrlValue.replace('__larp__', this.larpValue);
+        }
         this.editor = document.createElement('div');
         this.editor.classList.add('wysiwyg-editor');
         this.editor.contentEditable = true;

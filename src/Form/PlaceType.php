@@ -21,6 +21,9 @@ class PlaceType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.place.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',

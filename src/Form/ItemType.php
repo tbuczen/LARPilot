@@ -27,6 +27,9 @@ class ItemType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'form.item.description',
                 'required' => false,
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('isCrafted', CheckboxType::class, [
                 'label' => 'form.item.is_crafted',

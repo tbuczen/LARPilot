@@ -34,6 +34,9 @@ class EventType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.event.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('place', EntityType::class, [
                 'class' => Place::class,

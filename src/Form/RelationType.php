@@ -38,6 +38,9 @@ class RelationType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.relation.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'form.relation.type',

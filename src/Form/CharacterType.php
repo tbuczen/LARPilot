@@ -40,6 +40,9 @@ class CharacterType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.character.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('availableForRecruitment', CheckboxType::class, [
                 'label' => 'form.character.available_for_recruitment',

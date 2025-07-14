@@ -23,6 +23,9 @@ class LarpType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.larp.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('location', TextType::class, [
                 'label' => 'form.larp.location',
