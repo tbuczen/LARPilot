@@ -21,6 +21,9 @@ class KanbanTaskType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'form.kanban.description',
                 'required' => false,
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',

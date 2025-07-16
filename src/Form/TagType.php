@@ -23,6 +23,9 @@ class TagType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'form.tag.description',
                 'required' => false,
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('target', ChoiceType::class, [
                 'label' => 'form.tag.target',

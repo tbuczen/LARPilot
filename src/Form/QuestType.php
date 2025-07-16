@@ -34,6 +34,9 @@ class QuestType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.quest.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,

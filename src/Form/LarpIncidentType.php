@@ -26,6 +26,9 @@ class LarpIncidentType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.incident.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('allowFeedback', CheckboxType::class, [
                 'label' => 'form.incident.allow_feedback',

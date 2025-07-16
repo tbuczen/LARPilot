@@ -25,7 +25,11 @@ class LocationType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
-                'attr' => ['class' => 'form-control', 'rows' => 4]
+                'attr' => [
+                    'class' => 'form-control',
+                    'rows' => 4,
+                    'data-controller' => 'wysiwyg',
+                ]
             ])
             ->add('address', TextType::class, [
                 'attr' => ['class' => 'form-control']

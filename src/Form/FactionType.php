@@ -22,6 +22,9 @@ class FactionType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.faction.description',
+                'attr' => [
+                    'data-controller' => 'wysiwyg',
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',
