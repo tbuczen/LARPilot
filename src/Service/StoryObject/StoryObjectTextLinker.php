@@ -20,7 +20,8 @@ final readonly class StoryObjectTextLinker
             return $html;
         }
         $dom = new \DOMDocument('1.0', 'UTF-8');
-        @$dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
         $xpath = new \DOMXPath($dom);
         foreach ($xpath->query('//*[@data-story-object-id]') as $node) {
             $id = $node->getAttribute('data-story-object-id');

@@ -63,7 +63,7 @@
                         <td>{{ event.title }}</td>
                         <td>{{ event.startTime ? event.startTime|date('Y-m-d H:i') : '-' }}</td>
                         <td>{{ event.endTime ? event.endTime|date('Y-m-d H:i') : '-' }}</td>
-                        <td>{{ event.description|default('-') }}</td>
+                        <td>{{ event.description|sanitize_html|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_event_modify', { larp: larp.id, event: event.id }) }}"
                                class="btn btn-sm btn-primary">

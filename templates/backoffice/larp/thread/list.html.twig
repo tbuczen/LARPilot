@@ -53,7 +53,7 @@
                 {% for thread in threads %}
                     <tr>
                         <td>{{ thread.title }}</td>
-                        <td>{{ thread.description|default('-') }}</td>
+                        <td>{{ thread.description|sanitize_html }}</td>
                         <td>
 
                             <a href="{{ path('backoffice_larp_story_thread_modify', { larp: larp.id, thread: thread.id }) }}"

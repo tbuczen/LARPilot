@@ -4,6 +4,8 @@ namespace App\Controller\Backoffice;
 
 use App\Controller\BaseController;
 use App\Entity\Enum\LarpIncidentStatus;
+use App\Entity\Larp;
+use App\Entity\LarpIncident;
 use App\Form\Filter\LarpIncidentFilterType;
 use App\Repository\LarpIncidentRepository;
 use App\Repository\LarpRepository;
@@ -11,22 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/larp', name: 'backoffice_larp_')]
+#[Route('/larp/{larp}', name: 'backoffice_larp_')]
 
 class LarpIncidentsController extends BaseController
 {
-    #[Route('/{id}/incidents', name: 'incidents', methods: ['GET', 'POST'])]
+    #[Route('/incidents', name: 'incidents', methods: ['GET', 'POST'])]
     public function incidents(
         Request                $request,
-        string                 $id,
-        LarpRepository         $larpRepository,
+        Larp                 $larp,
         LarpIncidentRepository $incidentRepository,
     ): Response {
-        $larp = $larpRepository->find($id);
-        if (!$larp) {
-            throw $this->createNotFoundException('Larp not found.');
-        }
-
         $filterForm = $this->createForm(LarpIncidentFilterType::class);
         $filterForm->handleRequest($request);
         $criteria = ['larp' => $larp];
@@ -46,6 +42,15 @@ class LarpIncidentsController extends BaseController
             'larp' => $larp,
             'incidents' => $incidents,
             'filterForm' => $filterForm->createView(),
+        ]);
+    }
+
+    #[Route('/incident/{incident}', name: 'incident_view', methods: ['GET'])]
+    public function view(Larp $larp, LarpIncident $incident): Response
+    {
+        return $this->render('backoffice/larp/incident/view.html.twig', [
+            'larp' => $larp,
+            'incident' => $incident,
         ]);
     }
 }

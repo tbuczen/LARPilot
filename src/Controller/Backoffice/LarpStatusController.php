@@ -3,7 +3,9 @@
 namespace App\Controller\Backoffice;
 
 use App\Entity\Larp;
+use App\Form\LarpPropertiesType;
 use App\Service\Larp\Workflow\LarpWorkflowService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +17,7 @@ class LarpStatusController extends AbstractController
 {
     public function __construct(
         private readonly LarpWorkflowService $workflowService,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -27,12 +30,33 @@ class LarpStatusController extends AbstractController
         $currentStatus = $larp->getStatus();
         $allStatuses = $this->workflowService->getAllStatuses();
 
+        $propertiesForm = $this->createForm(LarpPropertiesType::class, $larp);
+
         return $this->render('backoffice/larp/status/index.html.twig', [
             'larp' => $larp,
             'currentStatus' => $currentStatus,
             'availableTransitions' => $availableTransitions,
             'allStatuses' => $allStatuses,
+            'propertiesForm' => $propertiesForm->createView(),
         ]);
+    }
+
+    #[Route('/update-properties', name: 'update_properties', methods: ['POST'])]
+    public function updateProperties(Larp $larp, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('MANAGE_LARP_GENERAL_SETTINGS', $larp);
+
+        $form = $this->createForm(LarpPropertiesType::class, $larp);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
+            $this->addFlash('success', 'LARP properties updated successfully.');
+        } else {
+            $this->addFlash('error', 'Failed to update LARP properties. Please check the form for errors.');
+        }
+
+        return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);
     }
 
     #[Route('/transition/{transitionName}', name: 'transition', methods: ['POST'])]

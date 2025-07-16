@@ -52,7 +52,7 @@
                 {% for faction in factions %}
                     <tr>
                         <td>{{ faction.title }}</td>
-                        <td>{{ faction.description|default('-') }}</td>
+                        <td>{{ faction.description|sanitize_html|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_faction_modify', { larp: larp.id, faction: faction.id }) }}"
                                class="btn btn-sm btn-primary">

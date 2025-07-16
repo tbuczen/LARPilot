@@ -30,7 +30,7 @@
                 {% for place in places %}
                     <tr>
                         <td>{{ place.title }}</td>
-                        <td>{{ place.description|default('-') }}</td>
+                        <td>{{ place.description|sanitize_html|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_place_modify', { larp: larp.id, place: place.id }) }}" class="btn btn-sm btn-primary">
                                 {{ 'common.show_edit'|trans }}

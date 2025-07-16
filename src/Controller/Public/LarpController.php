@@ -8,9 +8,11 @@ use App\Repository\LarpApplicationRepository;
 use App\Repository\LarpInvitationRepository;
 use App\Repository\LarpRepository;
 use App\Service\Larp\LarpManager;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/', name: 'public_larp_')]
 class LarpController extends BaseController
@@ -29,6 +31,7 @@ class LarpController extends BaseController
         $filterForm = $this->createForm(LarpPublicFilterType::class);
         $filterForm->handleRequest($request);
         $qb = $this->getListQueryBuilder($larpRepository, $filterForm, $request);
+        $qb = $larpRepository->modifyListQueryBuilderForUser($qb, $this->getUser());
         $pagination = $this->getPagination($qb, $request);
 
         return $this->render('public/larp/list.html.twig', [

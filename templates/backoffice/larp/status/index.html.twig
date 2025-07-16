@@ -68,6 +68,50 @@
                 {% endif %}
             </div>
         </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">{{ 'larp.properties'|trans }}</h5>
+            </div>
+            <div class="card-body">
+                {{ form_start(propertiesForm, {'action': path('backoffice_larp_status_update_properties', {'larp': larp.id})}) }}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(propertiesForm.startDate) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(propertiesForm.endDate) }}
+                    </div>
+                </div>
+
+                {{ form_row(propertiesForm.location) }}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(propertiesForm.maxCharacterChoices) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(propertiesForm.setting) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(propertiesForm.type) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(propertiesForm.characterSystem) }}
+                    </div>
+                </div>
+
+                {{ form_row(propertiesForm.description) }}
+
+                {{ form_row(propertiesForm.submit) }}
+
+                {{ form_end(propertiesForm) }}
+            </div>
+        </div>
     </div>
 
     <div class="col-md-4">

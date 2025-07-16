@@ -27,7 +27,7 @@
                 {% for tag in tags %}
                     <tr>
                         <td>{{ tag.title }}</td>
-                        <td>{{ tag.description|default('-') }}</td>
+                        <td>{{ tag.description|sanitize_html|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_tag_modify', { larp: larp.id, tag: tag.id }) }}"
                                class="btn btn-sm btn-primary">

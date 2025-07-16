@@ -11,6 +11,8 @@ enum LarpSetting: string
     case BATTLE = 'battle';
     case NOIR = 'noir';
     case POST_APO = 'postapo';
+    case WITCHER = 'witcher';
+    case HARRY_POTTER = 'harry_potter';
 
     public function getLabel(): string
     {
@@ -22,6 +24,8 @@ enum LarpSetting: string
             self::BATTLE => 'Battle',
             self::NOIR => 'Noir',
             self::POST_APO => 'Postapocalyptic',
+            self::WITCHER => 'Witcher',
+            self::HARRY_POTTER => 'Harry Potter',
         };
     }
 }

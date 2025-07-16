@@ -43,10 +43,8 @@ class StoryObjectMentionController extends AbstractController
             throw new AccessDeniedException('You must be logged in to access this resource');
         }
 
-        // Check if user has specific permission for this LARP
         $this->denyAccessUnlessGranted(LarpStoryVoter::VIEW, $larp);
 
-        // Get and sanitize query parameter
         $query = trim($request->query->get('query', ''));
 
         // Validate minimum query length

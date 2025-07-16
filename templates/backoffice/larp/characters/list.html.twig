@@ -78,7 +78,7 @@
                     <tr>
                         <td>{{ character.title }}</td>
                         <td>{{ character.gender ? character.gender.value : ''}}</td>
-                        <td>{{ character.description|default('-') }}</td>
+                        <td>{{ character.description|sanitize_html|default('-') }}</td>
                         <td>{{ character.factions|map(f => f.title)|join(', ')|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id, character: character.id }) }}"

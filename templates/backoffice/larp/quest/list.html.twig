@@ -53,7 +53,7 @@
                 {% for quest in quests %}
                     <tr>
                         <td>{{ quest.title }}</td>
-                        <td>{{ quest.description|default('-') }}</td>
+                        <td>{{ quest.description|sanitize_html|default('-') }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_quest_modify', { larp: larp.id, quest: quest.id }) }}"
                                class="btn btn-sm btn-primary">

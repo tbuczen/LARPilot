@@ -345,5 +345,6 @@ larp:
     confirmed.description: "Event confirmed and will happen"
     cancelled.description: "Event has been cancelled"
     completed.description: "Event has been completed"
+  properties: 'Properties'
 form:
   character_choice: 'messages'

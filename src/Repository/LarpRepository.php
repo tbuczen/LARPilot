@@ -2,10 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Enum\LarpCharacterSystem;
-use App\Entity\Enum\LarpSetting;
 use App\Entity\Enum\LarpStageStatus;
-use App\Entity\Enum\LarpType;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -23,17 +20,9 @@ class LarpRepository extends ServiceEntityRepository
         parent::__construct($registry, Larp::class);
     }
 
-    /**
-     * @return Larp[]
-     */
-    public function findAllUpcomingPublished(?UserInterface $currentUser = null): QueryBuilder
+    public function modifyListQueryBuilderForUser(QueryBuilder $qb, ?UserInterface $user): QueryBuilder
     {
         $now = new \DateTimeImmutable();
-
-        $qb = $this->createQueryBuilder('l')
-            ->orderBy('l.startDate', 'ASC');
-
-        // Use the statuses that are visible for everyone
         $visibleStatuses = [
             LarpStageStatus::PUBLISHED->value,
             LarpStageStatus::INQUIRIES->value,
@@ -43,15 +32,15 @@ class LarpRepository extends ServiceEntityRepository
         ];
 
         $upcoming = $qb->expr()->andX(
-            $qb->expr()->in('l.status', ':visibleStatuses'),
-            $qb->expr()->gte('l.startDate', ':now')
+            $qb->expr()->in('c.status', ':visibleStatuses'),
+            $qb->expr()->gte('c.startDate', ':now')
         );
 
-        if ($currentUser) {
+        if ($user) {
             $subQb = $this->getEntityManager()->createQueryBuilder();
             $subQb->select('1')
                 ->from(LarpParticipant::class, 'lp')
-                ->where('lp.larp = l')
+                ->where('lp.larp = c')
                 ->andWhere('lp.user = :currentUser');
 
             $qb->where(
@@ -60,14 +49,17 @@ class LarpRepository extends ServiceEntityRepository
                     $qb->expr()->exists($subQb->getDQL())
                 )
             );
-            $qb->setParameter('currentUser', $currentUser);
-        } else {
+            $qb->setParameter('currentUser', $user);
+        }
+
+        else {
             // If no user is logged in, only visible upcoming larps are shown.
             $qb->where($upcoming);
         }
 
         $qb->setParameter('visibleStatuses', $visibleStatuses)
             ->setParameter('now', $now);
+
 
         return $qb;
     }
