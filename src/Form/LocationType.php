@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Location;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -99,7 +100,16 @@ class LocationType extends AbstractType
             ->add('capacity', IntegerType::class, [
                 'required' => false,
                 'attr' => ['class' => 'form-control']
-            ]);
+            ])
+            ->add('isPublic', CheckboxType::class, [
+                'required' => false,
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('isActive', CheckboxType::class, [
+                'required' => false,
+                'attr' => ['class' => 'form-control']
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

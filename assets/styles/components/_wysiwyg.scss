@@ -35,7 +35,7 @@
 // Mention dropdown styles
 .mention-dropdown {
   position: absolute;
-  z-index: 1050;
+  z-index: 10050 !important;
   min-width: 200px;
   max-width: 350px;
   max-height: 250px;

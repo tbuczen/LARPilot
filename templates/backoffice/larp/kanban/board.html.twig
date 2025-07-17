@@ -1,26 +1,107 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <div data-controller="kanban" data-kanban-update-url-value="{{ path('backoffice_larp_kanban_task_update', {id: 'ID'}) }}">
+    <div class="kanban-board"
+         data-controller="kanban"
+         data-kanban-update-url-value="{{ path('backoffice_larp_kanban_task_update', {larp: larp.id, task: 'TASK_ID'}) }}"
+         data-kanban-assign-url-value="{{ path('backoffice_larp_kanban_task_assign', {larp: larp.id, task: 'TASK_ID'}) }}"
+         data-kanban-create-url-value="{{ path('backoffice_larp_kanban_task_create', {larp: larp.id}) }}"
+         data-kanban-detail-url-value="{{ path('backoffice_larp_kanban_task_detail', {larp: larp.id, task: 'TASK_ID'}) }}"
+         data-kanban-edit-url-value="{{ path('backoffice_larp_kanban_task_edit', {larp: larp.id, task: 'TASK_ID'}) }}"
+         data-kanban-delete-url-value="{{ path('backoffice_larp_kanban_task_delete', {larp: larp.id, task: 'TASK_ID'}) }}">
+
         <div class="row">
             {% for status in ['TODO','IN_PROGRESS','DONE'] %}
-                <div class="col" data-kanban-target="column" data-status="{{ status }}">
-                    <h5 class="text-center">{{ status|trans({}, 'messages') }}</h5>
-                    <ul class="list-group min-vh-25">
-                        {% for task in tasks if task.status.value == status %}
-                            <li class="list-group-item" data-task-id="{{ task.id }}">
-                                <strong>{{ task.title }}</strong><br>
-                                {{ task.description }}
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <div class="col-md-4">
+                    <div class="kanban-column" data-kanban-target="column" data-status="{{ status }}">
+                        <h5>{{ status|trans({}, 'messages') }}</h5>
+
+                        <ul class="list-unstyled kanban-tasks" data-kanban-target="taskList">
+                            {% for task in tasks %}
+                                {% if task.status.value == status %}
+                                    <li class="kanban-task" data-task-id="{{ task.id }}" data-kanban-target="task">
+                                        <div class="task-header">
+                                            <div class="task-title" data-action="click->kanban#showTaskDetail">
+                                                {{ task.title }}
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                {% if task.priority > 0 %}
+                                                    <span class="task-priority {{ task.priority >= 7 ? 'high' : (task.priority >= 4 ? 'medium' : 'low') }}">
+                                                        P{{ task.priority }}
+                                                    </span>
+                                                {% endif %}
+                                                <div class="dropdown ms-2">
+                                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                            type="button"
+                                                            data-action="click->kanban#toggleAssignmentDropdown"
+                                                            data-task-id="{{ task.id }}">
+                                                        {% if task.assignedTo %}
+                                                            {{ task.assignedTo.name }}
+                                                        {% else %}
+                                                            Unassigned
+                                                        {% endif %}
+                                                    </button>
+                                                    <div class="assignment-dropdown" data-task-id="{{ task.id }}">
+                                                        <button class="dropdown-item"
+                                                                data-action="click->kanban#assignTask"
+                                                                data-task-id="{{ task.id }}"
+                                                                data-participant-id="">
+                                                            Unassigned
+                                                        </button>
+                                                        {% for participant in participants %}
+                                                            <button class="dropdown-item"
+                                                                    data-action="click->kanban#assignTask"
+                                                                    data-task-id="{{ task.id }}"
+                                                                    data-participant-id="{{ participant.id }}">
+                                                                {{ participant.name }}
+                                                            </button>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if task.description %}
+                                            <div class="task-description">
+                                                {{ task.description|striptags|u.truncate(100) }}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if task.dueDate %}
+                                            <div class="task-due-date">
+                                                <i class="bi bi-clock"></i> Due: {{ task.dueDate|date('Y-m-d H:i') }}
+                                            </div>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             {% endfor %}
         </div>
-        {{ form_start(form) }}
-            {{ form_row(form.title) }}
-            {{ form_row(form.description) }}
-            {{ form_row(form.submit) }}
-        {{ form_end(form) }}
+
+        <!-- Floating Add Button -->
+        <button class="floating-add-btn" data-action="click->kanban#showCreateModal">
+            <i class="bi bi-plus"></i>
+        </button>
+
+        <!-- Modal Overlay -->
+        <div class="modal-overlay" data-kanban-target="modalOverlay" data-action="click->kanban#closeModal">
+            <div class="modal-content" data-action="click->kanban#stopPropagation">
+                <div class="modal-header">
+                    <h5 data-kanban-target="modalTitle">Modal Title</h5>
+                    <button class="modal-close" data-action="click->kanban#closeModal">×</button>
+                </div>
+                <div class="modal-body" data-kanban-target="modalBody">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" data-kanban-target="modalFooter">
+                    <!-- Footer content will be added dynamically -->
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

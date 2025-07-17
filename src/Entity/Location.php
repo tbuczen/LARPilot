@@ -87,7 +87,10 @@ class Location implements Timestampable, CreatorAwareInterface
     private ?int $capacity = null;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
-    private bool $isActive = true;
+    private bool $isActive = false;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
+    private bool $isPublic = false;
 
     /** @var Collection<Larp> */
     #[ORM\OneToMany(targetEntity: Larp::class, mappedBy: 'location')]
@@ -294,6 +297,16 @@ class Location implements Timestampable, CreatorAwareInterface
             $this->setImages(array_values($images));
         }
         return $this;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
     }
 
     public function getFacilities(): ?string

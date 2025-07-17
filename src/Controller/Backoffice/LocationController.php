@@ -8,7 +8,6 @@ use App\Entity\Location;
 use App\Entity\User;
 use App\Form\LocationType;
 use App\Repository\LocationRepository;
-use App\Security\Voter\Backoffice\Larp\LarpDetailsVoter;
 use App\Security\Voter\Backoffice\Larp\LarpLocationVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,27 +16,29 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/backoffice/location', name: 'backoffice_location_')]
+#[Route('/location', name: 'backoffice_location_')]
 #[IsGranted('ROLE_USER')]
 class LocationController extends AbstractController
 {
     public function __construct(
-        private readonly LocationRepository $locationRepository,
+        private readonly LocationRepository     $locationRepository,
         private readonly EntityManagerInterface $entityManager
-    ) {}
+    )
+    {
+    }
 
-    #[Route('/', name: 'list', methods: ['GET'])]
+    #[Route('/list', name: 'list', methods: ['GET'])]
     public function list(): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             // Super admin can see all locations
             $locations = $this->locationRepository->findAll();
         } else {
-            // Organizer can only see their own locations
-            $locations = $this->locationRepository->findBy(['createdBy' => $user]);
+            // Organizer can only see their own locations and public ones
+            $locations = $this->locationRepository->findActiveAndPublicForUser($user);
         }
 
         return $this->render('backoffice/location/list.html.twig', [
@@ -47,13 +48,15 @@ class LocationController extends AbstractController
 
     #[Route('/{location}', name: 'modify_global', defaults: ['location' => null], methods: ['GET', 'POST'])]
     public function modifyGlobal(
-        Request $request,
-        ?Location $location = null
+        Request            $request,
+        LocationRepository $locationRepository,
+        ?Location          $location = null
     ): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        
+        if ($location === null) {
+            $location = new Location();
+        }
+
         // Check if user has organizer role or is super admin
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw $this->createAccessDeniedException('You need ROLE_SUPER_ADMIN to create global locations.');
@@ -63,9 +66,7 @@ class LocationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $location->setCreatedBy($user);
-            $this->entityManager->persist($location);
-            $this->entityManager->flush();
+            $locationRepository->save($location);
 
             $this->addFlash('success', 'Location created successfully.');
             return $this->redirectToRoute('backoffice_location_list');
@@ -79,12 +80,16 @@ class LocationController extends AbstractController
 
     #[Route('/larp/{larp}/location/{location}', name: 'modify_for_larp', defaults: ['location' => null], methods: ['GET', 'POST'])]
     public function modifyForLarp(
-        Request $request,
-        Larp $larp,
+        Request            $request,
+        Larp               $larp,
         LocationRepository $locationRepository,
-        ?Location $location = null
+        ?Location          $location = null
     ): Response
     {
+        if ($location === null) {
+            $location = new Location();
+        }
+
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             return $this->redirectToRoute('backoffice_location_modify_global');
         }
@@ -122,12 +127,12 @@ class LocationController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        
+
         if (!$this->isGranted('ROLE_SUPER_ADMIN') && $location->getCreatedBy() !== $user) {
             throw $this->createAccessDeniedException('You can only delete locations you created.');
         }
 
-        if ($this->isCsrfTokenValid('delete'.$location->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $location->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($location);
             $this->entityManager->flush();
             $this->addFlash('success', 'Location deleted successfully.');

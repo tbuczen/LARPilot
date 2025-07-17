@@ -3,6 +3,7 @@
 @import "./components/character_choice_styles";
 @import "./components/folder_browser";
 @import "./components/wysiwyg";
+@import "./components/kanban";
 
 
 body {
@@ -29,6 +30,8 @@ a.nav-link.active {
     --bs-body-bg: #fff;
     --bs-body-color: #212529;
     --bs-border-color-translucent: var(--bs-primary);
+    --bs-modal-bg: white;
+    --bs-modal-border-radius: 5px;
 }
 
 .ts-control, .ts-wrapper.single.input-active .ts-control{

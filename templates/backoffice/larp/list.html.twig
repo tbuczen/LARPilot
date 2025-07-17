@@ -11,7 +11,7 @@
                             <div><small>{{ larp.status.value }}</small><h5 class="mb-1">{{ larp.title }}</h5></div>
                             <small>{{ larp.startDate|date('Y-m-d') }}</small>
                         </div>
-                        <p class="mb-1">{{ larp.description|sanitize_htmlstriptags|slice(0, 150) ~ '...' }}</p>
+                        <p class="mb-1">{{ larp.description|sanitize_html|slice(0, 150) ~ '...'}}</p>
                         <small>{{ larp.location }}</small>
 
                     </a>

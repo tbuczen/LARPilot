@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Location;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Location>
@@ -16,13 +17,21 @@ class LocationRepository extends BaseRepository
         parent::__construct($registry, Location::class);
     }
 
-    public function findActiveLocations(): array
+    public function findActiveAndPublicForUser(UserInterface $user): array
     {
-        return $this->createQueryBuilder('l')
+        $qb = $this->createQueryBuilder('l')
             ->where('l.isActive = :active')
             ->setParameter('active', true)
-            ->orderBy('l.title', 'ASC')
-            ->getQuery()
+            ->orderBy('l.title', 'ASC');
+
+        $qb->where(
+            $qb->expr()->orX(
+                $qb->expr()->eq('l.isPublic', true),
+                $qb->expr()->eq('l.createdBy', $user)
+            )
+        );
+
+        return $qb->getQuery()
             ->getResult();
     }
 

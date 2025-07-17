@@ -1,0 +1,85 @@
+<div class="task-detail">
+    <div class="task-meta">
+        <div class="meta-item">
+            <span class="meta-label">Status:</span>
+            <span class="meta-value">
+                <span class="badge bg-{{ task.status.value == 'TODO' ? 'secondary' : (task.status.value == 'IN_PROGRESS' ? 'warning' : 'success') }}">
+                    {{ task.status.value|trans({}, 'messages') }}
+                </span>
+            </span>
+        </div>
+
+        {% if task.assignedTo %}
+            <div class="meta-item">
+                <span class="meta-label">Assigned to:</span>
+                <span class="meta-value">{{ task.assignedTo.name }}</span>
+            </div>
+        {% endif %}
+
+        {% if task.priority > 0 %}
+            <div class="meta-item">
+                <span class="meta-label">Priority:</span>
+                <span class="meta-value">
+                    <span class="task-priority {{ task.priority >= 7 ? 'high' : (task.priority >= 4 ? 'medium' : 'low') }}">
+                        P{{ task.priority }}
+                    </span>
+                </span>
+            </div>
+        {% endif %}
+
+        {% if task.dueDate %}
+            <div class="meta-item">
+                <span class="meta-label">Due Date:</span>
+                <span class="meta-value">{{ task.dueDate|date('Y-m-d H:i') }}</span>
+            </div>
+        {% endif %}
+
+        <div class="meta-item">
+            <span class="meta-label">Created:</span>
+            <span class="meta-value">{{ task.createdAt|date('Y-m-d H:i') }}</span>
+        </div>
+    </div>
+
+    {% if task.description %}
+        <div class="task-description">
+            <h6>Description</h6>
+            <div class="description-content">
+                {{ task.description|raw }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if task.activityLog %}
+        <div class="task-activity">
+            <h6>Activity Log</h6>
+            {% for activity in task.activityLog|reverse %}
+                <div class="activity-item">
+                    <div class="activity-type">{{ activity.type|title }}</div>
+                    <div class="activity-time">{{ activity.timestamp }}</div>
+                    {% if activity.data %}
+                        <div class="activity-details">
+                            {% for key, value in activity.data %}
+                                {% if key != 'timestamp' %}
+                                    <small>{{ key|title }}: {{ value }}</small><br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<div class="d-flex justify-content-between">
+    <div>
+        <button class="btn btn-primary" data-action="click->kanban#editTask" data-task-id="{{ task.id }}">
+            <i class="fas fa-edit"></i> Edit
+        </button>
+    </div>
+    <div>
+        <button class="btn btn-danger" data-action="click->kanban#deleteTask" data-task-id="{{ task.id }}">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+</div>

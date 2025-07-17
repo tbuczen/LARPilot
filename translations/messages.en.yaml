@@ -22,7 +22,7 @@ common:
   logout: 'Log Out'
   backoffice: 'Admin Panel'
   manage: 'Manage in Admin'
-  general: 'Generic'
+  general: 'Dashboard'
   open: 'Open'
   permission:
     view: 'View'
@@ -263,6 +263,7 @@ backoffice:
     status:
       manage: 'Manage'
     version_history: 'Version History'
+    tasks: 'Tasks'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"
@@ -289,6 +290,8 @@ backoffice:
     reject: "Reject"
     none: "No proposals"
     create: "Create Proposal"
+  location:
+    list: 'Locations'
 #Account related translations for both player and organizers
 account:
   larp:

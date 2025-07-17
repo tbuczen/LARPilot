@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Enum\LarpStageStatus;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
@@ -62,6 +63,25 @@ class LarpRepository extends ServiceEntityRepository
 
 
         return $qb;
+    }
+
+    public function findAllWhereParticipating(User $user): array
+    {
+        $qb = $this->createQueryBuilder('l');
+
+        $subQb = $this->getEntityManager()->createQueryBuilder();
+        $subQb->select('1')
+            ->from(LarpParticipant::class, 'lp')
+            ->where('lp.larp = l')
+            ->andWhere('lp.user = :currentUser');
+
+
+        $qb->where(
+            $qb->expr()->exists($subQb->getDQL())
+        );
+        $qb->setParameter('currentUser', $user);
+
+        return $qb->getQuery()->getResult();
     }
 
     private function applyFilters(QueryBuilder $qb, array $filters): void

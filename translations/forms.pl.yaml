@@ -96,6 +96,7 @@ form:
   kanban:
     title: "Tytuł zadania"
     description: "Opis zadania"
+    assigned_to: "Przypisano do"
   contact_email: 'Email kontaktowy'
   favourite_style: 'Ulubiony styl gry'
   triggers: 'Triggery / rzeczy do unikania'

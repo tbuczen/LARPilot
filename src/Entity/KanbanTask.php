@@ -30,6 +30,23 @@ class KanbanTask
     #[ORM\Column(type: 'integer')]
     private int $position = 0;
 
+    // Add LarpParticipant assignment
+    #[ORM\ManyToOne(targetEntity: LarpParticipant::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?LarpParticipant $assignedTo = null;
+
+    // Add priority field for better organization
+    #[ORM\Column(type: 'integer')]
+    private int $priority = 0;
+
+    // Add due date
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $dueDate = null;
+
+    // Add activity log
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $activityLog = [];
+
     public function getLarp(): ?Larp
     {
         return $this->larp;
@@ -69,6 +86,13 @@ class KanbanTask
 
     public function setStatus(KanbanStatus $status): void
     {
+        // Log status change
+        $this->logActivity('status_changed', [
+            'old_status' => $this->status->value,
+            'new_status' => $status->value,
+            'timestamp' => new \DateTimeImmutable()
+        ]);
+
         $this->status = $status;
     }
 
@@ -80,5 +104,65 @@ class KanbanTask
     public function setPosition(int $position): void
     {
         $this->position = $position;
+    }
+
+    public function getAssignedTo(): ?LarpParticipant
+    {
+        return $this->assignedTo;
+    }
+
+    public function setAssignedTo(?LarpParticipant $assignedTo): self
+    {
+        // Log assignment change
+        if ($this->assignedTo !== $assignedTo) {
+            $this->logActivity('assignment_changed', [
+                'old_assignee' => $this->assignedTo?->getName(),
+                'new_assignee' => $assignedTo?->getName(),
+                'timestamp' => new \DateTimeImmutable()
+            ]);
+        }
+
+        $this->assignedTo = $assignedTo;
+        return $this;
+    }
+
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(int $priority): self
+    {
+        $this->priority = $priority;
+        return $this;
+    }
+
+    public function getDueDate(): ?\DateTimeInterface
+    {
+        return $this->dueDate;
+    }
+
+    public function setDueDate(?\DateTimeInterface $dueDate): self
+    {
+        $this->dueDate = $dueDate;
+        return $this;
+    }
+
+    public function getActivityLog(): array
+    {
+        return $this->activityLog ?? [];
+    }
+
+    private function logActivity(string $type, array $data): void
+    {
+        if ($this->activityLog === null) {
+            $this->activityLog = [];
+        }
+
+        $this->activityLog[] = [
+            'type' => $type,
+            'data' => $data,
+            'timestamp' => (new \DateTimeImmutable())->format('Y-m-d H:i:s')
+        ];
     }
 }

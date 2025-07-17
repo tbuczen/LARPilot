@@ -2,7 +2,7 @@
 
 {% block title %}Create Location{% endblock %}
 
-{% block content %}
+{% block body %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -21,8 +21,11 @@
                             <div class="col-md-6">
                                 {{ form_row(form.title) }}
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 {{ form_row(form.isActive) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form_row(form.isPublic) }}
                             </div>
                         </div>
 

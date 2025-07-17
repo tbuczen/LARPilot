@@ -1,0 +1,21 @@
+
+{{ form_start(form, {'attr': {'data-action': 'submit->kanban#handleFormSubmit'}}) }}
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.title) }}
+        {{ form_row(form.assignedTo) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.priority) }}
+        {{ form_row(form.dueDate) }}
+    </div>
+</div>
+{{ form_row(form.description) }}
+
+<div class="d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-secondary" data-action="click->kanban#closeModal">
+        Cancel
+    </button>
+    {{ form_row(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
+</div>
+{{ form_end(form) }}

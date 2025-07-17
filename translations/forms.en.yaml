@@ -98,6 +98,9 @@ form:
   kanban:
     title: "Task title"
     description: "Task description"
+    assigned_to: "Assigned to"
+    priority: "Priority"
+    due_date: "Due date"
   contact_email: 'Contact email'
   favourite_style: 'Favourite play style'
   triggers: 'Triggers / things to avoid'

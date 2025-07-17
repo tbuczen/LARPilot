@@ -65,11 +65,14 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
                 ],
             ];
 
-
             $this->menuItems[] = [
                 'label' => $this->translator->trans('common.backoffice'),
                 'url' => '#',
                 'children' => [
+                    [
+                        'label' => $this->translator->trans('backoffice.location.list'),
+                        'url' => $this->router->generate('backoffice_location_list'),
+                    ],
                     [
                         'label' => $this->translator->trans('backoffice.larp.list'),
                         'url' => $this->router->generate('backoffice_larp_list'),

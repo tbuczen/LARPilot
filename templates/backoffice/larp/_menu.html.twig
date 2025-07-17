@@ -37,43 +37,49 @@
                             {{ 'backoffice.larp.invitations'|trans }}
                         </a>
                     {% endif %}
-                    {% set isApplicationsRoute = 'larp_applications' in currentRoute %}
+
+                    <a href="{{ path('backoffice_larp_kanban_board', {'larp': larp.id}) }}"
+                       class="btn btn-primary {% if currentRoute == 'backoffice_larp_kanban_board' %}active{% endif %}">
+                        {{ 'backoffice.larp.tasks'|trans }}
+                    </a>
+                </div>
+
+                {% set isApplicationsRoute = 'larp_applications' in currentRoute %}
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle {% if isApplicationsRoute %}active{% endif %}"
+                            type="button" id="applicationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ 'backoffice.larp.applications.title'|trans }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="applicationsDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}">
+                                {{ 'common.list'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}">
+                                {{ 'backoffice.larp.applications.match'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
+                    {% set isIncidentsRoute = 'larp_incident' in currentRoute %}
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle {% if isApplicationsRoute %}active{% endif %}"
-                                type="button" id="applicationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ 'backoffice.larp.applications.title'|trans }}
+                        <button class="btn btn-primary dropdown-toggle {% if isIncidentsRoute %}active{% endif %}"
+                                type="button" id="incidentsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'common.incidents'|trans }}
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="applicationsDropdown">
+                        <ul class="dropdown-menu" aria-labelledby="incidentsDropdown">
                             <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}">
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_incidents', {'larp': larp.id}) }}">
                                     {{ 'common.list'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.applications.match'|trans }}
                                 </a>
                             </li>
                         </ul>
                     </div>
-
-                    {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
-                        {% set isIncidentsRoute = 'larp_incident' in currentRoute %}
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle {% if isIncidentsRoute %}active{% endif %}"
-                                    type="button" id="incidentsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ 'common.incidents'|trans }}
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="incidentsDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('backoffice_larp_incidents', {'larp': larp.id}) }}">
-                                        {{ 'common.list'|trans }}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    {% endif %}
-                </div>
+                {% endif %}
 
                 {% if is_granted('VIEW_BO_LARP_STORY', larp) %}
                     {% set isStoryRoute = 'larp_story' in currentRoute %}
