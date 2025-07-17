@@ -78,6 +78,9 @@ class LarpCharactersController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_character_list', ['larp' => $larp->getId()]);
         }
 
+        $this->entityPreloader->preload([$character], 'quests');
+        $this->entityPreloader->preload([$character], 'threads');
+
         return $this->render('backoffice/larp/characters/modify.html.twig', [
             'character' => $character,
             'form' => $form->createView(),

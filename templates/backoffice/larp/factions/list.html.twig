@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block title %}{{ 'backoffice.larp.faction.list'|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
         <div class="modal-dialog">

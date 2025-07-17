@@ -20,12 +20,12 @@ class Quest extends StoryObject
     private ?Thread $thread = null;
 
     /** @var Collection<LarpCharacter> Specifically needed involved characters */
-    #[ORM\ManyToMany(targetEntity: LarpCharacter::class)]
+    #[ORM\ManyToMany(targetEntity: LarpCharacter::class, inversedBy: 'quests')]
     #[ORM\JoinTable(name: 'quest_involved_characters')]
     private Collection $involvedCharacters;
 
     /** @var Collection<LarpFaction> Specifically needed involved factions */
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class)]
+    #[ORM\ManyToMany(targetEntity: LarpFaction::class,  inversedBy: 'quests')]
     #[ORM\JoinTable(name: 'quest_involved_factions')]
     private Collection $involvedFactions;
 

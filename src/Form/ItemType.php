@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Larp;
 use App\Entity\StoryObject\Item;
+use App\Form\DataTransformer\MoneyToFloatTransformer;
 use Money\Currency;
 use Money\Money;
 use Symfony\Component\Form\AbstractType;
@@ -49,7 +50,10 @@ class ItemType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',
             ])
-        ;
+            ->get('cost')->addModelTransformer(new MoneyToFloatTransformer())
+;
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

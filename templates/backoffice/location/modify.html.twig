@@ -1,0 +1,125 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}Create Location{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Create New Location</h1>
+                    <a href="{{ path('backoffice_location_list') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(form) }}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.title) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.isActive) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                {{ form_row(form.description) }}
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Address Information</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.address) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form_row(form.city) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form_row(form.postalCode) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{ form_row(form.country) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_row(form.latitude) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_row(form.longitude) }}
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Contact Information</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.contactEmail) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.contactPhone) }}
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Online Presence</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.website) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.facebook) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.instagram) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.twitter) }}
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4">Additional Information</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.facilities) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.accessibility) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.parkingInfo) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.publicTransport) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.capacity) }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{{ path('backoffice_location_list') }}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Create Location</button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

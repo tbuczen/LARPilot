@@ -21,7 +21,7 @@
             {{ 'backoffice.larp.relation.list'|trans }}
         </span>
             <svg xmlns="http://www.w3.org/2000/svg"
-                 width="20" height="20" fill="currentColor"
+                 width="20" height="20"
                  class="bi bi-chevron-down transition toggleIcon"
                  viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -52,7 +52,7 @@
             {{ 'backoffice.larp.quest.list'|trans }}
         </span>
             <svg xmlns="http://www.w3.org/2000/svg"
-                 width="20" height="20" fill="currentColor"
+                 width="20" height="20"
                  class="bi bi-chevron-down transition toggleIcon"
                  viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -62,7 +62,56 @@
 
         <div id="questsCollapse" class="collapse">
             <div class="card-body">
-                Questy
+                {% if character.quests|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'common.name'|trans }}</th>
+                                    <th>{{ 'common.description'|trans }}</th>
+                                    <th>{{ 'common.actions'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for quest in character.quests %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('backoffice_larp_story_quest_modify', {
+                                                'larp': larp.id,
+                                                'quest': quest.id
+                                            }) }}" class="text-decoration-none">
+                                                {{ quest.title }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 300px;">
+                                                {{ quest.description|default('—') }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('backoffice_larp_story_quest_modify', {
+                                                'larp': larp.id,
+                                                'quest': quest.id
+                                            }) }}" class="btn btn-sm btn-outline-primary">
+                                                {{ 'common.edit'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-muted">
+                        {{ 'common.empty_list'|trans }}
+                    </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <a href="{{ path('backoffice_larp_story_quest_list', {'larp': larp.id}) }}" class="btn btn-outline-secondary">
+                        {{ 'common.view_all'|trans }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -81,7 +130,7 @@
             {{ 'backoffice.larp.thread.list'|trans }}
         </span>
             <svg xmlns="http://www.w3.org/2000/svg"
-                 width="20" height="20" fill="currentColor"
+                 width="20" height="20"
                  class="bi bi-chevron-down transition toggleIcon"
                  viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -91,11 +140,59 @@
 
         <div id="threadsCollapse" class="collapse">
             <div class="card-body">
-                Thready
+                {% if character.threads|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'common.name'|trans }}</th>
+                                    <th>{{ 'common.description'|trans }}</th>
+                                    <th>{{ 'common.actions'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for thread in character.threads %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path('backoffice_larp_story_thread_modify', {
+                                                'larp': larp.id,
+                                                'thread': thread.id
+                                            }) }}" class="text-decoration-none">
+                                                {{ thread.title }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div class="text-truncate" style="max-width: 300px;">
+                                                {{ thread.description|default('—') }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('backoffice_larp_story_thread_modify', {
+                                                'larp': larp.id,
+                                                'thread': thread.id
+                                            }) }}" class="btn btn-sm btn-outline-primary">
+                                                {{ 'common.edit'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-muted">
+                        {{ 'common.empty_list'|trans }}
+                    </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <a href="{{ path('backoffice_larp_story_thread_list', {'larp': larp.id}) }}" class="btn btn-outline-secondary">
+                        {{ 'common.view_all'|trans }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-
 
     {# References #}
     <div class="card mb-3 shadow-sm">
@@ -111,7 +208,7 @@
             {{ 'backoffice.larp.reference.list'|trans }}
         </span>
             <svg xmlns="http://www.w3.org/2000/svg"
-                 width="20" height="20" fill="currentColor"
+                 width="20" height="20"
                  class="bi bi-chevron-down transition toggleIcon"
                  viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -127,14 +224,39 @@
             </div>
         </div>
     </div>
+    
+    {# Version History #}
     <div class="card mb-3 shadow-sm">
-        <div class="card-header">Version history</div>
-        <div class="card-body">
-            {{ component('StoryObjectVersionHistory', { storyObject: character }) }}
+        <div
+                class="card-header d-flex justify-content-between align-items-center"
+                data-bs-toggle="collapse"
+                data-bs-target="#versionHistoryCollapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="versionHistoryCollapse"
+        >
+        <span class="fw-bold">
+            {{ 'backoffice.larp.version_history'|trans }}
+        </span>
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="20" height="20"
+                 class="bi bi-chevron-down transition toggleIcon"
+                 viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </div>
+        
+        <div id="versionHistoryCollapse" class="collapse">
+            <div class="card-body">
+                {{ component('StoryObjectVersionHistory', { 
+                    storyObject: character,
+                    showChangelogLinks: true 
+                }) }}
+            </div>
         </div>
     </div>
 
 {% endblock %}
 
 {% block title %}{{ larp.title }} - {{ character.getTitle() ?? 'common.new'|trans }}{% endblock %}
-

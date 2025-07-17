@@ -15,10 +15,10 @@ class LarpFaction extends StoryObject implements CreatorAwareInterface
     #[ORM\ManyToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
     private Collection $members;
 
-    #[ORM\ManyToMany(targetEntity: Quest::class, inversedBy: 'involvedFactions')]
+    #[ORM\ManyToMany(targetEntity: Quest::class, mappedBy: 'involvedFactions')]
     private Collection $quests;
 
-    #[ORM\ManyToMany(targetEntity: Thread::class, inversedBy: 'involvedFactions')]
+    #[ORM\ManyToMany(targetEntity: Thread::class, mappedBy: 'involvedFactions')]
     private Collection $threads;
 
     public function __construct()

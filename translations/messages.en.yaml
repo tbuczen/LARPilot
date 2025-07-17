@@ -99,6 +99,10 @@ common:
   end_date: 'End Date'
   status: 'Status'
   user: 'User'
+  view_all: 'View all'
+  title: 'Title'
+  amount: 'Amount'
+  settings: 'Settings'
 
 
 #Translations specific to public part of the app
@@ -160,6 +164,7 @@ backoffice:
       delete_only_larpilot: "Delete only in LARPilot"
       delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
     quest:
+      title: 'Quest'
       name: 'Quest'
       list: 'Quests'
       delete_only_larpilot: "Delete only in LARPilot"
@@ -174,6 +179,11 @@ backoffice:
       current: 'Current integrations'
       expired: 'Integration has expired, if You want to keep using it - please reconnect'
       reconnect: 'Re-connect'
+      facebookDescription: 'Connect your Facebook account to allow LARPilot to post updates on your behalf.'
+      discordDescription: 'Connect your Discord account to allow LARPilot to post updates on your behalf.'
+      asanaDescription: 'Connect your Asana account to allow LARPilot to synchronize work.'
+      trelloDescription: 'Connect your Trello account to allow LARPilot to synchronize work.'
+      miroDescription: 'Connect your Miro account to allow LARPilot to synchronize board.'
     import_characters: "Import Characters"
     import_options: "Import Options"
     import_file: "Import from CSV/XLSX file"
@@ -252,6 +262,7 @@ backoffice:
       list: 'Tags'
     status:
       manage: 'Manage'
+    version_history: 'Version History'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"

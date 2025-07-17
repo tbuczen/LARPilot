@@ -79,11 +79,11 @@ class EventType extends AbstractType
             ->add('involvedCharacters', EntityType::class, [
                 'class' => LarpCharacter::class,
                 'choice_label' => 'title',
-                'label' => 'form.event.factions',
+                'label' => 'form.event.characters',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'placeholder' => 'form.event.choose_faction',
+                'placeholder' => 'form.event.choose_character',
                 'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
                     return $repo->createQueryBuilder('f')
                         ->where('f.larp = :larp')
@@ -102,6 +102,10 @@ class EventType extends AbstractType
                         ->where('t.larp = :larp')
                         ->setParameter('larp', $larp);
                 },
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',

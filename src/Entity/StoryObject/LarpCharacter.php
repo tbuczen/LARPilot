@@ -82,10 +82,10 @@ class LarpCharacter extends StoryObject
     #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'members', cascade: ['persist'])]
     private Collection $factions;
 
-    #[ORM\ManyToMany(targetEntity: Quest::class, inversedBy: 'involvedCharacters')]
+    #[ORM\ManyToMany(targetEntity: Quest::class, mappedBy: 'involvedCharacters')]
     private Collection $quests;
 
-    #[ORM\ManyToMany(targetEntity: Thread::class, inversedBy: 'involvedCharacters')]
+    #[ORM\ManyToMany(targetEntity: Thread::class, mappedBy: 'involvedCharacters')]
     private Collection $threads;
 
     public function __construct()

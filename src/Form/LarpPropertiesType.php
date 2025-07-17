@@ -39,6 +39,7 @@ class LarpPropertiesType extends AbstractType
                 'choice_label' => 'title',
                 'placeholder' => 'Select a location',
                 'required' => false,
+                'autocomplete' => true,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('maxCharacterChoices', IntegerType::class, [

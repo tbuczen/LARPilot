@@ -23,6 +23,7 @@
                         label: 'common.name'|trans
                     } %}
                     <th>{{ 'common.description'|trans }}</th>
+                    <th>{{ 'common.amount'|trans }}</th>
                     <th>{{ 'common.actions'|trans }}</th>
                 </tr>
                 </thead>
@@ -30,7 +31,8 @@
                 {% for item in items %}
                     <tr>
                         <td>{{ item.title }}</td>
-                        <td>{{ item.description|sanitize_html|default('-') }}</td>
+                        <td>{{ item.description|sanitize_html }}</td>
+                        <td>{{ item.quantity }}</td>
                         <td>
                             <a href="{{ path('backoffice_larp_story_item_modify', { larp: larp.id, item: item.id }) }}" class="btn btn-sm btn-primary">
                                 {{ 'common.show_edit'|trans }}

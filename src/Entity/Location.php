@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatorAwareInterface;
+use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LocationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,10 +16,11 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
-class Location implements Timestampable
+class Location implements Timestampable, CreatorAwareInterface
 {
     use UuidTraitEntity;
     use TimestampableEntity;
+    use CreatorAwareTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;

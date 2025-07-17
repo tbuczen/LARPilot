@@ -75,7 +75,7 @@ class EventsController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_event_list', ['larp' => $larp->getId()]);
         }
 
-        return $this->render('backoffice/larp/events/modify.html.twig', [
+        return $this->render('backoffice/larp/event/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
         ]);

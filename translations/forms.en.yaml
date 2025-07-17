@@ -8,6 +8,7 @@ form:
     available_for_recruitment: "Available for recruitment"
     faction: "Faction"
     choose_faction: "Choose a faction..."
+    gender: "Gender"
   faction:
     name: "Unique Faction Name"
     description: "Faction Description"
@@ -16,6 +17,7 @@ form:
     valid_to: "Invitation code valid to"
     role: "Role"
     character: "Choose a character..."
+    is_reusable: "Reusable"
   recruitment:
     number: "Required number"
     type: "Type"

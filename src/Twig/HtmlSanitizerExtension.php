@@ -13,8 +13,12 @@ class HtmlSanitizerExtension extends AbstractExtension
         ];
     }
 
-    public function sanitizeHtml(string $html): string
+    public function sanitizeHtml(?string $html): string
     {
+        if($html === null) {
+            return '-';
+        }
+
         $html = html_entity_decode($html, ENT_HTML5, 'UTF-8');
         // Remove potentially dangerous elements
         $dangerous = ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea', 'select', 'button'];

@@ -12,8 +12,8 @@ use Money\Money;
 class Item extends StoryObject
 {
     /** @var StoryObject|null The item can be for specific quest, thread, character, faction */
-    #[ORM\ManyToMany(targetEntity: StoryObject::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: StoryObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
     protected ?StoryObject $designation = null;
 
     #[ORM\Column(type: 'boolean')]

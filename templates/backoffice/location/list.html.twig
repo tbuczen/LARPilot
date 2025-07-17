@@ -1,0 +1,75 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}Locations{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Locations</h1>
+                    <a href="{{ path('backoffice_location_modify_for_larp') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Location
+                    </a>
+                </div>
+
+                {% if locations is empty %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No locations found.
+                    </div>
+                {% else %}
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Address</th>
+                                        <th>City</th>
+                                        <th>Capacity</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for location in locations %}
+                                        <tr>
+                                            <td>{{ location.title }}</td>
+                                            <td>{{ location.address }}</td>
+                                            <td>{{ location.city ?? 'N/A' }}</td>
+                                            <td>{{ location.capacity ?? 'N/A' }}</td>
+                                            <td>
+                                                {% if location.isActive %}
+                                                    <span class="badge bg-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+
+                                                <a href="{{ path('backoffice_location_modify_global', {'id': location.id}) }}"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                {% if is_granted('ROLE_SUPER_ADMIN') or location.createdBy == app.user %}
+                                                    <form method="post" action="{{ path('backoffice_location_delete', {'id': location.id}) }}"
+                                                          style="display: inline-block;" 
+                                                          onsubmit="return confirm('Are you sure you want to delete this location?');">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ location.id) }}">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
