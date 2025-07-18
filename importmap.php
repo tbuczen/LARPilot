@@ -32,14 +32,6 @@ return [
         'path' => './assets/styles/app.scss',
         'type' => 'css',
     ],
-//    './styles/folder_browser.css' => [
-//        'path' => './assets/styles/folder_browser.css',
-//        'type' => 'css',
-//    ],
-//    './styles/wysiwyg.css' => [
-//        'path' => './assets/styles/wysiwyg.css',
-//        'type' => 'css',
-//    ],
     './controllers/integrations/folder_browser_controller.js' => [
         'path' => './assets/controllers/integrations/folder_browser_controller.js',
     ],
