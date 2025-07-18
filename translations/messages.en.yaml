@@ -362,3 +362,23 @@ larp:
   properties: 'Properties'
 form:
   character_choice: 'messages'
+
+# Role enumeration translations
+user_role:
+  ROLE_ORGANIZER: 'Organizer'
+  ROLE_STAFF: 'Staff'
+  ROLE_MAIN_STORY_WRITER: 'Main Story Writer'
+  ROLE_STORY_WRITER: 'Story Writer'
+  ROLE_PHOTOGRAPHER: 'Photographer'
+  ROLE_CRAFTER: 'Crafter'
+  ROLE_MAKEUP_ARTIST: 'Makeup Artist'
+  ROLE_GAME_MASTER: 'Game Master'
+  ROLE_NPC_LONG: 'NPC (Long)'
+  ROLE_NPC_SHORT: 'NPC (Short)'
+  ROLE_PLAYER: 'Player'
+  ROLE_MEDIC: 'Medic'
+  ROLE_TRASHER: 'Trasher'
+  ROLE_PERSON_OF_TRUST: 'Person of Trust'
+  ROLE_OUTFIT_APPROVER: 'Outfit Approver'
+  ROLE_ACCOUNTANT: 'Accountant'
+  ROLE_GASTRO: 'Gastronomy'

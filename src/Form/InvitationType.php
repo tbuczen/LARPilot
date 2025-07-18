@@ -26,7 +26,8 @@ class InvitationType extends AbstractType
             ->add('invitedRole', ChoiceType::class, [
                 'label' => 'form.invitation.role',
                 'choices' => UserRole::cases(),
-                'choice_label' => fn (UserRole $role) => $role->name,
+                'choice_label' => fn (UserRole $role) => 'user_role.' . $role->value,
+                'choice_translation_domain' => 'messages',
                 'choice_value' => fn (?UserRole $role) => $role?->value,
                 'required' => true,
             ])
