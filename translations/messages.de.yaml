@@ -143,3 +143,23 @@ file_select:
 login_page:
   info: Wenn du bereits registriert bist, melde dich an und verbinde Konten in deinen Kontoeinstellungen.
   title: Registrierung / Anmeldung
+
+# Übersetzungen für Benutzerrollen
+user_role:
+  ROLE_ORGANIZER: 'Organisator'
+  ROLE_STAFF: 'Team'
+  ROLE_MAIN_STORY_WRITER: 'Hauptautor'
+  ROLE_STORY_WRITER: 'Autor'
+  ROLE_PHOTOGRAPHER: 'Fotograf'
+  ROLE_CRAFTER: 'Bastler'
+  ROLE_MAKEUP_ARTIST: 'Maskenbildner'
+  ROLE_GAME_MASTER: 'Spielleiter'
+  ROLE_NPC_LONG: 'NPC (lang)'
+  ROLE_NPC_SHORT: 'NPC (kurz)'
+  ROLE_PLAYER: 'Spieler'
+  ROLE_MEDIC: 'Sanitäter'
+  ROLE_TRASHER: 'Aufräumer'
+  ROLE_PERSON_OF_TRUST: 'Vertrauensperson'
+  ROLE_OUTFIT_APPROVER: 'Outfitprüfer'
+  ROLE_ACCOUNTANT: 'Buchhalter'
+  ROLE_GASTRO: 'Gastronomie'

@@ -11,7 +11,7 @@
 
                 <ul class="list-group list-group-flush my-4">
                     <li class="list-group-item">
-                        <strong>{{ 'common.role'|trans }}:</strong> {{ invitation.invitedRole.name }}
+                        <strong>{{ 'common.role'|trans }}:</strong> {{ ('user_role.' ~ invitation.invitedRole.value)|trans }}
                     </li>
                     {% if invitation.larpCharacter %}
                         <li class="list-group-item">

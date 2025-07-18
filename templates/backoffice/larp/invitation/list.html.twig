@@ -32,7 +32,7 @@
                 {% else %}
                 {% for invitation in invitations %}
                     <tr>
-                        <td>{{ invitation.invitedRole.value }}</td>
+                        <td>{{ ('user_role.' ~ invitation.invitedRole.value)|trans }}</td>
                         <td>{{ invitation.validTo|date(constant('DateTimeInterface::ATOM')) }}</td>
                         <td>
 {#                            <a href="{{ path('backoffice_larp_invitations_modify', { larp: larp.id, invitation: invitation.id }) }}"#}
