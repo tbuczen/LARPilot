@@ -73,3 +73,12 @@ a.nav-link.active {
 .badge {
     color: #000 !important;
 }
+
+// Mobile-first responsiveness
+@media (max-width: 767.98px) {
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+    }
+}
