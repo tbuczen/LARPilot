@@ -30,13 +30,13 @@
         {% if task.dueDate %}
             <div class="meta-item">
                 <span class="meta-label">Due Date:</span>
-                <span class="meta-value">{{ task.dueDate|date('Y-m-d H:i') }}</span>
+                <span class="meta-value">{{ task.dueDate|date('Y-m-d H:m') }}</span>
             </div>
         {% endif %}
 
         <div class="meta-item">
             <span class="meta-label">Created:</span>
-            <span class="meta-value">{{ task.createdAt|date('Y-m-d H:i') }}</span>
+            <span class="meta-value">{{ task.createdAt|date('Y-m-d H:m') }}</span>
         </div>
     </div>
 

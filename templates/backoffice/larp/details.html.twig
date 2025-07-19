@@ -170,9 +170,9 @@
                     <h6 class="card-title">{{ 'common.event.dates'|trans }}</h6>
                     <small class="text-muted">
                         {% if larp.startDate %}
-                            {{ larp.startDate|date('M d, Y') }}
+                            {{ larp.startDate|date('Y-m-d H:m') }}
                             {% if larp.endDate and larp.endDate != larp.startDate %}
-                                - {{ larp.endDate|date('M d, Y') }}
+                                - {{ larp.endDate|date('Y-m-d H:m') }}
                             {% endif %}
                         {% else %}
                             {{ 'common.not_set'|trans }}

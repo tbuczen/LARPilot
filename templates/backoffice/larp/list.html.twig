@@ -9,7 +9,7 @@
                     <a href="{{ path('backoffice_larp_details', {'larp': larp.id}) }}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <div><small>{{ larp.status.value }}</small><h5 class="mb-1">{{ larp.title }}</h5></div>
-                            <small>{{ larp.startDate|date('Y-m-d') }}</small>
+                            <small>{{ larp.startDate|date('Y-m-d H:m') }}</small>
                         </div>
                         <p class="mb-1">{{ larp.description|sanitize_html|slice(0, 150) ~ '...'}}</p>
                         <small>{{ larp.location }}</small>
