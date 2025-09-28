@@ -60,7 +60,7 @@ class User implements UserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -115,9 +115,11 @@ class User implements UserInterface
         return $this->contactEmail;
     }
 
-    public function setContactEmail(string $contactEmail): void
+    public function setContactEmail(string $contactEmail): self
     {
         $this->contactEmail = $contactEmail;
+
+        return $this;
     }
 
     public function getPreferredLocale(): ?Locale

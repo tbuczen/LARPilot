@@ -72,18 +72,6 @@ Start the Symfony web server:
 symfony server:start
 ```
 
-Build frontend assets:
-```bash
-# Development build
-yarn dev
-
-# Hot reload
-yarn dev-server
-
-# Production build
-yarn build
-```
-
 ## Story recruitment module
 
 ### Business purpose

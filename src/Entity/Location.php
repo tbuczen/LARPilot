@@ -108,7 +108,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -129,7 +129,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
         return $this;
@@ -140,7 +140,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->address;
     }
 
-    public function setAddress(string $address): static
+    public function setAddress(string $address): self
     {
         $this->address = $address;
         return $this;
@@ -151,7 +151,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->city;
     }
 
-    public function setCity(?string $city): static
+    public function setCity(?string $city): self
     {
         $this->city = $city;
         return $this;
@@ -162,7 +162,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->country;
     }
 
-    public function setCountry(?string $country): static
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
         return $this;
@@ -173,7 +173,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->postalCode;
     }
 
-    public function setPostalCode(?string $postalCode): static
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;
@@ -184,7 +184,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->latitude;
     }
 
-    public function setLatitude(?string $latitude): static
+    public function setLatitude(?string $latitude): self
     {
         $this->latitude = $latitude;
         return $this;
@@ -195,7 +195,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->longitude;
     }
 
-    public function setLongitude(?string $longitude): static
+    public function setLongitude(?string $longitude): self
     {
         $this->longitude = $longitude;
         return $this;
@@ -206,7 +206,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->website;
     }
 
-    public function setWebsite(?string $website): static
+    public function setWebsite(?string $website): self
     {
         $this->website = $website;
         return $this;
@@ -217,7 +217,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->facebook;
     }
 
-    public function setFacebook(?string $facebook): static
+    public function setFacebook(?string $facebook): self
     {
         $this->facebook = $facebook;
         return $this;
@@ -228,7 +228,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->instagram;
     }
 
-    public function setInstagram(?string $instagram): static
+    public function setInstagram(?string $instagram): self
     {
         $this->instagram = $instagram;
         return $this;
@@ -239,7 +239,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->twitter;
     }
 
-    public function setTwitter(?string $twitter): static
+    public function setTwitter(?string $twitter): self
     {
         $this->twitter = $twitter;
         return $this;
@@ -250,7 +250,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->contactEmail;
     }
 
-    public function setContactEmail(?string $contactEmail): static
+    public function setContactEmail(?string $contactEmail): self
     {
         $this->contactEmail = $contactEmail;
         return $this;
@@ -261,7 +261,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->contactPhone;
     }
 
-    public function setContactPhone(?string $contactPhone): static
+    public function setContactPhone(?string $contactPhone): self
     {
         $this->contactPhone = $contactPhone;
         return $this;
@@ -272,13 +272,13 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->images ?? [];
     }
 
-    public function setImages(?array $images): static
+    public function setImages(?array $images): self
     {
         $this->images = $images;
         return $this;
     }
 
-    public function addImage(string $imagePath): static
+    public function addImage(string $imagePath): self
     {
         $images = $this->getImages();
         if (!in_array($imagePath, $images, true)) {
@@ -288,7 +288,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
-    public function removeImage(string $imagePath): static
+    public function removeImage(string $imagePath): self
     {
         $images = $this->getImages();
         $key = array_search($imagePath, $images, true);
@@ -304,9 +304,10 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->isPublic;
     }
 
-    public function setIsPublic(bool $isPublic): void
+    public function setIsPublic(bool $isPublic): self
     {
         $this->isPublic = $isPublic;
+        return $this;
     }
 
     public function getFacilities(): ?string
@@ -314,7 +315,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->facilities;
     }
 
-    public function setFacilities(?string $facilities): static
+    public function setFacilities(?string $facilities): self
     {
         $this->facilities = $facilities;
         return $this;
@@ -325,7 +326,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->accessibility;
     }
 
-    public function setAccessibility(?string $accessibility): static
+    public function setAccessibility(?string $accessibility): self
     {
         $this->accessibility = $accessibility;
         return $this;
@@ -336,7 +337,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->parkingInfo;
     }
 
-    public function setParkingInfo(?string $parkingInfo): static
+    public function setParkingInfo(?string $parkingInfo): self
     {
         $this->parkingInfo = $parkingInfo;
         return $this;
@@ -347,7 +348,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->publicTransport;
     }
 
-    public function setPublicTransport(?string $publicTransport): static
+    public function setPublicTransport(?string $publicTransport): self
     {
         $this->publicTransport = $publicTransport;
         return $this;
@@ -358,7 +359,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->capacity;
     }
 
-    public function setCapacity(?int $capacity): static
+    public function setCapacity(?int $capacity): self
     {
         $this->capacity = $capacity;
         return $this;
@@ -369,7 +370,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): static
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
         return $this;
@@ -383,7 +384,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this->larps;
     }
 
-    public function addLarp(Larp $larp): static
+    public function addLarp(Larp $larp): self
     {
         if (!$this->larps->contains($larp)) {
             $this->larps->add($larp);
@@ -392,7 +393,7 @@ class Location implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
-    public function removeLarp(Larp $larp): static
+    public function removeLarp(Larp $larp): self
     {
         if ($this->larps->removeElement($larp)) {
             if ($larp->getLocation() === $this) {

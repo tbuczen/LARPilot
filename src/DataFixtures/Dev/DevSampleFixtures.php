@@ -1,0 +1,293 @@
+<?php
+
+namespace App\DataFixtures\Dev;
+
+use App\Entity\Enum\CharacterType;
+use App\Entity\Enum\Gender;
+use App\Entity\Enum\LarpCharacterSystem;
+use App\Entity\Enum\LarpSetting;
+use App\Entity\Enum\LarpStageStatus;
+use App\Entity\Enum\LarpType;
+use App\Entity\Enum\RelationType;
+use App\Entity\Enum\TargetType;
+use App\Entity\Enum\UserRole;
+use App\Entity\Larp;
+use App\Entity\LarpParticipant;
+use App\Entity\Location;
+use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Relation;
+use App\Entity\Tag;
+use App\Entity\User;
+use DateInterval;
+use DateTimeImmutable;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use Random\RandomException;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+
+final class DevSampleFixtures extends Fixture
+{
+    /**
+     * @throws RandomException
+     */
+    public function load(ObjectManager $manager): void
+    {
+        // Users
+        $superAdmin = (new User())
+            ->setUsername('superadmin')
+            ->setContactEmail('superadmin@example.com')
+            ->setRoles(['ROLE_SUPER_ADMIN']);
+        $regularUser = (new User())
+            ->setUsername('jane.doe')
+            ->setContactEmail('jane.doe@example.com')
+            ->setRoles(['ROLE_USER']);
+
+        $manager->persist($superAdmin);
+        $manager->persist($regularUser);
+
+        // Helper for createdBy fields
+        $setCreator = static function (object $entity) use ($superAdmin) {
+            if (method_exists($entity, 'setCreatedBy')) {
+                $entity->setCreatedBy($superAdmin);
+            }
+        };
+
+        // Location (shared)
+        $loc = (new Location())
+            ->setTitle('Old Fortress')
+            ->setDescription('A scenic fort used for LARP events.')
+            ->setAddress('1 Castle Rd')
+            ->setCity('City')
+            ->setCountry('PL')
+            ->setIsActive(true)
+            ->setIsPublic(true);
+        $setCreator($loc);
+        $manager->persist($loc);
+
+        // 2 LARPs
+        $larpPublished = $this->createLarp(
+            'Witcher Conclave',
+            LarpStageStatus::PUBLISHED,
+            LarpSetting::WITCHER,
+            LarpType::STORY,
+            $loc,
+            $superAdmin
+        );
+        $larpDraft = $this->createLarp(
+            'Cyber Alley',
+            LarpStageStatus::DRAFT,
+            LarpSetting::CYBERPUNK,
+            LarpType::MIXED,
+            $loc,
+            $superAdmin
+        );
+        $manager->persist($larpPublished);
+        $manager->persist($larpDraft);
+
+        // LarpParticipants: super admin as organizer for both; regular user as non-organizer for one
+        $adminP1 = $this->participant($superAdmin, $larpPublished, [UserRole::ORGANIZER]);
+        $adminP2 = $this->participant($superAdmin, $larpDraft, [UserRole::ORGANIZER]);
+        $userP1 = $this->participant($regularUser, $larpPublished, [UserRole::PLAYER]);
+        $userP2 = $this->participant($regularUser, $larpDraft, [UserRole::NPC_SHORT]);
+
+        foreach ([$adminP1, $adminP2, $userP1, $userP2] as $p) {
+            $manager->persist($p);
+        }
+
+        // Up to 10 tags per LARP
+        $tagsPub = $this->createTags($larpPublished, $superAdmin, 8);
+        $tagsDraft = $this->createTags($larpDraft, $superAdmin, 6);
+        foreach (array_merge($tagsPub, $tagsDraft) as $t) {
+            $manager->persist($t);
+        }
+
+        // Up to 10 characters per LARP (mix of types), assign some tags and a participant
+        $charsPub = $this->createCharacters($larpPublished, $superAdmin, 10, [$adminP1, $userP1], $tagsPub);
+        $charsDraft = $this->createCharacters($larpDraft, $superAdmin, 8, [$adminP2, $userP2], $tagsDraft);
+        foreach (array_merge($charsPub, $charsDraft) as $c) {
+            $manager->persist($c);
+        }
+
+        // Some relations between characters (friends/enemies across the same LARP)
+        foreach ([$charsPub, $charsDraft] as $list) {
+            $relations = $this->createRelations($list, $superAdmin);
+            foreach ($relations as $r) {
+                $manager->persist($r);
+            }
+        }
+
+        $manager->flush();
+    }
+
+    private function createLarp(
+        string $title,
+        LarpStageStatus $status,
+        ?LarpSetting $setting,
+        ?LarpType $type,
+        Location $location,
+        User $creator
+    ): Larp {
+        $now = new DateTimeImmutable();
+        $larp = (new Larp())
+            ->setTitle($title)
+            ->setDescription($title . ' description.')
+            ->setStartDate($now->add(new DateInterval('P30D')))
+            ->setEndDate($now->add(new DateInterval('P33D')))
+            ->setLocation($location)
+            ->setStatus($status)
+            ->setMaxCharacterChoices(3)
+            ->setSetting($setting)
+            ->setType($type)
+            ->setCharacterSystem(LarpCharacterSystem::PREPARED_CHARACTERS);
+        $larp->setCreatedBy($creator);
+
+        // slug is generated by Gedmo, but keep a fallback if needed
+        if (method_exists($larp, 'setSlug') && $larp->getSlug() === null) {
+            $slugger = new AsciiSlugger();
+            $larp->setSlug((string)$slugger->slug($title)->lower());
+        }
+
+        return $larp;
+    }
+
+    /**
+     * @return Tag[]
+     */
+    private function createTags(Larp $larp, User $creator, int $count): array
+    {
+        $pool = [
+            'honor', 'secrets', 'ambition', 'loyalty', 'romance',
+            'politics', 'violence', 'wisdom', 'wealth', 'poverty',
+            'destiny', 'dilemma', 'war', 'shame', 'betrayal',
+        ];
+        shuffle($pool);
+        $selected = array_slice($pool, 0, max(1, $count));
+
+        $out = [];
+        foreach ($selected as $label) {
+            $tag = new Tag();
+            $tag->setTitle(ucfirst($label));
+            $tag->setDescription('Tag: ' . $label);
+            $tag->setTarget(TargetType::Character);
+            $tag->setLarp($larp);
+            $tag->setCreatedBy($creator);
+            $out[] = $tag;
+        }
+        return $out;
+    }
+
+    /**
+     * @param LarpParticipant[] $participants
+     * @param Tag[] $tags
+     * @return LarpCharacter[]
+     * @throws RandomException
+     */
+    private function createCharacters(
+        Larp $larp,
+        User $creator,
+        int $count,
+        array $participants,
+        array $tags
+    ): array {
+        $types = [
+            CharacterType::Player,
+            CharacterType::LongNpc,
+            CharacterType::ShortNpc,
+            CharacterType::GameMaster,
+            CharacterType::GenericNpc,
+        ];
+        $genders = [Gender::Male, Gender::Female, Gender::Other, Gender::Unspecified];
+
+        $chars = [];
+        for ($i = 1; $i <= $count; $i++) {
+            $ch = new LarpCharacter();
+            $ch->setTitle(sprintf('Character %02d', $i));
+            $ch->setDescription('Autogenerated character '.$i);
+            $ch->setLarp($larp);
+            $ch->setInGameName('IG-'.$i);
+            $ch->setGender($genders[array_rand($genders)]);
+            $ch->setAvailableForRecruitment((bool)random_int(0, 1));
+            $ch->setCharacterType($types[array_rand($types)]);
+            $ch->setCreatedBy($creator);
+
+            // Assign a participant (random from a list)
+            $participant = $participants[array_rand($participants)];
+            $ch->setLarpParticipant($participant);
+
+            // Give 0–3 tags
+            $tagCount = min(count($tags), random_int(0, 3));
+            if ($tagCount > 0) {
+                $pick = $this->pickRandom($tags, $tagCount);
+                foreach ($pick as $t) {
+                    $ch->addTag($t);
+                }
+            }
+
+            $chars[] = $ch;
+        }
+
+        // Link one continuation chain if we have enough characters
+        if (count($chars) >= 3) {
+            $chars[1]->setPreviousCharacter($chars[0]);
+            $chars[2]->setPreviousCharacter($chars[1]);
+            $chars[0]->setContinuation($chars[1]);
+            $chars[1]->setContinuation($chars[2]);
+        }
+
+        return $chars;
+    }
+
+    /**
+     * @return Relation[]
+     */
+    private function createRelations(array $characters, User $creator): array
+    {
+        $relations = [];
+        if (count($characters) < 4) {
+            return $relations;
+        }
+
+        // Create a couple of friend/enemy links inside the same LARP
+        $pairs = [
+            [$characters[0], $characters[1], RelationType::Friend],
+            [$characters[2], $characters[3], RelationType::Enemy],
+        ];
+
+        foreach ($pairs as [$from, $to, $type]) {
+            $rel = (new Relation())
+                ->setFrom($from)
+                ->setTo($to)
+                ->setRelationType($type)
+                ->setDescription($type->value . ' relation');
+            $rel->setLarp($from->getLarp());
+            $rel->setCreatedBy($creator);
+            $relations[] = $rel;
+        }
+        return $relations;
+    }
+
+    private function participant(User $user, Larp $larp, array $roles): LarpParticipant
+    {
+        return (new LarpParticipant())
+            ->setUser($user)
+            ->setLarp($larp)
+            ->setRoles($roles);
+    }
+
+    /**
+     * @template T
+     * @param T[] $items
+     * @return T[]
+     */
+    private function pickRandom(array $items, int $n): array
+    {
+        if ($n <= 0 || $n >= count($items)) {
+            return $n <= 0 ? [] : $items;
+        }
+        $keys = array_rand($items, $n);
+        if (!is_array($keys)) {
+            $keys = [$keys];
+        }
+        return array_values(array_intersect_key($items, array_flip($keys)));
+    }
+}

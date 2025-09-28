@@ -1,0 +1,64 @@
+name: PHPUnit
+
+on:
+  pull_request:
+    branches: [ "**" ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd="pg_isready -U postgres -d test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: composer:v2
+
+      - name: Copy .env.test if needed
+        run: |
+          cp -n .env.test.dist .env.test || true
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in `seq 1 30`; do
+            pg_isready -h 127.0.0.1 -p 5432 -U postgres -d test && break
+            sleep 1
+          done
+
+      - name: Prepare test database
+        env:
+          # Adjust driver to pdo_pgsql if needed in your Doctrine config
+          DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/test?serverVersion=15&charset=utf8"
+          APP_ENV: test
+        run: |
+          php bin/console doctrine:database:create --if-not-exists --env=test
+          php bin/console doctrine:migrations:migrate --no-interaction --env=test
+
+      - name: Run tests
+        env:
+          APP_ENV: test
+          DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/test?serverVersion=15&charset=utf8"
+        run: vendor/bin/phpunit --colors=always

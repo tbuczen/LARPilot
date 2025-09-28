@@ -18,7 +18,7 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title">{{ larp.title }}</h5>
-                                <p class="card-text">{{ larp.description }}</p>
+                                <p class="card-text">{{ larp.description|truncate_words(15) }}</p>
 
                                 <div class="mb-2">
                                     <strong>Status:</strong>
@@ -68,7 +68,7 @@
                             </div>
                             <div class="card-footer">
                                 <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-primary">
-                                    View Details
+                                    {{ 'common.show_details'|trans }}
                                 </a>
 {#                                {% if larp.location %}#}
 {#                                    <a href="{{ path('public_location_details', {'slug': larp.location.slug}) }}" class="btn btn-outline-secondary btn-sm">#}

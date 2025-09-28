@@ -1,37 +1,20 @@
 <?php
 
-namespace App\Controller\Backoffice;
+namespace App\Controller\Backoffice\Larp;
 
 use App\Domain\Larp\UseCase\SubmitLarp\SubmitLarpCommand;
 use App\Domain\Larp\UseCase\SubmitLarp\SubmitLarpHandler;
 use App\Entity\Larp;
-use App\Entity\User;
 use App\Form\LarpType;
-use App\Repository\LarpRepository;
-use App\Security\Voter\Backoffice\Larp\LarpDetailsVoter;
-use App\Service\Larp\LarpDashboardService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/larp', name: 'backoffice_larp_')]
-class LarpController extends AbstractController
+#[Route('/larp/create', name: 'backoffice_larp_create',  methods: ['GET', 'POST'])]
+class LarpCreateController extends AbstractController
 {
-    #[Route('', name: 'list', methods: ['GET'])]
-    public function index(LarpRepository $larpRepository): Response
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        $larps = $larpRepository->findAllWhereParticipating($user);
-        return $this->render('backoffice/larp/list.html.twig', [
-            'larps' => $larps,
-        ]);
-    }
-
-    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function submit(Request $request, SubmitLarpHandler $handler): Response
+    public function __invoke(Request $request, SubmitLarpHandler $handler): Response
     {
         $larp = new Larp();
         $form = $this->createForm(LarpType::class, $larp);
@@ -61,24 +44,6 @@ class LarpController extends AbstractController
 
         return $this->render('backoffice/larp/create.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    #[Route('/{larp}', name: 'details', methods: ['GET'])]
-    public function details(
-        Larp $larp,
-        LarpDashboardService $dashboardService
-    ): Response {
-
-        if (!$this->isGranted(LarpDetailsVoter::VIEW, $larp)) {
-            return $this->redirectToRoute('public_larp_list', [], 403);
-        }
-
-        $dashboard = $dashboardService->getDashboardData($larp);
-
-        return $this->render('backoffice/larp/details.html.twig', [
-            'larp' => $larp,
-            'dashboard' => $dashboard,
         ]);
     }
 }
