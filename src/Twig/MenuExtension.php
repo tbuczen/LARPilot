@@ -30,7 +30,7 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
             ]
         ];
 
-        if ($user) {
+        if ($user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             $this->menuItems[] = [
                 'label' => $this->translator->trans('common.account'),
                 'url' => '#',

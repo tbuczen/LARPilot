@@ -71,7 +71,7 @@ class StatusController extends AbstractController
 
         // Check validation errors
         $validationErrors = $this->workflowService->getTransitionValidationErrors($larp, $transitionName);
-        if (!empty($validationErrors)) {
+        if ($validationErrors !== []) {
             foreach ($validationErrors as $error) {
                 $this->addFlash('error', $error);
             }

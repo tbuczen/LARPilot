@@ -94,10 +94,8 @@ class StoryRecruitment
 
     public function removeProposal(RecruitmentProposal $proposal): void
     {
-        if ($this->proposals->removeElement($proposal)) {
-            if ($proposal->getRecruitment() === $this) {
-                $proposal->setRecruitment(null);
-            }
+        if ($this->proposals->removeElement($proposal) && $proposal->getRecruitment() === $this) {
+            $proposal->setRecruitment(null);
         }
     }
 }

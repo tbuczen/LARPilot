@@ -49,7 +49,7 @@ class ItemController extends BaseController
         ?Item $item = null,
     ): Response {
         $new = false;
-        if (!$item) {
+        if (!$item instanceof \App\Entity\StoryObject\Item) {
             $item = new Item();
             $item->setLarp($larp);
             $item->setCost(new Money(0, new Currency('USD')));
@@ -83,10 +83,8 @@ class ItemController extends BaseController
         Item $item,
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
-        if ($deleteIntegrations) {
-            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $item, 'Item')) {
-                return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
-            }
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $item, 'Item')) {
+            return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
         }
 
         $itemRepository->remove($item);

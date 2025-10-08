@@ -10,7 +10,7 @@ use Symfony\Component\Workflow\Event\GuardEvent;
 class LarpWorkflowGuardListener implements EventSubscriberInterface
 {
     public function __construct(
-        private LarpTransitionGuardService $guardService
+        private readonly LarpTransitionGuardService $guardService
     ) {
     }
 
@@ -47,7 +47,7 @@ class LarpWorkflowGuardListener implements EventSubscriberInterface
     {
         /** @var Larp $larp */
         $larp = $event->getSubject();
-        
+
         // Note: We don't block the transition here, we let it show up but disabled
         // The blocking is handled by the validation in the controller/service
         // This allows the button to appear with validation errors in the dropdown

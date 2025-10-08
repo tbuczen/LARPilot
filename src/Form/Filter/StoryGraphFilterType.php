@@ -33,11 +33,9 @@ class StoryGraphFilterType extends AbstractType
 //                    'plugins' =>  ['dropdown_input']
                 'hideSelected' => false
                 ],
-                'query_builder' => function (ThreadRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (ThreadRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('involvedFactions', EntityType::class, [
                 'class' => LarpFaction::class,
@@ -49,11 +47,9 @@ class StoryGraphFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('involvedCharacters', EntityType::class, [
                 'class' => LarpCharacter::class,
@@ -65,11 +61,9 @@ class StoryGraphFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ]);
         ;
     }
@@ -83,7 +77,7 @@ class StoryGraphFilterType extends AbstractType
     {
         $resolver->setDefaults([
             'csrf_protection' => false,
-            'validation_groups' => array('filtering'),
+            'validation_groups' => ['filtering'],
             'method' => 'GET',
             'translation_domain' => 'forms',
             'larp' => null,

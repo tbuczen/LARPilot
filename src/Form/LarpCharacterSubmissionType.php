@@ -44,12 +44,10 @@ class LarpCharacterSubmissionType extends AbstractType
                 'label' => 'form.preferred_tags',
                 'help' => 'form.preferred_tags_help',
                 'autocomplete' => true,
-                'query_builder' => function (EntityRepository $er) use ($larp) {
-                    return $er->createQueryBuilder('t')
-                        ->where('t.larp = :larp')
-                        ->setParameter('larp', $larp)
-                        ->orderBy('t.title', 'ASC');
-                },
+                'query_builder' => fn (EntityRepository $er): \Doctrine\ORM\QueryBuilder => $er->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
             ])
             ->add('unwantedTags', EntityType::class, [
                 'class' => Tag::class,
@@ -59,12 +57,10 @@ class LarpCharacterSubmissionType extends AbstractType
                 'label' => 'form.unwanted_tags',
                 'help' => 'form.unwanted_tags_help',
                 'autocomplete' => true,
-                'query_builder' => function (EntityRepository $er) use ($larp) {
-                    return $er->createQueryBuilder('t')
-                        ->where('t.larp = :larp')
-                        ->setParameter('larp', $larp)
-                        ->orderBy('t.title', 'ASC');
-                },
+                'query_builder' => fn (EntityRepository $er): \Doctrine\ORM\QueryBuilder => $er->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
             ])
             ->add('choices', CollectionType::class, [
                 'entry_type' => LarpCharacterSubmissionChoiceType::class,

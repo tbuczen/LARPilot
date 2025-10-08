@@ -46,11 +46,9 @@ class QuestType extends AbstractType
                 'multiple' => false,
                 'autocomplete' => true,
                 'placeholder' => 'form.quest.choose_thread',
-                'query_builder' => function (ThreadRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (ThreadRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
                 'tom_select_options' => [
                     'create' => true,
                     'persist' => false,
@@ -64,11 +62,9 @@ class QuestType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.quest.choose_faction',
-                'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
                 'tom_select_options' => [
                     'create' => true,
                     'persist' => false,
@@ -82,11 +78,9 @@ class QuestType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.quest.choose_character',
-                'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
                 'tom_select_options' => [
                     'create' => true,
                     'persist' => false,
@@ -99,11 +93,9 @@ class QuestType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'query_builder' => function (TagRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('t')
-                        ->where('t.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (TagRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp),
                 'tom_select_options' => [
                     'create' => true,
                     'persist' => false,

@@ -28,7 +28,7 @@ class LarpFactionFilterType extends AbstractType
     {
         $resolver->setDefaults([
             'csrf_protection' => false,
-            'validation_groups' => array('filtering'),
+            'validation_groups' => ['filtering'],
             'method' => 'GET',
             'translation_domain' => 'forms',
         ]);

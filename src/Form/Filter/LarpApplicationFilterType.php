@@ -27,11 +27,9 @@ class LarpApplicationFilterType extends AbstractType
                 'autocomplete' => true,
                 'placeholder' => 'form.choose',
                 'data_extraction_method' => 'default',
-                'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('c')
-                        ->where('c.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                    ->where('c.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('faction', EntityType::class, [
                 'class' => LarpFaction::class,
@@ -40,11 +38,9 @@ class LarpApplicationFilterType extends AbstractType
                 'autocomplete' => true,
                 'placeholder' => 'form.choose',
                 'data_extraction_method' => 'default',
-                'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ]);
     }
 

@@ -23,7 +23,7 @@ use Webmozart\Assert\Assert;
 class ImportCharactersHandler
 {
     private array $cache;
-    private ?IntegrationServiceInterface $integrationService;
+    private ?IntegrationServiceInterface $integrationService = null;
 
     public function __construct(
         private readonly LarpRepository          $larpRepository,
@@ -119,7 +119,7 @@ class ImportCharactersHandler
 
     private function handleFaction(mixed $value, string $larpId, LarpCharacter $character): void
     {
-        $factionName = trim($value);
+        $factionName = trim((string) $value);
         if (!isset($this->cache[$factionName])) {
             $faction = $this->factionRepository->findByOrCreate($factionName, $larpId);
             $this->cache[$factionName] = $faction;

@@ -61,7 +61,7 @@ class LarpCharacter extends StoryObject
 
     //type - player/long npc/short npc/ game master/ generic npc
     #[ORM\Column(enumType: CharacterType::class)]
-    private CharacterType $characterType;
+    private CharacterType $characterType = CharacterType::Player;
 
     //character tags - like what is to play the character many to many LarpCharacterTag
 
@@ -97,7 +97,6 @@ class LarpCharacter extends StoryObject
         $this->quests = new ArrayCollection();
         $this->threads = new ArrayCollection();
         $this->items = new ArrayCollection();
-        $this->characterType = CharacterType::Player;
     }
 
 

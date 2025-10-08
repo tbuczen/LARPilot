@@ -28,7 +28,7 @@ readonly class LarpBackofficeSecurityListener
             return;
         }
 
-        if (!$route || !str_starts_with($route, 'backoffice_larp_')) {
+        if (!$route || !str_starts_with((string) $route, 'backoffice_larp_')) {
             return;
         }
 

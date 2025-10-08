@@ -46,13 +46,13 @@ class ParticipantType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'label' => 'form.participant.role',
                 'choices' => UserRole::cases(),
-                'choice_label' => fn (UserRole $role) => 'user_role.' . $role->value,
+                'choice_label' => fn (UserRole $role): string => 'user_role.' . $role->value,
                 'choice_translation_domain' => 'messages',
                 'required' => true,
                 'autocomplete' => true,
                 'multiple' => true,
             ])
-            ->addDependent('larpCharacters', 'roles', function (DependentField $field, ?array $roles) use ($larp) {
+            ->addDependent('larpCharacters', 'roles', function (DependentField $field, ?array $roles) use ($larp): void {
                 if (!$roles) {
                     return;
                 }
@@ -66,11 +66,9 @@ class ParticipantType extends AbstractType
                             'label' => 'form.participant.character',
                             'autocomplete' => true,
                             'multiple' => true,
-                            'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
-                                return $repo->createQueryBuilder('c')
-                                    ->where('c.larp = :larp')
-                                    ->setParameter('larp', $larp);
-                            },
+                            'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                                ->where('c.larp = :larp')
+                                ->setParameter('larp', $larp),
                         ]);
                     }
                 }

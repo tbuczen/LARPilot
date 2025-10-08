@@ -57,7 +57,7 @@ class EventController extends BaseController
         ?Event             $event = null,
     ): Response {
         $new = false;
-        if (!$event) {
+        if (!$event instanceof \App\Entity\StoryObject\Event) {
             $event = new Event();
             $event->setLarp($larp);
             $new = true;
@@ -92,12 +92,10 @@ class EventController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations) {
-            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $event, 'Event')) {
-                return $this->redirectToRoute('backoffice_larp_story_event_list', [
-                    'larp' => $larp->getId(),
-                ]);
-            }
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $event, 'Event')) {
+            return $this->redirectToRoute('backoffice_larp_story_event_list', [
+                'larp' => $larp->getId(),
+            ]);
         }
 
         $eventRepository->remove($event);
@@ -183,7 +181,7 @@ class EventController extends BaseController
         StoryRecruitmentRepository $recruitmentRepository,
         ?StoryRecruitment          $recruitment = null,
     ): Response {
-        if (!$recruitment) {
+        if (!$recruitment instanceof \App\Entity\StoryObject\StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($event);
             $recruitment->setCreatedBy($this->getUser());

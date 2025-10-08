@@ -28,8 +28,8 @@ class FileMappingType extends AbstractType
                 'label' => 'Mapping type',
                 'choices' => $allowedTypes,
             ])
-            ->addDependent('meta', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType) {
-                if (!$type) {
+            ->addDependent('meta', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType): void {
+                if (!$type instanceof \App\Entity\Enum\ResourceType) {
                     return;
                 }
                 $type = $this->getType($mimeType, $type);
@@ -39,8 +39,8 @@ class FileMappingType extends AbstractType
                     $field->add($form);
                 }
             })
-            ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType) {
-                if (!$type) {
+            ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType): void {
+                if (!$type instanceof \App\Entity\Enum\ResourceType) {
                     return;
                 }
                 $type = $this->getType($mimeType, $type);
@@ -68,7 +68,7 @@ class FileMappingType extends AbstractType
             return ResourceType::cases(); // fallback if no mimeType known
         }
 
-        return array_filter(ResourceType::cases(), function (ResourceType $type) use ($mimeType) {
+        return array_filter(ResourceType::cases(), function (ResourceType $type) use ($mimeType): bool {
             // Example: you define your own matching rules here
             if (str_starts_with($mimeType, 'application/vnd.google-apps.folder')) {
                 return $type->isFolderMapping();
@@ -88,7 +88,7 @@ class FileMappingType extends AbstractType
     {
         $allowedTypes = $this->getAllowedResourceTypes($mimeType);
         if (!in_array($type, $allowedTypes, true)) {
-            $type = reset($allowedTypes);
+            return reset($allowedTypes);
         }
         return $type;
     }

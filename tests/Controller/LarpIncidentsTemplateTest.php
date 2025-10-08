@@ -65,7 +65,7 @@ class LarpIncidentsTemplateTest extends KernelTestCase
 
         $data = $form->getData();
         $incidents = [$incidentA, $incidentB];
-        $filtered = array_values(array_filter($incidents, function (LarpIncident $i) use ($data) {
+        $filtered = array_values(array_filter($incidents, function (LarpIncident $i) use ($data): bool {
             if (!empty($data['status']) && !in_array($i->getStatus(), $data['status'], true)) {
                 return false;
             }

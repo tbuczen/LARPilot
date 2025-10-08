@@ -16,7 +16,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
-class Location implements Timestampable, CreatorAwareInterface
+class Location implements Timestampable, CreatorAwareInterface, \Stringable
 {
     use UuidTraitEntity;
     use TimestampableEntity;
@@ -69,7 +69,7 @@ class Location implements Timestampable, CreatorAwareInterface
     private ?string $contactPhone = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private ?array $images = null;
+    private ?array $images = [];
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $facilities = null;
@@ -100,7 +100,6 @@ class Location implements Timestampable, CreatorAwareInterface
     {
         $this->id = Uuid::v4();
         $this->larps = new ArrayCollection();
-        $this->images = [];
     }
 
     public function getTitle(): ?string
@@ -395,10 +394,8 @@ class Location implements Timestampable, CreatorAwareInterface
 
     public function removeLarp(Larp $larp): self
     {
-        if ($this->larps->removeElement($larp)) {
-            if ($larp->getLocation() === $this) {
-                $larp->setLocation(null);
-            }
+        if ($this->larps->removeElement($larp) && $larp->getLocation() === $this) {
+            $larp->setLocation(null);
         }
         return $this;
     }

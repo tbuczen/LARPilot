@@ -56,7 +56,7 @@ class CharacterController extends BaseController
         ?LarpCharacter          $character = null,
     ): Response {
         $new = false;
-        if (!$character) {
+        if (!$character instanceof \App\Entity\StoryObject\LarpCharacter) {
             $character = new LarpCharacter();
             $character->setLarp($larp);
             $new = true;
@@ -95,12 +95,10 @@ class CharacterController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations) {
-            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $character, 'Character')) {
-                return $this->redirectToRoute('backoffice_larp_story_character_list', [
-                    'larp' => $larp->getId(),
-                ]);
-            }
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $character, 'Character')) {
+            return $this->redirectToRoute('backoffice_larp_story_character_list', [
+                'larp' => $larp->getId(),
+            ]);
         }
 
         $characterRepository->remove($character);

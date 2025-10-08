@@ -41,7 +41,7 @@ class StoryGraphFactionFilterTest extends TestCase
             $quest,
         ]);
 
-        $nodeIds = array_map(static fn ($n) => $n['data']['id'], $graph['nodes']);
+        $nodeIds = array_map(static fn (array $n) => $n['data']['id'], $graph['nodes']);
 
         $this->assertContains($faction->getId()->toRfc4122(), $nodeIds);
         $this->assertContains($character->getId()->toRfc4122(), $nodeIds);

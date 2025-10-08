@@ -51,7 +51,7 @@ class LocationController extends AbstractController
         LocationRepository $locationRepository,
         ?Location          $location = null
     ): Response {
-        if ($location === null) {
+        if (!$location instanceof \App\Entity\Location) {
             $location = new Location();
         }
 
@@ -83,7 +83,7 @@ class LocationController extends AbstractController
         LocationRepository $locationRepository,
         ?Location          $location = null
     ): Response {
-        if ($location === null) {
+        if (!$location instanceof \App\Entity\Location) {
             $location = new Location();
         }
 

@@ -31,7 +31,7 @@ class TestController extends CharacterSubmissionsController
         FilterBuilderUpdaterInterface $filterBuilderUpdater,
         PaginatorInterface $paginator,
         EntityManagerInterface $entityManager,
-        private FormInterface $form
+        private readonly FormInterface $form
     ) {
         parent::__construct($translator, $filterBuilderUpdater, $paginator, $entityManager);
     }

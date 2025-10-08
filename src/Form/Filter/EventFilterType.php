@@ -45,11 +45,9 @@ class EventFilterType extends AbstractType
 //                    'plugins' =>  ['dropdown_input']
                 'hideSelected' => false
                 ],
-                'query_builder' => function (ThreadRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (ThreadRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
         ;
     }
@@ -63,7 +61,7 @@ class EventFilterType extends AbstractType
     {
         $resolver->setDefaults([
             'csrf_protection' => false,
-            'validation_groups' => array('filtering'),
+            'validation_groups' => ['filtering'],
             'method' => 'GET',
             'translation_domain' => 'forms',
             'larp' => null,

@@ -32,7 +32,7 @@ readonly class RegisterUserHandler
 
         $user = $this->userRepository->findOneByEmail($command->email);
 
-        if (!$user) {
+        if (!$user instanceof \App\Entity\User) {
             $user = new User();
             $user->setContactEmail($command->email);
             // Assign default role (e.g., PLAYER). Adjust to your enum or role structure.

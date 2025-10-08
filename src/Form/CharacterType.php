@@ -56,11 +56,9 @@ class CharacterType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.character.choose_faction',
-                'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',

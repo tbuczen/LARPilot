@@ -10,8 +10,8 @@ use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 class LarpApplicationDashboardService
 {
     public function __construct(
-        private EntityPreloader $entityPreloader,
-        private LarpApplicationRepository $applicationRepository
+        private readonly EntityPreloader $entityPreloader,
+        private readonly LarpApplicationRepository $applicationRepository
     ) {
     }
 
@@ -45,7 +45,7 @@ class LarpApplicationDashboardService
                 }
             }
             
-            if (!empty($allChoices)) {
+            if ($allChoices !== []) {
                 $this->entityPreloader->preload($allChoices, 'character');
                 $this->entityPreloader->preload($allChoices, 'application');
             }
@@ -125,9 +125,7 @@ class LarpApplicationDashboardService
         }
 
         // Sort character stats by popularity (most wanted)
-        uasort($characterChoices, function ($a, $b) {
-            return $b['count'] <=> $a['count'];
-        });
+        uasort($characterChoices, fn ($a, $b): int => $b['count'] <=> $a['count']);
         $mostWantedCharacters = array_slice($characterChoices, 0, 10);
         $stats['most_wanted_characters'] = $mostWantedCharacters;
 
@@ -137,9 +135,7 @@ class LarpApplicationDashboardService
         
         // First, add characters with applications but not in most wanted (sorted by lowest count)
         $sortedByLeastWanted = $characterChoices;
-        uasort($sortedByLeastWanted, function ($a, $b) {
-            return $a['count'] <=> $b['count'];
-        });
+        uasort($sortedByLeastWanted, fn ($a, $b): int => $a['count'] <=> $b['count']);
         
         foreach ($sortedByLeastWanted as $characterId => $data) {
             if (!in_array($characterId, $mostWantedIds)) {
@@ -174,9 +170,7 @@ class LarpApplicationDashboardService
         }
         
         // Sort faction distribution by count (descending)
-        uasort($factionDistribution, function ($a, $b) {
-            return $b['count'] <=> $a['count'];
-        });
+        uasort($factionDistribution, fn ($a, $b): int => $b['count'] <=> $a['count']);
         
         $stats['faction_distribution'] = $factionDistribution;
 

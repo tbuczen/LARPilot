@@ -88,7 +88,7 @@ class CharacterSubmissionsController extends BaseController
         // Get voting data for current user
         $voteRepository = $em->getRepository(LarpApplicationVote::class);
         $userVotes = [];
-        if ($this->getUser()) {
+        if ($this->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             $votes = $voteRepository->findBy(['user' => $this->getUser()]);
             foreach ($votes as $vote) {
                 $userVotes[$vote->getChoice()->getId()->toRfc4122()] = $vote;
@@ -152,7 +152,7 @@ class CharacterSubmissionsController extends BaseController
         }
 
         $user = $this->getUser();
-        if (!$user) {
+        if (!$user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             $this->addFlash('error', 'backoffice.larp.applications.login_required');
             return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
         }
@@ -164,7 +164,7 @@ class CharacterSubmissionsController extends BaseController
             'user' => $user
         ]);
 
-        if ($existingVote) {
+        if ($existingVote instanceof \App\Entity\LarpApplicationVote) {
             // Update existing vote
             $existingVote->setVote($voteValue);
             $existingVote->setJustification($justification);

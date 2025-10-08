@@ -196,7 +196,7 @@ class SeedLarpFixturesCommand extends Command
      */
     private function linkCharactersToParticipantsIfMissing(array $characters, array $playerParticipants): int
     {
-        if (!$playerParticipants) {
+        if ($playerParticipants === []) {
             return 0;
         }
 

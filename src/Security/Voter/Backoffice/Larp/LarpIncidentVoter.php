@@ -23,10 +23,6 @@ class LarpIncidentVoter extends Voter
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (!$user instanceof User) {
-            return false;
-        }
-
         //        $participants = $subject->getParticipants();
         //        /** @var LarpParticipant|null $userOrganizer */
         //        $userOrganizer = $participants->filter(function (LarpParticipant $participant) use ($user) {
@@ -36,7 +32,6 @@ class LarpIncidentVoter extends Voter
         //        if (!$userOrganizer) {
         //            return false;
         //        }
-
-        return true;
+        return $user instanceof User;
     }
 }

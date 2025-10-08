@@ -49,7 +49,7 @@ class FacebookAuthenticator extends OAuth2Authenticator implements Authenticatio
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client): \Symfony\Component\Security\Core\User\UserInterface {
                 /** @var FacebookUser $facebookUser */
                 $facebookUser = $client->fetchUserFromToken($accessToken);
                 $providerEnum = SocialAccountProvider::Facebook;

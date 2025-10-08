@@ -47,7 +47,7 @@ readonly class GraphEdgeBuilder
     private function extractObjectIds(array $objects): array
     {
         return array_map(
-            fn (StoryObject $object) => $object->getId()->toRfc4122(),
+            fn (StoryObject $object): string => $object->getId()->toRfc4122(),
             $objects
         );
     }

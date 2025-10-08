@@ -53,7 +53,7 @@ readonly class GoogleClientManager
         ]);
         $client->setAccessToken($storedToken);
 
-        if ($client->isAccessTokenExpired() && !empty($storedToken['refresh_token'])) {
+        if ($client->isAccessTokenExpired() && (isset($storedToken['refresh_token']) && ($storedToken['refresh_token'] !== '' && $storedToken['refresh_token'] !== '0'))) {
             $this->refreshToken($client, $storedToken['refresh_token'], $integration);
         }
 

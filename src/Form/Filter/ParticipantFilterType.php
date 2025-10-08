@@ -34,7 +34,7 @@ class ParticipantFilterType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'label' => 'form.invitation.role',
                 'choices' => UserRole::cases(),
-                'choice_label' => fn (UserRole $role) => 'user_role.' . $role->value,
+                'choice_label' => fn (UserRole $role): string => 'user_role.' . $role->value,
                 'choice_translation_domain' => 'messages',
                 'choice_value' => fn (?UserRole $role) => $role?->value,
                 'autocomplete' => true,
@@ -66,12 +66,10 @@ class ParticipantFilterType extends AbstractType
 //                    'plugins' =>  ['dropdown_input']
                     'hideSelected' => false
                 ],
-                'query_builder' => function (UserRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('u')
-                        ->innerJoin('u.larpParticipants', 'lp')
-                        ->where('lp.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (UserRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('u')
+                    ->innerJoin('u.larpParticipants', 'lp')
+                    ->where('lp.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
         ;
     }
@@ -85,7 +83,7 @@ class ParticipantFilterType extends AbstractType
     {
         $resolver->setDefaults([
             'csrf_protection' => false,
-            'validation_groups' => array('filtering'),
+            'validation_groups' => ['filtering'],
             'method' => 'GET',
             'translation_domain' => 'forms',
             'larp' => null,

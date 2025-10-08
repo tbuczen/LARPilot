@@ -120,7 +120,7 @@ class LarpParticipant
         $organizerRoles = array_map(fn ($role) => $role->value, UserRole::getOrganizers());
         $userRoles = array_map(fn ($role) => $role->value, $this->getRoles());
 
-        return !empty(array_intersect($organizerRoles, $userRoles));
+        return array_intersect($organizerRoles, $userRoles) !== [];
     }
 
     public function isStoryWriter(): bool
@@ -128,7 +128,7 @@ class LarpParticipant
         $storyWriters = array_map(fn ($role) => $role->value, UserRole::getStoryWriters());
         $userRoles = array_map(fn ($role) => $role->value, $this->getRoles());
 
-        return !empty(array_intersect($storyWriters, $userRoles));
+        return array_intersect($storyWriters, $userRoles) !== [];
     }
 
  
@@ -163,11 +163,9 @@ class LarpParticipant
 
     public function removeLarpCharacter(LarpCharacter $larpCharacter): self
     {
-        if ($this->larpCharacters->removeElement($larpCharacter)) {
-            // set the owning side to null (unless already changed)
-            if ($larpCharacter->getLarpParticipant() === $this) {
-                $larpCharacter->setLarpParticipant(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->larpCharacters->removeElement($larpCharacter) && $larpCharacter->getLarpParticipant() === $this) {
+            $larpCharacter->setLarpParticipant(null);
         }
 
         return $this;

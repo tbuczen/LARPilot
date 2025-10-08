@@ -107,7 +107,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
             $file = $drive->files->get($externalFileId, ['fields' => 'webViewLink']);
             return $file->getWebViewLink();
         } catch (Exception $e) {
-            throw new RuntimeException('Unable to retrieve file URL: ' . $e->getMessage());
+            throw new RuntimeException('Unable to retrieve file URL: ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -179,7 +179,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
     {
         $baseUrl = $file->getUrl();
 
-        $baseUrl = preg_replace('/\?.*/', '', $baseUrl);
+        $baseUrl = preg_replace('/\?.*/', '', (string) $baseUrl);
         $sheetId = $additionalData['sheetId'] ?? 0; /* @see CharacterController::importFromSelectedMapping */
         return match ($referenceType) {
             ReferenceType::SpreadsheetRow => $baseUrl . "#gid=$sheetId&range=$externalId:$externalId",

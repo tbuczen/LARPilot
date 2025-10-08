@@ -16,7 +16,7 @@ class BaseRepositoryTest extends TestCase
         $em->expects($this->once())->method('flush');
 
         $repository = new class($em) extends BaseRepository {
-            public function __construct(private EntityManagerInterface $em) {}
+            public function __construct(private readonly EntityManagerInterface $em) {}
             protected function getEntityManager(): EntityManagerInterface
             {
                 return $this->em;
@@ -34,7 +34,7 @@ class BaseRepositoryTest extends TestCase
         $em->expects($this->once())->method('flush');
 
         $repository = new class($em) extends BaseRepository {
-            public function __construct(private EntityManagerInterface $em) {}
+            public function __construct(private readonly EntityManagerInterface $em) {}
             protected function getEntityManager(): EntityManagerInterface
             {
                 return $this->em;

@@ -44,7 +44,7 @@ readonly class SubmitLarpHandler
     {
         $participant = new LarpParticipant();
         $user = $this->entityManager->getRepository(User::class)->find($command->submittedByUserId);
-        if (!$user) {
+        if (!$user instanceof \App\Entity\User) {
             throw new \RuntimeException('User not found.');
         }
         $participant->setUser($user);

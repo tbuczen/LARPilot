@@ -25,11 +25,9 @@ class RecruitmentProposalType extends AbstractType
                 'class' => LarpCharacter::class,
                 'choice_label' => 'title',
                 'label' => 'form.proposal.character',
-                'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('c')
-                        ->where('c.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                    ->where('c.larp = :larp')
+                    ->setParameter('larp', $larp),
                 'autocomplete' => true,
             ])
             ->add('comment', TextareaType::class, [

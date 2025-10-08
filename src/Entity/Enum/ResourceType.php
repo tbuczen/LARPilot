@@ -75,9 +75,6 @@ enum ResourceType: string
 
     public function isFolderMapping(): bool
     {
-        return in_array($this, [
-            self::CHARACTER_DOC_DIRECTORY,
-            // other folder-related types
-        ], true);
+        return $this === self::CHARACTER_DOC_DIRECTORY;
     }
 }

@@ -29,7 +29,7 @@ class RelationRepository extends BaseRepository
      */
     public function findRelationsBetweenObjects(array $objectIds): array
     {
-        if (empty($objectIds)) {
+        if ($objectIds === []) {
             return [];
         }
 

@@ -21,7 +21,7 @@ final class TextTruncateExtension extends AbstractExtension
         }
 
         // Normalize whitespace
-        $text = trim(preg_replace('/\s+/u', ' ', $text));
+        $text = trim((string) preg_replace('/\s+/u', ' ', $text));
 
         if ($limit <= 0) {
             return '';

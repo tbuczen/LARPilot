@@ -56,8 +56,8 @@ class ExternalReferenceType extends AbstractType
                 'required' => true,
                 'placeholder' => 'form.choose',
             ])
-            ->addDependent('storyObject', 'storyObjectType', function (DependentField $field, ?TargetType $type) use ($larp) {
-                if (!$type) {
+            ->addDependent('storyObject', 'storyObjectType', function (DependentField $field, ?TargetType $type) use ($larp): void {
+                if (!$type instanceof \App\Entity\Enum\TargetType) {
                     return;
                 }
                 $field->add(EntityType::class, [
@@ -68,7 +68,7 @@ class ExternalReferenceType extends AbstractType
                     'multiple' => false,
                     'placeholder' => 'form.choose',
                     'label' => 'form.relation.from', //TODO: Change
-                    'query_builder' => function (BaseRepository $repo) use ($larp) {
+                    'query_builder' => function (BaseRepository $repo) use ($larp): \Doctrine\ORM\QueryBuilder {
                         $qb = $repo->createQueryBuilder('o')
                             ->where('o.larp = :larp')
                             ->setParameter('larp', $larp);

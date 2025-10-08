@@ -28,7 +28,7 @@ class RelationType extends AbstractType
 
         /** @var StoryObject|null $contextOwner If this is set - the field should not be editable */
         $contextOwner = $options['contextOwner'];
-        list($disableFrom, $disableTo) = $this->getDisabledFieldList($builder, $contextOwner);
+        [$disableFrom, $disableTo] = $this->getDisabledFieldList($builder, $contextOwner);
 
 
         $builder = new DynamicFormBuilder($builder);
@@ -93,8 +93,8 @@ class RelationType extends AbstractType
 
     private function getClosure(Larp $larp, bool $disable, ?StoryObject $contextOwner = null): \Closure
     {
-        return function (DependentField $field, ?TargetType $type) use ($larp, $disable, $contextOwner) {
-            if (!$type) {
+        return function (DependentField $field, ?TargetType $type) use ($larp, $disable, $contextOwner): void {
+            if (!$type instanceof \App\Entity\Enum\TargetType) {
                 return;
             }
             $field->add(EntityType::class, [
@@ -105,12 +105,12 @@ class RelationType extends AbstractType
                 'multiple' => false,
                 'placeholder' => 'form.choose',
                 'label' => 'form.relation.from', //TODO: Change
-                'query_builder' => function (BaseRepository $repo) use ($larp, $disable, $contextOwner) {
+                'query_builder' => function (BaseRepository $repo) use ($larp, $disable, $contextOwner): \Doctrine\ORM\QueryBuilder {
                     $qb = $repo->createQueryBuilder('o')
                         ->where('o.larp = :larp')
                         ->setParameter('larp', $larp);
 
-                    if ($contextOwner && !$disable) {
+                    if ($contextOwner instanceof \App\Entity\StoryObject\StoryObject && !$disable) {
                         $qb->andWhere('o != :self')
                             ->setParameter('self', $contextOwner);
                     }
@@ -137,13 +137,13 @@ class RelationType extends AbstractType
         $disableFrom = false;
         $disableTo = false;
 
-        if ($isEditing && $contextOwner) {
+        if ($isEditing && $contextOwner instanceof \App\Entity\StoryObject\StoryObject) {
             if ($relation->getFrom() === $contextOwner) {
                 $disableFrom = true;
             } elseif ($relation->getTo() === $contextOwner) {
                 $disableTo = true;
             }
         }
-        return array($disableFrom, $disableTo);
+        return [$disableFrom, $disableTo];
     }
 }

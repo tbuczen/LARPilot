@@ -67,7 +67,7 @@ class StoryObjectRepository extends BaseRepository
         $factionIds = $this->normalizeIds($factions);
         
         // If no filters, return all objects
-        if (empty($threadIds) && empty($characterIds) && empty($factionIds)) {
+        if ($threadIds === [] && $characterIds === [] && $factionIds === []) {
             return $this->createQueryBuilder('so')
                 ->where('so.larp = :larp')
                 ->andWhere('so NOT INSTANCE OF ' . Relation::class)
@@ -96,7 +96,7 @@ class StoryObjectRepository extends BaseRepository
         
         $allIds = array_unique($allIds);
         
-        if (empty($allIds)) {
+        if ($allIds === []) {
             return [];
         }
         
@@ -140,7 +140,7 @@ class StoryObjectRepository extends BaseRepository
             ->setParameters($parameters)
             ->getSingleColumnResult();
 
-        return array_map(static fn ($id) => $id instanceof Uuid ? $id->toRfc4122() : (string) $id, $rows);
+        return array_map(static fn ($id): string => $id instanceof Uuid ? $id->toRfc4122() : (string) $id, $rows);
     }
 
     /**

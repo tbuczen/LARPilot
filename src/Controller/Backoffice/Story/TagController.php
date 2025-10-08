@@ -37,7 +37,7 @@ class TagController extends BaseController
     #[Route('{tag}', name: 'modify', defaults: ['tag' => null], methods: ['GET', 'POST'])]
     public function modify(Request $request, Larp $larp, TagRepository $tagRepository, ?Tag $tag = null): Response
     {
-        if (!$tag) {
+        if (!$tag instanceof \App\Entity\Tag) {
             $tag = new Tag();
             $tag->setLarp($larp);
         }

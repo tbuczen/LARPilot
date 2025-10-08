@@ -23,7 +23,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LarpRepository::class)]
-class Larp implements Timestampable, CreatorAwareInterface
+class Larp implements Timestampable, CreatorAwareInterface, \Stringable
 {
     use UuidTraitEntity;
     use TimestampableEntity;
@@ -226,7 +226,7 @@ class Larp implements Timestampable, CreatorAwareInterface
 
     public function getDuration(): int
     {
-        if (!$this->startDate || !$this->endDate) {
+        if (!$this->startDate instanceof \DateTimeInterface || !$this->endDate instanceof \DateTimeInterface) {
             return 0;
         }
         
@@ -257,10 +257,8 @@ class Larp implements Timestampable, CreatorAwareInterface
 
     public function removeCharacter(LarpCharacter $character): static
     {
-        if ($this->characters->removeElement($character)) {
-            if ($character->getLarp() === $this) {
-                $character->setLarp(null);
-            }
+        if ($this->characters->removeElement($character) && $character->getLarp() === $this) {
+            $character->setLarp(null);
         }
         return $this;
     }

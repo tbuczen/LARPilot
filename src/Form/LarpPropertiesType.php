@@ -49,21 +49,21 @@ class LarpPropertiesType extends AbstractType
             ])
             ->add('setting', EnumType::class, [
                 'class' => LarpSetting::class,
-                'choice_label' => fn (LarpSetting $setting) => $setting->getLabel(),
+                'choice_label' => fn (LarpSetting $setting): string => $setting->getLabel(),
                 'placeholder' => 'Select a setting',
                 'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('type', EnumType::class, [
                 'class' => LarpType::class,
-                'choice_label' => fn (LarpType $type) => $type->getLabel(),
+                'choice_label' => fn (LarpType $type): string => $type->getLabel(),
                 'placeholder' => 'Select a type',
                 'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('characterSystem', EnumType::class, [
                 'class' => LarpCharacterSystem::class,
-                'choice_label' => fn (LarpCharacterSystem $system) => $system->getLabel(),
+                'choice_label' => fn (LarpCharacterSystem $system): string => $system->getLabel(),
                 'placeholder' => 'Select a character system',
                 'required' => false,
                 'attr' => ['class' => 'form-select']

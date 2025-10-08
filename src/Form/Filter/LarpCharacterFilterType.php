@@ -56,11 +56,9 @@ class LarpCharacterFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('storyWriter', EntityType::class, [
                 'class' => LarpParticipant::class,
@@ -69,7 +67,7 @@ class LarpCharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
-                'query_builder' => function (LarpParticipantRepository $repo) use ($larp) {
+                'query_builder' => function (LarpParticipantRepository $repo) use ($larp): \Doctrine\ORM\QueryBuilder {
                     $qb = $repo->createQueryBuilder('p')
                         ->join('p.user', 'u')
                         ->andWhere('p.larp = :larp')
@@ -106,7 +104,7 @@ class LarpCharacterFilterType extends AbstractType
     {
         $resolver->setDefaults([
             'csrf_protection' => false,
-            'validation_groups' => array('filtering'),
+            'validation_groups' => ['filtering'],
             'method' => 'GET',
             'translation_domain' => 'forms',
             'larp' => null

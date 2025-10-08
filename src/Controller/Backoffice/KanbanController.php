@@ -152,7 +152,7 @@ class KanbanController extends BaseController
                 'title' => $task->getTitle(),
                 'status' => $task->getStatus()->value,
                 'position' => $task->getPosition(),
-                'assignedTo' => $task->getAssignedTo() ? [
+                'assignedTo' => $task->getAssignedTo() instanceof \App\Entity\LarpParticipant ? [
                     'id' => $task->getAssignedTo()->getId(),
                     'name' => $task->getAssignedTo()->getName()
                 ] : null

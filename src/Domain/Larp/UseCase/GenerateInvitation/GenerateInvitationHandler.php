@@ -16,7 +16,7 @@ readonly class GenerateInvitationHandler
     public function handle(GenerateInvitationCommand $command): GenerateInvitationDTO
     {
         $larp = $this->entityManager->getRepository(Larp::class)->find($command->larpId);
-        if (!$larp) {
+        if (!$larp instanceof \App\Entity\Larp) {
             throw new \RuntimeException('Larp not found.');
         }
 

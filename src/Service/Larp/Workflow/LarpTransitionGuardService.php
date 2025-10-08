@@ -42,17 +42,12 @@ class LarpTransitionGuardService
     {
         $errors = [];
 
-        switch ($transitionName) {
-            case 'to_published':
-                $errors = $this->getPublishValidationErrors($larp);
-                break;
-            case 'to_inquiries':
-                $errors = $this->getInquiriesValidationErrors($larp);
-                break;
-            case 'to_confirmed':
-                $errors = $this->getConfirmedValidationErrors($larp);
-                break;
-        }
+        $errors = match ($transitionName) {
+            'to_published' => $this->getPublishValidationErrors($larp),
+            'to_inquiries' => $this->getInquiriesValidationErrors($larp),
+            'to_confirmed' => $this->getConfirmedValidationErrors($larp),
+            default => $errors,
+        };
 
         return $errors;
     }
@@ -62,10 +57,10 @@ class LarpTransitionGuardService
      */
     private function hasRequiredBasicInfo(Larp $larp): bool
     {
-        return !empty($larp->getLocation()) &&
-               !empty($larp->getDescription()) &&
-               $larp->getStartDate() !== null &&
-               $larp->getEndDate() !== null;
+        return $larp->getLocation() instanceof \App\Entity\Location &&
+               !in_array($larp->getDescription(), [null, '', '0'], true) &&
+               $larp->getStartDate() instanceof \DateTimeInterface &&
+               $larp->getEndDate() instanceof \DateTimeInterface;
     }
 
     /**
@@ -132,19 +127,19 @@ class LarpTransitionGuardService
     {
         $errors = [];
 
-        if (empty($larp->getLocation())) {
+        if (!$larp->getLocation() instanceof \App\Entity\Location) {
             $errors[] = 'Location is required to publish';
         }
 
-        if (empty($larp->getDescription())) {
+        if (in_array($larp->getDescription(), [null, '', '0'], true)) {
             $errors[] = 'Description is required to publish';
         }
 
-        if ($larp->getStartDate() === null) {
+        if (!$larp->getStartDate() instanceof \DateTimeInterface) {
             $errors[] = 'Start date is required to publish';
         }
 
-        if ($larp->getEndDate() === null) {
+        if (!$larp->getEndDate() instanceof \DateTimeInterface) {
             $errors[] = 'End date is required to publish';
         }
 
@@ -162,9 +157,7 @@ class LarpTransitionGuardService
             $errors[] = 'At least one character is required to open for inquiries';
         }
 
-        $charactersWithoutDescription = $larp->getCharacters()->filter(function ($character) {
-            return empty($character->getDescription());
-        });
+        $charactersWithoutDescription = $larp->getCharacters()->filter(fn ($character): bool => in_array($character->getDescription(), [null, '', '0'], true));
 
         if (!$charactersWithoutDescription->isEmpty()) {
             $errors[] = sprintf(

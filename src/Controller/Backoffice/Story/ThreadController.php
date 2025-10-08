@@ -56,7 +56,7 @@ class ThreadController extends BaseController
         ?Thread            $thread = null,
     ): Response {
         $new = false;
-        if (!$thread) {
+        if (!$thread instanceof \App\Entity\StoryObject\Thread) {
             $thread = new Thread();
             $thread->setLarp($larp);
             $new = true;
@@ -115,12 +115,10 @@ class ThreadController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations) {
-            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $thread, 'Thread')) {
-                return $this->redirectToRoute('backoffice_larp_story_thread_list', [
-                    'larp' => $larp->getId(),
-                ]);
-            }
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $thread, 'Thread')) {
+            return $this->redirectToRoute('backoffice_larp_story_thread_list', [
+                'larp' => $larp->getId(),
+            ]);
         }
 
         $threadRepository->remove($thread);
@@ -206,7 +204,7 @@ class ThreadController extends BaseController
         StoryRecruitmentRepository $recruitmentRepository,
         ?StoryRecruitment          $recruitment = null,
     ): Response {
-        if (!$recruitment) {
+        if (!$recruitment instanceof \App\Entity\StoryObject\StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($thread);
             $recruitment->setCreatedBy($this->getUser());

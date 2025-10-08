@@ -2,6 +2,7 @@
 // PHP
 declare(strict_types=1);
 
+use Rector\CodingStyle\ClassNameImport\ClassNameImportSkipVoter\FullyQualifiedNameClassNameImportSkipVoter;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -27,12 +28,7 @@ return static function (RectorConfig $rectorConfig): void {
         LevelSetList::UP_TO_PHP_82,
         SetList::CODE_QUALITY,
         SetList::TYPE_DECLARATION,
-        SetList::EARLY_RETURN,
-        // Symfony sets (adjust to your exact version if needed)
-//        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-//        SymfonySetList::SYMFONY_74,
-//        SymfonySetList::SYMFONY_CODE_QUALITY,
-
+        SetList::INSTANCEOF,
         // Optional extra improvements
         TwigSetList::TWIG_UNDERSCORE_TO_NAMESPACE,
     ]);
@@ -43,6 +39,7 @@ return static function (RectorConfig $rectorConfig): void {
         SimplifyIfElseToTernaryRector::class,
     ]);
 
-    // Autoload your app
+    $rectorConfig->importShortClasses(true);
+
     $rectorConfig->autoloadPaths([__DIR__ . '/vendor/autoload.php']);
 };

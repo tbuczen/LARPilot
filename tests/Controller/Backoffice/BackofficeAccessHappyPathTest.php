@@ -118,7 +118,7 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
         $repo = $this->em->getRepository(Larp::class);
         $larp = $repo->findOneBy(['slug' => 'test-larp']);
 
-        if (!$larp) {
+        if (!$larp instanceof \App\Entity\Larp) {
             $larp = new Larp();
             // Set minimum viable fields; adjust to your entity
             $larp->setTitle('Test LARP');
@@ -137,7 +137,7 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
         $repo = $this->em->getRepository(User::class);
         $user = $repo->findOneBy(['email' => 'superadmin+test@example.com']);
 
-        if (!$user) {
+        if (!$user instanceof \App\Entity\User) {
             $user = new User();
             // Set fields as per your User entity
             if (method_exists($user, 'setEmail')) {

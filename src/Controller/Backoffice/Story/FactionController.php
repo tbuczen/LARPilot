@@ -50,7 +50,7 @@ class FactionController extends BaseController
         ?LarpFaction          $faction = null,
     ): Response {
         $new = false;
-        if (!$faction) {
+        if (!$faction instanceof \App\Entity\StoryObject\LarpFaction) {
             $faction = new LarpFaction();
             $faction->setLarp($larp);
             $new = true;
@@ -99,12 +99,10 @@ class FactionController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations) {
-            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $faction, 'Faction')) {
-                return $this->redirectToRoute('backoffice_larp_story_faction_list', [
-                    'larp' => $larp->getId(),
-                ]);
-            }
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $faction, 'Faction')) {
+            return $this->redirectToRoute('backoffice_larp_story_faction_list', [
+                'larp' => $larp->getId(),
+            ]);
         }
 
         $factionRepository->remove($faction);

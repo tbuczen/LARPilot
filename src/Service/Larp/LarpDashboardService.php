@@ -9,7 +9,7 @@ use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 class LarpDashboardService
 {
     public function __construct(
-        private EntityPreloader $entityPreloader
+        private readonly EntityPreloader $entityPreloader
     ) {
     }
 
@@ -47,9 +47,7 @@ class LarpDashboardService
         $applications = $larp->getApplications();
         $totalApplications = $applications->count();
         
-        $pendingApplications = $applications->filter(function ($app) {
-            return method_exists($app, 'getStatus') && $app->getStatus() === 'pending';
-        })->count();
+        $pendingApplications = $applications->filter(fn ($app): bool => method_exists($app, 'getStatus') && $app->getStatus() === 'pending')->count();
 
         $participants = $larp->getParticipants();
         $approvedApplications = $participants->count();
@@ -66,9 +64,7 @@ class LarpDashboardService
         $characters = $larp->getCharacters();
         $totalCharacters = $characters->count();
         
-        $assignedCharacters = $characters->filter(function ($char) {
-            return method_exists($char, 'getAssignedTo') && $char->getAssignedTo() !== null;
-        })->count();
+        $assignedCharacters = $characters->filter(fn ($char): bool => method_exists($char, 'getAssignedTo') && $char->getAssignedTo() !== null)->count();
 
         return [
             'total' => $totalCharacters,
@@ -137,7 +133,7 @@ class LarpDashboardService
     private function getTimingData(Larp $larp): array
     {
         $daysUntilEvent = null;
-        if ($larp->getStartDate()) {
+        if ($larp->getStartDate() instanceof \DateTimeInterface) {
             $now = new \DateTime();
             $startDate = $larp->getStartDate();
             $interval = $now->diff($startDate);
@@ -145,7 +141,7 @@ class LarpDashboardService
         }
 
         $eventDuration = null;
-        if ($larp->getStartDate() && $larp->getEndDate()) {
+        if ($larp->getStartDate() instanceof \DateTimeInterface && $larp->getEndDate() instanceof \DateTimeInterface) {
             $interval = $larp->getStartDate()->diff($larp->getEndDate());
             $eventDuration = $interval->days;
         }

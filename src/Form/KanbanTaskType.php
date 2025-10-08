@@ -38,11 +38,9 @@ class KanbanTaskType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'placeholder' => 'form.kanban.unassigned',
-                'query_builder' => function ($repo) use ($larp) {
-                    return $repo->createQueryBuilder('lp')
-                        ->where('lp.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn ($repo) => $repo->createQueryBuilder('lp')
+                    ->where('lp.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('priority', IntegerType::class, [
                 'label' => 'form.kanban.priority',

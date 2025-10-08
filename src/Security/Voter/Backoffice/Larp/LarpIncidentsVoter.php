@@ -32,15 +32,8 @@ class LarpIncidentsVoter extends Voter
 
         $participants = $subject->getParticipants();
         /** @var LarpParticipant|null $userOrganizer */
-        $userOrganizer = $participants->filter(function (LarpParticipant $participant) use ($user) {
-            return $participant->getUser()->getId() === $user->getId() &&
-                ($participant->isAdmin() || $participant->isTrustPerson());
-        })->first();
-
-        if (!$userOrganizer) {
-            return false;
-        }
-
-        return true;
+        $userOrganizer = $participants->filter(fn (LarpParticipant $participant): bool => $participant->getUser()->getId() === $user->getId() &&
+            ($participant->isAdmin() || $participant->isTrustPerson()))->first();
+        return $userOrganizer !== null;
     }
 }

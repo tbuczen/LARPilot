@@ -55,7 +55,7 @@ class QuestController extends BaseController
         ?Quest          $quest = null,
     ): Response {
         $new = false;
-        if (!$quest) {
+        if (!$quest instanceof \App\Entity\StoryObject\Quest) {
             $quest = new Quest();
             $quest->setLarp($larp);
             $new = true;
@@ -109,12 +109,10 @@ class QuestController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations) {
-            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $quest, 'Quest')) {
-                return $this->redirectToRoute('backoffice_larp_story_quest_list', [
-                    'larp' => $larp->getId(),
-                ]);
-            }
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $quest, 'Quest')) {
+            return $this->redirectToRoute('backoffice_larp_story_quest_list', [
+                'larp' => $larp->getId(),
+            ]);
         }
 
         $questRepository->remove($quest);
@@ -200,7 +198,7 @@ class QuestController extends BaseController
         StoryRecruitmentRepository $recruitmentRepository,
         ?StoryRecruitment          $recruitment = null,
     ): Response {
-        if (!$recruitment) {
+        if (!$recruitment instanceof \App\Entity\StoryObject\StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($quest);
             $recruitment->setCreatedBy($this->getUser());

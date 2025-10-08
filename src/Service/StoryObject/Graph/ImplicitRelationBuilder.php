@@ -89,7 +89,7 @@ readonly class ImplicitRelationBuilder
 
         // Quest -> Thread (only if thread is standalone node, not acting as parent group)
         $thread = $quest->getThread();
-        if ($thread) {
+        if ($thread instanceof \App\Entity\StoryObject\Thread) {
             $threadId = $thread->getId()->toRfc4122();
             // Check if thread is standalone (no group created for it)
             $threadGroupId = $thread->getId()->toBase32();
@@ -113,7 +113,7 @@ readonly class ImplicitRelationBuilder
 
         // Event -> Thread (only if thread is standalone node, not acting as parent group)
         $thread = $event->getThread();
-        if ($thread) {
+        if ($thread instanceof \App\Entity\StoryObject\Thread) {
             $threadId = $thread->getId()->toRfc4122();
             // Check if thread is standalone (no group created for it)
             $threadGroupId = $thread->getId()->toBase32();

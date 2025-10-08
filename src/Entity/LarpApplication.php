@@ -40,11 +40,10 @@ class LarpApplication implements Timestampable, CreatorAwareInterface
         $this->choices = new ArrayCollection();
         $this->preferredTags = new ArrayCollection();
         $this->unwantedTags = new ArrayCollection();
-        $this->status = SubmissionStatus::NEW;
     }
 
     #[ORM\Column(length: 50)]
-    private ?SubmissionStatus $status = null;
+    private ?SubmissionStatus $status = SubmissionStatus::NEW;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;

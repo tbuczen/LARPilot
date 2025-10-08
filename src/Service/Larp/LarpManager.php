@@ -55,7 +55,7 @@ readonly class LarpManager
         $userId = $user->getId()->toRfc4122();
 
         if (!$invitation->isReusable()) {
-            if (!empty($invitation->getAcceptedByUserIds())) {
+            if (!in_array($invitation->getAcceptedByUserIds(), [null, []], true)) {
                 throw new \DomainException('Invitation already used.');
             }
             $invitation->setAcceptedByUserIds([$userId]);

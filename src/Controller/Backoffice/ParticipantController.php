@@ -44,7 +44,7 @@ class ParticipantController extends BaseController
         $form = $this->createForm(ParticipantType::class, $participant, ['larp' => $larp]);
         $form->handleRequest($request);
 
-        if (!$participant) {
+        if (!$participant instanceof \App\Entity\LarpParticipant) {
             $participant = new LarpParticipant();
         } else {
             $this->entityPreloader->preload([$participant], 'larpCharacters');

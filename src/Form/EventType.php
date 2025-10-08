@@ -46,11 +46,9 @@ class EventType extends AbstractType
                 'multiple' => false,
                 'autocomplete' => true,
                 'placeholder' => 'form.event.choose_place',
-                'query_builder' => function (PlaceRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('p')
-                        ->where('p.larp = :larp')
-                        ->setParameter('larp', $larp);
-                }
+                'query_builder' => fn (PlaceRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('p')
+                    ->where('p.larp = :larp')
+                    ->setParameter('larp', $larp)
             ])
             ->add('startTime', DateTimeType::class, [
                 'label' => 'form.event.start_time',
@@ -70,11 +68,9 @@ class EventType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.event.choose_faction',
-                'query_builder' => function (LarpFactionRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('involvedCharacters', EntityType::class, [
                 'class' => LarpCharacter::class,
@@ -84,11 +80,9 @@ class EventType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.event.choose_character',
-                'query_builder' => function (LarpCharacterRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('f')
-                        ->where('f.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
@@ -97,11 +91,9 @@ class EventType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'query_builder' => function (TagRepository $repo) use ($larp) {
-                    return $repo->createQueryBuilder('t')
-                        ->where('t.larp = :larp')
-                        ->setParameter('larp', $larp);
-                },
+                'query_builder' => fn (TagRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp),
                 'tom_select_options' => [
                     'create' => true,
                     'persist' => false,

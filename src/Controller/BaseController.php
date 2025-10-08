@@ -51,7 +51,7 @@ class BaseController extends AbstractController
     protected function getListQueryBuilder(EntityRepository $repo, FormInterface $filterForm, Request $request, ?Larp $larp = null): QueryBuilder
     {
         $qb = $repo->createQueryBuilder('c');
-        if ($larp !== null && $repo instanceof ListableRepositoryInterface) {
+        if ($larp instanceof \App\Entity\Larp && $repo instanceof ListableRepositoryInterface) {
             $qb = $repo->decorateLarpListQueryBuilder($qb, $larp);
         }
 

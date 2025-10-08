@@ -110,7 +110,7 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
         $this->scopes = $scopes;
     }
 
-    public function setClient(OAuth2ClientInterface $oauthClient)
+    public function setClient(OAuth2ClientInterface $oauthClient): void
     {
         $this->client = $oauthClient;
     }

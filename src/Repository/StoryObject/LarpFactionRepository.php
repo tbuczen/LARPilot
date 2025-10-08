@@ -32,10 +32,10 @@ class LarpFactionRepository extends BaseRepository
         $qb = $this->createQueryBuilder('f');
         $qb->where('f.title = :title')
             ->andWhere('f.larp = :larp')
-            ->setParameters(new ArrayCollection(array(
+            ->setParameters(new ArrayCollection([
                 new Parameter('title', $title),
                 new Parameter('larp', Uuid::fromString($larpId))
-            )))
+            ]))
             ->setMaxResults(1);
 
         $faction = $qb->getQuery()->getOneOrNullResult();

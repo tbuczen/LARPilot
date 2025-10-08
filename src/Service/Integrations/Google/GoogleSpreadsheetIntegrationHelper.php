@@ -134,7 +134,7 @@ readonly class GoogleSpreadsheetIntegrationHelper
             return $value;
         }
 
-        throw new \RuntimeException(sprintf('Cannot extract property "%s" from %s', $propertyName, get_class($storyObject)));
+        throw new \RuntimeException(sprintf('Cannot extract property "%s" from %s', $propertyName, $storyObject::class));
     }
 
     private function convertCollectionToString(iterable $collection): string
@@ -201,11 +201,7 @@ readonly class GoogleSpreadsheetIntegrationHelper
         $columnRange = $this->generateColumnRange($endColumn);
 
         foreach ($columnRange as $columnLetter) {
-            if (isset($newRow[$columnLetter])) {
-                $fullRow[] = $newRow[$columnLetter];
-            } else {
-                $fullRow[] = '';
-            }
+            $fullRow[] = $newRow[$columnLetter] ?? '';
         }
 
         return $fullRow;

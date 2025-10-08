@@ -19,7 +19,7 @@ class RecruitmentProposalRepositoryTest extends TestCase
 
         $registry = $this->createMock(ManagerRegistry::class);
         $repository = new class($registry, $em) extends RecruitmentProposalRepository {
-            public function __construct(ManagerRegistry $registry, private EntityManagerInterface $em)
+            public function __construct(ManagerRegistry $registry, private readonly EntityManagerInterface $em)
             {
                 parent::__construct($registry);
             }

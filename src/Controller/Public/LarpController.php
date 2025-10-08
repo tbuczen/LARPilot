@@ -47,7 +47,7 @@ class LarpController extends BaseController
     ): Response {
         $larp = $larpRepository->findOneBy(['slug' => $slug]);
         
-        if (!$larp) {
+        if (!$larp instanceof \App\Entity\Larp) {
             throw $this->createNotFoundException('LARP not found');
         }
         
@@ -55,11 +55,9 @@ class LarpController extends BaseController
         $userIsParticipant = false;
         $userHasApplication = false;
         
-        if ($user) {
+        if ($user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             // Check if user is already a participant
-            $userIsParticipant = $larp->getParticipants()->exists(function ($key, $participant) use ($user) {
-                return $participant->getUser() === $user;
-            });
+            $userIsParticipant = $larp->getParticipants()->exists(fn ($key, $participant): bool => $participant->getUser() === $user);
         
             // Check if user already has an application
             $userHasApplication = $applicationRepository->findOneBy(['larp' => $larp, 'user' => $user]) !== null;

@@ -17,7 +17,7 @@ class InvitationController extends BaseController
     #[Route('/invitations', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request, Larp $larp, LarpInvitationRepository $invitationRepository, ?LarpInvitation $invitation = null): Response
     {
-        if ($invitation !== null) {
+        if ($invitation instanceof \App\Entity\LarpInvitation) {
             $invitation = new LarpInvitation();
             $invitation->setLarp($larp);
         }
@@ -46,7 +46,7 @@ class InvitationController extends BaseController
         LarpInvitationRepository $invitationRepository,
         ?LarpInvitation          $invitation = null,
     ): Response {
-        if (!$invitation) {
+        if (!$invitation instanceof \App\Entity\LarpInvitation) {
             $invitation = new LarpInvitation();
         }
         $form = $this->createForm(InvitationType::class, $invitation, ['larp' => $larp]);

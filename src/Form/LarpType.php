@@ -41,9 +41,9 @@ class LarpType extends AbstractType
             ])
             ->add('recaptcha', EWZRecaptchaType::class, [
                 'mapped' => false,
-                'constraints' => array(
+                'constraints' => [
                     new RecaptchaTrue()
-                ),
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',

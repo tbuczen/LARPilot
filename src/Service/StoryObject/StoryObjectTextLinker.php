@@ -26,7 +26,10 @@ final readonly class StoryObjectTextLinker
         foreach ($xpath->query('//*[@data-story-object-id]') as $node) {
             $id = $node->getAttribute('data-story-object-id');
             $object = $this->storyObjectRepository->find(Uuid::fromString($id));
-            if (!$object || $object->getLarp()?->getId()->toRfc4122() !== $larp->getId()->toRfc4122()) {
+            if (!$object) {
+                continue;
+            }
+            if ($object->getLarp()?->getId()->toRfc4122() !== $larp->getId()->toRfc4122()) {
                 continue;
             }
             $href = $this->router->getEditUrl($object, $larp);

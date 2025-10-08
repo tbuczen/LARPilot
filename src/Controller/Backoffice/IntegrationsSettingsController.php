@@ -114,7 +114,7 @@ class IntegrationsSettingsController extends AbstractController
         LarpIntegration $integration,
         ?SharedFile     $sharedFile = null,
     ): Response {
-        if ($sharedFile === null) {
+        if (!$sharedFile instanceof \App\Entity\SharedFile) {
             /** @var SharedFile[] $files */
             $files = $integration->getSharedFiles();
         } else {

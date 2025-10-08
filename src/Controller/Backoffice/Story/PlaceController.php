@@ -46,7 +46,7 @@ class PlaceController extends BaseController
         ?Place $place = null,
     ): Response {
         $new = false;
-        if (!$place) {
+        if (!$place instanceof \App\Entity\StoryObject\Place) {
             $place = new Place();
             $place->setLarp($larp);
             $new = true;
@@ -79,10 +79,8 @@ class PlaceController extends BaseController
         Place $place,
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
-        if ($deleteIntegrations) {
-            if (!$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $place, 'Place')) {
-                return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
-            }
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $place, 'Place')) {
+            return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
         }
 
         $placeRepository->remove($place);

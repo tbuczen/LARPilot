@@ -42,7 +42,7 @@ class LarpWorkflowService
             $this->larpStageStatusStateMachine->apply($larp, $transitionName);
             $this->entityManager->flush();
             return true;
-        } catch (LogicException $e) {
+        } catch (LogicException) {
             return false;
         }
     }
@@ -79,7 +79,7 @@ class LarpWorkflowService
                 'name' => $transitionName,
                 'label' => $this->getTransitionLabel($transitionName),
                 'to' => $transition->getTos()[0] ?? null,
-                'canExecute' => empty($validationErrors),
+                'canExecute' => $validationErrors === [],
                 'validationErrors' => $validationErrors,
             ];
         }

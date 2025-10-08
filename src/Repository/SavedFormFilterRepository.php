@@ -28,7 +28,7 @@ class SavedFormFilterRepository extends BaseRepository
      */
     public function findByFormNameAndUser(string $formName, UserInterface $user, null|string|Uuid $larpId = null): array
     {
-        if (is_string($larpId) && !empty($larpId)) {
+        if (is_string($larpId) && ($larpId !== '' && $larpId !== '0')) {
             $larpId = Uuid::fromString($larpId);
         }
 

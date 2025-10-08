@@ -50,7 +50,7 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client): \Symfony\Component\Security\Core\User\UserInterface {
                 /** @var DiscordResourceOwner $user */
                 $user = $client->fetchUserFromToken($accessToken);
                 $providerEnum = SocialAccountProvider::Discord;

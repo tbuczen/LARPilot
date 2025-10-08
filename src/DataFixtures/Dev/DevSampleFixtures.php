@@ -46,7 +46,7 @@ final class DevSampleFixtures extends Fixture
         $manager->persist($regularUser);
 
         // Helper for createdBy fields
-        $setCreator = static function (object $entity) use ($superAdmin) {
+        $setCreator = static function (object $entity) use ($superAdmin): void {
             if (method_exists($entity, 'setCreatedBy')) {
                 $entity->setCreatedBy($superAdmin);
             }

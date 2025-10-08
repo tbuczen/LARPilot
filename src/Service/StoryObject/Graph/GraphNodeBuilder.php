@@ -78,7 +78,7 @@ readonly class GraphNodeBuilder
         // Thread grouping - only if thread has quests or events
         if ($object instanceof Quest || $object instanceof Event) {
             $thread = $object->getThread();
-            if ($thread) {
+            if ($thread instanceof \App\Entity\StoryObject\Thread) {
                 return $thread->getId()->toBase32();
             }
         }
