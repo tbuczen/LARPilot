@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Controller\Backoffice\LarpCharacterSubmissionsController;
+use App\Controller\Backoffice\CharacterSubmissionsController;
 use App\Entity\Larp;
 use App\Entity\LarpApplication;
 use App\Entity\LarpApplicationChoice;
@@ -24,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 
-class TestController extends LarpCharacterSubmissionsController
+class TestController extends CharacterSubmissionsController
 {
     public function __construct(
         TranslatorInterface $translator,

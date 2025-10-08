@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}/applications', name: 'backoffice_larp_applications_')]
-class LarpCharacterSubmissionsController extends BaseController
+class CharacterSubmissionsController extends BaseController
 {
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(
@@ -60,7 +60,7 @@ class LarpCharacterSubmissionsController extends BaseController
         ]);
     }
 
-    #[Route('match', name: 'match', methods: ['GET'])]
+    #[Route('/match', name: 'match', methods: ['GET'])]
     public function match(
         Larp $larp,
         EntityManagerInterface $em
@@ -136,7 +136,7 @@ class LarpCharacterSubmissionsController extends BaseController
         ]);
     }
 
-    #[Route('vote/{choice}', name: 'vote', methods: ['POST'])]
+    #[Route('/vote/{choice}', name: 'vote', methods: ['POST'])]
     public function vote(
         Larp $larp,
         LarpApplicationChoice $choice,
@@ -195,7 +195,7 @@ class LarpCharacterSubmissionsController extends BaseController
         return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
     }
 
-    #[Route('vote/{choice}/details', name: 'vote_details', methods: ['GET'])]
+    #[Route('/vote/{choice}/details', name: 'vote_details', methods: ['GET'])]
     public function voteDetails(
         Larp $larp,
         LarpApplicationChoice $choice,

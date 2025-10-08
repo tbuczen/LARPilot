@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp', name: 'backoffice_larp_story_')]
-class LarpRelationsController extends AbstractController
+class RelationController extends AbstractController
 {
     #[Route('/{larp}/story/relations', name: 'relations', methods: ['GET'])]
     public function relations(Larp $larp): Response

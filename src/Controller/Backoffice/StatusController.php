@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/backoffice/larp/{larp}/status', name: 'backoffice_larp_status_')]
-class LarpStatusController extends AbstractController
+class StatusController extends AbstractController
 {
     public function __construct(
         private readonly LarpWorkflowService $workflowService,

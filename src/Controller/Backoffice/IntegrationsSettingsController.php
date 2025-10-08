@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webmozart\Assert\Assert;
 
 #[Route('/larp', name: 'backoffice_larp_')]
-class LarpIntegrationsSettingsController extends AbstractController
+class IntegrationsSettingsController extends AbstractController
 {
     public function __construct(
         private readonly IntegrationManager    $larpIntegrationManager,

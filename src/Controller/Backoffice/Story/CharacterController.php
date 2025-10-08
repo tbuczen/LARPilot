@@ -12,20 +12,16 @@ use App\Entity\SharedFile;
 use App\Entity\StoryObject\LarpCharacter;
 use App\Form\CharacterType;
 use App\Form\Filter\LarpCharacterFilterType;
-use App\Helper\Logger;
 use App\Repository\StoryObject\LarpCharacterRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
-use Doctrine\ORM\QueryBuilder;
-use Spiriit\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Webmozart\Assert\Assert;
 
 #[Route('/larp/{larp}/story/character/', name: 'backoffice_larp_story_character_')]
-class LarpCharactersController extends BaseController
+class CharacterController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]
     public function list(

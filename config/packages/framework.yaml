@@ -16,6 +16,9 @@ framework:
     #esi: true
     #fragments: true
     ide: "phpstorm://open?url=file://%%f&line=%%l"
+    cache:
+        app: cache.adapter.apcu
+        system: cache.adapter.system
 
 when@test:
     framework:

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}', name: 'backoffice_larp_invitations_')]
-class LarpInvitationsController extends BaseController
+class InvitationController extends BaseController
 {
     #[Route('/invitations', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request, Larp $larp, LarpInvitationRepository $invitationRepository, ?LarpInvitation $invitation = null): Response

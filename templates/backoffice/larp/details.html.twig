@@ -9,9 +9,9 @@
                 <div class="card-header">
                     <h5 class="card-title mb-0">{{ 'common.dashboard'|trans }}</h5>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted">{{ larp.description }}</p>
-                </div>
+{#                <div class="card-body">#}
+{#                    <p class="text-muted">{{ larp.description }}</p>#}
+{#                </div>#}
             </div>
         </div>
     </div>
@@ -60,8 +60,15 @@
             <div class="card text-center">
                 <div class="card-body">
                     <h6 class="card-title">{{ 'common.location'|trans }}</h6>
-                    <p class="mb-0">{{ larp.location ?: ('common.not_set'|trans) }}</p>
-                </div>
+                    {% if larp.location %}
+                        <p class="mb-0">
+                            <a href="{{ path('public_location_details', { slug: larp.location.slug }) }}" target="_blank" rel="noopener">
+                                {{ larp.location }}
+                            </a>
+                        </p>
+                    {% else %}
+                        <p class="mb-0">{{ 'common.not_set'|trans }}</p>
+                    {% endif %}                </div>
             </div>
         </div>
     </div>
@@ -196,7 +203,7 @@
                         {% for faction in dashboard.factions.stats %}
                         <div class="col-md-4 mb-3">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span>{{ faction.title }}</span>
+                                <span><a href="{{ path('backoffice_larp_story_faction_modify', {'larp': larp.slug, 'faction' : faction.id}) }}">{{ faction.title }}</a></span>
                                 <span class="badge badge-primary">{{ faction.participants }} {{ 'common.participants.list'|trans }}</span>
                             </div>
                         </div>
@@ -218,18 +225,18 @@
                 <div class="card-body">
                     <div class="btn-group" role="group">
                         {% if dashboard.applications.pending > 0 %}
-                        <a href="#" class="btn btn-warning">
+                        <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-warning">
                             {{ 'common.applications.review'|trans }} ({{ dashboard.applications.pending }})
                         </a>
                         {% endif %}
                         {% if dashboard.characters.unassigned > 0 %}
-                        <a href="#" class="btn btn-info">
+                        <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-info">
                             {{ 'common.characters.assign'|trans }} ({{ dashboard.characters.unassigned }})
                         </a>
                         {% endif %}
-                        <a href="#" class="btn btn-primary">{{ 'common.participants.manage'|trans }}</a>
-                        <a href="#" class="btn btn-success">{{ 'common.send_announcement'|trans }}</a>
-                        <a href="#" class="btn btn-outline-secondary">{{ 'common.generate_reports'|trans }}</a>
+                        <a href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}" class="btn btn-primary">{{ 'common.participants.manage'|trans }}</a>
+{#                        <a href="#" class="btn btn-success">{{ 'common.send_announcement'|trans }}</a>#}
+{#                        <a href="#" class="btn btn-outline-secondary">{{ 'common.generate_reports'|trans }}</a>#}
                     </div>
                 </div>
             </div>

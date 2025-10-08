@@ -99,6 +99,8 @@ backoffice:
     reference:
       list: 'Referencje zewnętrzne'
       add: 'Dodaj referencję zewnętrzną'
+    participant:
+      list: 'Uczestnicy'
   google_drive_folders:
     title: Foldery Google Drive
     heading: Foldery Google Drive

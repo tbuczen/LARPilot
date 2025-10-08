@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}/story/faction/', name: 'backoffice_larp_story_faction_')]
 
-class LarpFactionsController extends BaseController
+class FactionController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET'])]
     public function factions(Request $request, Larp $larp, LarpFactionRepository $repository): Response

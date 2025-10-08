@@ -65,13 +65,20 @@ install:
 	docker compose exec -T php bash -lc 'composer install --no-interaction --prefer-dist'
 
 migrate:
-	docker compose exec -T php bash -lc "php bin/console doctrine:database:create --if-not-exists"
-	docker compose exec -T php bash -lc "php bin/console doctrine:migrations:migrate --no-interaction"
+	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console doctrine:database:create --if-not-exists"
+	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction"
+
+cc:
+	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console ca:cl --env=dev"
+	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console ca:wa --env=dev"
+	docker compose exec -T php bash -lc "chmod 777 -R ./var/cache"
+
 
 assets:
-	docker compose exec -T php bash -lc "php bin/console importmap:install"
-	docker compose exec -T php bash -lc "php bin/console sass:build || true"
-	docker compose exec -T php bash -lc "php bin/console asset-map:compile"
+	docker compose exec -T php bash -lc "rm -rf public/assets/*"
+	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console importmap:install"
+	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console sass:build || true"
+	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console asset-map:compile"
 
 local-fixtures:
 	docker compose exec -T php bash -lc "APP_ENV=dev php bin/console doctrine:fixtures:load --no-interaction --env=dev"

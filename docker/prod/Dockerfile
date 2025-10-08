@@ -4,7 +4,7 @@ FROM php:8.4-fpm-alpine
 RUN apk add --no-cache curl wget libzip-dev postgresql-dev icu-dev bash git rabbitmq-c-dev
 
 # PHP Extensions
-RUN docker-php-ext-install zip intl pdo pdo_pgsql bcmath
+RUN docker-php-ext-install zip intl pdo pdo_pgsql bcmath apcu
 
 RUN pecl install amqp redis && docker-php-ext-enable amqp redis opcache
 

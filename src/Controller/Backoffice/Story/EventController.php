@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}/story/event/', name: 'backoffice_larp_story_event_')]
 
-class EventsController extends BaseController
+class EventController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]
     public function list(Request $request, Larp $larp, EventRepository $repository): Response

@@ -6,7 +6,7 @@ RUN apk add --no-cache curl wget libzip-dev postgresql-dev icu-dev bash git auto
 # PHP Extensions
 RUN docker-php-ext-install zip intl pdo pdo_pgsql bcmath
 
-RUN pecl install xdebug amqp redis && docker-php-ext-enable xdebug amqp redis
+RUN pecl install xdebug amqp redis apcu && docker-php-ext-enable amqp redis apcu
 
 RUN mkdir -p /var/log \
 	&& mkdir -p /var/www/html/var \
@@ -23,7 +23,7 @@ COPY ../.. /var/www/html/
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/var /var/www/html/public
 
-COPY /docker/entrypoint.sh /etc/entrypoint.sh
+COPY docker/entrypoint.sh /etc/entrypoint.sh
 
 RUN chmod +x /etc/entrypoint.sh
 

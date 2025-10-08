@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}', name: 'backoffice_larp_')]
 
-class LarpIncidentsController extends BaseController
+class IncidentController extends BaseController
 {
     #[Route('/incidents', name: 'incidents', methods: ['GET', 'POST'])]
     public function incidents(

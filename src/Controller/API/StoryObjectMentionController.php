@@ -7,6 +7,7 @@ use App\Helper\Logger;
 use App\Repository\StoryObject\StoryObjectRepository;
 use App\Security\Voter\Backoffice\Larp\LarpStoryVoter;
 use App\Service\StoryObject\StoryObjectRouter;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,8 +28,9 @@ class StoryObjectMentionController extends AbstractController
      * @param Larp $larp The LARP object (automatically resolved by param converter)
      * @param StoryObjectRepository $repository Repository for story objects
      * @param StoryObjectRouter $router Router for generating edit URLs
+     * @param CacheItemPoolInterface $cache PSR-6 cache pool
      * @return JsonResponse
-     * 
+     *
      * @throws AccessDeniedException If user doesn't have access to this LARP
      */
     #[Route('/larp/{larp}/story-object/mention-search', name: 'backoffice_story_object_mention_search', methods: ['GET'])]
@@ -37,8 +39,8 @@ class StoryObjectMentionController extends AbstractController
         Larp $larp,
         StoryObjectRepository $repository,
         StoryObjectRouter $router,
+        CacheItemPoolInterface $cache,
     ): JsonResponse {
-        // Check if user is logged in and has access to this LARP
         if (!$this->isGranted('ROLE_USER')) {
             throw new AccessDeniedException('You must be logged in to access this resource');
         }
@@ -47,31 +49,60 @@ class StoryObjectMentionController extends AbstractController
 
         $query = trim($request->query->get('query', ''));
 
-        // Validate minimum query length
         if (strlen($query) < 1) {
             return new JsonResponse([], Response::HTTP_OK);
         }
 
         try {
-            // Get matching story objects (limit to 10 results)
-            $objects = $repository->searchByTitle($larp, $query, 10);
+            // Build cache key (per-larp, per-query); keep it short/safe
+            $cacheKey = sprintf(
+                'mention_search_%s_%s',
+                $larp->getId()->toRfc4122(),
+                substr(sha1(mb_strtolower($query)), 0, 16)
+            );
 
-            $result = [];
-            foreach ($objects as $object) {
-                $result[] = [
-                    'id' => $object->getId()->toRfc4122(),
-                    'name' => $object->getTitle(),
-                    'type' => $object::getTargetType()->value,
-                    'url' => $router->getEditUrl($object, $larp),
-                ];
+            $grouped = $cache->getItem($cacheKey);
+            if (!$grouped->isHit()) {
+                // Get matching story objects (limit to 10 results)
+                $objects = $repository->searchByTitle($larp, $query, 10);
+
+                // Group by type for client-side grouping UI
+                $byType = [];
+                foreach ($objects as $object) {
+                    $type = $object::getTargetType()->value;
+                    $byType[$type] ??= [];
+                    $byType[$type][] = [
+                        'id' => $object->getId()->toRfc4122(),
+                        'name' => $object->getTitle(),
+                        'type' => $type,
+                        'url' => $router->getEditUrl($object, $larp),
+                    ];
+                }
+
+                // Transform to a stable grouped array format
+                // Example:
+                // [
+                //   { "type": "character", "items": [ ... ] },
+                //   { "type": "faction", "items": [ ... ] }
+                // ]
+                $result = [];
+                foreach ($byType as $type => $items) {
+                    $result[] = [
+                        'type' => $type,
+                        'items' => $items,
+                    ];
+                }
+
+                $grouped->set($result);
+                // Short TTL; tune as needed (e.g., 60-300 seconds)
+                $grouped->expiresAfter(120);
+                $cache->save($grouped);
             }
 
-            return new JsonResponse($result, Response::HTTP_OK);
+            return new JsonResponse($grouped->get(), Response::HTTP_OK);
         } catch (\Exception $e) {
-            // Log the error
             Logger::get()->error('Error searching for story objects: ' . $e->getMessage());
 
-            // Return an empty result in case of error
             return new JsonResponse(
                 ['error' => 'An error occurred while searching for story objects'],
                 Response::HTTP_INTERNAL_SERVER_ERROR

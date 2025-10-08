@@ -180,7 +180,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
         $baseUrl = $file->getUrl();
 
         $baseUrl = preg_replace('/\?.*/', '', $baseUrl);
-        $sheetId = $additionalData['sheetId'] ?? 0; /* @see LarpCharactersController::importFromSelectedMapping */
+        $sheetId = $additionalData['sheetId'] ?? 0; /* @see CharacterController::importFromSelectedMapping */
         return match ($referenceType) {
             ReferenceType::SpreadsheetRow => $baseUrl . "#gid=$sheetId&range=$externalId:$externalId",
             ReferenceType::DocumentParagraph => $baseUrl . "#heading=$externalId",

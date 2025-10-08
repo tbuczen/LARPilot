@@ -103,6 +103,7 @@ common:
   title: 'Title'
   amount: 'Amount'
   settings: 'Settings'
+  roles: 'Roles'
 
 
 #Translations specific to public part of the app
@@ -260,6 +261,8 @@ backoffice:
       list: 'Items'
     tag:
       list: 'Tags'
+    participant:
+      list: 'Participants'
     status:
       manage: 'Manage'
     version_history: 'Version History'

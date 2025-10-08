@@ -100,6 +100,7 @@ class LarpDashboardService
             })->count();
             
             $factionStats[] = [
+                'id' => $faction->getId()->toRfc4122(),
                 'title' => $faction->getTitle() ?: 'Unknown',
                 'participants' => $factionParticipants,
             ];
