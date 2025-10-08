@@ -67,9 +67,9 @@ readonly class ImplicitRelationBuilder
         }
 
         // Thread -> Involved Factions (for standalone threads)
-//        foreach ($thread->getInvolvedFactions() as $faction) {
-//            $this->addEdgeIfValid($sourceId, $faction->getId()->toRfc4122(), 'involvement', null, $validNodeIds, $edges, $seenEdges);
-//        }
+        //        foreach ($thread->getInvolvedFactions() as $faction) {
+        //            $this->addEdgeIfValid($sourceId, $faction->getId()->toRfc4122(), 'involvement', null, $validNodeIds, $edges, $seenEdges);
+        //        }
 
         // Note: When thread acts as a group, quests/events are children, not connected by edges
         // When thread is standalone, it can still have involvement edges but no quest/event children

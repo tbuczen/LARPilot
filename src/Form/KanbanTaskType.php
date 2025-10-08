@@ -72,6 +72,5 @@ class KanbanTaskType extends AbstractType
             'translation_domain' => 'forms',
         ]);
         $resolver->setRequired(['larp']);
-
     }
 }

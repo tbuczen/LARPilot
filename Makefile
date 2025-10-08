@@ -23,7 +23,7 @@ endif
 db-wait:
 	@echo "Waiting for Postgres..."
 	@for i in {1..60}; do \
-	  docker compose exec -T postgres sh -lc 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB' && exit 0; \
+	  docker compose exec -T postgres sh -lc 'pg_isready -U $$POSTGRES_USER' && exit 0; \
 	  sleep 1; \
 	done; \
 	echo "Postgres did not become ready in time" && exit 1
@@ -79,6 +79,7 @@ assets:
 	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console importmap:install"
 	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console sass:build || true"
 	docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 bin/console asset-map:compile"
+	docker compose exec -T php bash -lc "composer dump-autoload"
 
 local-fixtures:
 	docker compose exec -T php bash -lc "APP_ENV=dev php bin/console doctrine:fixtures:load --no-interaction --env=dev"
@@ -111,6 +112,13 @@ ecs:
 # Lint fix (apply code style)
 ecs-fix:
 	docker compose exec -T php vendor/bin/ecs check --fix
+
+# Rector dry-run
+rector:
+	docker compose exec -T php vendor/bin/rector process --dry-run
+
+rector-fix:
+	docker compose exec -T php vendor/bin/rector process
 
 # Combined quality gate
 qa: ecs stan test

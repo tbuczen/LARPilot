@@ -12,7 +12,8 @@ class LarpApplicationDashboardService
     public function __construct(
         private EntityPreloader $entityPreloader,
         private LarpApplicationRepository $applicationRepository
-    ) {}
+    ) {
+    }
 
     public function getApplicationsWithPreloading(Larp $larp, $queryBuilder = null): array
     {
@@ -124,7 +125,7 @@ class LarpApplicationDashboardService
         }
 
         // Sort character stats by popularity (most wanted)
-        uasort($characterChoices, function($a, $b) {
+        uasort($characterChoices, function ($a, $b) {
             return $b['count'] <=> $a['count'];
         });
         $mostWantedCharacters = array_slice($characterChoices, 0, 10);
@@ -136,7 +137,7 @@ class LarpApplicationDashboardService
         
         // First, add characters with applications but not in most wanted (sorted by lowest count)
         $sortedByLeastWanted = $characterChoices;
-        uasort($sortedByLeastWanted, function($a, $b) {
+        uasort($sortedByLeastWanted, function ($a, $b) {
             return $a['count'] <=> $b['count'];
         });
         
@@ -173,7 +174,7 @@ class LarpApplicationDashboardService
         }
         
         // Sort faction distribution by count (descending)
-        uasort($factionDistribution, function($a, $b) {
+        uasort($factionDistribution, function ($a, $b) {
             return $b['count'] <=> $a['count'];
         });
         

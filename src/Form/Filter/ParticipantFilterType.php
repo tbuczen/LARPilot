@@ -13,8 +13,10 @@ use App\Entity\Tag;
 use App\Entity\User;
 use App\Repository\StoryObject\ThreadRepository;
 use App\Repository\UserRepository;
+use Spiriit\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
+use Spiriit\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -35,8 +37,23 @@ class ParticipantFilterType extends AbstractType
                 'choice_label' => fn (UserRole $role) => 'user_role.' . $role->value,
                 'choice_translation_domain' => 'messages',
                 'choice_value' => fn (?UserRole $role) => $role?->value,
-                'required' => true,
-//                'multiple' => true,
+                'autocomplete' => true,
+                'multiple' => true,
+                'apply_filter' => static function (QueryInterface $filterQuery, $field, $values) {
+                    $roles = $values['value'] ?? [];
+                    if (!is_array($roles)) {
+                        return null;
+                    }
+                    $parameters = [];
+                    $expression = $filterQuery->getExpr()->andX();
+                    /** @var UserRole $role */
+                    foreach ($roles as $i => $role) {
+                        $expression->add("JSONB_EXISTS($field, :role_$i) = true");
+                        $parameters["role_$i"] = $role->value;
+                    }
+
+                    return $filterQuery->createCondition($expression, $parameters);
+                }
             ])
             ->add('user', EntityType::class, [
                 'class' => User::class,

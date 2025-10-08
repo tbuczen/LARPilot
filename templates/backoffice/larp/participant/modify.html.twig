@@ -1,7 +1,16 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <div>
+
+<div class="card">
+    <div class="card-header">
+        {% if participant.user is not null %}
+            <h5 class="card-title mb-0">{{ participant.user.username }}</h5>
+        {% else %}
+            <h5 class="card-title mb-0">{{ 'common.new'|trans }} {{ 'common.participant'|trans }}</h5>
+        {% endif %}
+    </div>
+    <div class="card-body">
         {{ form_start(form) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}

@@ -41,7 +41,7 @@ class LarpLocationVoter extends Voter
         $location = $subject->getLocation();
         if ($location === null) {
             return true;
-        } else if ($location->getCreatedBy() !== $userOrganizer) {
+        } elseif ($location->getCreatedBy() !== $userOrganizer) {
             return false;
         }
 

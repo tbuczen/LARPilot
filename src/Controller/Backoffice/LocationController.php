@@ -23,8 +23,7 @@ class LocationController extends AbstractController
     public function __construct(
         private readonly LocationRepository     $locationRepository,
         private readonly EntityManagerInterface $entityManager
-    )
-    {
+    ) {
     }
 
     #[Route('/list', name: 'list', methods: ['GET'])]
@@ -51,8 +50,7 @@ class LocationController extends AbstractController
         Request            $request,
         LocationRepository $locationRepository,
         ?Location          $location = null
-    ): Response
-    {
+    ): Response {
         if ($location === null) {
             $location = new Location();
         }
@@ -84,8 +82,7 @@ class LocationController extends AbstractController
         Larp               $larp,
         LocationRepository $locationRepository,
         ?Location          $location = null
-    ): Response
-    {
+    ): Response {
         if ($location === null) {
             $location = new Location();
         }

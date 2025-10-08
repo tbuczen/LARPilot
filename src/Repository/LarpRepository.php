@@ -7,8 +7,8 @@ use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -51,9 +51,7 @@ class LarpRepository extends ServiceEntityRepository
                 )
             );
             $qb->setParameter('currentUser', $user);
-        }
-
-        else {
+        } else {
             // If no user is logged in, only visible upcoming larps are shown.
             $qb->where($upcoming);
         }
@@ -131,5 +129,4 @@ class LarpRepository extends ServiceEntityRepository
                ->setParameter('maxDuration', $filters['maxDuration']);
         }
     }
-
 }

@@ -2,11 +2,11 @@
 
 namespace App\Service\Larp\Workflow;
 
-use App\Entity\Larp;
 use App\Entity\Enum\LarpStageStatus;
-use Symfony\Component\Workflow\WorkflowInterface;
-use Symfony\Component\Workflow\Exception\LogicException;
+use App\Entity\Larp;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Workflow\Exception\LogicException;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 class LarpWorkflowService
 {

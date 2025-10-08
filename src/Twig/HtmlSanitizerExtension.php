@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -15,7 +16,7 @@ class HtmlSanitizerExtension extends AbstractExtension
 
     public function sanitizeHtml(?string $html): string
     {
-        if($html === null) {
+        if ($html === null) {
             return '-';
         }
 

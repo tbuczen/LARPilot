@@ -161,90 +161,90 @@ class StoryObjectRepository extends BaseRepository
         return array_values(array_unique($base));
     }
 
-private function getConnectedToThread(Larp $larp, string $threadId): array
-{
-    $ids = [];
+    private function getConnectedToThread(Larp $larp, string $threadId): array
+    {
+        $ids = [];
     
-    // Get quests and events for this thread
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT q.id FROM ' . Quest::class . ' q WHERE q.larp = :larp AND q.thread = :threadId',
-        ['larp' => $larp, 'threadId' => $threadId]
-    ));
+        // Get quests and events for this thread
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT q.id FROM ' . Quest::class . ' q WHERE q.larp = :larp AND q.thread = :threadId',
+            ['larp' => $larp, 'threadId' => $threadId]
+        ));
     
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT e.id FROM ' . Event::class . ' e WHERE e.larp = :larp AND e.thread = :threadId',
-        ['larp' => $larp, 'threadId' => $threadId]
-    ));
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT e.id FROM ' . Event::class . ' e WHERE e.larp = :larp AND e.thread = :threadId',
+            ['larp' => $larp, 'threadId' => $threadId]
+        ));
     
-    // Get involved characters and factions
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT c.id FROM ' . LarpCharacter::class . ' c JOIN c.threads t WHERE c.larp = :larp AND t.id = :threadId',
-        ['larp' => $larp, 'threadId' => $threadId]
-    ));
+        // Get involved characters and factions
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT c.id FROM ' . LarpCharacter::class . ' c JOIN c.threads t WHERE c.larp = :larp AND t.id = :threadId',
+            ['larp' => $larp, 'threadId' => $threadId]
+        ));
     
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT f.id FROM ' . LarpFaction::class . ' f JOIN f.threads t WHERE f.larp = :larp AND t.id = :threadId',
-        ['larp' => $larp, 'threadId' => $threadId]
-    ));
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT f.id FROM ' . LarpFaction::class . ' f JOIN f.threads t WHERE f.larp = :larp AND t.id = :threadId',
+            ['larp' => $larp, 'threadId' => $threadId]
+        ));
     
-    return $ids;
-}
+        return $ids;
+    }
 
-private function getConnectedToCharacter(Larp $larp, string $characterId): array
-{
-    $ids = [];
+    private function getConnectedToCharacter(Larp $larp, string $characterId): array
+    {
+        $ids = [];
     
-    // Get character's factions
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT f.id FROM ' . LarpFaction::class . ' f JOIN f.members c WHERE f.larp = :larp AND c.id = :characterId',
-        ['larp' => $larp, 'characterId' => $characterId]
-    ));
+        // Get character's factions
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT f.id FROM ' . LarpFaction::class . ' f JOIN f.members c WHERE f.larp = :larp AND c.id = :characterId',
+            ['larp' => $larp, 'characterId' => $characterId]
+        ));
     
-    // Get character's threads, quests, events
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT t.id FROM ' . Thread::class . ' t JOIN t.involvedCharacters c WHERE t.larp = :larp AND c.id = :characterId',
-        ['larp' => $larp, 'characterId' => $characterId]
-    ));
+        // Get character's threads, quests, events
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT t.id FROM ' . Thread::class . ' t JOIN t.involvedCharacters c WHERE t.larp = :larp AND c.id = :characterId',
+            ['larp' => $larp, 'characterId' => $characterId]
+        ));
     
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT q.id FROM ' . Quest::class . ' q JOIN q.involvedCharacters c WHERE q.larp = :larp AND c.id = :characterId',
-        ['larp' => $larp, 'characterId' => $characterId]
-    ));
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT q.id FROM ' . Quest::class . ' q JOIN q.involvedCharacters c WHERE q.larp = :larp AND c.id = :characterId',
+            ['larp' => $larp, 'characterId' => $characterId]
+        ));
     
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT e.id FROM ' . Event::class . ' e JOIN e.involvedCharacters c WHERE e.larp = :larp AND c.id = :characterId',
-        ['larp' => $larp, 'characterId' => $characterId]
-    ));
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT e.id FROM ' . Event::class . ' e JOIN e.involvedCharacters c WHERE e.larp = :larp AND c.id = :characterId',
+            ['larp' => $larp, 'characterId' => $characterId]
+        ));
     
-    return $ids;
-}
+        return $ids;
+    }
 
-private function getConnectedToFaction(Larp $larp, string $factionId): array
-{
-    $ids = [];
+    private function getConnectedToFaction(Larp $larp, string $factionId): array
+    {
+        $ids = [];
     
-    // Get faction members
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT c.id FROM ' . LarpCharacter::class . ' c JOIN c.factions f WHERE c.larp = :larp AND f.id = :factionId',
-        ['larp' => $larp, 'factionId' => $factionId]
-    ));
+        // Get faction members
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT c.id FROM ' . LarpCharacter::class . ' c JOIN c.factions f WHERE c.larp = :larp AND f.id = :factionId',
+            ['larp' => $larp, 'factionId' => $factionId]
+        ));
     
-    // Get faction's threads, quests, events
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT t.id FROM ' . Thread::class . ' t JOIN t.involvedFactions f WHERE t.larp = :larp AND f.id = :factionId',
-        ['larp' => $larp, 'factionId' => $factionId]
-    ));
+        // Get faction's threads, quests, events
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT t.id FROM ' . Thread::class . ' t JOIN t.involvedFactions f WHERE t.larp = :larp AND f.id = :factionId',
+            ['larp' => $larp, 'factionId' => $factionId]
+        ));
     
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT q.id FROM ' . Quest::class . ' q JOIN q.involvedFactions f WHERE q.larp = :larp AND f.id = :factionId',
-        ['larp' => $larp, 'factionId' => $factionId]
-    ));
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT q.id FROM ' . Quest::class . ' q JOIN q.involvedFactions f WHERE q.larp = :larp AND f.id = :factionId',
+            ['larp' => $larp, 'factionId' => $factionId]
+        ));
     
-    $ids = array_merge($ids, $this->fetchIds(
-        'SELECT e.id FROM ' . Event::class . ' e JOIN e.involvedFactions f WHERE e.larp = :larp AND f.id = :factionId',
-        ['larp' => $larp, 'factionId' => $factionId]
-    ));
+        $ids = array_merge($ids, $this->fetchIds(
+            'SELECT e.id FROM ' . Event::class . ' e JOIN e.involvedFactions f WHERE e.larp = :larp AND f.id = :factionId',
+            ['larp' => $larp, 'factionId' => $factionId]
+        ));
     
-    return $ids;
-}
+        return $ids;
+    }
 }

@@ -22,13 +22,6 @@ class ParticipantController extends BaseController
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
-//        $sort = $request->query->get('sort', 'title');
-//        $dir = $request->query->get('dir', 'asc');
-//
-//        $qb->orderBy('c.' . $sort, $dir);
-//        $qb->andWhere('c.larp = :larp')
-//            ->setParameter('larp', $larp);
-
         $participants = $qb->getQuery()->getResult();
 
         $this->entityPreloader->preload($participants, 'user');
@@ -48,11 +41,14 @@ class ParticipantController extends BaseController
         LarpParticipantRepository $participantRepository,
         ?LarpParticipant          $participant = null,
     ): Response {
-        if (!$participant) {
-            $participant = new LarpParticipant();
-        }
         $form = $this->createForm(ParticipantType::class, $participant, ['larp' => $larp]);
         $form->handleRequest($request);
+
+        if (!$participant) {
+            $participant = new LarpParticipant();
+        } else {
+            $this->entityPreloader->preload([$participant], 'larpCharacters');
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $participant->setLarp($larp);
@@ -64,6 +60,7 @@ class ParticipantController extends BaseController
         return $this->render('backoffice/larp/participant/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
+            'participant' => $participant,
         ]);
     }
 

@@ -10,7 +10,8 @@ class LarpDashboardService
 {
     public function __construct(
         private EntityPreloader $entityPreloader
-    ) {}
+    ) {
+    }
 
     public function getDashboardData(Larp $larp): array
     {
@@ -46,7 +47,7 @@ class LarpDashboardService
         $applications = $larp->getApplications();
         $totalApplications = $applications->count();
         
-        $pendingApplications = $applications->filter(function($app) {
+        $pendingApplications = $applications->filter(function ($app) {
             return method_exists($app, 'getStatus') && $app->getStatus() === 'pending';
         })->count();
 
@@ -65,7 +66,7 @@ class LarpDashboardService
         $characters = $larp->getCharacters();
         $totalCharacters = $characters->count();
         
-        $assignedCharacters = $characters->filter(function($char) {
+        $assignedCharacters = $characters->filter(function ($char) {
             return method_exists($char, 'getAssignedTo') && $char->getAssignedTo() !== null;
         })->count();
 
@@ -93,7 +94,7 @@ class LarpDashboardService
         
         $factionStats = [];
         foreach ($factions as $faction) {
-            $factionParticipants = $participants->filter(function(LarpParticipant $participant) use ($faction) {
+            $factionParticipants = $participants->filter(function (LarpParticipant $participant) use ($faction) {
                 foreach ($participant->getLarpCharacters() as $larpCharacter) {
                     return $larpCharacter?->belongsToFaction($faction);
                 }

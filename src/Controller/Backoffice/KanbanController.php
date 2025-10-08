@@ -130,8 +130,7 @@ class KanbanController extends BaseController
         KanbanTask $task,
         KanbanTaskRepository $repository,
         LarpParticipantRepository $participantRepository
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $data = json_decode($request->getContent(), true) ?? [];
         if (isset($data['status'])) {
             $task->setStatus(KanbanStatus::from($data['status']));
@@ -167,8 +166,7 @@ class KanbanController extends BaseController
         KanbanTask                $task,
         EntityManagerInterface    $em,
         LarpParticipantRepository $participantRepository
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $data = json_decode($request->getContent(), true) ?? [];
 
         if (isset($data['participantId'])) {

@@ -1,6 +1,5 @@
 <?php
 
-// src/Controller/Backoffice/DashboardController.php
 namespace App\Controller\Backoffice;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -23,7 +23,7 @@ class StoryObjectMentionController extends AbstractController
 {
     /**
      * Search for story objects by title for mention autocomplete
-     * 
+     *
      * @param Request $request The request object
      * @param Larp $larp The LARP object (automatically resolved by param converter)
      * @param StoryObjectRepository $repository Repository for story objects

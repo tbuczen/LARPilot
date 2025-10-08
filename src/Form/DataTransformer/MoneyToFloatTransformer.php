@@ -2,9 +2,9 @@
 
 namespace App\Form\DataTransformer;
 
-use Symfony\Component\Form\DataTransformerInterface;
-use Money\Money;
 use Money\Currency;
+use Money\Money;
+use Symfony\Component\Form\DataTransformerInterface;
 
 class MoneyToFloatTransformer implements DataTransformerInterface
 {

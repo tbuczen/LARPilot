@@ -17,7 +17,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[Route('/', name: 'public_larp_')]
 class LarpController extends BaseController
 {
-
     #[Route('/terms', name: 'terms', methods: ['GET'])]
     public function terms(): Response
     {
@@ -45,8 +44,7 @@ class LarpController extends BaseController
         string $slug,
         LarpRepository $larpRepository,
         LarpApplicationRepository $applicationRepository
-    ): Response
-    {
+    ): Response {
         $larp = $larpRepository->findOneBy(['slug' => $slug]);
         
         if (!$larp) {
@@ -59,7 +57,7 @@ class LarpController extends BaseController
         
         if ($user) {
             // Check if user is already a participant
-            $userIsParticipant = $larp->getParticipants()->exists(function($key, $participant) use ($user) {
+            $userIsParticipant = $larp->getParticipants()->exists(function ($key, $participant) use ($user) {
                 return $participant->getUser() === $user;
             });
         

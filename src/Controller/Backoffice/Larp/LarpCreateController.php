@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/larp/create', name: 'backoffice_larp_create',  methods: ['GET', 'POST'])]
+#[Route('/larp/create', name: 'backoffice_larp_create', methods: ['GET', 'POST'])]
 class LarpCreateController extends AbstractController
 {
     public function __invoke(Request $request, SubmitLarpHandler $handler): Response
@@ -35,7 +35,7 @@ class LarpCreateController extends AbstractController
 
             $this->addFlash('success', 'Larp created as DRAFT.');
 
-            return $this->redirectToRoute('backoffice_larp_details', ['larp' => $dto->larpId]);
+            return $this->redirectToRoute('backoffice_larp_dashboard', ['larp' => $dto->larpId]);
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {

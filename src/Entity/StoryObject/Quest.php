@@ -25,7 +25,7 @@ class Quest extends StoryObject
     private Collection $involvedCharacters;
 
     /** @var Collection<LarpFaction> Specifically needed involved factions */
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class,  inversedBy: 'quests')]
+    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'quests')]
     #[ORM\JoinTable(name: 'quest_involved_factions')]
     private Collection $involvedFactions;
 

@@ -2,9 +2,9 @@
 
 namespace App\Service\Larp\Workflow;
 
+use App\Entity\Enum\LarpStageStatus;
 use App\Entity\Enum\SubmissionStatus;
 use App\Entity\Larp;
-use App\Entity\Enum\LarpStageStatus;
 use App\Entity\LarpApplication;
 
 class LarpTransitionGuardService
@@ -30,7 +30,7 @@ class LarpTransitionGuardService
      */
     public function canConfirm(Larp $larp): bool
     {
-        return $this->hasRequiredBasicInfo($larp) && 
+        return $this->hasRequiredBasicInfo($larp) &&
                $this->hasAllCharactersWithShortDescription($larp) &&
                $this->hasAllCharactersAssigned($larp);
     }
@@ -162,7 +162,7 @@ class LarpTransitionGuardService
             $errors[] = 'At least one character is required to open for inquiries';
         }
 
-        $charactersWithoutDescription = $larp->getCharacters()->filter(function($character) {
+        $charactersWithoutDescription = $larp->getCharacters()->filter(function ($character) {
             return empty($character->getDescription());
         });
 

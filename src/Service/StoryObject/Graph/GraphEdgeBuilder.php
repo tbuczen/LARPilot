@@ -2,7 +2,6 @@
 
 namespace App\Service\StoryObject\Graph;
 
-
 use App\Entity\StoryObject\StoryObject;
 use App\Repository\StoryObject\RelationRepository;
 
@@ -11,8 +10,7 @@ readonly class GraphEdgeBuilder
     public function __construct(
         private RelationRepository      $relationRepository,
         private ImplicitRelationBuilder $implicitRelationBuilder,
-    )
-    {
+    ) {
     }
 
     public function buildEdges(array $objects, array $validNodeIds): array
@@ -49,7 +47,7 @@ readonly class GraphEdgeBuilder
     private function extractObjectIds(array $objects): array
     {
         return array_map(
-            fn(StoryObject $object) => $object->getId()->toRfc4122(),
+            fn (StoryObject $object) => $object->getId()->toRfc4122(),
             $objects
         );
     }

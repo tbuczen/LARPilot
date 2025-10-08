@@ -51,9 +51,7 @@ class ItemType extends AbstractType
                 'label' => 'form.submit',
             ])
             ->get('cost')->addModelTransformer(new MoneyToFloatTransformer())
-;
-
-
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

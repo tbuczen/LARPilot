@@ -22,7 +22,7 @@ class LarpCharacterSubmissionType extends AbstractType
         /** @var Larp $larp */
         $larp = $options['larp'];
 
-//        $builder = new DynamicFormBuilder($builder);
+        //        $builder = new DynamicFormBuilder($builder);
 
         $builder
             ->add('contactEmail', EmailType::class, [

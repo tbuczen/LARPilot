@@ -7,6 +7,7 @@ use App\Entity\Enum\LarpSetting;
 use App\Entity\Enum\LarpStageStatus;
 use App\Entity\Enum\LarpType;
 use App\Entity\Enum\TargetType;
+use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -14,7 +15,6 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 
 class LarpPublicFilterType extends AbstractType
 {

@@ -123,3 +123,7 @@ form:
   character_choices: "Character Preferences"
   character_choices_help: "Drag and drop to reorder your character preferences by priority"
   select_tags: "Select tags..."
+  participant:
+    user: "User"
+    role: "Role"
+    character: "Character"

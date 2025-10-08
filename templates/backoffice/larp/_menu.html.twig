@@ -13,8 +13,8 @@
                         {{ 'backoffice.larp.preview'|trans }}
                     </a>
 
-                    <a href="{{ path('backoffice_larp_details', {'larp': larp.id}) }}"
-                       class="btn btn-primary {% if currentRoute == 'backoffice_larp_details' %}active{% endif %}">
+                    <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}"
+                       class="btn btn-primary {% if currentRoute == 'backoffice_larp_dashboard' %}active{% endif %}">
                         {{ 'common.general'|trans }}
                     </a>
 

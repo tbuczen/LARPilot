@@ -12,8 +12,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -49,21 +49,21 @@ class LarpPropertiesType extends AbstractType
             ])
             ->add('setting', EnumType::class, [
                 'class' => LarpSetting::class,
-                'choice_label' => fn(LarpSetting $setting) => $setting->getLabel(),
+                'choice_label' => fn (LarpSetting $setting) => $setting->getLabel(),
                 'placeholder' => 'Select a setting',
                 'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('type', EnumType::class, [
                 'class' => LarpType::class,
-                'choice_label' => fn(LarpType $type) => $type->getLabel(),
+                'choice_label' => fn (LarpType $type) => $type->getLabel(),
                 'placeholder' => 'Select a type',
                 'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('characterSystem', EnumType::class, [
                 'class' => LarpCharacterSystem::class,
-                'choice_label' => fn(LarpCharacterSystem $system) => $system->getLabel(),
+                'choice_label' => fn (LarpCharacterSystem $system) => $system->getLabel(),
                 'placeholder' => 'Select a character system',
                 'required' => false,
                 'attr' => ['class' => 'form-select']

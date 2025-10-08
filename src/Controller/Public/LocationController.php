@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/', name: 'public_location_')]
 class LocationController extends BaseController
 {
-
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(Request $request, LarpRepository $larpRepository): Response
     {
@@ -21,7 +20,7 @@ class LocationController extends BaseController
         $filterForm->handleRequest($request);
 
         $qb = $this->getListQueryBuilder($larpRepository, $filterForm, $request);
-//        $qb = $larpRepository->findAllUpcomingPublished($this->getUser());
+        //        $qb = $larpRepository->findAllUpcomingPublished($this->getUser());
 
         $pagination = $this->getPagination($qb, $request);
 
@@ -35,8 +34,7 @@ class LocationController extends BaseController
     public function details(
         string $slug,
         LocationRepository $repository,
-    ): Response
-    {
+    ): Response {
         $location = $repository->findOneBy(['slug' => $slug]);
         
         if (!$location) {
@@ -47,5 +45,4 @@ class LocationController extends BaseController
             'location' => $location,
         ]);
     }
-
 }

@@ -76,7 +76,7 @@
 {#                                    </a>#}
 {#                                {% endif %}#}
                                 {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
-                                    <a href="{{ path('backoffice_larp_details', {'larp': larp.id}) }}" class="btn btn-secondary">
+                                    <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}" class="btn btn-secondary">
                                         <i class="bi bi-gear me-1"></i>{{ 'common.manage'|trans }}
                                     </a>
                                 {% endif %}
