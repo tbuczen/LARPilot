@@ -3,10 +3,10 @@
 namespace App\Form\Filter;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
-use App\Repository\StoryObject\LarpCharacterRepository;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
+use App\Repository\StoryObject\CharacterRepository;
+use App\Repository\StoryObject\FactionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,24 +21,24 @@ class LarpApplicationFilterType extends AbstractType
 
         $builder
             ->add('character', EntityType::class, [
-                'class' => LarpCharacter::class,
+                'class' => Character::class,
                 'choice_label' => 'title',
                 'required' => false,
                 'autocomplete' => true,
                 'placeholder' => 'form.choose',
                 'data_extraction_method' => 'default',
-                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
                     ->where('c.larp = :larp')
                     ->setParameter('larp', $larp),
             ])
             ->add('faction', EntityType::class, [
-                'class' => LarpFaction::class,
+                'class' => Faction::class,
                 'choice_label' => 'title',
                 'required' => false,
                 'autocomplete' => true,
                 'placeholder' => 'form.choose',
                 'data_extraction_method' => 'default',
-                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ]);

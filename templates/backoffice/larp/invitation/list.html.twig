@@ -33,16 +33,8 @@
                 {% for invitation in invitations %}
                     <tr>
                         <td>{{ ('user_role.' ~ invitation.invitedRole.value)|trans }}</td>
-                        <td>{{ invitation.validTo|date(constant('DateTimeInterface::ATOM')) }}</td>
+                        <td>{{ invitation.validTo|date('Y-m-d H:i:s') }}</td>
                         <td>
-{#                            <a href="{{ path('backoffice_larp_invitations_modify', { larp: larp.id, invitation: invitation.id }) }}"#}
-{#                               class="btn btn-sm btn-primary">#}
-{#                                {{ 'common.edit'|trans }}#}
-{#                            </a>#}
-{#                            <a href="{{ path('backoffice_larp_invitations_delete', { larp: larp.id, invitation: invitation.id }) }}"#}
-{#                               class="btn btn-sm btn-danger">#}
-{#                                {{ 'common.delete'|trans }}#}
-{#                            </a>#}
                             <div class="d-flex gap-2">
                                 <input type="text"
                                        class="form-control form-control-sm d-none"

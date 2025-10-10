@@ -3,12 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Thread;
 use App\Entity\Tag;
-use App\Repository\StoryObject\LarpCharacterRepository;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\CharacterRepository;
+use App\Repository\StoryObject\FactionRepository;
 use App\Repository\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -36,14 +36,14 @@ class ThreadType extends AbstractType
                 ],
             ])
             ->add('involvedFactions', EntityType::class, [
-                'class' => LarpFaction::class,
+                'class' => Faction::class,
                 'choice_label' => 'title',
                 'label' => 'form.thread.factions',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.thread.choose_faction',
-                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
                 'tom_select_options' => [
@@ -52,14 +52,14 @@ class ThreadType extends AbstractType
                 ],
             ])
             ->add('involvedCharacters', EntityType::class, [
-                'class' => LarpCharacter::class,
+                'class' => Character::class,
                 'choice_label' => 'title',
                 'label' => 'form.thread.characters',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.thread.choose_faction',
-                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
                 'tom_select_options' => [

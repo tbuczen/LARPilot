@@ -22,7 +22,7 @@ class LarpDashboardController extends AbstractController
 
         $dashboard = $dashboardService->getDashboardData($larp);
 
-        return $this->render('backoffice/larp/details.html.twig', [
+        return $this->render('backoffice/larp/dashboard.html.twig', [
             'larp' => $larp,
             'dashboard' => $dashboard,
         ]);

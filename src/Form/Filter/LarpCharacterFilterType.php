@@ -7,10 +7,10 @@ use App\Entity\Enum\Gender;
 use App\Entity\Enum\UserRole;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Entity\Tag;
 use App\Repository\LarpParticipantRepository;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\FactionRepository;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -47,7 +47,7 @@ class LarpCharacterFilterType extends AbstractType
                 'placeholder' => 'form.choose',
             ])
             ->add('factions', EntityType::class, [
-                'class' => LarpFaction::class,
+                'class' => Faction::class,
                 'choice_label' => 'title',
                 'multiple' => true,
                 'required' => false,
@@ -56,7 +56,7 @@ class LarpCharacterFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ])

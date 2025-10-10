@@ -3,9 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\StoryObject\RecruitmentProposal;
-use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\CharacterRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,10 +22,10 @@ class RecruitmentProposalType extends AbstractType
 
         $builder
             ->add('character', EntityType::class, [
-                'class' => LarpCharacter::class,
+                'class' => Character::class,
                 'choice_label' => 'title',
                 'label' => 'form.proposal.character',
-                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
                     ->where('c.larp = :larp')
                     ->setParameter('larp', $larp),
                 'autocomplete' => true,

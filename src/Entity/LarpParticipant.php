@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Enum\UserRole;
 use App\Entity\LarpApplication;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,7 +34,7 @@ class LarpParticipant
     #[ORM\JoinColumn(nullable: false)]
     private ?Larp $larp = null;
 
-    #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larpParticipant')]
+    #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'larpParticipant')]
     private ?Collection $larpCharacters = null;
 
     #[ORM\OneToOne(targetEntity: LarpApplication::class)]
@@ -144,14 +144,14 @@ class LarpParticipant
     }
 
     /**
-     * @return Collection<int, LarpCharacter>
+     * @return Collection<int, Character>
      */
     public function getLarpCharacters(): Collection
     {
         return $this->larpCharacters;
     }
 
-    public function addLarpCharacter(LarpCharacter $larpCharacter): self
+    public function addLarpCharacter(Character $larpCharacter): self
     {
         if (!$this->larpCharacters->contains($larpCharacter)) {
             $this->larpCharacters->add($larpCharacter);
@@ -161,7 +161,7 @@ class LarpParticipant
         return $this;
     }
 
-    public function removeLarpCharacter(LarpCharacter $larpCharacter): self
+    public function removeLarpCharacter(Character $larpCharacter): self
     {
         // set the owning side to null (unless already changed)
         if ($this->larpCharacters->removeElement($larpCharacter) && $larpCharacter->getLarpParticipant() === $this) {

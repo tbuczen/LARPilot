@@ -25,10 +25,10 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     #[ORM\Column(type: 'string', enumType: LarpIntegrationProvider::class)]
     private LarpIntegrationProvider $provider;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'text')]
     private string $accessToken;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $refreshToken = null;
 
     #[ORM\Column(type: 'datetime')]

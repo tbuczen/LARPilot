@@ -4,8 +4,8 @@ namespace App\Controller\Backoffice\Story;
 
 use App\Controller\BaseController;
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Entity\StoryObject\Character;
+use App\Repository\StoryObject\CharacterRepository;
 use App\Repository\StoryObject\StoryRecruitmentRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class StoryMarketplaceController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET'])]
-    public function list(Larp $larp, LarpCharacterRepository $repository): Response
+    public function list(Larp $larp, CharacterRepository $repository): Response
     {
         $characters = $repository->createQueryBuilder('c')
             ->andWhere('c.larp = :larp')
@@ -31,7 +31,7 @@ class StoryMarketplaceController extends BaseController
     }
 
     #[Route('toggle/{character}', name: 'toggle', methods: ['POST'])]
-    public function toggle(Larp $larp, LarpCharacter $character, LarpCharacterRepository $repository): Response
+    public function toggle(Larp $larp, Character $character, CharacterRepository $repository): Response
     {
         $character->setAvailableForRecruitment(!$character->isAvailableForRecruitment());
         $repository->save($character);
@@ -42,7 +42,7 @@ class StoryMarketplaceController extends BaseController
     }
 
     #[Route('{character}/recruitments', name: 'recruitments', methods: ['GET'])]
-    public function recruitments(Larp $larp, LarpCharacter $character, StoryRecruitmentRepository $recruitmentRepository): Response
+    public function recruitments(Larp $larp, Character $character, StoryRecruitmentRepository $recruitmentRepository): Response
     {
         $recruitments = $recruitmentRepository->createQueryBuilder('r')
             ->join('r.storyObject', 'o')

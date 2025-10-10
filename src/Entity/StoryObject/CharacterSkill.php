@@ -7,13 +7,13 @@ use App\Entity\Trait\UuidTraitEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-class LarpCharacterSkill
+class CharacterSkill
 {
     use UuidTraitEntity;
 
-    #[ORM\ManyToOne(targetEntity: LarpCharacter::class, inversedBy: 'skills')]
+    #[ORM\ManyToOne(targetEntity: Character::class, inversedBy: 'skills')]
     #[ORM\JoinColumn(nullable: false)]
-    private LarpCharacter $character;
+    private Character $character;
 
     #[ORM\ManyToOne(targetEntity: Skill::class)]
     #[ORM\JoinColumn(nullable: false)]

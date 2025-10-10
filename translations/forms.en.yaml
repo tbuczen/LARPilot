@@ -101,6 +101,8 @@ form:
     assigned_to: "Assigned to"
     priority: "Priority"
     due_date: "Due date"
+    unassigned: "Unassigned"
+    visibility: "Visibility"
   contact_email: 'Contact email'
   favourite_style: 'Favourite play style'
   triggers: 'Triggers / things to avoid'

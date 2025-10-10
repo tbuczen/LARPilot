@@ -18,9 +18,9 @@ class RecruitmentProposal
     #[ORM\JoinColumn(nullable: false)]
     private ?StoryRecruitment $recruitment = null;
 
-    #[ORM\ManyToOne(targetEntity: LarpCharacter::class)]
+    #[ORM\ManyToOne(targetEntity: Character::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private ?LarpCharacter $character = null;
+    private ?Character $character = null;
 
     #[ORM\Column(enumType: RecruitmentProposalStatus::class)]
     private RecruitmentProposalStatus $status = RecruitmentProposalStatus::PENDING;
@@ -38,12 +38,12 @@ class RecruitmentProposal
         $this->recruitment = $recruitment;
     }
 
-    public function getCharacter(): ?LarpCharacter
+    public function getCharacter(): ?Character
     {
         return $this->character;
     }
 
-    public function setCharacter(LarpCharacter $character): void
+    public function setCharacter(Character $character): void
     {
         $this->character = $character;
     }

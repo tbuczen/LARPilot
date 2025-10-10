@@ -4,14 +4,15 @@ namespace App\Form;
 
 use App\Entity\Larp;
 use App\Entity\StoryObject\Event;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Place;
 use App\Entity\Tag;
-use App\Repository\StoryObject\LarpCharacterRepository;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\CharacterRepository;
+use App\Repository\StoryObject\FactionRepository;
 use App\Repository\StoryObject\PlaceRepository;
 use App\Repository\TagRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -46,7 +47,7 @@ class EventType extends AbstractType
                 'multiple' => false,
                 'autocomplete' => true,
                 'placeholder' => 'form.event.choose_place',
-                'query_builder' => fn (PlaceRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('p')
+                'query_builder' => fn (PlaceRepository $repo): QueryBuilder => $repo->createQueryBuilder('p')
                     ->where('p.larp = :larp')
                     ->setParameter('larp', $larp)
             ])
@@ -61,26 +62,26 @@ class EventType extends AbstractType
                 'required' => false,
             ])
             ->add('involvedFactions', EntityType::class, [
-                'class' => LarpFaction::class,
+                'class' => Faction::class,
                 'choice_label' => 'title',
                 'label' => 'form.event.factions',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.event.choose_faction',
-                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (FactionRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ])
             ->add('involvedCharacters', EntityType::class, [
-                'class' => LarpCharacter::class,
+                'class' => Character::class,
                 'choice_label' => 'title',
                 'label' => 'form.event.characters',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.event.choose_character',
-                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (CharacterRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ])
@@ -91,7 +92,7 @@ class EventType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'query_builder' => fn (TagRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                'query_builder' => fn (TagRepository $repo): QueryBuilder => $repo->createQueryBuilder('t')
                     ->where('t.larp = :larp')
                     ->setParameter('larp', $larp),
                 'tom_select_options' => [

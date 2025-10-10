@@ -7,8 +7,8 @@ use App\Entity\Enum\LarpSetting;
 use App\Entity\Enum\LarpStageStatus;
 use App\Entity\Enum\LarpType;
 use App\Entity\StoryObject\Event;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
@@ -64,8 +64,8 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\Column(nullable: true, enumType: LarpCharacterSystem::class)]
     private ?LarpCharacterSystem $characterSystem = null;
 
-    /** @var Collection<LarpCharacter> */
-    #[ORM\OneToMany(targetEntity: LarpCharacter::class, mappedBy: 'larp')]
+    /** @var Collection<Character> */
+    #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'larp')]
     private Collection $characters;
 
     /** @var Collection<LarpApplication> */
@@ -88,8 +88,8 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\OneToMany(targetEntity: LarpIntegration::class, mappedBy: 'larp')]
     private Collection $integrations;
 
-    /** @var Collection<LarpFaction> */
-    #[ORM\OneToMany(targetEntity: LarpFaction::class, mappedBy: 'larp')]
+    /** @var Collection<Faction> */
+    #[ORM\OneToMany(targetEntity: Faction::class, mappedBy: 'larp')]
     private Collection $factions;
 
     public function __construct()
@@ -239,14 +239,14 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     }
 
     /**
-     * @return Collection<int, LarpCharacter>
+     * @return Collection<int, Character>
      */
     public function getCharacters(): Collection
     {
         return $this->characters;
     }
 
-    public function addCharacter(LarpCharacter $character): static
+    public function addCharacter(Character $character): static
     {
         if (!$this->characters->contains($character)) {
             $this->characters->add($character);
@@ -255,7 +255,7 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
         return $this;
     }
 
-    public function removeCharacter(LarpCharacter $character): static
+    public function removeCharacter(Character $character): static
     {
         if ($this->characters->removeElement($character) && $character->getLarp() === $this) {
             $character->setLarp(null);
@@ -264,14 +264,14 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     }
 
     /**
-     * @return Collection<LarpFaction>
+     * @return Collection<Faction>
      */
     public function getFactions(): Collection
     {
         return $this->factions;
     }
 
-    public function addFaction(LarpFaction $element): self
+    public function addFaction(Faction $element): self
     {
         if (!$this->factions->contains($element)) {
             $this->factions[] = $element;
@@ -280,7 +280,7 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
         return $this;
     }
 
-    public function removeFaction(LarpFaction $element): self
+    public function removeFaction(Faction $element): self
     {
         if ($this->factions->removeElement($element)) {
             $element->setLarp(null);

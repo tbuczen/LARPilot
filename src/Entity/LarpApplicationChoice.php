@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\Trait\UuidTraitEntity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,9 +18,9 @@ class LarpApplicationChoice
     #[ORM\JoinColumn(nullable: false)]
     private LarpApplication $application;
 
-    #[ORM\ManyToOne(targetEntity: LarpCharacter::class)]
+    #[ORM\ManyToOne(targetEntity: Character::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private LarpCharacter $character;
+    private Character $character;
 
     #[ORM\Column(type: 'integer')]
     private int $priority = 1;
@@ -44,12 +44,12 @@ class LarpApplicationChoice
         $this->application = $application;
     }
 
-    public function getCharacter(): LarpCharacter
+    public function getCharacter(): Character
     {
         return $this->character;
     }
 
-    public function setCharacter(LarpCharacter $character): void
+    public function setCharacter(Character $character): void
     {
         $this->character = $character;
     }

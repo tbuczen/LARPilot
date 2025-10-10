@@ -4,9 +4,12 @@ namespace App\Form;
 
 use App\Entity\Enum\Gender;
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
+use App\Entity\Tag;
+use App\Repository\StoryObject\FactionRepository;
+use App\Repository\TagRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -38,6 +41,22 @@ class CharacterType extends AbstractType
                 'choice_value' => fn (?Gender $gender) => $gender?->value,
                 'required' => true,
             ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => 'title',
+                'label' => 'form.character.tag',
+                'required' => false,
+                'multiple' => true,
+                'autocomplete' => true,
+                'placeholder' => 'form.common.choose',
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
+                'query_builder' => fn (TagRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
+                    ->where('f.larp = :larp')
+                    ->setParameter('larp', $larp),
+            ])
             ->add('description', TextareaType::class, [
                 'label' => 'form.character.description',
                 'attr' => [
@@ -49,14 +68,14 @@ class CharacterType extends AbstractType
                 'required' => false,
             ])
             ->add('factions', EntityType::class, [
-                'class' => LarpFaction::class,
+                'class' => Faction::class,
                 'choice_label' => 'title',
                 'label' => 'form.character.faction',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'form.character.choose_faction',
-                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (FactionRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ])
@@ -69,7 +88,7 @@ class CharacterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => LarpCharacter::class,
+            'data_class' => Character::class,
             'translation_domain' => 'forms',
             'larp' => null,
         ]);

@@ -9,7 +9,7 @@ use App\Entity\Larp;
 use App\Entity\LarpParticipant;
 use App\Entity\Skill;
 use App\Entity\Tag;
-use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\CharacterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,8 +21,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     message: 'A character with this title already exists in this LARP.'
 )]
 #[ORM\Index(columns: ['in_game_name'])]
-#[ORM\Entity(repositoryClass: LarpCharacterRepository::class)]
-class LarpCharacter extends StoryObject
+#[ORM\Entity(repositoryClass: CharacterRepository::class)]
+class Character extends StoryObject
 {
     #[Gedmo\Versioned]
     #[ORM\Column(length: 255, nullable: true)]
@@ -30,11 +30,11 @@ class LarpCharacter extends StoryObject
 
     #[ORM\OneToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(name: "previous_character_id", referencedColumnName: "id", nullable: true)]
-    private ?LarpCharacter $previousCharacter = null;
+    private ?Character $previousCharacter = null;
 
     #[ORM\OneToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(name: "continuation_character_id", referencedColumnName: "id", nullable: true)]
-    private ?LarpCharacter $continuation = null;
+    private ?Character $continuation = null;
 
     #[Gedmo\Versioned]
     #[ORM\Column(type: "text", nullable: true)]
@@ -69,17 +69,17 @@ class LarpCharacter extends StoryObject
     #[ORM\JoinTable(name: "larp_character_tags")]
     private Collection $tags;
 
-    //skills - list can be defined by organizers and people responsible for larp mechanics many to many to LarpCharacterSkill
-    #[ORM\OneToMany(targetEntity: LarpCharacterSkill::class, mappedBy: 'character')]
+    //skills - list can be defined by organizers and people responsible for larp mechanics many to many to CharacterSkill
+    #[ORM\OneToMany(targetEntity: CharacterSkill::class, mappedBy: 'character')]
     #[ORM\JoinTable(name: "larp_character_skill")]
     private Collection $skills;
 
     //items that character should start the game with (each item should be defined in the system, crafted by crafters or bought by the organizers)
-    #[ORM\OneToMany(targetEntity: LarpCharacterItem::class, mappedBy: 'character')]
+    #[ORM\OneToMany(targetEntity: CharacterItem::class, mappedBy: 'character')]
     #[ORM\JoinTable(name: "larp_character_item")]
     private Collection $items;
 
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'members', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Faction::class, inversedBy: 'members', cascade: ['persist'])]
     private Collection $factions;
 
     #[ORM\ManyToMany(targetEntity: Quest::class, mappedBy: 'involvedCharacters')]
@@ -148,25 +148,25 @@ class LarpCharacter extends StoryObject
     }
 
     /**
-     * @return Collection<LarpFaction>
+     * @return Collection<Faction>
      */
     public function getFactions(): Collection
     {
         return $this->factions;
     }
 
-    public function addFaction(LarpFaction $larpFaction): self
+    public function addFaction(Faction $faction): self
     {
-        if (!$this->factions->contains($larpFaction)) {
-            $this->factions[] = $larpFaction;
-            //            $larpFaction->addMember($this);
+        if (!$this->factions->contains($faction)) {
+            $this->factions[] = $faction;
+            //            $faction->addMember($this);
         }
         return $this;
     }
 
-    public function removeFaction(LarpFaction $larpFaction): self
+    public function removeFaction(Faction $faction): self
     {
-        $this->factions->removeElement($larpFaction);
+        $this->factions->removeElement($faction);
         return $this;
     }
 
@@ -340,7 +340,7 @@ class LarpCharacter extends StoryObject
         return TargetType::Character;
     }
 
-    public function belongsToFaction(LarpFaction $faction): bool
+    public function belongsToFaction(Faction $faction): bool
     {
         return $this->factions->contains($faction);
     }

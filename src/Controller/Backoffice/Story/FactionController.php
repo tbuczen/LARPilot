@@ -4,11 +4,11 @@ namespace App\Controller\Backoffice\Story;
 
 use App\Controller\BaseController;
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Form\FactionType;
 use App\Form\Filter\LarpFactionFilterType;
 use App\Helper\Logger;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\FactionRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class FactionController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET'])]
-    public function factions(Request $request, Larp $larp, LarpFactionRepository $repository): Response
+    public function factions(Request $request, Larp $larp, FactionRepository $repository): Response
     {
         $filterForm = $this->createForm(LarpFactionFilterType::class);
         $filterForm->handleRequest($request);
@@ -46,12 +46,12 @@ class FactionController extends BaseController
         IntegrationManager      $integrationManager,
         Request                 $request,
         Larp                    $larp,
-        LarpFactionRepository $factionRepository,
-        ?LarpFaction          $faction = null,
+        FactionRepository $factionRepository,
+        ?Faction          $faction = null,
     ): Response {
         $new = false;
-        if (!$faction instanceof \App\Entity\StoryObject\LarpFaction) {
-            $faction = new LarpFaction();
+        if (!$faction instanceof \App\Entity\StoryObject\Faction) {
+            $faction = new Faction();
             $faction->setLarp($larp);
             $new = true;
         }
@@ -94,8 +94,8 @@ class FactionController extends BaseController
         IntegrationManager      $integrationManager,
         Larp                    $larp,
         Request                 $request,
-        LarpFactionRepository $factionRepository,
-        LarpFaction           $faction,
+        FactionRepository $factionRepository,
+        Faction           $faction,
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enum\UserRole;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpInvitationRepository;
 use Doctrine\DBAL\Types\Types;
@@ -30,8 +30,8 @@ class LarpInvitation
     #[ORM\Column(enumType: UserRole::class)]
     private UserRole $invitedRole;
 
-    #[ORM\ManyToOne(targetEntity: LarpCharacter::class)]
-    private ?LarpCharacter $larpCharacter = null;
+    #[ORM\ManyToOne(targetEntity: Character::class)]
+    private ?Character $larpCharacter = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isReusable = true;
@@ -104,12 +104,12 @@ class LarpInvitation
         return $this;
     }
 
-    public function getLarpCharacter(): ?LarpCharacter
+    public function getLarpCharacter(): ?Character
     {
         return $this->larpCharacter;
     }
 
-    public function setLarpCharacter(?LarpCharacter $larpCharacter): self
+    public function setLarpCharacter(?Character $larpCharacter): self
     {
         $this->larpCharacter = $larpCharacter;
         return $this;

@@ -3,11 +3,11 @@
 namespace App\Service\Larp;
 
 use App\Entity\StoryObject\Event;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\Thread;
 use App\Repository\StoryObject\EventRepository;
-use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\CharacterRepository;
 use App\Repository\StoryObject\QuestRepository;
 use App\Repository\StoryObject\ThreadRepository;
 use Doctrine\Common\Collections\Collection;
@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\Collection;
 readonly class SuggestionService
 {
     public function __construct(
-        private LarpCharacterRepository $characterRepository,
+        private CharacterRepository $characterRepository,
         private QuestRepository $questRepository,
         private EventRepository $eventRepository,
         private ThreadRepository $threadRepository,
@@ -23,7 +23,7 @@ readonly class SuggestionService
     }
 
     /**
-     * @return LarpCharacter[]
+     * @return Character[]
      */
     public function suggestCharactersForQuest(Quest $quest): array
     {
@@ -49,7 +49,7 @@ readonly class SuggestionService
     }
 
     /**
-     * @return LarpCharacter[]
+     * @return Character[]
      */
     public function suggestCharactersForEvent(Event $event): array
     {
@@ -75,7 +75,7 @@ readonly class SuggestionService
     }
 
     /**
-     * @return LarpCharacter[]
+     * @return Character[]
      */
     public function suggestCharactersForThread(Thread $thread): array
     {
@@ -111,7 +111,7 @@ readonly class SuggestionService
     /**
      * @return Quest[]
      */
-    public function suggestQuestsForCharacter(LarpCharacter $character): array
+    public function suggestQuestsForCharacter(Character $character): array
     {
         $tagIds = $this->collectTagIds([$character]);
         if ($tagIds === []) {
@@ -133,7 +133,7 @@ readonly class SuggestionService
     }
 
     /**
-     * @param iterable<LarpCharacter> $characters
+     * @param iterable<Character> $characters
      * @return string[]
      */
     private function collectTagIds(iterable $characters): array

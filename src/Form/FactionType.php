@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -35,7 +35,7 @@ class FactionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => LarpFaction::class,
+            'data_class' => Faction::class,
             'translation_domain' => 'forms',
             'larp' => null,
         ]);

@@ -2,10 +2,12 @@
 
 namespace App\Form;
 
+use App\Entity\Enum\TaskVisibility;
 use App\Entity\KanbanTask;
 use App\Entity\LarpParticipant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -55,6 +57,13 @@ class KanbanTaskType extends AbstractType
                 'label' => 'form.kanban.due_date',
                 'required' => false,
                 'widget' => 'single_text',
+            ])
+            ->add('visibility', ChoiceType::class, [
+                'label' => 'form.kanban.visibility',
+                'choices' => TaskVisibility::cases(),
+                'choice_label' => fn (TaskVisibility $type) => $type->name,
+                'choice_value' => fn (?TaskVisibility $type) => $type?->value,
+                'required' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit',

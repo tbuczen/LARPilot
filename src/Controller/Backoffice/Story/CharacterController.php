@@ -9,10 +9,10 @@ use App\Entity\Enum\LarpIntegrationProvider;
 use App\Entity\Larp;
 use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Form\CharacterType;
 use App\Form\Filter\LarpCharacterFilterType;
-use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\CharacterRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class CharacterController extends BaseController
         Request $request,
         Larp $larp,
         LarpManager $larpManager,
-        LarpCharacterRepository $repository,
+        CharacterRepository $repository,
     ): Response {
         $filterForm = $this->createForm(LarpCharacterFilterType::class, options: ['larp' => $larp]);
         $filterForm->handleRequest($request);
@@ -52,12 +52,12 @@ class CharacterController extends BaseController
         IntegrationManager      $integrationManager,
         Request                 $request,
         Larp                    $larp,
-        LarpCharacterRepository $characterRepository,
-        ?LarpCharacter          $character = null,
+        CharacterRepository $characterRepository,
+        ?Character          $character = null,
     ): Response {
         $new = false;
-        if (!$character instanceof \App\Entity\StoryObject\LarpCharacter) {
-            $character = new LarpCharacter();
+        if (!$character instanceof Character) {
+            $character = new Character();
             $character->setLarp($larp);
             $new = true;
         }
@@ -76,6 +76,7 @@ class CharacterController extends BaseController
 
         $this->entityPreloader->preload([$character], 'quests');
         $this->entityPreloader->preload([$character], 'threads');
+        $this->entityPreloader->preload([$character], 'tags');
 
         return $this->render('backoffice/larp/characters/modify.html.twig', [
             'character' => $character,
@@ -90,8 +91,8 @@ class CharacterController extends BaseController
         IntegrationManager      $integrationManager,
         Larp                    $larp,
         Request                 $request,
-        LarpCharacterRepository $characterRepository,
-        LarpCharacter           $character,
+        CharacterRepository $characterRepository,
+        Character           $character,
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 

@@ -4,15 +4,15 @@ namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
 use App\Entity\Trait\CreatorAwareInterface;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\FactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: LarpFactionRepository::class)]
-class LarpFaction extends StoryObject implements CreatorAwareInterface
+#[ORM\Entity(repositoryClass: FactionRepository::class)]
+class Faction extends StoryObject implements CreatorAwareInterface
 {
-    #[ORM\ManyToMany(targetEntity: LarpCharacter::class, mappedBy: 'factions')]
+    #[ORM\ManyToMany(targetEntity: Character::class, mappedBy: 'factions')]
     private Collection $members;
 
     #[ORM\ManyToMany(targetEntity: Quest::class, mappedBy: 'involvedFactions')]
@@ -58,23 +58,23 @@ class LarpFaction extends StoryObject implements CreatorAwareInterface
     }
 
     /**
-     * @return Collection<LarpCharacter>
+     * @return Collection<Character>
      */
     public function getMembers(): Collection
     {
         return $this->members;
     }
 
-    public function addMember(LarpCharacter $larpCharacter): self
+    public function addMember(Character $character): self
     {
-        if (!$this->members->contains($larpCharacter)) {
-            $this->members[] = $larpCharacter;
-            $larpCharacter->addFaction($this);
+        if (!$this->members->contains($character)) {
+            $this->members[] = $character;
+            $character->addFaction($this);
         }
         return $this;
     }
 
-    public function removeMember(LarpCharacter $character): self
+    public function removeMember(Character $character): self
     {
         if ($this->members->removeElement($character)) {
             // set the owning side to null (unless already changed)

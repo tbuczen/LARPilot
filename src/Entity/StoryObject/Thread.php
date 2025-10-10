@@ -22,13 +22,13 @@ class Thread extends StoryObject
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'thread')]
     private Collection $events;
 
-    /** @var Collection<LarpCharacter> Specifically needed involved characters */
-    #[ORM\ManyToMany(targetEntity: LarpCharacter::class, inversedBy: 'threads')]
+    /** @var Collection<Character> Specifically needed involved characters */
+    #[ORM\ManyToMany(targetEntity: Character::class, inversedBy: 'threads')]
     #[ORM\JoinTable(name: 'thread_involved_characters')]
     private Collection $involvedCharacters;
 
-    /** @var Collection<LarpFaction> Specifically needed involved factions */
-    #[ORM\ManyToMany(targetEntity: LarpFaction::class, inversedBy: 'threads')]
+    /** @var Collection<Faction> Specifically needed involved factions */
+    #[ORM\ManyToMany(targetEntity: Faction::class, inversedBy: 'threads')]
     #[ORM\JoinTable(name: 'thread_involved_factions')]
     private Collection $involvedFactions;
 
@@ -55,7 +55,7 @@ class Thread extends StoryObject
         return $this->involvedCharacters;
     }
 
-    public function addInvolvedCharacter(LarpCharacter $character): self
+    public function addInvolvedCharacter(Character $character): self
     {
         if (!$this->involvedCharacters->contains($character)) {
             $this->involvedCharacters->add($character);
@@ -63,7 +63,7 @@ class Thread extends StoryObject
         return $this;
     }
 
-    public function removeInvolvedCharacter(LarpCharacter $character): self
+    public function removeInvolvedCharacter(Character $character): self
     {
         if ($this->involvedCharacters->contains($character)) {
             $this->involvedCharacters->remove($character);
@@ -81,7 +81,7 @@ class Thread extends StoryObject
         return $this->involvedFactions;
     }
 
-    public function addInvolvedFaction(LarpFaction $involvedFaction): self
+    public function addInvolvedFaction(Faction $involvedFaction): self
     {
         if (!$this->involvedFactions->contains($involvedFaction)) {
             $this->involvedFactions->add($involvedFaction);
@@ -89,7 +89,7 @@ class Thread extends StoryObject
         return $this;
     }
 
-    public function removeInvolvedFaction(LarpFaction $involvedFaction): self
+    public function removeInvolvedFaction(Faction $involvedFaction): self
     {
         if ($this->involvedFactions->contains($involvedFaction)) {
             $this->involvedFactions->remove($involvedFaction);

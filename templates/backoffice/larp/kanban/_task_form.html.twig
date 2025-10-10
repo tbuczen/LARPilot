@@ -1,9 +1,12 @@
 
-{{ form_start(form, {'attr': {'data-action': 'submit->kanban#handleFormSubmit'}}) }}
+{{ form_start(form, {
+    action: actionUrl,
+    'attr': {'data-action': 'submit->kanban#handleFormSubmit'}}) }}
 <div class="row">
     <div class="col-md-6">
         {{ form_row(form.title) }}
         {{ form_row(form.assignedTo) }}
+        {{ form_row(form.visibility) }}
     </div>
     <div class="col-md-6">
         {{ form_row(form.priority) }}

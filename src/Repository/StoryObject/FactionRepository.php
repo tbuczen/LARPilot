@@ -3,7 +3,7 @@
 namespace App\Repository\StoryObject;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Repository\BaseRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,21 +13,21 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @extends ServiceEntityRepository<LarpFaction>
+ * @extends ServiceEntityRepository<Faction>
  *
- * @method null|LarpFaction find($id, $lockMode = null, $lockVersion = null)
- * @method null|LarpFaction findOneBy(array $criteria, array $orderBy = null)
- * @method LarpFaction[]    findAll()
- * @method LarpFaction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method null|Faction find($id, $lockMode = null, $lockVersion = null)
+ * @method null|Faction findOneBy(array $criteria, array $orderBy = null)
+ * @method Faction[]    findAll()
+ * @method Faction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class LarpFactionRepository extends BaseRepository
+class FactionRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, LarpFaction::class);
+        parent::__construct($registry, Faction::class);
     }
 
-    public function findByOrCreate(string $title, string $larpId): LarpFaction
+    public function findByOrCreate(string $title, string $larpId): Faction
     {
         $qb = $this->createQueryBuilder('f');
         $qb->where('f.title = :title')
@@ -41,7 +41,7 @@ class LarpFactionRepository extends BaseRepository
         $faction = $qb->getQuery()->getOneOrNullResult();
 
         if (!$faction) {
-            $faction = new LarpFaction();
+            $faction = new Faction();
             $faction->setTitle($title);
             $faction->setLarp($this->getEntityManager()->getReference(Larp::class, Uuid::fromString($larpId)));
             $this->getEntityManager()->persist($faction);

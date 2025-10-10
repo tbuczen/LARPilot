@@ -6,9 +6,9 @@ use App\Entity\Enum\UserRole;
 use App\Entity\Larp;
 use App\Entity\LarpInvitation;
 use App\Entity\LarpParticipant;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\User;
-use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\CharacterRepository;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -59,14 +59,14 @@ class ParticipantType extends AbstractType
                 foreach ($roles as $role) {
                     if ($role === UserRole::PLAYER) {
                         $field->add(EntityType::class, [
-                            'class' => LarpCharacter::class,
+                            'class' => Character::class,
                             'choice_label' => 'title',
                             'required' => false,
                             'placeholder' => 'form.choose',
                             'label' => 'form.participant.character',
                             'autocomplete' => true,
                             'multiple' => true,
-                            'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                            'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
                                 ->where('c.larp = :larp')
                                 ->setParameter('larp', $larp),
                         ]);

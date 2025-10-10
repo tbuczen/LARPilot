@@ -31,32 +31,15 @@
                                                     </span>
                                                 {% endif %}
                                                 <div class="dropdown ms-2">
-                                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    <button class="btn btn-sm btn-outline-secondary"
                                                             type="button"
-                                                            data-action="click->kanban#toggleAssignmentDropdown"
-                                                            data-task-id="{{ task.id }}">
+                                                            >
                                                         {% if task.assignedTo %}
                                                             {{ task.assignedTo.name }}
                                                         {% else %}
                                                             Unassigned
                                                         {% endif %}
                                                     </button>
-                                                    <div class="assignment-dropdown" data-task-id="{{ task.id }}">
-                                                        <button class="dropdown-item"
-                                                                data-action="click->kanban#assignTask"
-                                                                data-task-id="{{ task.id }}"
-                                                                data-participant-id="">
-                                                            Unassigned
-                                                        </button>
-                                                        {% for participant in participants %}
-                                                            <button class="dropdown-item"
-                                                                    data-action="click->kanban#assignTask"
-                                                                    data-task-id="{{ task.id }}"
-                                                                    data-participant-id="{{ participant.id }}">
-                                                                {{ participant.name }}
-                                                            </button>
-                                                        {% endfor %}
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

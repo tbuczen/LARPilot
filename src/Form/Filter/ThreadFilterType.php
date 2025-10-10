@@ -3,10 +3,10 @@
 namespace App\Form\Filter;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
-use App\Repository\StoryObject\LarpCharacterRepository;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
+use App\Repository\StoryObject\CharacterRepository;
+use App\Repository\StoryObject\FactionRepository;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,7 +26,7 @@ class ThreadFilterType extends AbstractType
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
             ->add('involvedFactions', EntityType::class, [
-                'class' => LarpFaction::class,
+                'class' => Faction::class,
                 'choice_label' => 'title',
                 'multiple' => true,
                 'required' => false,
@@ -35,12 +35,12 @@ class ThreadFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => fn (LarpFactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ])
             ->add('involvedCharacters', EntityType::class, [
-                'class' => LarpCharacter::class,
+                'class' => Character::class,
                 'choice_label' => 'title',
                 'multiple' => true,
                 'required' => false,
@@ -49,7 +49,7 @@ class ThreadFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => fn (LarpCharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ])

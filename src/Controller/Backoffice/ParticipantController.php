@@ -22,14 +22,14 @@ class ParticipantController extends BaseController
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
-        $participants = $qb->getQuery()->getResult();
+        $pagination = $this->getPagination($qb, $request);
 
-        $this->entityPreloader->preload($participants, 'user');
-        $this->entityPreloader->preload($participants, 'larpCharacters');
+        $this->entityPreloader->preload($pagination->getItems(), 'user');
+        $this->entityPreloader->preload($pagination->getItems(), 'larpCharacters');
 
         return $this->render('backoffice/larp/participant/list.html.twig', [
             'larp' => $larp,
-            'participants' => $participants,
+            'participants' => $pagination,
             'filterForm' => $filterForm->createView(),
         ]);
     }
@@ -44,7 +44,7 @@ class ParticipantController extends BaseController
         $form = $this->createForm(ParticipantType::class, $participant, ['larp' => $larp]);
         $form->handleRequest($request);
 
-        if (!$participant instanceof \App\Entity\LarpParticipant) {
+        if (!$participant instanceof LarpParticipant) {
             $participant = new LarpParticipant();
         } else {
             $this->entityPreloader->preload([$participant], 'larpCharacters');

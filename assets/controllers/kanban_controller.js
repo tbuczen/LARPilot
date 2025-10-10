@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import Sortable from '../vendor/sortable.esm.js';
+// import {values} from "../../public/assets/vendor/lodash-es/lodash-es.index-BAEpLOo";
 
 export default class extends Controller {
     static targets = ['column', 'taskList', 'task', 'modalOverlay', 'modalTitle', 'modalBody', 'modalFooter'];

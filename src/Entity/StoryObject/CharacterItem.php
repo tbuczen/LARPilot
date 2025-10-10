@@ -6,14 +6,14 @@ use App\Entity\Trait\UuidTraitEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-class LarpCharacterItem
+class CharacterItem
 {
     use UuidTraitEntity;
 
     //gedmo loggable
-    #[ORM\ManyToOne(targetEntity: LarpCharacter::class, inversedBy: 'items')]
+    #[ORM\ManyToOne(targetEntity: Character::class, inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
-    private LarpCharacter $character;
+    private Character $character;
 
     #[ORM\ManyToOne(targetEntity: Item::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -22,12 +22,12 @@ class LarpCharacterItem
     #[ORM\Column(type: 'integer')]
     private int $amount = 1;
 
-    public function getCharacter(): LarpCharacter
+    public function getCharacter(): Character
     {
         return $this->character;
     }
 
-    public function setCharacter(LarpCharacter $character): void
+    public function setCharacter(Character $character): void
     {
         $this->character = $character;
     }

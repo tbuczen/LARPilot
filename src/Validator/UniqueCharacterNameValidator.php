@@ -2,13 +2,13 @@
 
 namespace App\Validator;
 
-use App\Repository\StoryObject\LarpCharacterRepository;
+use App\Repository\StoryObject\CharacterRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueCharacterNameValidator extends ConstraintValidator
 {
-    public function __construct(private readonly LarpCharacterRepository $repository)
+    public function __construct(private readonly CharacterRepository $repository)
     {
     }
 

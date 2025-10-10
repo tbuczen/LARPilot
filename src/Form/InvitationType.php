@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Enum\UserRole;
 use App\Entity\LarpInvitation;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -45,7 +45,7 @@ class InvitationType extends AbstractType
                 }
                 if ($role === UserRole::PLAYER) {
                     $field->add(EntityType::class, [
-                        'class' => LarpCharacter::class,
+                        'class' => Character::class,
                         'choice_label' => 'name',
                         'required' => false,
                         'placeholder' => 'form.choose',

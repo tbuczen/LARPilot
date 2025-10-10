@@ -9,9 +9,9 @@
                 <div class="card-header">
                     <h5 class="card-title mb-0">{{ 'common.dashboard'|trans }}</h5>
                 </div>
-{#                <div class="card-body">#}
-{#                    <p class="text-muted">{{ larp.description }}</p>#}
-{#                </div>#}
+                <div class="card-body">
+                    <p class="text-muted">{{ larp.description|raw }}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -203,7 +203,7 @@
                         {% for faction in dashboard.factions.stats %}
                         <div class="col-md-4 mb-3">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span><a href="{{ path('backoffice_larp_story_faction_modify', {'larp': larp.slug, 'faction' : faction.id}) }}">{{ faction.title }}</a></span>
+                                <span><a href="{{ path('backoffice_larp_story_faction_modify', {'larp': larp.id, 'faction' : faction.id}) }}">{{ faction.title }}</a></span>
                                 <span class="badge badge-primary">{{ faction.participants }} {{ 'common.participants.list'|trans }}</span>
                             </div>
                         </div>

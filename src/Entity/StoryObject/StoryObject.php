@@ -26,12 +26,12 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap([
-    TargetType::Character->value => LarpCharacter::class,
+    TargetType::Character->value => Character::class,
     TargetType::Thread->value => Thread::class,
     TargetType::Quest->value => Quest::class,
     TargetType::Event->value => Event::class,
     TargetType::Relation->value => Relation::class,
-    TargetType::Faction->value => LarpFaction::class,
+    TargetType::Faction->value => Faction::class,
     TargetType::Item->value => Item::class,
     TargetType::Place->value => Place::class,
 ])]

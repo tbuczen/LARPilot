@@ -4,15 +4,15 @@ namespace App\Service\Infrastructure;
 
 use App\Entity\Enum\TargetType;
 use App\Entity\TargetableInterface;
-use App\Repository\StoryObject\LarpCharacterRepository;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\CharacterRepository;
+use App\Repository\StoryObject\FactionRepository;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class TargetResolver
 {
     public function __construct(
-        private LarpCharacterRepository $characterRepository,
-        private LarpFactionRepository   $factionRepository,
+        private CharacterRepository $characterRepository,
+        private FactionRepository   $factionRepository,
     ) {
     }
 

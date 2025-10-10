@@ -3,7 +3,7 @@
 namespace App\Repository\StoryObject;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\StoryObject\StoryObject;
 use App\Repository\BaseRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -11,18 +11,18 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<LarpCharacter>
+ * @extends ServiceEntityRepository<Character>
  *
- * @method null|LarpCharacter find($id, $lockMode = null, $lockVersion = null)
- * @method null|LarpCharacter findOneBy(array $criteria, array $orderBy = null)
- * @method LarpCharacter[]    findAll()
- * @method LarpCharacter[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method null|Character find($id, $lockMode = null, $lockVersion = null)
+ * @method null|Character findOneBy(array $criteria, array $orderBy = null)
+ * @method Character[]    findAll()
+ * @method Character[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class LarpCharacterRepository extends BaseRepository implements ListableRepositoryInterface
+class CharacterRepository extends BaseRepository implements ListableRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, LarpCharacter::class);
+        parent::__construct($registry, Character::class);
     }
 
     public function decorateLarpListQueryBuilder(QueryBuilder $qb, Larp $larp): QueryBuilder

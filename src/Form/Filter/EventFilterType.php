@@ -6,7 +6,7 @@ use App\Entity\Enum\CharacterType;
 use App\Entity\Enum\Gender;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Thread;
 use App\Entity\Tag;
 use App\Repository\StoryObject\ThreadRepository;

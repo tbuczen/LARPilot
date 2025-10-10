@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Larp;
 use App\Entity\LarpApplicationChoice;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -21,7 +21,7 @@ class LarpCharacterSubmissionChoiceType extends AbstractType
 
         $builder
             ->add('character', EntityType::class, [
-                'class' => LarpCharacter::class,
+                'class' => Character::class,
                 'choice_label' => 'title',
                 'query_builder' => fn ($repo) => $repo->createQueryBuilder('c')
                     ->where('c.larp = :larp')

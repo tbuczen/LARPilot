@@ -4,8 +4,10 @@ namespace App\Controller\Backoffice;
 
 use App\Controller\BaseController;
 use App\Entity\Enum\KanbanStatus;
+use App\Entity\Enum\TaskVisibility;
 use App\Entity\KanbanTask;
 use App\Entity\Larp;
+use App\Entity\LarpParticipant;
 use App\Form\KanbanTaskType;
 use App\Repository\KanbanTaskRepository;
 use App\Repository\LarpParticipantRepository;
@@ -22,13 +24,10 @@ class KanbanController extends BaseController
     public function board(Larp $larp, KanbanTaskRepository $repository): Response
     {
         $tasks = $repository->findBy(['larp' => $larp], ['position' => 'ASC']);
-        $form = $this->createForm(KanbanTaskType::class, null, ['larp' => $larp]);
-
+        $this->entityPreloader->preload($tasks, 'assignedTo');
         return $this->render('backoffice/larp/kanban/board.html.twig', [
             'larp' => $larp,
-            'form' => $form,
             'tasks' => $tasks,
-            'participants' => $larp->getLarpParticipants(),
         ]);
     }
 
@@ -38,7 +37,6 @@ class KanbanController extends BaseController
         $task = new KanbanTask();
         $form = $this->createForm(KanbanTaskType::class, $task, ['larp' => $larp]);
         
-        // Handle form submission
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             
@@ -61,6 +59,7 @@ class KanbanController extends BaseController
                 return new JsonResponse([
                     'success' => false,
                     'html' => $this->renderView('backoffice/larp/kanban/_task_form.html.twig', [
+                        'actionUrl' => $this->generateUrl('backoffice_larp_kanban_task_create', ['larp' => $larp->getId()->toRfc4122()]),
                         'form' => $form->createView(),
                         'larp' => $larp,
                     ])
@@ -70,6 +69,7 @@ class KanbanController extends BaseController
 
         // For GET requests (loading the form), return HTML directly
         return $this->render('backoffice/larp/kanban/_task_form.html.twig', [
+            'actionUrl' => $this->generateUrl('backoffice_larp_kanban_task_create', ['larp' => $larp->getId()->toRfc4122()]),
             'form' => $form->createView(),
             'larp' => $larp,
         ]);
@@ -84,11 +84,10 @@ class KanbanController extends BaseController
     }
 
     #[Route('/task/{task}/edit', name: 'task_edit', methods: ['GET', 'POST'])]
-    public function editTask(Request $request, KanbanTask $task, KanbanTaskRepository $repository): Response
+    public function editTask(Request $request, Larp $larp, KanbanTask $task, KanbanTaskRepository $repository): Response
     {
         $form = $this->createForm(KanbanTaskType::class, $task, ['larp' => $task->getLarp()]);
         
-        // Handle form submission
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             
@@ -110,6 +109,7 @@ class KanbanController extends BaseController
                 return new JsonResponse([
                     'success' => false,
                     'html' => $this->renderView('backoffice/larp/kanban/_task_form.html.twig', [
+                        'actionUrl' => $this->generateUrl('backoffice_larp_kanban_task_edit', ['task' => $task->getId(), 'larp' => $larp->getId()->toRfc4122()]),
                         'form' => $form->createView(),
                         'task' => $task,
                     ])
@@ -119,7 +119,9 @@ class KanbanController extends BaseController
 
         // For GET requests (loading the form), return HTML directly
         return $this->render('backoffice/larp/kanban/_task_form.html.twig', [
+            'actionUrl' => $this->generateUrl('backoffice_larp_kanban_task_edit', ['task' => $task->getId(), 'larp' => $larp->getId()->toRfc4122()]),
             'form' => $form->createView(),
+            'larp' => $larp,
             'task' => $task,
         ]);
     }
@@ -152,7 +154,7 @@ class KanbanController extends BaseController
                 'title' => $task->getTitle(),
                 'status' => $task->getStatus()->value,
                 'position' => $task->getPosition(),
-                'assignedTo' => $task->getAssignedTo() instanceof \App\Entity\LarpParticipant ? [
+                'assignedTo' => $task->getAssignedTo() instanceof LarpParticipant ? [
                     'id' => $task->getAssignedTo()->getId(),
                     'name' => $task->getAssignedTo()->getName()
                 ] : null

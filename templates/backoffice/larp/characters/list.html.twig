@@ -76,15 +76,16 @@
                 <tbody>
                 {% for character in characters %}
                     <tr>
-                        <td>{{ character.title }}</td>
+                        <td>
+                            <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id, character: character.id }) }}">
+                                {{ character.title }}
+                            </a>
+                        </td>
                         <td>{{ character.gender ? character.gender.value : ''}}</td>
-                        <td>{{ character.description|sanitize_html|default('-') }}</td>
+                        <td>{{ character.description|truncate_words(7)|raw }}</td>
                         <td>{{ character.factions|map(f => f.title)|join(', ')|default('-') }}</td>
                         <td>
-                            <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id, character: character.id }) }}"
-                               class="btn btn-sm btn-primary">
-                                {{ 'common.show_edit'|trans }}
-                            </a>
+
 
                             <button type="button"
                                     class="btn btn-sm btn-danger"

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enum\KanbanStatus;
+use App\Entity\Enum\TaskVisibility;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\KanbanTaskRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,23 +28,24 @@ class KanbanTask
     #[ORM\Column(type: 'string', enumType: KanbanStatus::class)]
     private KanbanStatus $status = KanbanStatus::TODO;
 
+    #[ORM\Column(type: 'string', enumType: TaskVisibility::class, options: [
+        'default' => TaskVisibility::ALL
+    ])]
+    private TaskVisibility $visibility = TaskVisibility::ALL;
+
     #[ORM\Column(type: 'integer')]
     private int $position = 0;
 
-    // Add LarpParticipant assignment
     #[ORM\ManyToOne(targetEntity: LarpParticipant::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?LarpParticipant $assignedTo = null;
 
-    // Add priority field for better organization
     #[ORM\Column(type: 'integer')]
     private int $priority = 0;
 
-    // Add due date
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $dueDate = null;
 
-    // Add activity log
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $activityLog = [];
 
@@ -146,6 +148,16 @@ class KanbanTask
     {
         $this->dueDate = $dueDate;
         return $this;
+    }
+
+    public function getVisibility(): TaskVisibility
+    {
+        return $this->visibility;
+    }
+
+    public function setVisibility(TaskVisibility $visibility): void
+    {
+        $this->visibility = $visibility;
     }
 
     public function getActivityLog(): array
