@@ -3,19 +3,54 @@
 {% block title %}{{ 'common.incidents'|trans }}{% endblock %}
 
 {% block larp_content %}
-    <h1>{{ 'common.incidents'|trans }}</h1>
-    {% if filterForm is defined %}
-        {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
-    {% endif %}
-    <ul>
-        {% for incident in incidents %}
-            <li>
-                <a href="{{ path('backoffice_larp_incident_view', {larp: larp.id, incident: incident.id}) }}">
-                    {{ incident.caseId }} - {{ incident.status.value }}
-                </a>
-            </li>
-        {% else %}
-            <li>{{ 'common.empty_list'|trans }}</li>
-        {% endfor %}
-    </ul>
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'common.incidents'|trans }}</h2>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% if filterForm is defined %}
+                {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+            {% endif %}
+
+            {% if incidents is not empty %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>{{ 'common.name'|trans }}</th>
+                        <th>{{ 'common.status'|trans }}</th>
+                        <th>{{ 'common.actions'|trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for incident in incidents %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('backoffice_larp_incident_view', {larp: larp.id, incident: incident.id}) }}">
+                                    {{ incident.caseId }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">
+                                    {{ incident.status.value }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ path('backoffice_larp_incident_view', {larp: larp.id, incident: incident.id}) }}"
+                                   class="btn btn-sm btn-primary">
+                                    {{ 'common.show_details'|trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p class="text-muted p-3">{{ 'common.empty_list'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

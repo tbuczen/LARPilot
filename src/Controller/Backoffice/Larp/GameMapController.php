@@ -6,11 +6,13 @@ use App\Controller\BaseController;
 use App\Entity\GameMap;
 use App\Entity\Larp;
 use App\Entity\MapLocation;
+use App\Form\Filter\GameMapFilterType;
 use App\Form\GameMapType;
 use App\Form\MapLocationType;
 use App\Repository\GameMapRepository;
 use App\Repository\MapLocationRepository;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,13 +22,27 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class GameMapController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET'])]
-    public function list(Larp $larp, GameMapRepository $repository): Response
+    public function list(Request $request, Larp $larp, GameMapRepository $repository): Response
     {
-        $maps = $repository->findByLarp($larp);
+        $filterForm = $this->createForm(GameMapFilterType::class);
+        $filterForm->handleRequest($request);
+
+        $qb = $repository->createQueryBuilder('m')
+            ->where('m.larp = :larp')
+            ->setParameter('larp', $larp);
+
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+
+        $sort = $request->query->get('sort', 'name');
+        $dir = $request->query->get('dir', 'asc');
+        $qb->orderBy('m.' . $sort, $dir);
+
+        $maps = $qb->getQuery()->getResult();
 
         return $this->render('backoffice/larp/map/list.html.twig', [
             'maps' => $maps,
             'larp' => $larp,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 
@@ -50,7 +66,7 @@ class GameMapController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var \Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile */
+            /** @var UploadedFile|null $imageFile */
             $imageFile = $form->get('imageFile')->getData();
 
             if ($imageFile) {

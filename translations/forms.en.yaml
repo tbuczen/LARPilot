@@ -1,4 +1,6 @@
 form:
+  common:
+    name: Name
   submit: "Submit"
   choose: "Choose..."
   character_lbl: 'Character'
@@ -176,5 +178,13 @@ form:
     place: "Linked Story Place"
     place_placeholder: "Link to existing story place (optional)"
     place_help: "Associate this map location with a story place entity"
-    description: "Description"
+    description: 'Click in grid to select location'
     description_placeholder: "Describe this location and its purpose"
+
+
+enum:
+  location_type:
+    indoor: "Indoor"
+    outdoor: "Outdoor"
+    special: "Special"
+    transition: "Transition"

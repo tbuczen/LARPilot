@@ -13,10 +13,11 @@ export default class extends Controller {
     };
 
     connect() {
+        console.log('Leaflet map editor controller connected');
+        console.log('Coordinates target ID:', this.coordinatesTargetValue);
         this.selectedCells = new Set();
         this.cellLayers = {};
         this.initMap();
-        this.loadExistingCoordinates();
     }
 
     disconnect() {
@@ -49,6 +50,12 @@ export default class extends Controller {
 
             // Draw grid with clickable cells
             this.drawInteractiveGrid(img.width, img.height);
+
+            // Load existing coordinates after grid is drawn and DOM is ready
+            // Use setTimeout to ensure the form field is fully rendered
+            setTimeout(() => {
+                this.loadExistingCoordinates();
+            }, 100);
         };
     }
 
@@ -145,17 +152,23 @@ export default class extends Controller {
         if (input && input.value) {
             try {
                 const coordinates = JSON.parse(input.value);
-                if (Array.isArray(coordinates)) {
+                if (Array.isArray(coordinates) && coordinates.length > 0) {
+                    console.log('Loading existing coordinates:', coordinates);
                     coordinates.forEach(coord => {
                         this.selectedCells.add(coord);
                         if (this.cellLayers[coord]) {
                             this.cellLayers[coord].setStyle({ fillOpacity: 0.3 });
+                            console.log('Highlighted cell:', coord);
+                        } else {
+                            console.warn('Cell layer not found for:', coord);
                         }
                     });
                 }
             } catch (e) {
-                console.error('Failed to parse existing coordinates:', e);
+                console.error('Failed to parse existing coordinates:', e, 'Value:', input.value);
             }
+        } else {
+            console.log('No existing coordinates found. Input:', input, 'Value:', input?.value);
         }
     }
 

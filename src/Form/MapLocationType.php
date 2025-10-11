@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Enum\LocationType;
 use App\Entity\MapLocation;
 use App\Entity\StoryObject\Place;
+use App\Form\DataTransformer\JsonToArrayTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
@@ -74,6 +75,7 @@ class MapLocationType extends AbstractType
         if ($larp) {
             $builder->add('place', EntityType::class, [
                 'label' => 'form.map_location.place',
+                'choice_label' => 'title',
                 'class' => Place::class,
                 'required' => false,
                 'placeholder' => 'form.map_location.place_placeholder',
@@ -87,6 +89,10 @@ class MapLocationType extends AbstractType
                 'autocomplete' => true,
             ]);
         }
+
+        $builder->get('gridCoordinates')
+            ->addModelTransformer(new JsonToArrayTransformer());
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -269,6 +269,17 @@ backoffice:
       list: 'Events'
     version_history: 'Version History'
     tasks: 'Tasks'
+    map:
+      list: 'Maps'
+      create: 'Create Map'
+      upload_error: 'An error occurred while uploading the map file. Please try again.'
+      grid_size: 'Grid Size'
+      locations_count: 'Locations Count'
+      add_location: 'Add location'
+      location_create: 'Create location'
+      on_map: 'On map'
+      location_select_help: 'Click in grid to select location'
+      location_edit: 'Edit location'
   google_drive_folders:
     title: "Google Drive Folders"
     heading: "Google Drive Folders"

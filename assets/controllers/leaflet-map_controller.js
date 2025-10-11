@@ -13,6 +13,8 @@ export default class extends Controller {
     };
 
     connect() {
+        console.log('Leaflet map viewer controller connected');
+        console.log('Locations to display:', this.locationsValue);
         this.initMap();
     }
 
@@ -99,21 +101,44 @@ export default class extends Controller {
 
     addLocationMarkers(width, height) {
         if (!this.locationsValue || this.locationsValue.length === 0) {
+            console.log('No locations to display');
             return;
         }
 
+        console.log(`Adding markers for ${this.locationsValue.length} locations`);
         const cellWidth = width / this.gridColumnsValue;
         const cellHeight = height / this.gridRowsValue;
 
         this.locationsValue.forEach(location => {
             if (!location.gridCoordinates || location.gridCoordinates.length === 0) {
+                console.log(`Location ${location.name} has no grid coordinates`);
                 return;
             }
 
-            // Calculate center of all grid cells for this location
+            console.log(`Processing location: ${location.name} with coordinates:`, location.gridCoordinates);
+
+            const markerColor = location.color || '#3388ff';
+
+            // Highlight each grid cell for this location
             let totalX = 0, totalY = 0;
             location.gridCoordinates.forEach(coord => {
                 const { row, col } = this.parseCellCoordinate(coord);
+
+                // Calculate cell bounds
+                const x1 = col * cellWidth;
+                const y1 = row * cellHeight;
+                const x2 = x1 + cellWidth;
+                const y2 = y1 + cellHeight;
+
+                // Draw highlighted rectangle for this cell
+                L.rectangle([[y1, x1], [y2, x2]], {
+                    color: markerColor,
+                    fillColor: markerColor,
+                    fillOpacity: 0.3,
+                    weight: 2
+                }).addTo(this.map);
+
+                // Accumulate center coordinates
                 totalX += col * cellWidth + cellWidth / 2;
                 totalY += row * cellHeight + cellHeight / 2;
             });
@@ -121,8 +146,7 @@ export default class extends Controller {
             const centerX = totalX / location.gridCoordinates.length;
             const centerY = totalY / location.gridCoordinates.length;
 
-            // Create marker with custom icon
-            const markerColor = location.color || '#3388ff';
+            // Create marker with custom icon at the center
             const marker = L.marker([centerY, centerX], {
                 icon: L.divIcon({
                     className: 'location-marker',
@@ -142,6 +166,7 @@ export default class extends Controller {
             popupContent += `Cells: ${location.gridCoordinates.join(', ')}`;
 
             marker.bindPopup(popupContent);
+            console.log(`Added marker for location: ${location.name} at [${centerY}, ${centerX}]`);
         });
     }
 

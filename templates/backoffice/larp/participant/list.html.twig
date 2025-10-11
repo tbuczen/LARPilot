@@ -20,7 +20,10 @@
                 <table class="table table-striped table-hover mb-0">
                     <thead class="table-light">
                     <tr>
-                        <th>{{ 'common.name'|trans }}</th>
+                        {% include 'includes/sort_th.html.twig' with {
+                            field: 'user.username',
+                            label: 'common.name'|trans
+                        } %}
                         <th>{{ 'common.roles'|trans }}</th>
                         <th>{{ 'common.actions'|trans }}</th>
                     </tr>
