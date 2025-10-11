@@ -5,7 +5,7 @@
         <input type="hidden" name="_csrf_token" data-controller="csrf-protection">
         <input type="hidden" name="decisionTree" data-decision-tree-target="input" />
         <div data-controller="decision-tree"
-             data-decision-tree-elements-value='{{ quest.decisionTree|default([])|json_encode }}'
+             data-decision-tree-elements-value='{{ quest.decisionTree|default({})|json_encode }}'
              style="width: 100%; height: 600px;"></div>
         <button type="submit" class="btn btn-primary mt-3">{{ 'common.save'|trans }}</button>
     </form>

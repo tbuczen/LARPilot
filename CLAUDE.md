@@ -142,8 +142,17 @@ LARP entities use Symfony Workflow for status management (`larp_stage_status` st
 - Bootstrap 5.3 for UI
 - TomSelect for autocomplete fields
 - Quill for WYSIWYG editing
-- Cytoscape for graph visualization
+- Cytoscape for graph visualization (story graphs and decision trees)
 - SortableJS for drag-and-drop
+
+**Decision Tree Editor** (`decision_tree_controller.js`):
+- Visual editor for Quest and Thread branching narratives
+- Node types: Start (green ellipse), Decision (yellow diamond), Outcome (cyan rectangle), Reference (gray octagon), End (red ellipse)
+- Edge types: Choice (green), Consequence (red dashed), Reference (gray dotted)
+- Interactive toolbar: add nodes, connect edges, auto-layout (Dagre algorithm), delete
+- Serializes to JSONB format stored in `Quest.decisionTree` / `Thread.decisionTree`
+- Routes: `backoffice_larp_story_quest_tree`, `backoffice_larp_story_thread_tree`
+- See `docs/DECISION_TREE_SYSTEM.md` for full documentation
 
 ### TomSelect AJAX Entity Creation
 

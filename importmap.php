@@ -149,4 +149,10 @@ return [
         'version' => '1.9.4',
         'type' => 'css',
     ],
+    'cytoscape-dagre' => [
+        'version' => '2.5.0',
+    ],
+    'dagre' => [
+        'version' => '0.8.5',
+    ],
 ];

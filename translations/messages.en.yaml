@@ -169,6 +169,8 @@ backoffice:
       name: 'Quest'
       list: 'Quests'
       delete_only_larpilot: "Delete only in LARPilot"
+      tree: 'Decision Tree'
+      tree_editor: 'Quest Decision Tree Editor'
     relations: 'Story Relations'
     events: 'Events'
     integrations: 'Integrations'
@@ -250,6 +252,8 @@ backoffice:
       add: 'Add Relation'
     thread:
       list: 'Threads'
+      tree: 'Decision Tree'
+      tree_editor: 'Thread Decision Tree Editor'
     reference:
       list: 'External References'
       add: 'Add External Reference'
@@ -447,3 +451,61 @@ user_role:
   ROLE_OUTFIT_APPROVER: 'Outfit Approver'
   ROLE_ACCOUNTANT: 'Accountant'
   ROLE_GASTRO: 'Gastronomy'
+
+# Decision Tree translations
+decision_tree:
+  node_types:
+    start: 'Start Node'
+    decision: 'Decision Node'
+    outcome: 'Outcome Node'
+    reference: 'Reference Node'
+    end: 'End Node'
+  edge_types:
+    choice: 'Player Choice'
+    consequence: 'Consequence'
+    reference: 'Reference Link'
+  toolbar:
+    add_start: 'Add Start'
+    add_decision: 'Add Decision'
+    add_outcome: 'Add Outcome'
+    add_reference: 'Add Reference'
+    add_end: 'Add End'
+    add_edge: 'Connect Nodes'
+    auto_layout: 'Auto Layout'
+    delete_selected: 'Delete Selected'
+  prompts:
+    node_title: 'Node title:'
+    node_description: 'Node description (optional):'
+    edge_label: 'Edge label (player choice/consequence):'
+    edge_type: 'Edge type (choice/consequence/reference):'
+    select_source_first: 'Please select a source node first'
+    click_target: 'Click on a target node to create connection'
+    select_to_delete: 'Please select a node or edge to delete'
+  metadata:
+    story_objects: 'Story Objects'
+    conditions: 'Conditions'
+    consequences: 'Consequences'
+    duration: 'Duration'
+    location: 'Location'
+    tags: 'Tags'
+  condition_types:
+    has_item: 'Player has item'
+    character_present: 'Character is present'
+    character_state: 'Character has state'
+    faction_reputation: 'Faction reputation'
+    quest_completed: 'Quest completed'
+    time_constraint: 'Time constraint'
+    location_match: 'At specific location'
+  consequence_types:
+    gain_item: 'Gain item'
+    lose_item: 'Lose item'
+    relationship_change: 'Relationship change'
+    quest_update: 'Quest update'
+    character_state_change: 'Character state change'
+    information_reveal: 'Reveal information'
+  roles:
+    required: 'Required'
+    involved: 'Involved'
+    mentioned: 'Mentioned'
+    rewarded: 'Rewarded'
+    lost: 'Lost'
