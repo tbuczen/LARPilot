@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Backoffice;
 
-use App\Entity\LarpParticipant;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Enum\LarpStageStatus;
-use App\Entity\User; // adjust to your User entity FQCN
-use App\Entity\Larp; // adjust to your Larp entity FQCN
+use App\Entity\Larp;
+use App\Entity\LarpParticipant;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route; // adjust to your User entity FQCN
+use Symfony\Component\Routing\RouteCollection; // adjust to your Larp entity FQCN
+use Symfony\Component\Routing\RouterInterface;
 
 final class BackofficeAccessHappyPathTest extends WebTestCase
 {
@@ -154,12 +154,11 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
         $roles = $user->getRoles();
         $roles[] = 'ROLE_SUPER_ADMIN';
         $user->setRoles(array_values(array_unique($roles)));
-//        add LarpParticipant to user with provided larp
+        //        add LarpParticipant to user with provided larp
 
         $this->em->persist($user);
         $this->em->flush();
 
         return $user;
     }
-
 }

@@ -6,7 +6,6 @@ use App\Entity\Larp;
 use App\Service\Larp\ParticipantCodeGenerator;
 use App\Service\Larp\ParticipantCodeValidator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Uid\Uuid;
 
 class ParticipantCodeValidatorTest extends TestCase
 {

@@ -1,0 +1,157 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">{{ map.name }}</h2>
+                <div class="d-flex gap-2">
+                    <a href="{{ path('backoffice_larp_map_location_modify', { larp: larp.id, map: map.id }) }}"
+                       class="btn btn-success">
+                        {{ 'backoffice.larp.map.add_location'|trans }}
+                    </a>
+                    <a href="{{ path('backoffice_larp_map_modify', { larp: larp.id, map: map.id }) }}"
+                       class="btn btn-primary">
+                        {{ 'common.edit'|trans }}
+                    </a>
+                    <a href="{{ path('backoffice_larp_map_list', { larp: larp.id }) }}"
+                       class="btn btn-secondary">
+                        {{ 'common.back'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if map.description %}
+                <div class="mb-3">
+                    <strong>{{ 'common.description'|trans }}:</strong>
+                    {{ map.description|sanitize_html|raw }}
+                </div>
+            {% endif %}
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>{{ 'backoffice.larp.map.grid_size'|trans }}:</strong>
+                    {{ map.gridRows }} × {{ map.gridColumns }}
+                </div>
+                <div class="col-md-6">
+                    <strong>{{ 'backoffice.larp.map.locations_count'|trans }}:</strong>
+                    {{ locations|length }}
+                </div>
+            </div>
+
+            {% if map.imageFile %}
+                <div class="mb-4"
+                     data-controller="leaflet-map"
+                     data-leaflet-map-image-url-value="{{ map.imagePath }}"
+                     data-leaflet-map-grid-rows-value="{{ map.gridRows }}"
+                     data-leaflet-map-grid-columns-value="{{ map.gridColumns }}"
+                     data-leaflet-map-grid-opacity-value="{{ map.gridOpacity }}"
+                     data-leaflet-map-grid-visible-value="{{ map.isGridVisible ? 'true' : 'false' }}"
+                     data-leaflet-map-locations-value="{{ locations|json_encode }}">
+                    <div id="map" style="height: 600px; width: 100%; border: 1px solid #ddd;"></div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    {{ 'backoffice.larp.map.no_image'|trans }}
+                </div>
+            {% endif %}
+
+            {% if locations is not empty %}
+                <h3 class="mt-4">{{ 'backoffice.larp.map.locations'|trans }}</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                        <tr>
+                            <th>{{ 'common.name'|trans }}</th>
+                            <th>{{ 'form.map_location.type'|trans }}</th>
+                            <th>{{ 'form.map_location.grid_coordinates'|trans }}</th>
+                            <th>{{ 'form.map_location.capacity'|trans }}</th>
+                            <th>{{ 'common.actions'|trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for location in locations %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('backoffice_larp_map_location_modify', {
+                                        larp: larp.id, map: map.id, location: location.id
+                                    }) }}">
+                                        {{ location.name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if location.type %}
+                                        {{ ('enum.location_type.' ~ location.type.value)|trans }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ location.gridCoordinatesString }}</td>
+                                <td>{{ location.capacity ?? '-' }}</td>
+                                <td>
+                                    <a href="{{ path('backoffice_larp_map_location_modify', {
+                                        larp: larp.id, map: map.id, location: location.id
+                                    }) }}" class="btn btn-sm btn-primary">
+                                        {{ 'common.edit'|trans }}
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteLocationModal"
+                                            data-item-id="{{ location.id }}"
+                                            data-item-name="{{ location.name }}"
+                                            data-delete-url="{{ path('backoffice_larp_map_location_delete', {
+                                                larp: larp.id, map: map.id, location: location.id
+                                            }) }}">
+                                        {{ 'common.delete'|trans }}
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteLocationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    {{ 'backoffice.common.confirmation'|trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ 'common.cancel'|trans }}
+                    </button>
+                    <form id="deleteLocationForm" method="POST">
+                        <button type="submit" class="btn btn-danger">
+                            {{ 'common.delete'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const deleteLocationModal = document.getElementById('deleteLocationModal');
+        deleteLocationModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const itemId = button.getAttribute('data-item-id');
+            const itemName = button.getAttribute('data-item-name');
+            const deleteUrl = button.getAttribute('data-delete-url');
+
+            const modalTitle = deleteLocationModal.querySelector('.modal-title');
+            modalTitle.textContent = `{{ 'common.delete'|trans }} "${itemName}"?`;
+
+            const deleteForm = document.getElementById('deleteLocationForm');
+            deleteForm.action = deleteUrl;
+        });
+    </script>
+{% endblock %}

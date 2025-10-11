@@ -36,7 +36,7 @@ class IncidentController extends BaseController
 
         $incidents = $incidentRepository->findBy($criteria);
 
-        return $this->render('backoffice/larp/incidents.html.twig', [
+        return $this->render('backoffice/larp/incident/list.html.twig', [
             'larp' => $larp,
             'incidents' => $incidents,
             'filterForm' => $filterForm->createView(),

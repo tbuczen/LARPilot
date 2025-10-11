@@ -9,7 +9,7 @@ use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 
 return static function (ECSConfig $config): void {
-    $config->paths([__DIR__ . '/src']);
+    $config->paths([__DIR__ . '/src', __DIR__ . '/tests']);
 
     // Use PSR-12 as base
     $config->sets([

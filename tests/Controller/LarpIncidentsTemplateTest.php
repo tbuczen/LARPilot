@@ -32,7 +32,7 @@ class LarpIncidentsTemplateTest extends KernelTestCase
         $incident->setCaseId('123');
         $incident->setStatus(LarpIncidentStatus::NEW);
 
-        $html = $twig->render('backoffice/larp/incidents.html.twig', [
+        $html = $twig->render('backoffice/larp/list.html.twig', [
             'larp' => $larp,
             'incidents' => [$incident],
         ]);

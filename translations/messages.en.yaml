@@ -286,9 +286,30 @@ backoffice:
     open: "Open recruitments"
     none: "No recruitments"
   marketplace:
+    title: "Thread Marketplace"
+    threads: "Threads"
+    quests: "Quests"
+    events: "Events"
+    characters_needing_threads: "Characters Needing Threads"
     available: "Available Characters"
     toggle: "Toggle"
     view_recruitments: "View Recruitments"
+    min_threads_info: "Minimum threads per character: %count%"
+    current_threads: "Current Threads"
+    view_suggestions: "View Suggestions"
+    involved: "Involved"
+    no_characters: "No characters involved"
+    needs_threads: "This character needs more threads!"
+    needs_threads_detail: "Currently has %current% thread(s), but needs at least %minimum%"
+    has_enough_threads: "This character has enough threads (%current% of %minimum% minimum)"
+    no_tags: "No tags assigned"
+    no_current_threads: "No threads currently assigned"
+    suggested_threads: "Suggested Threads Based on Character Tags"
+    matching_tags: "Matching Tags"
+    no_suggestions: "No suggestions available"
+    suggestions_for: "Suggestions for"
+    player_preferences: "Player Preferences"
+    match_score: "Match Score"
   proposal:
     list: "Proposals"
     accept: "Accept"
@@ -297,6 +318,22 @@ backoffice:
     create: "Create Proposal"
   location:
     list: 'Locations'
+  map:
+    list: 'Game Maps'
+    create: 'Create Game Map'
+    edit: 'Edit Game Map'
+    view: 'View Map'
+    empty_list: 'No maps have been created yet'
+    grid_size: 'Grid Size'
+    locations_count: 'Locations'
+    no_image: 'No map image uploaded'
+    upload_error: 'Failed to upload map image'
+    locations: 'Map Locations'
+    add_location: 'Add Location'
+    location_create: 'Create Location'
+    location_edit: 'Edit Location'
+    on_map: 'On Map'
+    location_select_help: 'Click on grid cells to select the area for this location'
 #Account related translations for both player and organizers
 account:
   larp:
@@ -335,6 +372,18 @@ relation_type:
   enemy: "Enemy"
   family: "Family"
   ally: "Ally"
+
+gender:
+  Male: "Male"
+  Female: "Female"
+  Other: "Other"
+
+enum:
+  location_type:
+    indoor: "Indoor"
+    outdoor: "Outdoor"
+    special: "Special"
+    transition: "Transition"
 
 larp:
   status:

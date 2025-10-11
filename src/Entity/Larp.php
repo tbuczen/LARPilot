@@ -55,6 +55,9 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\Column(type: Types::SMALLINT)]
     private int $maxCharacterChoices = 1;
 
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 3])]
+    private int $minThreadsPerCharacter = 3;
+
     #[ORM\Column(nullable: true, enumType: LarpSetting::class)]
     private ?LarpSetting $setting = null;
 
@@ -188,6 +191,17 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     public function setMaxCharacterChoices(int $maxCharacterChoices): static
     {
         $this->maxCharacterChoices = $maxCharacterChoices;
+        return $this;
+    }
+
+    public function getMinThreadsPerCharacter(): int
+    {
+        return $this->minThreadsPerCharacter;
+    }
+
+    public function setMinThreadsPerCharacter(int $minThreadsPerCharacter): static
+    {
+        $this->minThreadsPerCharacter = $minThreadsPerCharacter;
         return $this;
     }
 

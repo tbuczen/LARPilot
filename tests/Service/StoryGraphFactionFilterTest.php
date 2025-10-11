@@ -10,7 +10,6 @@ use App\Service\Larp\StoryObjectRelationExplorer;
 use App\Service\StoryObject\Graph\GraphEdgeBuilder;
 use App\Service\StoryObject\Graph\GraphNodeBuilder;
 use PHPUnit\Framework\TestCase;
-use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
 class StoryGraphFactionFilterTest extends TestCase
 {

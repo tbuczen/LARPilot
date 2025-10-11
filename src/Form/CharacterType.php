@@ -41,6 +41,15 @@ class CharacterType extends AbstractType
                 'choice_value' => fn (?Gender $gender) => $gender?->value,
                 'required' => true,
             ])
+            ->add('preferredGender', ChoiceType::class, [
+                'label' => 'form.character.preferred_gender',
+                'choices' => Gender::cases(),
+                'choice_label' => fn (Gender $gender) => $gender->name,
+                'choice_value' => fn (?Gender $gender) => $gender?->value,
+                'required' => false,
+                'placeholder' => 'form.character.preferred_gender_placeholder',
+                'help' => 'form.character.preferred_gender_help',
+            ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'choice_label' => 'title',

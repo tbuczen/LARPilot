@@ -10,12 +10,11 @@ use App\Entity\StoryObject\Character;
 use App\Entity\User;
 use App\Repository\LarpApplicationChoiceRepository;
 use App\Repository\LarpApplicationRepository;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use App\Service\Larp\LarpApplicationDashboardService;
 use App\Service\Larp\SubmissionStatsService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use PHPUnit\Framework\TestCase;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface;
@@ -23,8 +22,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
-
 
 class TestController extends CharacterSubmissionsController
 {
@@ -120,8 +117,14 @@ class LarpCharacterSubmissionsControllerTest extends TestCase
         $statsRepo = $this->createMock(LarpApplicationRepository::class);
         $statsRepo->method('findBy')->willReturn([]);
         $preloader = new class($this->createMock(EntityManagerInterface::class)) extends \ShipMonk\DoctrineEntityPreloader\EntityPreloader {
-            public function __construct(EntityManagerInterface $em) { parent::__construct($em); }
-            public function preload(mixed $sourceEntities, string $sourcePropertyName, ?int $batchSize = null, ?int $maxFetchJoinSameFieldCount = null): array { return []; }
+            public function __construct(EntityManagerInterface $em)
+            {
+                parent::__construct($em);
+            }
+            public function preload(mixed $sourceEntities, string $sourcePropertyName, ?int $batchSize = null, ?int $maxFetchJoinSameFieldCount = null): array
+            {
+                return [];
+            }
         };
         $statsService = new SubmissionStatsService($statsRepo, $preloader);
 

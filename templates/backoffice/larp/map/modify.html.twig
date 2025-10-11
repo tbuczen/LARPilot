@@ -1,0 +1,28 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h2>
+                {% if isNew %}
+                    {{ 'backoffice.larp.map.create'|trans }}
+                {% else %}
+                    {{ 'backoffice.larp.map.edit'|trans }} - {{ map.name }}
+                {% endif %}
+            </h2>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">
+                    {{ 'common.save'|trans }}
+                </button>
+                <a href="{{ path('backoffice_larp_map_list', { larp: larp.id }) }}" class="btn btn-secondary">
+                    {{ 'common.cancel'|trans }}
+                </a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

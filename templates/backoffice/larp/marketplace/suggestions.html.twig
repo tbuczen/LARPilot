@@ -1,0 +1,122 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'backoffice.marketplace.suggestions_for'|trans }} {{ application.user.displayName }}</h2>
+            </div>
+
+            {# View tabs #}
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link {% if view == 'threads' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_suggestions', {
+                           larp: larp.id, application: application.id, view: 'threads'
+                       }) }}">
+                        {{ 'backoffice.marketplace.threads'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if view == 'quests' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_suggestions', {
+                           larp: larp.id, application: application.id, view: 'quests'
+                       }) }}">
+                        {{ 'backoffice.marketplace.quests'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if view == 'events' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_suggestions', {
+                           larp: larp.id, application: application.id, view: 'events'
+                       }) }}">
+                        {{ 'backoffice.marketplace.events'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body">
+            {# Player preferences #}
+            <div class="alert alert-info">
+                <h5>{{ 'backoffice.marketplace.player_preferences'|trans }}</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>{{ 'form.preferred_tags'|trans }}:</strong>
+                        {% if application.preferredTags|length > 0 %}
+                            {% for tag in application.preferredTags %}
+                                <span class="badge bg-success">{{ tag.title }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">{{ 'common.none'|trans }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>{{ 'form.unwanted_tags'|trans }}:</strong>
+                        {% if application.unwantedTags|length > 0 %}
+                            {% for tag in application.unwantedTags %}
+                                <span class="badge bg-danger">{{ tag.title }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">{{ 'common.none'|trans }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# Suggestions #}
+            {% if suggestions is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{{ 'common.title'|trans }}</th>
+                                <th>{{ 'common.description'|trans }}</th>
+                                <th>{{ 'backoffice.marketplace.match_score'|trans }}</th>
+                                <th>{{ 'backoffice.marketplace.matching_tags'|trans }}</th>
+                                <th>{{ 'common.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for suggestion in suggestions %}
+                                {% set item = suggestion[view[:-1]] %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('backoffice_larp_story_' ~ view ~ '_modify', {
+                                            larp: larp.id, (view[:-1]): item.id
+                                        }) }}">
+                                            {{ item.title }}
+                                        </a>
+                                    </td>
+                                    <td>{{ item.description|sanitize_html|striptags|u.truncate(100, '...') }}</td>
+                                    <td>
+                                        <span class="badge {% if suggestion.matchScore >= 20 %}bg-success{% elseif suggestion.matchScore >= 10 %}bg-warning{% else %}bg-secondary{% endif %}">
+                                            {{ suggestion.matchScore }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% for tag in suggestion.matchingTags %}
+                                            <span class="badge bg-success">{{ tag.title }}</span>
+                                        {% endfor %}
+                                        {% if suggestion.matchingTags is empty %}
+                                            <span class="text-muted">{{ 'common.none'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('backoffice_larp_story_' ~ view ~ '_modify', {
+                                            larp: larp.id, (view[:-1]): item.id
+                                        }) }}" class="btn btn-sm btn-primary">
+                                            {{ 'common.view'|trans }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">{{ 'backoffice.marketplace.no_suggestions'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

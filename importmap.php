@@ -115,7 +115,6 @@ return [
     'jquery-ui' => [
         'version' => '1.14.1',
     ],
-
     'quill' => [
         'version' => '2.0.3',
     ],
@@ -142,5 +141,12 @@ return [
     ],
     'lodash.isequal' => [
         'version' => '4.5.0',
+    ],
+    'leaflet' => [
+        'version' => '1.9.4',
+    ],
+    'leaflet/dist/leaflet.min.css' => [
+        'version' => '1.9.4',
+        'type' => 'css',
     ],
 ];

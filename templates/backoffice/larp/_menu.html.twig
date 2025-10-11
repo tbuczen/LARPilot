@@ -3,149 +3,160 @@
 
     <div class="container-xl my-4">
         <div class="d-flex align-items-center flex-wrap gap-3">
-
             <h1 class="h2 mb-0">{{ larp.title }}</h1>
 
-            <div class="d-flex ms-auto gap-2">
+            <div class="d-flex ms-auto gap-2 flex-wrap">
+                {# Dashboard & Preview #}
                 <div class="btn-group" role="group" aria-label="LARP General Menu">
-
-                    <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-secondary">
-                        {{ 'backoffice.larp.preview'|trans }}
+                    <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-eye"></i> {{ 'backoffice.larp.preview'|trans }}
                     </a>
 
                     <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}"
                        class="btn btn-primary {% if currentRoute == 'backoffice_larp_dashboard' %}active{% endif %}">
-                        {{ 'common.general'|trans }}
+                        <i class="bi bi-speedometer2"></i> {{ 'common.dashboard'|trans }}
                     </a>
+                </div>
 
+                {# Management #}
+                <div class="btn-group" role="group" aria-label="LARP Management">
                     {% if is_granted('MANAGE_LARP_GENERAL_SETTINGS', larp) %}
-                    <a href="{{ path('backoffice_larp_status_index', {larp: larp.id}) }}" class="btn btn-primary">
-                        {{ 'backoffice.larp.status.manage'|trans }}
-                    </a>
-                    {% endif %}
-
-                    {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
-                        <a href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
-                           class="btn btn-primary {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}">
-                            {{ 'backoffice.larp.integrations'|trans }}
-                        </a>
-                    {% endif %}
-
-                    {% if is_granted('VIEW_BO_LARP_INVITATIONS', larp) %}
-                        <a href="{{ path('backoffice_larp_invitations_list', {'larp': larp.id}) }}"
-                           class="btn btn-primary {% if currentRoute == 'backoffice_larp_invitations' %}active{% endif %}">
-                            {{ 'backoffice.larp.invitations'|trans }}
+                        <a href="{{ path('backoffice_larp_status_index', {larp: larp.id}) }}"
+                           class="btn btn-primary {% if 'larp_status' in currentRoute %}active{% endif %}">
+                            <i class="bi bi-gear"></i> {{ 'backoffice.larp.status.manage'|trans }}
                         </a>
                     {% endif %}
 
                     <a href="{{ path('backoffice_larp_kanban_board', {'larp': larp.id}) }}"
                        class="btn btn-primary {% if currentRoute == 'backoffice_larp_kanban_board' %}active{% endif %}">
-                        {{ 'backoffice.larp.tasks'|trans }}
+                        <i class="bi bi-kanban"></i> {{ 'backoffice.larp.tasks'|trans }}
                     </a>
+
+                    {% if is_granted('VIEW_BO_LARP_INVITATIONS', larp) %}
+                        <a href="{{ path('backoffice_larp_invitations_list', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if 'larp_invitations' in currentRoute %}active{% endif %}">
+                            <i class="bi bi-envelope"></i> {{ 'backoffice.larp.invitations'|trans }}
+                        </a>
+                    {% endif %}
+
+                    {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
+                        <a href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
+                           class="btn btn-primary {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}">
+                            <i class="bi bi-plugin"></i> {{ 'backoffice.larp.integrations'|trans }}
+                        </a>
+                    {% endif %}
                 </div>
 
+                {# Applications #}
                 {% set isApplicationsRoute = 'larp_applications' in currentRoute %}
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle {% if isApplicationsRoute %}active{% endif %}"
                             type="button" id="applicationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ 'backoffice.larp.applications.title'|trans }}
+                        <i class="bi bi-person-check"></i> {{ 'backoffice.larp.applications.title'|trans }}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="applicationsDropdown">
                         <li>
                             <a class="dropdown-item" href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}">
-                                {{ 'common.list'|trans }}
+                                <i class="bi bi-list-ul"></i> {{ 'common.list'|trans }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}">
-                                {{ 'backoffice.larp.applications.match'|trans }}
+                                <i class="bi bi-shuffle"></i> {{ 'backoffice.larp.applications.match'|trans }}
                             </a>
                         </li>
                     </ul>
                 </div>
 
-                {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
-                    {% set isIncidentsRoute = 'larp_incident' in currentRoute %}
+                {# Story & Content #}
+                {% if is_granted('VIEW_BO_LARP_STORY', larp) %}
+                    {% set isStoryRoute = 'larp_story' in currentRoute %}
+                    {% set isMapRoute = 'larp_map' in currentRoute %}
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle {% if isIncidentsRoute %}active{% endif %}"
-                                type="button" id="incidentsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ 'common.incidents'|trans }}
+                        <button class="btn btn-primary dropdown-toggle {% if isStoryRoute or isMapRoute %}active{% endif %}"
+                                type="button" id="storyDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-book"></i> {{ 'backoffice.larp.story.main_title'|trans }}
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="incidentsDropdown">
+                        <ul class="dropdown-menu" aria-labelledby="storyDropdown">
                             <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_incidents', {'larp': larp.id}) }}">
-                                    {{ 'common.list'|trans }}
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_main', {'larp': larp.id}) }}">
+                                    <i class="bi bi-house-door"></i> {{ 'common.dashboard'|trans }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            {# Core Story Elements #}
+                            <li><h6 class="dropdown-header">Core Elements</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_character_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-person"></i> {{ 'backoffice.larp.character.list'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_faction_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-people"></i> {{ 'backoffice.larp.faction.list'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_marketplace_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-shop"></i> {{ 'backoffice.larp.marketplace'|trans }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            {# Story Content #}
+                            <li><h6 class="dropdown-header">Story Content</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_thread_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-bezier2"></i> {{ 'backoffice.larp.threads'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_quest_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-flag"></i> {{ 'backoffice.larp.quest.list'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_event_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-calendar-event"></i> {{ 'backoffice.larp.events'|trans }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            {# World Building #}
+                            <li><h6 class="dropdown-header">World Building</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_place_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-geo-alt"></i> {{ 'backoffice.larp.place.list'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_map_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-map"></i> {{ 'backoffice.larp.map.list'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_item_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-box-seam"></i> {{ 'backoffice.larp.item.list'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_tag_list', {'larp': larp.id}) }}">
+                                    <i class="bi bi-tags"></i> {{ 'backoffice.larp.tag.list'|trans }}
                                 </a>
                             </li>
                         </ul>
                     </div>
                 {% endif %}
 
-                {% if is_granted('VIEW_BO_LARP_STORY', larp) %}
-                    {% set isStoryRoute = 'larp_story' in currentRoute %}
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle {% if isStoryRoute %}active{% endif %}"
-                                type="button" id="storyDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ 'backoffice.larp.story.main_title'|trans }}
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="storyDropdown">
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_main', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.story.main_title'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_character_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.character.list'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_marketplace_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.marketplace'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_faction_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.faction.list'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_thread_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.threads'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_quest_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.quest.list'|trans }}
-                                </a>
-                            </li>
-{#                            <li>#}
-{#                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_relations', {'larp': larp.id}) }}">#}
-{#                                    {{ 'backoffice.larp.relations'|trans }}#}
-{#                                </a>#}
-{#                            </li>#}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_event_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.events'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_place_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.place.list'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_item_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.item.list'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ path('backoffice_larp_story_tag_list', {'larp': larp.id}) }}">
-                                    {{ 'backoffice.larp.tag.list'|trans }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                {# Incidents #}
+                {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
+                    {% set isIncidentsRoute = 'larp_incident' in currentRoute %}
+                    <a href="{{ path('backoffice_larp_incidents', {'larp': larp.id}) }}"
+                       class="btn btn-primary {% if isIncidentsRoute %}active{% endif %}">
+                        <i class="bi bi-shield-exclamation"></i> {{ 'common.incidents'|trans }}
+                    </a>
                 {% endif %}
             </div>
         </div>

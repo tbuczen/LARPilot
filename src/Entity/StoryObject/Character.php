@@ -44,6 +44,10 @@ class Character extends StoryObject
     #[ORM\Column(length: 255, nullable: true, enumType: Gender::class)]
     private ?Gender $gender = null;
 
+    #[Gedmo\Versioned]
+    #[ORM\Column(length: 255, nullable: true, enumType: Gender::class)]
+    private ?Gender $preferredGender = null;
+
     #[ORM\Column(type: 'boolean')]
     private bool $availableForRecruitment = false;
 
@@ -188,6 +192,17 @@ class Character extends StoryObject
     public function setGender(?Gender $gender): self
     {
         $this->gender = $gender;
+        return $this;
+    }
+
+    public function getPreferredGender(): ?Gender
+    {
+        return $this->preferredGender;
+    }
+
+    public function setPreferredGender(?Gender $preferredGender): self
+    {
+        $this->preferredGender = $preferredGender;
         return $this;
     }
 
