@@ -11,7 +11,7 @@ use App\Entity\ObjectFieldMapping;
 use App\Entity\SharedFile;
 use App\Entity\StoryObject\Character;
 use App\Form\CharacterType;
-use App\Form\Filter\LarpCharacterFilterType;
+use App\Form\Filter\CharacterFilterType;
 use App\Repository\StoryObject\CharacterRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
@@ -30,7 +30,7 @@ class CharacterController extends BaseController
         LarpManager $larpManager,
         CharacterRepository $repository,
     ): Response {
-        $filterForm = $this->createForm(LarpCharacterFilterType::class, options: ['larp' => $larp]);
+        $filterForm = $this->createForm(CharacterFilterType::class, options: ['larp' => $larp]);
         $filterForm->handleRequest($request);
         $qb = $this->getListQueryBuilder($repository, $filterForm, $request, $larp);
         $pagination = $this->getPagination($qb, $request);

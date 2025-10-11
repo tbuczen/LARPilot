@@ -12,7 +12,6 @@ use App\Form\EventType;
 use App\Form\Filter\EventFilterType;
 use App\Form\RecruitmentProposalType;
 use App\Form\StoryRecruitmentType;
-use App\Helper\Logger;
 use App\Repository\StoryObject\EventRepository;
 use App\Repository\StoryObject\RecruitmentProposalRepository;
 use App\Repository\StoryObject\StoryRecruitmentRepository;
@@ -57,7 +56,7 @@ class EventController extends BaseController
         ?Event             $event = null,
     ): Response {
         $new = false;
-        if (!$event instanceof \App\Entity\StoryObject\Event) {
+        if (!$event instanceof Event) {
             $event = new Event();
             $event->setLarp($larp);
             $new = true;
@@ -181,7 +180,7 @@ class EventController extends BaseController
         StoryRecruitmentRepository $recruitmentRepository,
         ?StoryRecruitment          $recruitment = null,
     ): Response {
-        if (!$recruitment instanceof \App\Entity\StoryObject\StoryRecruitment) {
+        if (!$recruitment instanceof StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($event);
             $recruitment->setCreatedBy($this->getUser());

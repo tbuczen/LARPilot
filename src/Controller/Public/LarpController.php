@@ -8,7 +8,6 @@ use App\Repository\LarpApplicationRepository;
 use App\Repository\LarpInvitationRepository;
 use App\Repository\LarpRepository;
 use App\Service\Larp\LarpManager;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -55,7 +54,7 @@ class LarpController extends BaseController
         $userIsParticipant = false;
         $userHasApplication = false;
         
-        if ($user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
+        if ($user instanceof UserInterface) {
             // Check if user is already a participant
             $userIsParticipant = $larp->getParticipants()->exists(fn ($key, $participant): bool => $participant->getUser() === $user);
         

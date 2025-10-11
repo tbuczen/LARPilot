@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
-class FacebookAuthenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
+class FacebookAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
@@ -49,7 +49,7 @@ class FacebookAuthenticator extends OAuth2Authenticator implements Authenticatio
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client): \Symfony\Component\Security\Core\User\UserInterface {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client): UserInterface {
                 /** @var FacebookUser $facebookUser */
                 $facebookUser = $client->fetchUserFromToken($accessToken);
                 $providerEnum = SocialAccountProvider::Facebook;

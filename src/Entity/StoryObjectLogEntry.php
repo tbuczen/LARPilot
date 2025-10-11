@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry;
 use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
-use Gedmo\Loggable\Loggable;
 
 #[ORM\Entity(repositoryClass: LogEntryRepository::class)]
 #[ORM\Table(name: 'story_object_log_entry')]

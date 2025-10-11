@@ -37,7 +37,7 @@ class LarpRepository extends ServiceEntityRepository
             $qb->expr()->gte('c.startDate', ':now')
         );
 
-        if ($user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
+        if ($user instanceof UserInterface) {
             $subQb = $this->getEntityManager()->createQueryBuilder();
             $subQb->select('1')
                 ->from(LarpParticipant::class, 'lp')

@@ -55,7 +55,7 @@ class QuestController extends BaseController
         ?Quest          $quest = null,
     ): Response {
         $new = false;
-        if (!$quest instanceof \App\Entity\StoryObject\Quest) {
+        if (!$quest instanceof Quest) {
             $quest = new Quest();
             $quest->setLarp($larp);
             $new = true;
@@ -198,7 +198,7 @@ class QuestController extends BaseController
         StoryRecruitmentRepository $recruitmentRepository,
         ?StoryRecruitment          $recruitment = null,
     ): Response {
-        if (!$recruitment instanceof \App\Entity\StoryObject\StoryRecruitment) {
+        if (!$recruitment instanceof StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($quest);
             $recruitment->setCreatedBy($this->getUser());

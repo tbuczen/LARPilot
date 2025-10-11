@@ -30,13 +30,15 @@
                 <tbody>
                 {% for item in items %}
                     <tr>
-                        <td>{{ item.title }}</td>
+                        <td>
+                            <a href="{{ path('backoffice_larp_story_item_modify', { larp: larp.id, item: item.id }) }}">
+                                {{ item.title }}
+                            </a>
+                        </td>
                         <td>{{ item.description|sanitize_html }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>
-                            <a href="{{ path('backoffice_larp_story_item_modify', { larp: larp.id, item: item.id }) }}" class="btn btn-sm btn-primary">
-                                {{ 'common.show_edit'|trans }}
-                            </a>
+
                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#globalDeleteItemModal" data-delete-text=" {{ 'common.delete'|trans }}" data-character-id="{{ item.id }}" data-character-name="{{ item.title }}" data-delete-url-base="{{ path('backoffice_larp_story_item_delete', { larp: larp.id, item: 'CHARACTER_ID' }) }}">
                                 {{ 'common.delete'|trans }}
                             </button>

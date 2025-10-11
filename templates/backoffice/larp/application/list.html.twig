@@ -179,25 +179,13 @@
                 <div class="card-header">
                     <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.filter_applications'|trans }}</h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     {% include 'includes/filter_form.html.twig' with { form: filterForm, larp: larp } %}
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Applications List -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.title'|trans }} ({{ applications|length }})</h6>
-                </div>
-                <div class="card-body">
                     {% if applications is not empty %}
                         <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
+                            <table class="table table-striped table-hover mb-0">
+                                <thead class="table-light">
                                     <tr>
                                         <th>{{ 'backoffice.larp.applications.applicant'|trans }}</th>
                                         <th>{{ 'backoffice.larp.applications.status'|trans }}</th>

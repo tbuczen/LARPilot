@@ -3,7 +3,6 @@
 namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
-use App\Entity\Larp;
 use App\Entity\Tag;
 use App\Repository\StoryObject\ThreadRepository;
 use Doctrine\Common\Collections\ArrayCollection;

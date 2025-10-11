@@ -7,7 +7,6 @@ use App\Entity\Enum\ReferenceRole;
 use App\Entity\Enum\ReferenceType;
 use App\Entity\Enum\TargetType;
 use App\Entity\StoryObject\StoryObject;
-use App\Entity\StoryObject\Thread;
 use App\Entity\Trait\CreatorAwareInterface;
 use App\Entity\Trait\CreatorAwareTrait;
 use App\Entity\Trait\UuidTraitEntity;
@@ -16,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Uid\Uuid;
 
 #[Gedmo\Loggable]
 #[ORM\Entity(repositoryClass: ExternalReferenceRepository::class)]

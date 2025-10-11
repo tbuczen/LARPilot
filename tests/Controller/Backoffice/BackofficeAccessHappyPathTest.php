@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Backoffice;
 
+use App\Entity\LarpParticipant;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Enum\LarpStageStatus;
 use App\Entity\User; // adjust to your User entity FQCN
 use App\Entity\Larp; // adjust to your Larp entity FQCN
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +29,7 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
 
         // Ensure we have a LARP and a super-admin for it
         $larp = $this->provideLarp();
-        $user = $this->provideSuperAdminForLarp($larp);
+        $user = $this->provideSuperAdmin($larp);
 
         // Symfony 6+: loginUser available via BrowserKit
         $this->client->loginUser($user);
@@ -118,13 +120,17 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
         $repo = $this->em->getRepository(Larp::class);
         $larp = $repo->findOneBy(['slug' => 'test-larp']);
 
-        if (!$larp instanceof \App\Entity\Larp) {
+        if (!$larp instanceof Larp) {
             $larp = new Larp();
             // Set minimum viable fields; adjust to your entity
             $larp->setTitle('Test LARP');
-            if (method_exists($larp, 'setSlug')) {
-                $larp->setSlug('test-larp');
-            }
+            $larp->setDescription('Test LARP Description');
+            $larp->setStartDate(new \DateTime('2025-01-01'));
+            $larp->setEndDate(new \DateTime('2025-01-03'));
+            $larp->setStatus(LarpStageStatus::DRAFT);
+            // Set createdBy to the user we're creating
+            $user = $this->provideSuperAdmin($larp);
+            $larp->setCreatedBy($user);
             $this->em->persist($larp);
             $this->em->flush();
         }
@@ -132,41 +138,28 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
         return $larp;
     }
 
-    private function provideSuperAdminForLarp(Larp $larp): User
+    private function provideSuperAdmin(Larp $larp): User
     {
         $repo = $this->em->getRepository(User::class);
         $user = $repo->findOneBy(['email' => 'superadmin+test@example.com']);
 
-        if (!$user instanceof \App\Entity\User) {
-            $user = new User();
-            // Set fields as per your User entity
-            if (method_exists($user, 'setEmail')) {
-                $user->setEmail('superadmin+test@example.com');
-            }
-            if (method_exists($user, 'setPassword')) {
-                // Password irrelevant when using loginUser(); still set a placeholder
-                $user->setPassword('!not-used-in-tests!');
-            }
-            if (method_exists($user, 'setRoles')) {
-                $roles = $user->getRoles();
-                $roles[] = 'ROLE_SUPER_ADMIN';
-                $user->setRoles(array_values(array_unique($roles)));
-            }
-            $this->em->persist($user);
-            $this->em->flush();
+        if ($user instanceof User) {
+            return $user;
         }
 
-        // Ensure association as "super admin of this LARP"
-        // Adjust based on your domain model: many-to-many, pivot, or dedicated relation
-        if (method_exists($user, 'addAdministratedLarp')) {
-            $user->addAdministratedLarp($larp);
-            $this->em->flush();
-        } elseif (method_exists($user, 'setLarp') && null === $user->getLarp()) {
-            $user->setLarp($larp);
-            $this->em->flush();
-        }
-        // If you have a specific permission entity, create and persist here.
+        $user = new User();
+        // Set fields as per your User entity
+        $user->setContactEmail('superadmin+test@example.com');
+
+        $roles = $user->getRoles();
+        $roles[] = 'ROLE_SUPER_ADMIN';
+        $user->setRoles(array_values(array_unique($roles)));
+//        add LarpParticipant to user with provided larp
+
+        $this->em->persist($user);
+        $this->em->flush();
 
         return $user;
     }
+
 }

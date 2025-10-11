@@ -6,7 +6,9 @@ use App\Controller\BaseController;
 use App\Entity\Larp;
 use App\Entity\LarpApplicationChoice;
 use App\Entity\LarpApplicationVote;
+use App\Form\Filter\LarpApplicationChoiceFilterType;
 use App\Form\Filter\LarpApplicationFilterType;
+use App\Repository\LarpApplicationChoiceRepository;
 use App\Repository\LarpApplicationRepository;
 use App\Service\Larp\LarpApplicationDashboardService;
 use App\Service\Larp\SubmissionStatsService;
@@ -15,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/larp/{larp}/applications', name: 'backoffice_larp_applications_')]
 class CharacterSubmissionsController extends BaseController
@@ -62,24 +65,20 @@ class CharacterSubmissionsController extends BaseController
 
     #[Route('/match', name: 'match', methods: ['GET'])]
     public function match(
+        Request $request,
         Larp $larp,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        LarpApplicationChoiceRepository $repository,
     ): Response {
-        $choiceRepository = $em->getRepository(LarpApplicationChoice::class);
-        $choices = $choiceRepository->createQueryBuilder('c')
-            ->join('c.application', 'a')
-            ->join('c.character', 'ch')
-            ->leftJoin('ch.factions', 'f')
-            ->addSelect('a', 'ch', 'f')
-            ->andWhere('a.larp = :larp')
-            ->setParameter('larp', $larp)
-            ->orderBy('ch.title', 'ASC')
-            ->addOrderBy('c.priority', 'DESC')
-            ->getQuery()
-            ->getResult();
+        $filterForm = $this->createForm(LarpApplicationChoiceFilterType::class, null, ['larp' => $larp]);
+        $filterForm->handleRequest($request);
+        $qb = $repository->createQueryBuilder('c');
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+        $pagination = $this->getPagination($qb, $request);
 
+        // Group choices by character
         $grouped = [];
-        foreach ($choices as $choice) {
+        foreach ($pagination as $choice) {
             $id = $choice->getCharacter()->getId()->toRfc4122();
             $grouped[$id]['character'] = $choice->getCharacter();
             $grouped[$id]['choices'][] = $choice;
@@ -88,7 +87,7 @@ class CharacterSubmissionsController extends BaseController
         // Get voting data for current user
         $voteRepository = $em->getRepository(LarpApplicationVote::class);
         $userVotes = [];
-        if ($this->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
+        if ($this->getUser() instanceof UserInterface) {
             $votes = $voteRepository->findBy(['user' => $this->getUser()]);
             foreach ($votes as $vote) {
                 $userVotes[$vote->getChoice()->getId()->toRfc4122()] = $vote;
@@ -97,35 +96,38 @@ class CharacterSubmissionsController extends BaseController
 
         // Calculate vote statistics for each choice
         $voteStats = [];
-        foreach (array_merge(...array_column($grouped, 'choices')) as $choice) {
-            $choiceId = $choice->getId()->toRfc4122();
-            $votes = $voteRepository->findBy(['choice' => $choice]);
-            
-            $upvotes = 0;
-            $downvotes = 0;
-            $voteDetails = [];
-            
-            foreach ($votes as $vote) {
-                if ($vote->isUpvote()) {
-                    $upvotes++;
-                } else {
-                    $downvotes++;
+        if (!empty($grouped)) {
+            $allChoices = array_merge(...array_column($grouped, 'choices'));
+            foreach ($allChoices as $choice) {
+                $choiceId = $choice->getId()->toRfc4122();
+                $votes = $voteRepository->findBy(['choice' => $choice]);
+
+                $upvotes = 0;
+                $downvotes = 0;
+                $voteDetails = [];
+
+                foreach ($votes as $vote) {
+                    if ($vote->isUpvote()) {
+                        $upvotes++;
+                    } else {
+                        $downvotes++;
+                    }
+
+                    $voteDetails[] = [
+                        'user' => $vote->getUser()->getUsername(),
+                        'vote' => $vote->getVote(),
+                        'justification' => $vote->getJustification(),
+                        'createdAt' => $vote->getCreatedAt()
+                    ];
                 }
-                
-                $voteDetails[] = [
-                    'user' => $vote->getUser()->getUsername(),
-                    'vote' => $vote->getVote(),
-                    'justification' => $vote->getJustification(),
-                    'createdAt' => $vote->getCreatedAt()
+
+                $voteStats[$choiceId] = [
+                    'upvotes' => $upvotes,
+                    'downvotes' => $downvotes,
+                    'total' => $upvotes - $downvotes,
+                    'details' => $voteDetails
                 ];
             }
-            
-            $voteStats[$choiceId] = [
-                'upvotes' => $upvotes,
-                'downvotes' => $downvotes,
-                'total' => $upvotes - $downvotes,
-                'details' => $voteDetails
-            ];
         }
 
         return $this->render('backoffice/larp/application/match.html.twig', [
@@ -133,6 +135,8 @@ class CharacterSubmissionsController extends BaseController
             'choices' => $grouped,
             'userVotes' => $userVotes,
             'voteStats' => $voteStats,
+            'filterForm' => $filterForm->createView(),
+            'pagination' => $pagination,
         ]);
     }
 
@@ -152,7 +156,7 @@ class CharacterSubmissionsController extends BaseController
         }
 
         $user = $this->getUser();
-        if (!$user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
+        if (!$user instanceof UserInterface) {
             $this->addFlash('error', 'backoffice.larp.applications.login_required');
             return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
         }
@@ -164,13 +168,12 @@ class CharacterSubmissionsController extends BaseController
             'user' => $user
         ]);
 
-        if ($existingVote instanceof \App\Entity\LarpApplicationVote) {
+        if ($existingVote instanceof LarpApplicationVote) {
             // Update existing vote
             $existingVote->setVote($voteValue);
             $existingVote->setJustification($justification);
             $existingVote->setCreatedAt(new \DateTime());
         } else {
-            // Create new vote
             $vote = new LarpApplicationVote();
             $vote->setChoice($choice);
             $vote->setUser($user);

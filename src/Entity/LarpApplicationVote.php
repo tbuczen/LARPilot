@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\UuidTraitEntity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'larp_application_vote')]
@@ -52,7 +53,7 @@ class LarpApplicationVote
         return $this->user;
     }
 
-    public function setUser(User $user): void
+    public function setUser(User|UserInterface $user): void
     {
         $this->user = $user;
     }

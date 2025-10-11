@@ -6,7 +6,7 @@ use App\Controller\BaseController;
 use App\Entity\Larp;
 use App\Entity\StoryObject\Faction;
 use App\Form\FactionType;
-use App\Form\Filter\LarpFactionFilterType;
+use App\Form\Filter\FactionFilterType;
 use App\Helper\Logger;
 use App\Repository\StoryObject\FactionRepository;
 use App\Service\Integrations\IntegrationManager;
@@ -22,7 +22,7 @@ class FactionController extends BaseController
     #[Route('list', name: 'list', methods: ['GET'])]
     public function factions(Request $request, Larp $larp, FactionRepository $repository): Response
     {
-        $filterForm = $this->createForm(LarpFactionFilterType::class);
+        $filterForm = $this->createForm(FactionFilterType::class);
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
@@ -50,7 +50,7 @@ class FactionController extends BaseController
         ?Faction          $faction = null,
     ): Response {
         $new = false;
-        if (!$faction instanceof \App\Entity\StoryObject\Faction) {
+        if (!$faction instanceof Faction) {
             $faction = new Faction();
             $faction->setLarp($larp);
             $new = true;

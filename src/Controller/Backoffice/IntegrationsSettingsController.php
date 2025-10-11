@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Webmozart\Assert\Assert;
 
 #[Route('/larp', name: 'backoffice_larp_')]
 class IntegrationsSettingsController extends AbstractController
@@ -114,7 +113,7 @@ class IntegrationsSettingsController extends AbstractController
         LarpIntegration $integration,
         ?SharedFile     $sharedFile = null,
     ): Response {
-        if (!$sharedFile instanceof \App\Entity\SharedFile) {
+        if (!$sharedFile instanceof SharedFile) {
             /** @var SharedFile[] $files */
             $files = $integration->getSharedFiles();
         } else {

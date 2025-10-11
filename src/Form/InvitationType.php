@@ -40,7 +40,7 @@ class InvitationType extends AbstractType
                 'required' => false,
             ])
             ->addDependent('larpCharacter', 'invitedRole', function (DependentField $field, ?UserRole $role): void {
-                if (!$role instanceof \App\Entity\Enum\UserRole) {
+                if (!$role instanceof UserRole) {
                     return;
                 }
                 if ($role === UserRole::PLAYER) {

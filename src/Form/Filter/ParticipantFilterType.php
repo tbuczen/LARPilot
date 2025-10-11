@@ -2,20 +2,10 @@
 
 namespace App\Form\Filter;
 
-use App\Entity\Enum\CharacterType;
-use App\Entity\Enum\Gender;
 use App\Entity\Enum\UserRole;
 use App\Entity\Larp;
-use App\Entity\LarpParticipant;
-use App\Entity\StoryObject\Faction;
-use App\Entity\StoryObject\Thread;
-use App\Entity\Tag;
 use App\Entity\User;
-use App\Repository\StoryObject\ThreadRepository;
 use App\Repository\UserRepository;
-use Spiriit\Bundle\FormFilterBundle\Filter\Doctrine\ORMQuery;
-use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
-use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Spiriit\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

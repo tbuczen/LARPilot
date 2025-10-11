@@ -2,7 +2,7 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\StoryObjectLogEntry;
 use App\Service\StoryObject\StoryObjectVersionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +13,7 @@ class StoryObjectVersionServiceTest extends TestCase
 {
     public function testVersionHistoryDiff(): void
     {
-        $character = new LarpCharacter();
+        $character = new Character();
 
         $e1 = new StoryObjectLogEntry();
         $ref = new \ReflectionClass($e1);

@@ -2,17 +2,16 @@
 
 namespace App\Domain\Larp\UseCase\ImportCharacters;
 
-use App\Entity\Enum\CharacterType;
 use App\Entity\Enum\ReferenceRole;
 use App\Entity\Enum\ReferenceType;
 use App\Entity\ExternalReference;
 use App\Entity\Larp;
 use App\Entity\SharedFile;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Repository\LarpRepository;
 use App\Repository\SharedFileRepository;
-use App\Repository\StoryObject\LarpCharacterRepository;
-use App\Repository\StoryObject\LarpFactionRepository;
+use App\Repository\StoryObject\CharacterRepository;
+use App\Repository\StoryObject\FactionRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Integrations\IntegrationServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,8 +26,8 @@ class ImportCharactersHandler
 
     public function __construct(
         private readonly LarpRepository          $larpRepository,
-        private readonly LarpCharacterRepository $characterRepository,
-        private readonly LarpFactionRepository   $factionRepository,
+        private readonly CharacterRepository $characterRepository,
+        private readonly FactionRepository   $factionRepository,
         private readonly SharedFileRepository    $sharedFileRepository,
         private readonly IntegrationManager      $integrationManager,
         private readonly EntityManagerInterface  $entityManager
@@ -68,7 +67,7 @@ class ImportCharactersHandler
                         continue;
                     }
 
-                    $character = new LarpCharacter();
+                    $character = new Character();
                     $character->setLarp($this->entityManager->getReference(Larp::class, Uuid::fromString($command->larpId)));
 
                     // Process each mapping: iterate over the mapping configuration.
@@ -88,7 +87,7 @@ class ImportCharactersHandler
                             if (method_exists($character, $setter)) {
                                 $character->$setter($value);
                             } else {
-                                throw new \LogicException("Setter $setter does not exist for LarpCharacter");
+                                throw new \LogicException("Setter $setter does not exist for Character");
                             }
                         }
                     }
@@ -117,7 +116,7 @@ class ImportCharactersHandler
         return null;
     }
 
-    private function handleFaction(mixed $value, string $larpId, LarpCharacter $character): void
+    private function handleFaction(mixed $value, string $larpId, Character $character): void
     {
         $factionName = trim((string) $value);
         if (!isset($this->cache[$factionName])) {
@@ -127,7 +126,7 @@ class ImportCharactersHandler
         $character->addFaction($this->cache[$factionName]);
     }
 
-    private function createReference(LarpCharacter $character, int|string $rowNo, SharedFile $file, array $additionalData = []): void
+    private function createReference(Character $character, int|string $rowNo, SharedFile $file, array $additionalData = []): void
     {
         $reference = new ExternalReference();
         $reference->setStoryObject($character);

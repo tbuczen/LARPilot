@@ -3,9 +3,9 @@
 namespace App\Repository\StoryObject;
 
 use App\Entity\Larp;
+use App\Entity\StoryObject\Character;
 use App\Entity\StoryObject\Event;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\Relation;
 use App\Entity\StoryObject\StoryObject;
@@ -49,8 +49,8 @@ class StoryObjectRepository extends BaseRepository
     /**
      * @param Larp                $larp
      * @param Collection<int, Thread>|Thread[]       $threads
-     * @param Collection<int, LarpCharacter>|LarpCharacter[] $characters
-     * @param Collection<int, LarpFaction>|LarpFaction[]     $factions
+     * @param Collection<int, Character>|Character[] $characters
+     * @param Collection<int, Faction>|Faction[]     $factions
      * @return StoryObject[]
      */
     public function findForGraph(
@@ -178,12 +178,12 @@ class StoryObjectRepository extends BaseRepository
     
         // Get involved characters and factions
         $ids = array_merge($ids, $this->fetchIds(
-            'SELECT c.id FROM ' . LarpCharacter::class . ' c JOIN c.threads t WHERE c.larp = :larp AND t.id = :threadId',
+            'SELECT c.id FROM ' . Character::class . ' c JOIN c.threads t WHERE c.larp = :larp AND t.id = :threadId',
             ['larp' => $larp, 'threadId' => $threadId]
         ));
     
         $ids = array_merge($ids, $this->fetchIds(
-            'SELECT f.id FROM ' . LarpFaction::class . ' f JOIN f.threads t WHERE f.larp = :larp AND t.id = :threadId',
+            'SELECT f.id FROM ' . Faction::class . ' f JOIN f.threads t WHERE f.larp = :larp AND t.id = :threadId',
             ['larp' => $larp, 'threadId' => $threadId]
         ));
     
@@ -196,7 +196,7 @@ class StoryObjectRepository extends BaseRepository
     
         // Get character's factions
         $ids = array_merge($ids, $this->fetchIds(
-            'SELECT f.id FROM ' . LarpFaction::class . ' f JOIN f.members c WHERE f.larp = :larp AND c.id = :characterId',
+            'SELECT f.id FROM ' . Faction::class . ' f JOIN f.members c WHERE f.larp = :larp AND c.id = :characterId',
             ['larp' => $larp, 'characterId' => $characterId]
         ));
     
@@ -225,7 +225,7 @@ class StoryObjectRepository extends BaseRepository
     
         // Get faction members
         $ids = array_merge($ids, $this->fetchIds(
-            'SELECT c.id FROM ' . LarpCharacter::class . ' c JOIN c.factions f WHERE c.larp = :larp AND f.id = :factionId',
+            'SELECT c.id FROM ' . Character::class . ' c JOIN c.factions f WHERE c.larp = :larp AND f.id = :factionId',
             ['larp' => $larp, 'factionId' => $factionId]
         ));
     

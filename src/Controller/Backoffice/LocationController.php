@@ -3,7 +3,6 @@
 namespace App\Controller\Backoffice;
 
 use App\Entity\Larp;
-use App\Entity\LarpParticipant;
 use App\Entity\Location;
 use App\Entity\User;
 use App\Form\LocationType;
@@ -51,7 +50,7 @@ class LocationController extends AbstractController
         LocationRepository $locationRepository,
         ?Location          $location = null
     ): Response {
-        if (!$location instanceof \App\Entity\Location) {
+        if (!$location instanceof Location) {
             $location = new Location();
         }
 
@@ -83,7 +82,7 @@ class LocationController extends AbstractController
         LocationRepository $locationRepository,
         ?Location          $location = null
     ): Response {
-        if (!$location instanceof \App\Entity\Location) {
+        if (!$location instanceof Location) {
             $location = new Location();
         }
 

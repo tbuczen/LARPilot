@@ -2,9 +2,9 @@
 
 namespace App\Service\StoryObject\Graph;
 
+use App\Entity\StoryObject\Character;
 use App\Entity\StoryObject\Event;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\Thread;
@@ -16,8 +16,8 @@ readonly class ImplicitRelationBuilder
         $sourceId = $object->getId()->toRfc4122();
 
         match (true) {
-            $object instanceof LarpCharacter => $this->addCharacterEdges($object, $sourceId, $validNodeIds, $edges, $seenEdges),
-            $object instanceof LarpFaction => $this->addFactionEdges($object, $sourceId, $validNodeIds, $edges, $seenEdges),
+            $object instanceof Character => $this->addCharacterEdges($object, $sourceId, $validNodeIds, $edges, $seenEdges),
+            $object instanceof Faction => $this->addFactionEdges($object, $sourceId, $validNodeIds, $edges, $seenEdges),
             $object instanceof Thread => $this->addThreadEdges($object, $sourceId, $validNodeIds, $edges, $seenEdges),
             $object instanceof Quest => $this->addQuestEdges($object, $sourceId, $validNodeIds, $edges, $seenEdges),
             $object instanceof Event => $this->addEventEdges($object, $sourceId, $validNodeIds, $edges, $seenEdges),
@@ -25,7 +25,7 @@ readonly class ImplicitRelationBuilder
         };
     }
 
-    private function addCharacterEdges(LarpCharacter $character, string $sourceId, array $validNodeIds, array &$edges, array &$seenEdges): void
+    private function addCharacterEdges(Character $character, string $sourceId, array $validNodeIds, array &$edges, array &$seenEdges): void
     {
         // Character -> Faction (only if faction is standalone node)
         foreach ($character->getFactions() as $faction) {
@@ -46,7 +46,7 @@ readonly class ImplicitRelationBuilder
         }
     }
 
-    private function addFactionEdges(LarpFaction $faction, string $sourceId, array $validNodeIds, array &$edges, array &$seenEdges): void
+    private function addFactionEdges(Faction $faction, string $sourceId, array $validNodeIds, array &$edges, array &$seenEdges): void
     {
         // Faction -> Thread involvement (direct edges to thread nodes)
         foreach ($faction->getThreads() as $thread) {
@@ -89,7 +89,7 @@ readonly class ImplicitRelationBuilder
 
         // Quest -> Thread (only if thread is standalone node, not acting as parent group)
         $thread = $quest->getThread();
-        if ($thread instanceof \App\Entity\StoryObject\Thread) {
+        if ($thread instanceof Thread) {
             $threadId = $thread->getId()->toRfc4122();
             // Check if thread is standalone (no group created for it)
             $threadGroupId = $thread->getId()->toBase32();
@@ -113,7 +113,7 @@ readonly class ImplicitRelationBuilder
 
         // Event -> Thread (only if thread is standalone node, not acting as parent group)
         $thread = $event->getThread();
-        if ($thread instanceof \App\Entity\StoryObject\Thread) {
+        if ($thread instanceof Thread) {
             $threadId = $thread->getId()->toRfc4122();
             // Check if thread is standalone (no group created for it)
             $threadGroupId = $thread->getId()->toBase32();

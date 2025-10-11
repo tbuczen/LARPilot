@@ -265,6 +265,8 @@ backoffice:
       list: 'Participants'
     status:
       manage: 'Manage'
+    event:
+      list: 'Events'
     version_history: 'Version History'
     tasks: 'Tasks'
   google_drive_folders:

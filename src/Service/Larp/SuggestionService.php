@@ -2,15 +2,14 @@
 
 namespace App\Service\Larp;
 
-use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\Thread;
-use App\Repository\StoryObject\EventRepository;
 use App\Repository\StoryObject\CharacterRepository;
+use App\Repository\StoryObject\EventRepository;
 use App\Repository\StoryObject\QuestRepository;
 use App\Repository\StoryObject\ThreadRepository;
-use Doctrine\Common\Collections\Collection;
 
 readonly class SuggestionService
 {

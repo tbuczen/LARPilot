@@ -26,7 +26,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 use Wohali\OAuth2\Client\Provider\DiscordResourceOwner;
 
 /** @see https://discord.com/developers/docs/topics/oauth2 */
-class DiscordAuthenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
+class DiscordAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
@@ -50,7 +50,7 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client): \Symfony\Component\Security\Core\User\UserInterface {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client): UserInterface {
                 /** @var DiscordResourceOwner $user */
                 $user = $client->fetchUserFromToken($accessToken);
                 $providerEnum = SocialAccountProvider::Discord;

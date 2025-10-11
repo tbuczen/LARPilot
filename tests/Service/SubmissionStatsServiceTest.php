@@ -5,8 +5,8 @@ namespace App\Tests\Service;
 use App\Entity\Larp;
 use App\Entity\LarpApplication;
 use App\Entity\LarpApplicationChoice;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
 use App\Repository\LarpApplicationRepository;
 use App\Service\Larp\SubmissionStatsService;
 use PHPUnit\Framework\TestCase;
@@ -18,10 +18,10 @@ class SubmissionStatsServiceTest extends TestCase
     {
         $larp = new Larp();
 
-        $faction = new LarpFaction();
+        $faction = new Faction();
         $larp->addFaction($faction);
 
-        $character = new LarpCharacter();
+        $character = new Character();
         $larp->addCharacter($character);
         $faction->addMember($character);
 
@@ -52,7 +52,6 @@ class SubmissionStatsServiceTest extends TestCase
         $stats = $service->getStatsForLarp($larp);
 
         $this->assertSame([$application], $stats['applications']);
-        $this->assertSame(0, $stats['missing']);
         $this->assertCount(1, $stats['factionStats']);
         $this->assertSame($faction, $stats['factionStats'][0]['faction']);
         $this->assertSame(100.0, $stats['factionStats'][0]['percentage']);

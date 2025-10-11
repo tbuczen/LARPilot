@@ -19,7 +19,7 @@ class UniqueCharacterNameValidator extends ConstraintValidator
             return;
         }
 
-        $character = $this->context->getObject(); // The current LarpCharacter entity
+        $character = $this->context->getObject(); // The current Character entity
 
         if (!$character->getLarp()) {
             return;

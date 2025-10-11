@@ -56,7 +56,7 @@ class ThreadController extends BaseController
         ?Thread            $thread = null,
     ): Response {
         $new = false;
-        if (!$thread instanceof \App\Entity\StoryObject\Thread) {
+        if (!$thread instanceof Thread) {
             $thread = new Thread();
             $thread->setLarp($larp);
             $new = true;
@@ -204,7 +204,7 @@ class ThreadController extends BaseController
         StoryRecruitmentRepository $recruitmentRepository,
         ?StoryRecruitment          $recruitment = null,
     ): Response {
-        if (!$recruitment instanceof \App\Entity\StoryObject\StoryRecruitment) {
+        if (!$recruitment instanceof StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($thread);
             $recruitment->setCreatedBy($this->getUser());

@@ -6,7 +6,7 @@ use App\Entity\Enum\UserRole;
 use App\Entity\Larp;
 use App\Entity\LarpApplication;
 use App\Entity\LarpParticipant;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -54,7 +54,7 @@ class SeedLarpFixturesCommand extends Command
 
         $userRepo = $this->em->getRepository(User::class);
         $participantRepo = $this->em->getRepository(LarpParticipant::class);
-        $characterRepo = $this->em->getRepository(LarpCharacter::class);
+        $characterRepo = $this->em->getRepository(Character::class);
 
         $users = $this->ensureUsers($userRepo, $larpId, 150);
         $io->writeln(sprintf('Users present: %d', count($users)));
@@ -141,7 +141,7 @@ class SeedLarpFixturesCommand extends Command
     /**
      * Get all characters for the LARP.
      *
-     * @return LarpCharacter[]
+     * @return Character[]
      */
     private function getLarpCharacters(ObjectRepository $characterRepo, Larp $larp): array
     {
@@ -191,7 +191,7 @@ class SeedLarpFixturesCommand extends Command
      * If a character lacks a participant, attach one in round-robin from provided players.
      * Returns number of links created.
      *
-     * @param LarpCharacter[] $characters
+     * @param Character[] $characters
      * @param LarpParticipant[] $playerParticipants
      */
     private function linkCharactersToParticipantsIfMissing(array $characters, array $playerParticipants): int
@@ -230,7 +230,7 @@ class SeedLarpFixturesCommand extends Command
      *
      * Returns number of applications created this run.
      *
-     * @param LarpCharacter[] $characters
+     * @param Character[] $characters
      */
     private function ensureApplications(array $characters, Larp $larp): int
     {

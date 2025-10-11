@@ -57,7 +57,7 @@ class ExternalReferenceType extends AbstractType
                 'placeholder' => 'form.choose',
             ])
             ->addDependent('storyObject', 'storyObjectType', function (DependentField $field, ?TargetType $type) use ($larp): void {
-                if (!$type instanceof \App\Entity\Enum\TargetType) {
+                if (!$type instanceof TargetType) {
                     return;
                 }
                 $field->add(EntityType::class, [

@@ -4,7 +4,6 @@ namespace App\Controller\Backoffice;
 
 use App\Controller\BaseController;
 use App\Entity\Enum\KanbanStatus;
-use App\Entity\Enum\TaskVisibility;
 use App\Entity\KanbanTask;
 use App\Entity\Larp;
 use App\Entity\LarpParticipant;

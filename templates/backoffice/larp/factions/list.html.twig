@@ -53,15 +53,14 @@
                 <tbody>
                 {% for faction in factions %}
                     <tr>
-                        <td>{{ faction.title }}</td>
+                        <td>
+                            <a href="{{ path('backoffice_larp_story_faction_modify', { larp: larp.id, faction: faction.id }) }}">
+                                {{ faction.title }}
+                            </a>
+                           </td>
                         <td>{{ faction.description|sanitize_html|default('-') }}</td>
                         <td>
-                            <a href="{{ path('backoffice_larp_story_faction_modify', { larp: larp.id, faction: faction.id }) }}"
-                               class="btn btn-sm btn-primary">
-                                {{ 'common.show_edit'|trans }}
-                            </a>
-
-                            <button type="button"
+                                                        <button type="button"
                                     class="btn btn-sm btn-danger"
                                     data-bs-toggle="modal"
                                     data-bs-target="#globalDeleteFactionModal"

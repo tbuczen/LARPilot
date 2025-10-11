@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Enum\UserRole;
-use App\Entity\LarpApplication;
 use App\Entity\StoryObject\Character;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Repository\LarpParticipantRepository;

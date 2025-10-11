@@ -46,7 +46,7 @@ class PlaceController extends BaseController
         ?Place $place = null,
     ): Response {
         $new = false;
-        if (!$place instanceof \App\Entity\StoryObject\Place) {
+        if (!$place instanceof Place) {
             $place = new Place();
             $place->setLarp($larp);
             $new = true;

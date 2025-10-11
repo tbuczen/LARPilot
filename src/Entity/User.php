@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\LarpApplication;
 use App\Entity\Trait\UuidTraitEntity;
 use App\Enum\Locale;
 use App\Repository\UserRepository;

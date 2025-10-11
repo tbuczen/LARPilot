@@ -2,9 +2,9 @@
 
 namespace App\Service\StoryObject\Graph;
 
+use App\Entity\StoryObject\Character;
 use App\Entity\StoryObject\Event;
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\Thread;
@@ -64,21 +64,21 @@ readonly class GraphNodeBuilder
     private function determineParentGroup(StoryObject $object): ?string
     {
         // Faction grouping
-        if ($object instanceof LarpCharacter) {
+        if ($object instanceof Character) {
             $faction = $object->getFactions()->first();
-            if ($faction instanceof LarpFaction) {
+            if ($faction instanceof Faction) {
                 return $faction->getId()->toBase32();
             }
         }
 
-        if ($object instanceof LarpFaction) {
+        if ($object instanceof Faction) {
             return $object->getId()->toBase32();
         }
 
         // Thread grouping - only if thread has quests or events
         if ($object instanceof Quest || $object instanceof Event) {
             $thread = $object->getThread();
-            if ($thread instanceof \App\Entity\StoryObject\Thread) {
+            if ($thread instanceof Thread) {
                 return $thread->getId()->toBase32();
             }
         }

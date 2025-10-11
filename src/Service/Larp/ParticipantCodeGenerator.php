@@ -3,7 +3,6 @@
 namespace App\Service\Larp;
 
 use App\Entity\Larp;
-use Symfony\Component\Uid\Uuid;
 
 final readonly class ParticipantCodeGenerator
 {

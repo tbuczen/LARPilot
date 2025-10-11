@@ -8,6 +8,16 @@
         </a>
     </div>
 
+    <!-- Filter Form -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">{{ 'common.filter'|trans }}</h5>
+        </div>
+        <div class="card-body">
+            {% include 'includes/filter_form.html.twig' with { form: filterForm, larp: larp } %}
+        </div>
+    </div>
+
     {% for data in choices %}
         <div class="card mb-4">
             <div class="card-header">
@@ -105,6 +115,13 @@
             {{ 'common.empty_list'|trans }}
         </div>
     {% endfor %}
+
+    {% if pagination.getTotalItemCount > 0 %}
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-4">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    {% endif %}
 
     <!-- Vote Modal -->
     <div class="modal fade" id="voteModal" tabindex="-1" aria-labelledby="voteModalLabel" aria-hidden="true">

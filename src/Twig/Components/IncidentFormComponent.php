@@ -46,7 +46,7 @@ class IncidentFormComponent extends AbstractController
         /** @var LarpIncident $incident */
         $incident = $this->getForm()->getData();
         if (!$this->validator->validate($incident->getReportCode(), $incident->getLarp())) {
-            $this->getForm()->get('reportCode')->addError(new \Symfony\Component\Form\FormError('Invalid code'));
+            $this->getForm()->get('reportCode')->addError(new FormError('Invalid code'));
             return;
         }
         $incident->setCaseId(Uuid::v4()->toRfc4122());

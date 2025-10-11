@@ -2,7 +2,6 @@
 
 namespace App\Domain\Account\UseCase\RegisterUser;
 
-use App\Domain\Account\DTO\UserDTO;
 use App\Entity\User;
 use App\Entity\UserSocialAccount;
 use App\Repository\UserRepository;
@@ -32,7 +31,7 @@ readonly class RegisterUserHandler
 
         $user = $this->userRepository->findOneByEmail($command->email);
 
-        if (!$user instanceof \App\Entity\User) {
+        if (!$user instanceof User) {
             $user = new User();
             $user->setContactEmail($command->email);
             // Assign default role (e.g., PLAYER). Adjust to your enum or role structure.

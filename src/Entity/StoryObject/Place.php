@@ -3,7 +3,6 @@
 namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\TargetType;
-use App\Entity\Larp;
 use App\Repository\StoryObject\PlaceRepository;
 use Doctrine\ORM\Mapping as ORM;
 

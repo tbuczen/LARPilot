@@ -7,7 +7,6 @@ use App\Entity\Larp;
 use App\Entity\StoryObject\Item;
 use App\Form\Filter\ItemFilterType;
 use App\Form\ItemType;
-use App\Helper\Logger;
 use App\Repository\StoryObject\ItemRepository;
 use App\Service\Integrations\IntegrationManager;
 use App\Service\Larp\LarpManager;
@@ -49,7 +48,7 @@ class ItemController extends BaseController
         ?Item $item = null,
     ): Response {
         $new = false;
-        if (!$item instanceof \App\Entity\StoryObject\Item) {
+        if (!$item instanceof Item) {
             $item = new Item();
             $item->setLarp($larp);
             $item->setCost(new Money(0, new Currency('USD')));

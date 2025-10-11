@@ -42,14 +42,13 @@ class RelationType extends AbstractType
                     'data-controller' => 'wysiwyg',
                 ],
             ])
-            ->add('type', ChoiceType::class, [
+            ->add('relationType', ChoiceType::class, [
                 'label' => 'form.relation.type',
                 'choices' => RelationKind::cases(),
                 'choice_label' => fn (RelationKind $type) => $type->name,
                 'choice_value' => fn (?RelationKind $type) => $type?->value,
                 'required' => true,
             ])
-
             ->add('fromType', ChoiceType::class, [
                 'label' => 'form.relation.fromType',
                 'choices' => TargetType::getAvailableForRelations(),
@@ -94,7 +93,7 @@ class RelationType extends AbstractType
     private function getClosure(Larp $larp, bool $disable, ?StoryObject $contextOwner = null): \Closure
     {
         return function (DependentField $field, ?TargetType $type) use ($larp, $disable, $contextOwner): void {
-            if (!$type instanceof \App\Entity\Enum\TargetType) {
+            if (!$type instanceof TargetType) {
                 return;
             }
             $field->add(EntityType::class, [
@@ -110,7 +109,7 @@ class RelationType extends AbstractType
                         ->where('o.larp = :larp')
                         ->setParameter('larp', $larp);
 
-                    if ($contextOwner instanceof \App\Entity\StoryObject\StoryObject && !$disable) {
+                    if ($contextOwner instanceof StoryObject && !$disable) {
                         $qb->andWhere('o != :self')
                             ->setParameter('self', $contextOwner);
                     }
@@ -137,7 +136,7 @@ class RelationType extends AbstractType
         $disableFrom = false;
         $disableTo = false;
 
-        if ($isEditing && $contextOwner instanceof \App\Entity\StoryObject\StoryObject) {
+        if ($isEditing && $contextOwner instanceof StoryObject) {
             if ($relation->getFrom() === $contextOwner) {
                 $disableFrom = true;
             } elseif ($relation->getTo() === $contextOwner) {

@@ -1,6 +1,7 @@
 form:
   submit: "Submit"
   choose: "Choose..."
+  character_lbl: 'Character'
   character:
     name: "Unique Character Name"
     in_game_name: "In-Game Name"
@@ -9,6 +10,8 @@ form:
     faction: "Faction"
     choose_faction: "Choose a faction..."
     gender: "Gender"
+    tag: "Tags defining character gameplay"
+  faction_lbl: 'Faction'
   faction:
     name: "Unique Faction Name"
     description: "Faction Description"
@@ -129,3 +132,13 @@ form:
     user: "User"
     role: "Role"
     character: "Character"
+  sort_by: "Sort by"
+  default_sort: "Default sorting"
+  sort:
+    character_title: "Character title"
+    priority: "Priority"
+    vote_score: "Vote score"
+    ascending: "Ascending"
+    descending: "Descending"
+  sort_order: "Sort order"
+  user: "User"

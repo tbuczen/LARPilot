@@ -5,7 +5,6 @@ namespace App\Entity\StoryObject;
 use App\Entity\Enum\StoryTimeUnit;
 use App\Entity\Enum\TargetType;
 use App\Entity\LarpParticipant;
-use App\Entity\StoryObject\Place;
 use App\Entity\Tag;
 use App\Repository\StoryObject\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;

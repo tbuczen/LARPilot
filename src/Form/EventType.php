@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Larp;
-use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Event;
 use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Place;
 use App\Entity\Tag;

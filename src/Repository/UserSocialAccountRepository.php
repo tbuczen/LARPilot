@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\UserSocialAccount;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

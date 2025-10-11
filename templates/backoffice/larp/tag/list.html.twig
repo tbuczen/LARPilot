@@ -15,6 +15,9 @@
         <div class="card-body p-0">
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
 
+            {% if tags is not empty %}
+            <div class="table-responsive">
+
             <table class="table table-striped table-hover mb-0">
                 <thead class="table-light">
                 <tr>
@@ -26,13 +29,14 @@
                 <tbody>
                 {% for tag in tags %}
                     <tr>
-                        <td>{{ tag.title }}</td>
+                        <td>
+                            <a href="{{ path('backoffice_larp_story_tag_modify', { larp: larp.id, tag: tag.id }) }}">
+                            {{ tag.title }}
+                            </a>
+                        </td>
                         <td>{{ tag.description|sanitize_html|default('-') }}</td>
                         <td>
-                            <a href="{{ path('backoffice_larp_story_tag_modify', { larp: larp.id, tag: tag.id }) }}"
-                               class="btn btn-sm btn-primary">
-                                {{ 'common.show_edit'|trans }}
-                            </a>
+
                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#globalDeleteTagModal"
                                     data-delete-text=" {{ 'common.delete'|trans }}"
@@ -45,6 +49,10 @@
                 {% endfor %}
                 </tbody>
             </table>
+            </div>
+            {% else %}
+                <p class="text-muted">{{ 'common.empty_list'|trans }}</p>
+            {% endif %}
         </div>
     </div>
 

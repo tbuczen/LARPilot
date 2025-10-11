@@ -29,12 +29,14 @@
                 <tbody>
                 {% for place in places %}
                     <tr>
-                        <td>{{ place.title }}</td>
+                        <td>
+                            <a href="{{ path('backoffice_larp_story_place_modify', { larp: larp.id, place: place.id }) }}">
+                                {{ place.title }}
+                            </a>
+                        </td>
                         <td>{{ place.description|sanitize_html|default('-') }}</td>
                         <td>
-                            <a href="{{ path('backoffice_larp_story_place_modify', { larp: larp.id, place: place.id }) }}" class="btn btn-sm btn-primary">
-                                {{ 'common.show_edit'|trans }}
-                            </a>
+
                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#globalDeletePlaceModal" data-delete-text=" {{ 'common.delete'|trans }}" data-character-id="{{ place.id }}" data-character-name="{{ place.title }}" data-delete-url-base="{{ path('backoffice_larp_story_place_delete', { larp: larp.id, place: 'CHARACTER_ID' }) }}">
                                 {{ 'common.delete'|trans }}
                             </button>

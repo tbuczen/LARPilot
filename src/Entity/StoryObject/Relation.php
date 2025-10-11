@@ -4,7 +4,6 @@ namespace App\Entity\StoryObject;
 
 use App\Entity\Enum\RelationType;
 use App\Entity\Enum\TargetType;
-use App\Entity\Larp;
 use App\Repository\StoryObject\RelationRepository;
 use Doctrine\ORM\Mapping as ORM;
 

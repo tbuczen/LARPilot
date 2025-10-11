@@ -25,7 +25,7 @@ readonly class AddSocialAccountToUserHandler
         ]);
         $user = $this->userRepository->find($command->userId);
 
-        if (!$existingAccount instanceof \App\Entity\UserSocialAccount) {
+        if (!$existingAccount instanceof UserSocialAccount) {
             $socialAccount = new UserSocialAccount();
             $socialAccount->setProvider($command->provider);
             $socialAccount->setProviderUserId($command->providerUserId);

@@ -31,12 +31,12 @@ enum TargetType: string
     public function getEntityClass(): string
     {
         return match ($this) {
-            self::Character => \App\Entity\StoryObject\LarpCharacter::class,
+            self::Character => \App\Entity\StoryObject\Character::class,
             self::Thread => \App\Entity\StoryObject\Thread::class,
             self::Quest => \App\Entity\StoryObject\Quest::class,
             self::Event => \App\Entity\StoryObject\Event::class,
             self::Relation => \App\Entity\StoryObject\Relation::class,
-            self::Faction => \App\Entity\StoryObject\LarpFaction::class,
+            self::Faction => \App\Entity\StoryObject\Faction::class,
             self::Item => \App\Entity\StoryObject\Item::class,
             self::Place => \App\Entity\StoryObject\Place::class,
             self::Tag => \App\Entity\Tag::class,

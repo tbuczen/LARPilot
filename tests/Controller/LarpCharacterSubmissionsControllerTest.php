@@ -6,12 +6,14 @@ use App\Controller\Backoffice\CharacterSubmissionsController;
 use App\Entity\Larp;
 use App\Entity\LarpApplication;
 use App\Entity\LarpApplicationChoice;
-use App\Entity\StoryObject\LarpCharacter;
+use App\Entity\StoryObject\Character;
 use App\Entity\User;
+use App\Repository\LarpApplicationChoiceRepository;
 use App\Repository\LarpApplicationRepository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\Larp\LarpApplicationDashboardService;
 use App\Service\Larp\SubmissionStatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -57,7 +59,7 @@ class LarpCharacterSubmissionsControllerTest extends TestCase
         $application->setUser($user);
         $application->setLarp($larp);
 
-        $character = new LarpCharacter();
+        $character = new Character();
         $character->setLarp($larp);
 
         $choice = new LarpApplicationChoice();
@@ -65,7 +67,7 @@ class LarpCharacterSubmissionsControllerTest extends TestCase
         $choice->setCharacter($character);
 
         $em = $this->createMock(EntityManagerInterface::class);
-        $repository = $this->createMock(EntityRepository::class);
+        $repository = $this->createMock(LarpApplicationChoiceRepository::class);
         $qb = $this->getMockBuilder(QueryBuilder::class)->disableOriginalConstructor()->getMock();
         $query = $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock();
         $query->method('getResult')->willReturn([$choice]);
@@ -91,7 +93,8 @@ class LarpCharacterSubmissionsControllerTest extends TestCase
             $this->createMock(FormInterface::class)
         );
 
-        $response = $controller->match($larp, $em);
+        $request = new Request();
+        $response = $controller->match($request, $larp, $em, $repository);
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertSame(200, $response->getStatusCode());
@@ -134,7 +137,11 @@ class LarpCharacterSubmissionsControllerTest extends TestCase
             $form
         );
 
-        $response = $controller->list($request, $larp, $repository, $statsService);
+        $dashboardService = $this->createMock(LarpApplicationDashboardService::class);
+        $dashboardService->method('getApplicationsWithPreloading')->willReturn([]);
+        $dashboardService->method('getDashboardStats')->willReturn([]);
+
+        $response = $controller->list($request, $larp, $repository, $dashboardService, $statsService);
 
         $this->assertInstanceOf(Response::class, $response);
     }

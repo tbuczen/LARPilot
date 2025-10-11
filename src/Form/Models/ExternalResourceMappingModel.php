@@ -17,7 +17,7 @@ class ExternalResourceMappingModel
 
     public static function fromEntity(?ObjectFieldMapping $mapping): self
     {
-        if (!$mapping instanceof \App\Entity\ObjectFieldMapping) {
+        if (!$mapping instanceof ObjectFieldMapping) {
             return new self();
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Enum\TargetType;
 use App\Entity\Larp;
 use App\Entity\StoryObject\Character;
 use App\Entity\StoryObject\Faction;
@@ -13,6 +12,7 @@ use App\Repository\StoryObject\CharacterRepository;
 use App\Repository\StoryObject\FactionRepository;
 use App\Repository\StoryObject\ThreadRepository;
 use App\Repository\TagRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -45,8 +45,8 @@ class QuestType extends AbstractType
                 'required' => false,
                 'multiple' => false,
                 'autocomplete' => true,
-                'placeholder' => 'form.quest.choose_thread',
-                'query_builder' => fn (ThreadRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'placeholder' => 'form.choose',
+                'query_builder' => fn (ThreadRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
                 'tom_select_options' => [
@@ -61,8 +61,8 @@ class QuestType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'placeholder' => 'form.quest.choose_faction',
-                'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'placeholder' => 'form.choose',
+                'query_builder' => fn (FactionRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
                 'tom_select_options' => [
@@ -77,8 +77,8 @@ class QuestType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'placeholder' => 'form.quest.choose_character',
-                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'placeholder' => 'form.choose',
+                'query_builder' => fn (CharacterRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
                 'tom_select_options' => [
@@ -93,7 +93,7 @@ class QuestType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'query_builder' => fn (TagRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                'query_builder' => fn (TagRepository $repo): QueryBuilder => $repo->createQueryBuilder('t')
                     ->where('t.larp = :larp')
                     ->setParameter('larp', $larp),
                 'tom_select_options' => [

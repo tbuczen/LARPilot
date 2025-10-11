@@ -12,7 +12,6 @@ use App\Repository\LarpIntegrationRepository;
 use App\Repository\LarpInvitationRepository;
 use App\Repository\LarpParticipantRepository;
 use App\Repository\LarpRepository;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 readonly class LarpManager
 {

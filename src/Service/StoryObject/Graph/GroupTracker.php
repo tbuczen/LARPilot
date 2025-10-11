@@ -2,7 +2,7 @@
 
 namespace App\Service\StoryObject\Graph;
 
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\StoryObject;
 use App\Entity\StoryObject\Thread;
 
@@ -13,7 +13,7 @@ class GroupTracker
 
     public function addToGroup(string $parentId, StoryObject $object): void
     {
-        if ($object instanceof LarpFaction) {
+        if ($object instanceof Faction) {
             $this->factionGroups[$parentId] = $object;
         } elseif ($object instanceof Thread) {
             $this->threadGroups[$parentId] = $object;
@@ -26,9 +26,9 @@ class GroupTracker
     private function addToApropriateGroup(string $parentId, StoryObject $object): void
     {
         // If we have a character, find its faction
-        if ($object instanceof \App\Entity\StoryObject\LarpCharacter) {
+        if ($object instanceof \App\Entity\StoryObject\Character) {
             $faction = $object->getFactions()->first();
-            if ($faction instanceof LarpFaction) {
+            if ($faction instanceof Faction) {
                 $this->factionGroups[$parentId] = $faction;
             }
         }

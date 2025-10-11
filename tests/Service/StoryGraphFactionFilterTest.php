@@ -2,11 +2,13 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\StoryObject\LarpCharacter;
-use App\Entity\StoryObject\LarpFaction;
+use App\Entity\StoryObject\Character;
+use App\Entity\StoryObject\Faction;
 use App\Entity\StoryObject\Quest;
 use App\Entity\StoryObject\Thread;
 use App\Service\Larp\StoryObjectRelationExplorer;
+use App\Service\StoryObject\Graph\GraphEdgeBuilder;
+use App\Service\StoryObject\Graph\GraphNodeBuilder;
 use PHPUnit\Framework\TestCase;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
@@ -14,8 +16,8 @@ class StoryGraphFactionFilterTest extends TestCase
 {
     public function testFactionFilterIncludesConnectedNodes(): void
     {
-        $faction = new LarpFaction();
-        $character = new LarpCharacter();
+        $faction = new Faction();
+        $character = new Character();
         $thread = new Thread();
         $quest = new Quest();
 
@@ -30,10 +32,11 @@ class StoryGraphFactionFilterTest extends TestCase
         $quest->addInvolvedCharacter($character);
         $character->addQuest($quest);
 
-        $preloader = $this->createMock(EntityPreloader::class);
-        $preloader->method('preload')->willReturn([]);
+        // Use actual instances since classes are readonly and can't be mocked
+        $nodeBuilder = new GraphNodeBuilder();
+        $edgeBuilder = new GraphEdgeBuilder();
 
-        $explorer = new StoryObjectRelationExplorer($preloader);
+        $explorer = new StoryObjectRelationExplorer($nodeBuilder, $edgeBuilder);
         $graph = $explorer->getGraphFromResults([
             $faction,
             $character,

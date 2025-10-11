@@ -29,7 +29,7 @@ class FileMappingType extends AbstractType
                 'choices' => $allowedTypes,
             ])
             ->addDependent('meta', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType): void {
-                if (!$type instanceof \App\Entity\Enum\ResourceType) {
+                if (!$type instanceof ResourceType) {
                     return;
                 }
                 $type = $this->getType($mimeType, $type);
@@ -40,7 +40,7 @@ class FileMappingType extends AbstractType
                 }
             })
             ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType): void {
-                if (!$type instanceof \App\Entity\Enum\ResourceType) {
+                if (!$type instanceof ResourceType) {
                     return;
                 }
                 $type = $this->getType($mimeType, $type);

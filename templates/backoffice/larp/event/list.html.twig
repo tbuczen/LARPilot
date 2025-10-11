@@ -60,16 +60,15 @@
                 <tbody>
                 {% for event in events %}
                     <tr>
-                        <td>{{ event.title }}</td>
+                        <td>
+                            <a href="{{ path('backoffice_larp_story_event_modify', { larp: larp.id, event: event.id }) }}">
+                            {{ event.title }}
+                            </a>
+                            </td>
                         <td>{{ event.startTime ? event.startTime|date('Y-m-d H:i') : '-' }}</td>
                         <td>{{ event.endTime ? event.endTime|date('Y-m-d H:i') : '-' }}</td>
                         <td>{{ event.description|sanitize_html|default('-') }}</td>
                         <td>
-                            <a href="{{ path('backoffice_larp_story_event_modify', { larp: larp.id, event: event.id }) }}"
-                               class="btn btn-sm btn-primary">
-                                {{ 'common.show_edit'|trans }}
-                            </a>
-
                             <button type="button"
                                     class="btn btn-sm btn-danger"
                                     data-bs-toggle="modal"

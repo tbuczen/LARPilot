@@ -3,7 +3,6 @@
 namespace App\Service\Larp;
 
 use App\Entity\Larp;
-use App\Entity\LarpApplication;
 use App\Repository\LarpApplicationRepository;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
