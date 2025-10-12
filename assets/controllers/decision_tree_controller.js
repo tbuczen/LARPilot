@@ -2,10 +2,10 @@ import { Controller } from '@hotwired/stimulus';
 import cytoscape from 'cytoscape';
 
 export default class extends Controller {
-    static targets = ['input'];
+    static targets = ['input', 'modal'];
     static values = {
-        elements: Array, // Accept both Array and Object
-        larpId: { type: String, default: '' },
+        elements: Object, // Decision tree data structure
+        larpId: String,
     };
 
     connect() {
@@ -174,7 +174,16 @@ export default class extends Controller {
 
         this.setupEventHandlers();
         this.setupToolbar();
+        this.setupContextMenu();
+        this.setupFormHandler();
         this.updateInput();
+
+        // Update reference badges for all nodes
+        this.cy.nodes().forEach(node => {
+            if (node.data('nodeType') === 'reference') {
+                this.updateNodeReferenceBadge(node);
+            }
+        });
     }
 
     parseTreeData(treeData) {
@@ -237,6 +246,18 @@ export default class extends Controller {
             }
         });
 
+        // Double-click to edit node inline
+        this.cy.on('dbltap', 'node', (event) => {
+            event.preventDefault();
+            this.editNodeInline(event.target);
+        });
+
+        // Double-click to edit edge inline
+        this.cy.on('dbltap', 'edge', (event) => {
+            event.preventDefault();
+            this.editEdgeInline(event.target);
+        });
+
         // Edge selection
         this.cy.on('tap', 'edge', (event) => {
             this.selectEdge(event.target);
@@ -246,7 +267,13 @@ export default class extends Controller {
         this.cy.on('tap', (event) => {
             if (event.target === this.cy) {
                 this.deselectAll();
+                this.removeActiveEditor();
             }
+        });
+
+        // Close editor when clicking on any node/edge
+        this.cy.on('tap', 'node, edge', () => {
+            this.removeActiveEditor();
         });
 
         // Hover effects
@@ -335,7 +362,7 @@ export default class extends Controller {
 
         const newNode = this.cy.getElementById(nodeId);
         this.selectNode(newNode);
-        this.promptEditNode(newNode);
+        // Don't auto-edit - user can double-click to edit
     }
 
     getNewNodePosition() {
@@ -371,13 +398,13 @@ export default class extends Controller {
 
     startEdgeCreation() {
         if (!this.selectedNode) {
-            alert('Please select a source node first');
+            // Don't show alert, just do nothing
             return;
         }
 
         this.edgeSourceNode = this.selectedNode;
         this.element.style.cursor = 'crosshair';
-        alert('Click on a target node to create connection');
+        // Visual feedback via cursor change - no alert needed
     }
 
     createEdge(sourceNode, targetNode) {
@@ -397,7 +424,7 @@ export default class extends Controller {
 
         const newEdge = this.cy.getElementById(edgeId);
         this.selectEdge(newEdge);
-        this.promptEditEdge(newEdge);
+        // Don't auto-edit - user can double-click to edit
     }
 
     promptEditNode(node) {
@@ -441,9 +468,8 @@ export default class extends Controller {
         } else if (this.selectedEdge) {
             this.selectedEdge.remove();
             this.selectedEdge = null;
-        } else {
-            alert('Please select a node or edge to delete');
         }
+        // If nothing selected, just do nothing - no alert needed
     }
 
     applyLayout() {
@@ -510,7 +536,652 @@ export default class extends Controller {
         };
     }
 
+    setupFormHandler() {
+        // Find the form and ensure data is serialized before submission
+        const form = this.element.closest('form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                // Force update the input value right before submission
+                const treeData = this.serializeTree();
+                const jsonString = JSON.stringify(treeData);
+                this.inputTarget.value = jsonString;
+
+                console.log('Form submitting with tree data:', jsonString);
+                console.log('Input element:', this.inputTarget);
+                console.log('Input name:', this.inputTarget.name);
+                console.log('Input value length:', this.inputTarget.value.length);
+            });
+        }
+    }
+
+    editNodeInline(node) {
+        // Remove any existing editor
+        this.removeActiveEditor();
+
+        const position = node.renderedPosition();
+        const label = node.data('label');
+
+        // Get container position to calculate absolute positioning
+        const containerRect = this.element.getBoundingClientRect();
+
+        // Create input element
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = label;
+        input.className = 'graph-text-editor';
+        input.style.cssText = `
+            position: fixed;
+            left: ${containerRect.left + position.x - 60}px;
+            top: ${containerRect.top + position.y - 10}px;
+            width: 120px;
+            padding: 4px 8px;
+            border: 2px solid #007bff;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 9999;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        `;
+
+        // Store reference
+        this.activeEditor = { input, node };
+
+        // Add to body for better positioning
+        document.body.appendChild(input);
+        input.focus();
+        input.select();
+
+        // Save on enter or blur
+        const save = () => {
+            const newLabel = input.value.trim();
+            if (newLabel) {
+                node.data('label', newLabel);
+            }
+            this.removeActiveEditor();
+        };
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                save();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.removeActiveEditor();
+            }
+        });
+
+        input.addEventListener('blur', save);
+    }
+
+    editEdgeInline(edge) {
+        // Remove any existing editor
+        this.removeActiveEditor();
+
+        const midpoint = edge.renderedMidpoint();
+        const label = edge.data('label');
+
+        // Get container position to calculate absolute positioning
+        const containerRect = this.element.getBoundingClientRect();
+
+        // Create input element
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = label;
+        input.className = 'graph-text-editor';
+        input.style.cssText = `
+            position: fixed;
+            left: ${containerRect.left + midpoint.x - 60}px;
+            top: ${containerRect.top + midpoint.y - 10}px;
+            width: 120px;
+            padding: 4px 8px;
+            border: 2px solid #28a745;
+            border-radius: 4px;
+            font-size: 10px;
+            z-index: 9999;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        `;
+
+        // Store reference
+        this.activeEditor = { input, edge };
+
+        // Add to body for better positioning
+        document.body.appendChild(input);
+        input.focus();
+        input.select();
+
+        // Save on enter or blur
+        const save = () => {
+            const newLabel = input.value.trim();
+            if (newLabel) {
+                edge.data('label', newLabel);
+            }
+            this.removeActiveEditor();
+        };
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                save();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.removeActiveEditor();
+            }
+        });
+
+        input.addEventListener('blur', save);
+    }
+
+    removeActiveEditor() {
+        if (this.activeEditor) {
+            if (this.activeEditor.input.parentElement) {
+                this.activeEditor.input.parentElement.removeChild(this.activeEditor.input);
+            }
+            this.activeEditor = null;
+        }
+    }
+
+    setupContextMenu() {
+        // Context menu on background (right-click)
+        this.cy.on('cxttap', (event) => {
+            if (event.target === this.cy) {
+                this.showBackgroundContextMenu(event);
+            }
+        });
+
+        // Context menu on nodes
+        this.cy.on('cxttap', 'node', (event) => {
+            event.preventDefault();
+            this.showNodeContextMenu(event);
+        });
+
+        // Context menu on edges
+        this.cy.on('cxttap', 'edge', (event) => {
+            event.preventDefault();
+            this.showEdgeContextMenu(event);
+        });
+
+        // Close context menu on any click
+        this.cy.on('tap', () => {
+            this.hideContextMenu();
+        });
+    }
+
+    showBackgroundContextMenu(event) {
+        this.hideContextMenu();
+
+        const menu = document.createElement('div');
+        menu.className = 'context-menu';
+        menu.style.cssText = `
+            position: fixed;
+            left: ${event.originalEvent.pageX}px;
+            top: ${event.originalEvent.pageY}px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10000;
+            padding: 4px 0;
+            min-width: 150px;
+        `;
+
+        const items = [
+            { label: 'Add Start Node', action: () => this.addNodeAtPosition('start', 'Start', event.position) },
+            { label: 'Add Decision Node', action: () => this.addNodeAtPosition('decision', 'Decision?', event.position) },
+            { label: 'Add Outcome Node', action: () => this.addNodeAtPosition('outcome', 'Outcome', event.position) },
+            { label: 'Add Reference Node', action: () => this.addNodeAtPosition('reference', 'Reference', event.position) },
+            { label: 'Add End Node', action: () => this.addNodeAtPosition('end', 'End', event.position) },
+            { type: 'separator' },
+            { label: 'Auto Layout', action: () => this.applyLayout() },
+        ];
+
+        items.forEach(item => {
+            if (item.type === 'separator') {
+                const separator = document.createElement('hr');
+                separator.style.cssText = 'margin: 4px 0; border: none; border-top: 1px solid #eee;';
+                menu.appendChild(separator);
+            } else {
+                const menuItem = document.createElement('div');
+                menuItem.textContent = item.label;
+                menuItem.style.cssText = 'padding: 8px 16px; cursor: pointer; user-select: none;';
+                menuItem.addEventListener('mouseenter', () => {
+                    menuItem.style.backgroundColor = '#f0f0f0';
+                });
+                menuItem.addEventListener('mouseleave', () => {
+                    menuItem.style.backgroundColor = 'white';
+                });
+                menuItem.addEventListener('click', () => {
+                    item.action();
+                    this.hideContextMenu();
+                });
+                menu.appendChild(menuItem);
+            }
+        });
+
+        document.body.appendChild(menu);
+        this.currentContextMenu = menu;
+    }
+
+    showNodeContextMenu(event) {
+        this.hideContextMenu();
+        const node = event.target;
+
+        const menu = document.createElement('div');
+        menu.className = 'context-menu';
+        menu.style.cssText = `
+            position: fixed;
+            left: ${event.originalEvent.pageX}px;
+            top: ${event.originalEvent.pageY}px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10000;
+            padding: 4px 0;
+            min-width: 150px;
+        `;
+
+        const items = [
+            { label: 'Edit Node', action: () => this.editNodeInline(node) },
+            { label: 'Connect to...', action: () => { this.edgeSourceNode = node; this.element.style.cursor = 'crosshair'; } },
+        ];
+
+        // Add "Manage References" for reference nodes
+        if (node.data('nodeType') === 'reference') {
+            items.push({ label: 'Manage Story Objects...', action: () => this.manageStoryObjectReferences(node), style: 'font-weight: 600;' });
+        }
+
+        items.push({ type: 'separator' });
+        items.push({ label: 'Delete Node', action: () => node.remove(), style: 'color: #dc3545;' });
+
+        items.forEach(item => {
+            if (item.type === 'separator') {
+                const separator = document.createElement('hr');
+                separator.style.cssText = 'margin: 4px 0; border: none; border-top: 1px solid #eee;';
+                menu.appendChild(separator);
+            } else {
+                const menuItem = document.createElement('div');
+                menuItem.textContent = item.label;
+                menuItem.style.cssText = `padding: 8px 16px; cursor: pointer; user-select: none; ${item.style || ''}`;
+                menuItem.addEventListener('mouseenter', () => {
+                    menuItem.style.backgroundColor = '#f0f0f0';
+                });
+                menuItem.addEventListener('mouseleave', () => {
+                    menuItem.style.backgroundColor = 'white';
+                });
+                menuItem.addEventListener('click', () => {
+                    item.action();
+                    this.hideContextMenu();
+                });
+                menu.appendChild(menuItem);
+            }
+        });
+
+        document.body.appendChild(menu);
+        this.currentContextMenu = menu;
+    }
+
+    showEdgeContextMenu(event) {
+        this.hideContextMenu();
+        const edge = event.target;
+
+        const menu = document.createElement('div');
+        menu.className = 'context-menu';
+        menu.style.cssText = `
+            position: fixed;
+            left: ${event.originalEvent.pageX}px;
+            top: ${event.originalEvent.pageY}px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10000;
+            padding: 4px 0;
+            min-width: 150px;
+        `;
+
+        const items = [
+            { label: 'Edit Edge', action: () => this.editEdgeInline(edge) },
+            { type: 'separator' },
+            { label: 'Delete Edge', action: () => edge.remove(), style: 'color: #dc3545;' },
+        ];
+
+        items.forEach(item => {
+            if (item.type === 'separator') {
+                const separator = document.createElement('hr');
+                separator.style.cssText = 'margin: 4px 0; border: none; border-top: 1px solid #eee;';
+                menu.appendChild(separator);
+            } else {
+                const menuItem = document.createElement('div');
+                menuItem.textContent = item.label;
+                menuItem.style.cssText = `padding: 8px 16px; cursor: pointer; user-select: none; ${item.style || ''}`;
+                menuItem.addEventListener('mouseenter', () => {
+                    menuItem.style.backgroundColor = '#f0f0f0';
+                });
+                menuItem.addEventListener('mouseleave', () => {
+                    menuItem.style.backgroundColor = 'white';
+                });
+                menuItem.addEventListener('click', () => {
+                    item.action();
+                    this.hideContextMenu();
+                });
+                menu.appendChild(menuItem);
+            }
+        });
+
+        document.body.appendChild(menu);
+        this.currentContextMenu = menu;
+    }
+
+    hideContextMenu() {
+        if (this.currentContextMenu) {
+            this.currentContextMenu.remove();
+            this.currentContextMenu = null;
+        }
+    }
+
+    addNodeAtPosition(nodeType, defaultLabel, position) {
+        const nodeId = `node-${Date.now()}`;
+
+        this.cy.add({
+            group: 'nodes',
+            data: {
+                id: nodeId,
+                label: defaultLabel,
+                nodeType: nodeType,
+                description: '',
+                metadata: {},
+            },
+            position: position
+        });
+
+        const newNode = this.cy.getElementById(nodeId);
+        this.selectNode(newNode);
+        // Don't auto-edit - user can double-click to edit
+    }
+
+    manageStoryObjectReferences(node) {
+        // Get current references from node metadata
+        const metadata = node.data('metadata') || {};
+        const storyObjects = metadata.storyObjects || [];
+
+        // Create modal
+        this.showStoryObjectModal(node, storyObjects);
+    }
+
+    showStoryObjectModal(node, currentReferences) {
+        // Remove existing modal if any
+        this.hideStoryObjectModal();
+
+        // Create modal backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade show';
+        backdrop.style.cssText = 'z-index: 10040;';
+
+        // Create modal
+        const modal = document.createElement('div');
+        modal.className = 'modal fade show';
+        modal.style.cssText = 'display: block; z-index: 10050;';
+        modal.innerHTML = `
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Manage Story Object References</h5>
+                        <button type="button" class="btn-close" data-action="close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Search and Add Story Objects:</label>
+                            <select id="story-object-search" class="form-select" multiple></select>
+                            <small class="form-text text-muted">
+                                Search for Characters, Items, Places, Factions, and other story objects to reference.
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Current References:</label>
+                            <div id="current-references" class="border rounded p-3" style="min-height: 100px; background-color: #f8f9fa;">
+                                ${this.renderReferenceList(currentReferences)}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-action="close">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-action="save">Save References</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Store references
+        this.currentModal = { modal, backdrop, node, references: [...currentReferences] };
+
+        // Add to DOM
+        document.body.appendChild(backdrop);
+        document.body.appendChild(modal);
+
+        // Setup event handlers
+        modal.querySelector('[data-action="close"]').addEventListener('click', () => this.hideStoryObjectModal());
+        modal.querySelectorAll('[data-action="close"]').forEach(btn => {
+            btn.addEventListener('click', () => this.hideStoryObjectModal());
+        });
+        modal.querySelector('[data-action="save"]').addEventListener('click', () => this.saveStoryObjectReferences());
+
+        // Initialize TomSelect for search (dynamic import to avoid loading if not needed)
+        this.initializeStoryObjectSearch();
+    }
+
+    renderReferenceList(references) {
+        if (references.length === 0) {
+            return '<p class="text-muted mb-0">No story objects referenced yet.</p>';
+        }
+
+        return references.map((ref, index) => `
+            <div class="d-flex align-items-center justify-content-between mb-2 p-2 bg-white border rounded">
+                <div>
+                    <strong>${this.escapeHtml(ref.title || 'Untitled')}</strong>
+                    <span class="badge bg-secondary ms-2">${this.escapeHtml(ref.type || 'unknown')}</span>
+                    ${ref.role ? `<span class="badge bg-info ms-1">${this.escapeHtml(ref.role)}</span>` : ''}
+                </div>
+                <button type="button" class="btn btn-sm btn-danger" data-remove-index="${index}">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+            </div>
+        `).join('');
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    async initializeStoryObjectSearch() {
+        if (!this.larpIdValue) {
+            console.warn('No larpId provided, story object search disabled');
+            return;
+        }
+
+        const selectElement = document.getElementById('story-object-search');
+        if (!selectElement) return;
+
+        // Dynamically import TomSelect
+        const TomSelect = (await import('tom-select')).default;
+
+        // Initialize TomSelect with AJAX search
+        const tomSelect = new TomSelect(selectElement, {
+            valueField: 'id',
+            labelField: 'title',
+            searchField: ['title'],
+            placeholder: 'Type to search for story objects...',
+            load: (query, callback) => {
+                if (!query.length) {
+                    callback();
+                    return;
+                }
+
+                // Fetch from API
+                const apiUrl = `/api/larp/${this.larpIdValue}/story-object/mention-search?query=${encodeURIComponent(query)}`;
+                console.log('Fetching story objects from:', apiUrl);
+
+                fetch(apiUrl)
+                    .then(response => {
+                        console.log('API response status:', response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('API response data:', data);
+
+                        // Flatten grouped results - API returns array of {type, items:[]}
+                        const allObjects = [];
+
+                        if (Array.isArray(data)) {
+                            data.forEach(group => {
+                                if (group.items && Array.isArray(group.items)) {
+                                    group.items.forEach(obj => {
+                                        allObjects.push({
+                                            id: obj.id,
+                                            title: obj.name || obj.title || 'Untitled',
+                                            type: obj.type || group.type,
+                                        });
+                                    });
+                                }
+                            });
+                        }
+
+                        console.log('Processed objects:', allObjects);
+                        callback(allObjects);
+                    })
+                    .catch(error => {
+                        console.error('Story object search failed:', error);
+                        callback();
+                    });
+            },
+            render: {
+                option: (data, escape) => {
+                    return `<div>
+                        <strong>${escape(data.title)}</strong>
+                        <span class="badge bg-secondary ms-2">${escape(data.type)}</span>
+                    </div>`;
+                },
+                item: (data, escape) => {
+                    return `<div>
+                        ${escape(data.title)} <span class="badge bg-secondary">${escape(data.type)}</span>
+                    </div>`;
+                }
+            },
+            onChange: (value) => {
+                if (value) {
+                    const selectedData = tomSelect.options[value];
+                    if (selectedData) {
+                        this.addStoryObjectReference(selectedData);
+                        tomSelect.clear();
+                    }
+                }
+            }
+        });
+
+        this.currentModal.tomSelect = tomSelect;
+    }
+
+    addStoryObjectReference(storyObject) {
+        if (!this.currentModal) return;
+
+        // Check if already added
+        const exists = this.currentModal.references.find(ref => ref.id === storyObject.id);
+        if (exists) {
+            return; // Already added
+        }
+
+        // Add to references
+        this.currentModal.references.push({
+            id: storyObject.id,
+            title: storyObject.title,
+            type: storyObject.type,
+            role: 'involved', // Default role
+        });
+
+        // Re-render reference list
+        this.updateReferenceList();
+    }
+
+    updateReferenceList() {
+        if (!this.currentModal) return;
+
+        const container = document.getElementById('current-references');
+        if (container) {
+            container.innerHTML = this.renderReferenceList(this.currentModal.references);
+
+            // Attach remove handlers
+            container.querySelectorAll('[data-remove-index]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.currentTarget.dataset.removeIndex, 10);
+                    this.removeStoryObjectReference(index);
+                });
+            });
+        }
+    }
+
+    removeStoryObjectReference(index) {
+        if (!this.currentModal) return;
+
+        this.currentModal.references.splice(index, 1);
+        this.updateReferenceList();
+    }
+
+    saveStoryObjectReferences() {
+        if (!this.currentModal) return;
+
+        const node = this.currentModal.node;
+        const references = this.currentModal.references;
+
+        // Update node metadata
+        const metadata = node.data('metadata') || {};
+        metadata.storyObjects = references;
+        node.data('metadata', metadata);
+
+        // Update node visual to show badge count
+        this.updateNodeReferenceBadge(node);
+
+        // Close modal
+        this.hideStoryObjectModal();
+    }
+
+    updateNodeReferenceBadge(node) {
+        const metadata = node.data('metadata') || {};
+        const storyObjects = metadata.storyObjects || [];
+
+        // Update node label to include badge
+        const baseLabel = node.data('label').replace(/\s+\(\d+\)$/, ''); // Remove existing count
+        if (storyObjects.length > 0) {
+            node.data('label', `${baseLabel} (${storyObjects.length})`);
+        } else {
+            node.data('label', baseLabel);
+        }
+    }
+
+    hideStoryObjectModal() {
+        if (this.currentModal) {
+            // Destroy TomSelect
+            if (this.currentModal.tomSelect) {
+                this.currentModal.tomSelect.destroy();
+            }
+
+            // Remove modal and backdrop
+            if (this.currentModal.modal.parentElement) {
+                this.currentModal.modal.parentElement.removeChild(this.currentModal.modal);
+            }
+            if (this.currentModal.backdrop.parentElement) {
+                this.currentModal.backdrop.parentElement.removeChild(this.currentModal.backdrop);
+            }
+
+            this.currentModal = null;
+        }
+    }
+
     disconnect() {
+        this.removeActiveEditor();
+        this.hideContextMenu();
+        this.hideStoryObjectModal();
         if (this.cy) {
             this.cy.destroy();
         }

@@ -4,11 +4,7 @@
 
 This document summarizes the implementation of the Decision Tree functionality for Quests and Threads in LARPilot.
 
-## What Was Done
-
 ### 1. Enhanced Decision Tree Controller (`assets/controllers/decision_tree_controller.js`)
-
-**Status**: ✅ Complete
 
 The Stimulus controller was completely rewritten with full editor functionality:
 
@@ -17,7 +13,7 @@ The Stimulus controller was completely rewritten with full editor functionality:
   - Start (green ellipse)
   - Decision (yellow diamond)
   - Outcome (cyan rectangle)
-  - Reference (gray octagon)
+  - Reference (gray octagon) - **Now supports story object references!**
   - End (red ellipse)
 
 - **Edge Types** (with distinct line styles):
@@ -28,34 +24,58 @@ The Stimulus controller was completely rewritten with full editor functionality:
 - **Interactive Toolbar**:
   - Add Start/Decision/Outcome/Reference/End nodes
   - Connect nodes (edge creation mode)
-  - Auto Layout (Dagre hierarchical layout)
+  - Auto Layout (breadthfirst hierarchical layout)
   - Delete selected node/edge
+
+- **Context Menus** (right-click):
+  - Background: Add any node type, auto layout
+  - Nodes: Edit, connect, delete
+  - Reference Nodes: **Manage Story Objects** (search and link characters, items, places, etc.)
+  - Edges: Edit, delete
 
 - **User Interactions**:
   - Click to select nodes/edges
   - Drag to reposition nodes
-  - Click selected node + "Connect" button + click target to create edge
+  - Double-click to edit inline (no popups!)
+  - Right-click for context menus
   - Hover effects for better UX
   - Background click to deselect
+
+- **Story Object Integration** ✨ NEW:
+  - Search and link story objects to Reference nodes via modal
+  - TomSelect autocomplete using `/api/larp/{larp}/story-object/mention-search`
+  - Visual badge count on Reference nodes showing linked objects (e.g., "Reference (3)")
+  - Manage multiple references per node with role assignment
+  - Remove references individually
+  - References persist in node metadata
 
 - **Data Management**:
   - Parse existing tree data (supports both new and legacy formats)
   - Serialize tree to JSON matching the documented schema
   - Auto-save to hidden form input on any change
+  - Story object references stored in `node.metadata.storyObjects[]`
 
 #### Code Structure:
 ```javascript
-connect()           // Initialize Cytoscape, setup handlers, toolbar
-parseTreeData()     // Convert JSON to Cytoscape elements
-setupEventHandlers() // Mouse events, selection, deselection
-setupToolbar()      // Create dynamic toolbar with buttons
-addNode()           // Add new node to graph
-createEdge()        // Connect two nodes
-promptEditNode()    // Edit node properties (currently uses prompt)
-promptEditEdge()    // Edit edge properties (currently uses prompt)
-deleteSelected()    // Remove selected element
-applyLayout()       // Run Dagre auto-layout algorithm
-serializeTree()     // Convert graph to JSON schema
+connect()                      // Initialize Cytoscape, setup handlers, toolbar
+parseTreeData()                // Convert JSON to Cytoscape elements
+setupEventHandlers()           // Mouse events, selection, deselection
+setupToolbar()                 // Create dynamic toolbar with buttons
+setupContextMenu()             // Right-click context menus for nodes/edges/background
+addNode()                      // Add new node to graph
+createEdge()                   // Connect two nodes
+editNodeInline()               // Inline text editing (no popups!)
+editEdgeInline()               // Inline edge label editing
+deleteSelected()               // Remove selected element
+applyLayout()                  // Run breadthfirst auto-layout algorithm
+serializeTree()                // Convert graph to JSON schema
+manageStoryObjectReferences()  // Open modal to manage story object links ✨ NEW
+showStoryObjectModal()         // Display modal with TomSelect search ✨ NEW
+initializeStoryObjectSearch()  // Initialize TomSelect with AJAX ✨ NEW
+addStoryObjectReference()      // Add story object to node metadata ✨ NEW
+removeStoryObjectReference()   // Remove story object from node ✨ NEW
+saveStoryObjectReferences()    // Save references and update badge ✨ NEW
+updateNodeReferenceBadge()     // Show count badge on Reference nodes ✨ NEW
 ```
 
 ### 2. Translations (`translations/messages.en.yaml`)
@@ -79,6 +99,8 @@ Added comprehensive translations for decision tree functionality:
 - **condition_types**: has_item, character_present, faction_reputation, etc.
 - **consequence_types**: gain_item, lose_item, relationship_change, etc.
 - **roles**: required, involved, mentioned, rewarded, lost
+- **modal** ✨ NEW: title, search_label, search_placeholder, search_help, current_references_label, no_references, remove_reference, cancel, save
+- **context_menu** ✨ NEW: manage_story_objects, edit_node, connect_to, delete_node, edit_edge, delete_edge, add_*_node, auto_layout
 
 ### 3. Documentation (`docs/DECISION_TREE_SYSTEM.md`)
 
@@ -103,54 +125,84 @@ Created comprehensive documentation including:
 
 **Status**: ✅ Complete (this file)
 
+## What Was Completed (Latest Update)
+
+### Story Object Reference Feature ✨ NEW
+
+**Status**: ✅ Complete
+
+Implemented comprehensive story object integration for Reference nodes:
+
+1. **Modal Dialog**:
+   - Bootstrap modal with backdrop
+   - Clean, professional UI
+   - Cancel and Save buttons
+
+2. **TomSelect Autocomplete**:
+   - Dynamic import of TomSelect library (lazy loading)
+   - AJAX search using `/api/larp/{larp}/story-object/mention-search`
+   - Searches across all story object types (Characters, Items, Places, Factions, etc.)
+   - Grouped display with type badges
+   - Prevents duplicate additions
+
+3. **Reference Management**:
+   - Add multiple story objects to a single Reference node
+   - Each reference includes: id, title, type, role (default: "involved")
+   - Remove individual references
+   - Visual list with badges showing object type and role
+
+4. **Visual Badges**:
+   - Reference nodes display count: "Reference (3)" when 3 objects are linked
+   - Badge updates automatically on save
+   - Badge persists on reload
+
+5. **Context Menu Integration**:
+   - "Manage Story Objects..." option appears only on Reference nodes
+   - Highlighted with bold font weight for visibility
+
+### Updated Templates
+
+- ✅ `templates/backoffice/larp/quest/tree.html.twig` - Added `larpId` value
+- ✅ `templates/backoffice/larp/thread/tree.html.twig` - Added `larpId` value
+
 ## What Still Needs To Be Done
-
-### Immediate: Install Dependencies
-
-**Required Package**: `cytoscape-dagre`
-
-The decision tree controller imports `cytoscape-dagre` for the hierarchical layout algorithm, but this package is not yet in the importmap.
-
-**Installation Command**:
-```bash
-php bin/console importmap:require cytoscape-dagre
-```
-
-This will add the package to `importmap.php` and download the necessary files.
 
 ### Future Enhancements (Phase 2+)
 
-1. **Advanced Node Editor Modal**:
-   - Replace `prompt()` dialogs with Bootstrap modals
-   - Add story object autocomplete using the existing `/api/larp/{larp}/story-object/mention-search` endpoint
-   - Allow editing conditions and consequences
-   - Add metadata fields (duration, location, tags)
+1. **Enhanced Reference Display** (optional):
+   - Click on Reference node badge to view linked objects without opening modal
+   - Tooltip showing linked object titles on hover
+   - Color-coded badges by object type
 
-2. **Story Object Integration**:
-   - Fetch and display story objects in node editor
-   - Show story object references as badges on nodes
-   - Validate that referenced story objects exist
+2. **Role Selection** (optional):
+   - Allow changing role when adding reference (required/involved/mentioned/etc.)
+   - Role dropdown in modal
+   - Role affects badge color
+
+3. **Story Object Validation** (backend):
+   - Validate that referenced story objects still exist
    - Warn about deleted/missing references
+   - Clean up orphaned references
 
-3. **Backend Validation Service**:
+4. **Backend Validation Service**:
    - Create `src/Service/StoryObject/DecisionTreeValidator.php`
    - Validate tree structure (must have start/end nodes)
    - Check for orphaned nodes
    - Verify story object UUIDs are valid
 
-4. **Enhanced Visualization**:
+5. **Enhanced Visualization**:
    - Add legend showing node/edge types
    - Minimap for navigation in large trees
    - Search/filter nodes by title
    - Highlight specific paths through the tree
    - Zoom controls
 
-5. **Export/Import**:
+6. **Export/Import**:
    - Export tree as PNG/SVG image (Cytoscape supports this)
    - Export as PDF for game masters to print
    - Enable quest/thread duplication with decision tree included
 
-6. **Mobile Optimization**:
+7. **Mobile Optimization**:
    - Responsive toolbar layout
    - Touch gesture support
    - Simplified editor for mobile devices
@@ -160,45 +212,60 @@ This will add the package to `importmap.php` and download the necessary files.
 
 ### Manual Testing Steps:
 
-1. **Install the missing dependency**:
-   ```bash
-   php bin/console importmap:require cytoscape-dagre
-   ```
-
-2. **Navigate to a Quest or Thread**:
+1. **Navigate to a Quest or Thread**:
    - Go to `/backoffice/larp/{larpId}/story/quest/{questId}`
    - Or: `/backoffice/larp/{larpId}/story/thread/{threadId}`
 
-3. **Access the Decision Tree**:
+2. **Access the Decision Tree**:
    - Click on the "Decision Tree" tab or link
    - URL: `.../quest/{questId}/tree` or `.../thread/{threadId}/tree`
 
-4. **Test Node Creation**:
-   - Click "+ Start" to create a start node
-   - Click "+ Decision" to create a decision node
-   - Edit the node title and description when prompted
+3. **Test Node Creation**:
+   - Click "+ Start" to create a start node (or right-click background)
+   - Click "+ Reference" to create a reference node
    - Observe the node appears with the correct color/shape
+   - Double-click on node to edit title inline (no popup!)
+
+4. **Test Story Object References** ✨ NEW:
+   - Create a Reference node
+   - Right-click the Reference node
+   - Click "Manage Story Objects..."
+   - Modal opens with search field
+   - Type to search for characters, items, etc.
+   - Click on a result to add it
+   - Observe it appears in "Current References" list
+   - Add multiple objects
+   - Click "Remove" to remove a reference
+   - Click "Save References"
+   - Observe the node now shows "Reference (N)" where N is the count
+   - Save the tree and reload - badge persists!
 
 5. **Test Edge Creation**:
    - Click on a node to select it (should see red border)
-   - Click "+ Connect" button
+   - Click "+ Connect" button (or use context menu "Connect to...")
    - Click on another node to create an edge
-   - Edit the edge label when prompted
+   - Double-click edge to edit label inline
 
-6. **Test Auto Layout**:
+6. **Test Context Menus**:
+   - Right-click background: Add any node, auto layout
+   - Right-click node: Edit, connect, delete
+   - Right-click edge: Edit, delete
+   - Right-click Reference node: Shows "Manage Story Objects..." option
+
+7. **Test Auto Layout**:
    - Add several nodes and edges
-   - Click "Auto Layout" button
+   - Click "Auto Layout" button (or right-click > Auto Layout)
    - Observe nodes arrange in hierarchical layout
 
-7. **Test Save/Load**:
-   - Create a complex tree with multiple nodes/edges
+8. **Test Save/Load**:
+   - Create a complex tree with multiple nodes/edges and story object references
    - Click "Save Changes" button at bottom of form
    - Refresh the page
-   - Verify the tree is loaded correctly
+   - Verify the tree is loaded correctly with all references preserved
 
-8. **Test Delete**:
-   - Select a node or edge (click on it)
-   - Click "Delete Selected" button
+9. **Test Delete**:
+   - Right-click a node or edge
+   - Click "Delete Node" or "Delete Edge"
    - Verify the element is removed
 
 ### Expected Console Output:
@@ -210,10 +277,11 @@ If everything is working correctly, you should see:
 
 ### Troubleshooting:
 
-**If you see "Cannot find module 'cytoscape-dagre'"**:
-- Run: `php bin/console importmap:require cytoscape-dagre`
-- Clear Symfony cache: `php bin/console cache:clear`
-- Reload the page
+**If story object search doesn't work**:
+- Verify larpId is passed to the controller in the template: `data-decision-tree-larp-id-value="{{ larp.id }}"`
+- Check browser console for AJAX errors
+- Test the API endpoint directly: `/api/larp/{larpId}/story-object/mention-search?query=test`
+- Ensure you have some characters/items/places created in the LARP
 
 **If nodes don't appear or layout is broken**:
 - Check browser console for JavaScript errors
@@ -247,7 +315,16 @@ The serialized tree follows this structure:
       "title": "Node title",
       "description": "Optional description",
       "position": { "x": 100, "y": 200 },
-      "metadata": {}
+      "metadata": {
+        "storyObjects": [
+          {
+            "id": "uuid-of-character",
+            "title": "John the Warrior",
+            "type": "character",
+            "role": "involved"
+          }
+        ]
+      }
     }
   ],
   "edges": [
@@ -271,15 +348,17 @@ The serialized tree follows this structure:
 ## Integration Points
 
 ### Existing Integrations:
-- ✅ Uses existing `StoryObjectMentionController` for future story object search
+- ✅ Uses existing `StoryObjectMentionController` for story object search (**NOW ACTIVE!**)
 - ✅ Follows existing Stimulus controller patterns
 - ✅ Uses existing Cytoscape.js library (same as `story_graph_controller`)
 - ✅ Integrates with existing form system (hidden input + POST)
+- ✅ Uses TomSelect for autocomplete (same as other forms)
+- ✅ Dynamic import for lazy loading (only loads TomSelect when needed)
 
 ### Future Integrations:
-- Story object autocomplete (when implementing advanced editor modal)
 - Version history (Gedmo Loggable already tracks Quest/Thread changes)
 - Google Docs export (when implementing PDF export feature)
+- Notification system (notify players when referenced in a quest/thread decision tree)
 
 ## Files Modified/Created
 
@@ -288,38 +367,43 @@ The serialized tree follows this structure:
 - ✅ `docs/DECISION_TREE_IMPLEMENTATION_SUMMARY.md` - This file
 
 ### Modified:
-- ✅ `assets/controllers/decision_tree_controller.js` - Complete rewrite
-- ✅ `translations/messages.en.yaml` - Added decision tree translations
+- ✅ `assets/controllers/decision_tree_controller.js` - Complete rewrite with story object integration
+- ✅ `translations/messages.en.yaml` - Added decision tree translations + modal/context menu translations
+- ✅ `templates/backoffice/larp/quest/tree.html.twig` - Added larpId value for API calls
+- ✅ `templates/backoffice/larp/thread/tree.html.twig` - Added larpId value for API calls
 
 ### Existing (no changes needed):
 - `src/Entity/StoryObject/Quest.php` - Already has `decisionTree` field
 - `src/Entity/StoryObject/Thread.php` - Already has `decisionTree` field
 - `src/Controller/Backoffice/Story/QuestController.php` - Already has `tree()` method
 - `src/Controller/Backoffice/Story/ThreadController.php` - Already has `tree()` method
-- `templates/backoffice/larp/quest/tree.html.twig` - Already references controller
-- `templates/backoffice/larp/thread/tree.html.twig` - Already references controller
-- `importmap.php` - Already has `cytoscape`, needs `cytoscape-dagre`
+- `src/Controller/API/StoryObjectMentionController.php` - Already provides search API
+- `importmap.php` - Already has `cytoscape` and `tom-select`
 
 ## Next Steps
 
-1. **Immediate** (required for functionality):
-   ```bash
-   php bin/console importmap:require cytoscape-dagre
-   ```
+1. **Test the story object reference feature** (see "Testing the Implementation" above)
+   - Create a Reference node
+   - Search for and add story objects
+   - Verify badge count appears
+   - Save and reload to confirm persistence
 
-2. **Test the basic editor** (see "Testing the Implementation" above)
+2. **Gather user feedback** on the reference feature:
+   - Is the modal UX intuitive?
+   - Should we add role selection (required/involved/mentioned)?
+   - Would tooltips on badges be helpful?
 
-3. **Gather user feedback** on the basic editor before building advanced features
+3. **Optional enhancements** (based on feedback):
+   - Role dropdown when adding references
+   - Click badge to view references without opening modal
+   - Tooltips showing linked object titles on hover
+   - Color-coded badges by object type
 
-4. **Phase 2** (if basic editor is approved):
-   - Implement advanced node editor modal with story object autocomplete
-   - Add backend validation service
-   - Implement export to PNG/PDF
-
-5. **Phase 3** (future enhancements):
+4. **Phase 3** (future enhancements):
+   - Backend validation (verify referenced UUIDs exist)
+   - Export to PNG/PDF with reference annotations
    - Minimap and enhanced visualization
    - Mobile optimization
-   - Real-time collaboration (if needed)
 
 ## Questions?
 

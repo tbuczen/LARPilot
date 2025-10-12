@@ -16,6 +16,7 @@
 
 ###> symfony/asset-mapper ###
 /public/assets/
+/public/uploads/maps/*
 /assets/vendor/
 !assets/vendor/sortable.esm.js
 ###< symfony/asset-mapper ###
