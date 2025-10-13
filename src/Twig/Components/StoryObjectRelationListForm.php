@@ -2,8 +2,8 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\StoryObject\StoryObject;
-use App\Repository\StoryObject\RelationRepository;
+use App\Domain\StoryObject\Entity\StoryObject;
+use App\Domain\StoryObject\Repository\RelationRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;

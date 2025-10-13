@@ -150,6 +150,33 @@
                     </div>
                 {% endif %}
 
+                {# Event Planner #}
+                {% set isEventPlannerRoute = 'event_planner' in currentRoute %}
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle {% if isEventPlannerRoute %}active{% endif %}"
+                            type="button" id="eventPlannerDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-calendar-range"></i> {{ 'backoffice.event_planner.title'|trans }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="eventPlannerDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('backoffice_event_planner_calendar_index', {'larp': larp.id}) }}">
+                                <i class="bi bi-calendar-week"></i> {{ 'backoffice.event_planner.calendar.title'|trans }}
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('backoffice_event_planner_event_list', {'larp': larp.id}) }}">
+                                <i class="bi bi-calendar-event"></i> {{ 'backoffice.event_planner.event.list'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('backoffice_event_planner_resource_list', {'larp': larp.id}) }}">
+                                <i class="bi bi-box-seam"></i> {{ 'backoffice.event_planner.resource.list'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
                 {# Incidents #}
                 {% if is_granted('VIEW_BO_LARP_INCIDENTS', larp) %}
                     {% set isIncidentsRoute = 'larp_incident' in currentRoute %}

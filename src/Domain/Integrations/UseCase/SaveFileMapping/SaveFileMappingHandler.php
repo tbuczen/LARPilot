@@ -2,11 +2,11 @@
 
 namespace App\Domain\Integrations\UseCase\SaveFileMapping;
 
-use App\Entity\Enum\ResourceType;
-use App\Entity\ObjectFieldMapping;
-use App\Repository\LarpRepository;
-use App\Repository\ObjectFieldMappingRepository;
-use App\Repository\SharedFileRepository;
+use App\Domain\Core\Repository\LarpRepository;
+use App\Domain\Integrations\Entity\Enum\ResourceType;
+use App\Domain\Integrations\Entity\ObjectFieldMapping;
+use App\Domain\Integrations\Repository\ObjectFieldMappingRepository;
+use App\Domain\Integrations\Repository\SharedFileRepository;
 
 final readonly class SaveFileMappingHandler
 {

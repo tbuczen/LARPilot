@@ -1,186 +1,246 @@
-form:
-  common:
-    name: Name
-  submit: "Submit"
-  choose: "Choose..."
-  character_lbl: 'Character'
-  character:
-    name: "Unique Character Name"
-    in_game_name: "In-Game Name"
-    description: "Character Description"
-    available_for_recruitment: "Available for recruitment"
-    faction: "Faction"
-    choose_faction: "Choose a faction..."
-    gender: "Gender"
-    preferred_gender: "Preferred Gender for Character"
-    preferred_gender_placeholder: "Unisex"
-    preferred_gender_help: "Select the preferred gender for this character (e.g., Male, Female, or leave blank for any gender)"
-    tag: "Tags defining character gameplay"
-  faction_lbl: 'Faction'
-  faction:
-    name: "Unique Faction Name"
-    description: "Faction Description"
-  invitation:
-    name: "Name"
-    valid_to: "Invitation code valid to"
-    role: "Role"
-    character: "Choose a character..."
-    is_reusable: "Reusable"
-  recruitment:
-    number: "Required number"
-    type: "Type"
-    notes: "Notes"
-  proposal:
-    character: "Character"
-    comment: "Comment"
-  mapping:
-    spreadsheet:
-      sheet_name: "Spreadsheet Name"
-      end_column: "End Column"
-      starting_row: "Starting Row"
-    document:
-  larp:
-    create: "Create new DRAFT Larp"
-    name: "Name"
-    description: "Description"
-    location: "Location"
-    start_date: "Start Date"
-    end_date: "End Date"
-    integrations: "Integrations"
-    invitations: "Invitations"
-    story: "Story"
-  save_filter_name: "Filter name"
-  quest:
-    name: "Unique Quest Name"
-    description: "Quest Description"
-    thread: "Assign to Thread"
-    factions: "Factions involved in quest"
-    characters: "Characters involved in quest"
-    tags: "Tags"
-  thread:
-    name: "Unique Thread Name"
-    description: "Thread Description"
-    factions: "Factions involved in thread"
-    characters: "Characters involved in thread"
-    tags: "Tags"
-    choose_faction: "Choose a faction..."
-  relation:
-    name: "Relation Name"
-    description: "Description of the relation"
-    type: "Relation Type"
-    fromType: "Type of owning side of relation"
-    from: "Relation Owner"
-    toType: "Type of target side of relation"
-    to: "Related"
-  external_reference:
-    name: "Name"
-    mapping_type: "Mapping Type"
-    reference_type: "Type"
-    url: "URL"
-    toType: "Target Type"
-  place:
-    name: "Unique Place Name"
-    description: "Place Description"
-  item:
-    name: "Unique Item Name"
-    description: "Item Description"
-    is_crafted: "Crafted"
-    is_purchased: "Purchased"
-    quantity: "Quantity"
-    cost: "Cost"
-  tag:
-    name: "Tag Name"
-    description: "Tag Description"
-    target: "Target"
-  event:
-    name: "Event Name"
-    description: "Event Description"
-    place: "Place"
-    choose_place: "Choose a place..."
-    factions: "Factions involved in event"
-    characters: "Characters involved in event"
-    tags: "Tags"
-    start_time: 'Start Time'
-    end_time: 'End Time'
-    choose_faction: 'Choose a faction...'
-  kanban:
-    title: "Task title"
-    description: "Task description"
-    assigned_to: "Assigned to"
-    priority: "Priority"
-    due_date: "Due date"
-    unassigned: "Unassigned"
-    visibility: "Visibility"
-  contact_email: 'Contact email'
-  favourite_style: 'Favourite play style'
-  triggers: 'Triggers / things to avoid'
-  priority: 'Priority'
-  justification: 'Justification'
-  visual: 'Visual ideas'
-  incident:
-    report_code: "Participant code"
-    description: "Describe what happened"
-    allow_feedback: "I want feedback"
-    contact_accused: "Allow contacting accused"
-    allow_mediator: "Allow mediator"
-    stay_anonymous: "Stay anonymous"
-  contact_email_help: "Alternative email for this application (optional)"
-  favourite_style_help: "Describe your preferred roleplay style, themes you enjoy, etc."
-  preferred_tags: "Preferred Tags"
-  preferred_tags_help: "Select tags that represent themes or elements you'd like to see in your character"
-  unwanted_tags: "Tags to Avoid"
-  unwanted_tags_help: "Select tags that represent themes or elements you'd prefer to avoid"
-  character_choices: "Character Preferences"
-  character_choices_help: "Drag and drop to reorder your character preferences by priority"
-  select_tags: "Select tags..."
-  participant:
-    user: "User"
-    role: "Role"
-    character: "Character"
-  sort_by: "Sort by"
-  default_sort: "Default sorting"
-  sort:
-    character_title: "Character title"
-    priority: "Priority"
-    vote_score: "Vote score"
-    ascending: "Ascending"
-    descending: "Descending"
-  sort_order: "Sort order"
+common:
+  name: Name
+submit: "Submit"
+choose: "Choose..."
+character_lbl: 'Character'
+character:
+  name: "Unique Character Name"
+  in_game_name: "In-Game Name"
+  description: "Character Description"
+  available_for_recruitment: "Available for recruitment"
+  faction: "Faction"
+  choose_faction: "Choose a faction..."
+  gender: "Gender"
+  preferred_gender: "Preferred Gender for Character"
+  preferred_gender_placeholder: "Unisex"
+  preferred_gender_help: "Select the preferred gender for this character (e.g., Male, Female, or leave blank for any gender)"
+  tag: "Tags defining character gameplay"
+faction_lbl: 'Faction'
+faction:
+  name: "Unique Faction Name"
+  description: "Faction Description"
+invitation:
+  name: "Name"
+  valid_to: "Invitation code valid to"
+  role: "Role"
+  character: "Choose a character..."
+  is_reusable: "Reusable"
+recruitment:
+  number: "Required number"
+  type: "Type"
+  notes: "Notes"
+proposal:
+  character: "Character"
+  comment: "Comment"
+mapping:
+  spreadsheet:
+    sheet_name: "Spreadsheet Name"
+    end_column: "End Column"
+    starting_row: "Starting Row"
+  document:
+larp:
+  create: "Create new DRAFT Core"
+  name: "Name"
+  description: "Description"
+  location: "Location"
+  start_date: "Start Date"
+  end_date: "End Date"
+  integrations: "Integrations"
+  invitations: "Invitations"
+  story: "Story"
+save_filter_name: "Filter name"
+quest:
+  name: "Unique Quest Name"
+  description: "Quest Description"
+  thread: "Assign to Thread"
+  factions: "Factions involved in quest"
+  characters: "Characters involved in quest"
+  tags: "Tags"
+thread:
+  name: "Unique Thread Name"
+  description: "Thread Description"
+  factions: "Factions involved in thread"
+  characters: "Characters involved in thread"
+  tags: "Tags"
+  choose_faction: "Choose a faction..."
+relation:
+  name: "Relation Name"
+  description: "Description of the relation"
+  type: "Relation Type"
+  fromType: "Type of owning side of relation"
+  from: "Relation Owner"
+  toType: "Type of target side of relation"
+  to: "Related"
+external_reference:
+  name: "Name"
+  mapping_type: "Mapping Type"
+  reference_type: "Type"
+  url: "URL"
+  toType: "Target Type"
+place:
+  name: "Unique Place Name"
+  description: "Place Description"
+item:
+  name: "Unique Item Name"
+  description: "Item Description"
+  is_crafted: "Crafted"
+  is_purchased: "Purchased"
+  quantity: "Quantity"
+  cost: "Cost"
+tag:
+  name: "Tag Name"
+  description: "Tag Description"
+  target: "Target"
+event:
+  name: "Event Name"
+  description: "Event Description"
+  place: "Place"
+  choose_place: "Choose a place..."
+  factions: "Factions involved in event"
+  characters: "Characters involved in event"
+  tags: "Tags"
+  start_time: 'Start Time'
+  end_time: 'End Time'
+  choose_faction: 'Choose a faction...'
+kanban:
+  title: "Task title"
+  description: "Task description"
+  assigned_to: "Assigned to"
+  priority: "Priority"
+  due_date: "Due date"
+  unassigned: "Unassigned"
+  visibility: "Visibility"
+contact_email: 'Contact email'
+favourite_style: 'Favourite play style'
+triggers: 'Triggers / things to avoid'
+priority: 'Priority'
+justification: 'Justification'
+visual: 'Visual ideas'
+incident:
+  report_code: "Participant code"
+  description: "Describe what happened"
+  allow_feedback: "I want feedback"
+  contact_accused: "Allow contacting accused"
+  allow_mediator: "Allow mediator"
+  stay_anonymous: "Stay anonymous"
+contact_email_help: "Alternative email for this application (optional)"
+favourite_style_help: "Describe your preferred roleplay style, themes you enjoy, etc."
+preferred_tags: "Preferred Tags"
+preferred_tags_help: "Select tags that represent themes or elements you'd like to see in your character"
+unwanted_tags: "Tags to Avoid"
+unwanted_tags_help: "Select tags that represent themes or elements you'd prefer to avoid"
+character_choices: "Character Preferences"
+character_choices_help: "Drag and drop to reorder your character preferences by priority"
+select_tags: "Select tags..."
+participant:
   user: "User"
-  filter_tags: "Filter by Tags"
-  game_map:
-    name: "Map Name"
-    name_placeholder: "Enter map name (e.g., Game Venue, Forest Area)"
-    description: "Description"
-    description_placeholder: "Describe this map and its purpose"
-    image_file: "Map Image"
-    image_file_help: "Upload an image of the venue/area (JPG, PNG, GIF, WEBP - max 10MB)"
-    image_file_invalid: "Please upload a valid image file (JPG, PNG, GIF, WEBP)"
-    grid_rows: "Grid Rows"
-    grid_rows_help: "Number of horizontal rows in the grid (1-100)"
-    grid_columns: "Grid Columns"
-    grid_columns_help: "Number of vertical columns in the grid (1-100)"
-    grid_opacity: "Grid Opacity"
-    grid_opacity_help: "Transparency of the grid overlay (0.0 = invisible, 1.0 = fully visible)"
-    grid_visible: "Show Grid"
-    grid_visible_help: "Toggle grid visibility on the map"
-  map_location:
-    name: "Location Name"
-    name_placeholder: "Enter location name (e.g., Main Hall, Forest Clearing)"
-    grid_coordinates: "Grid Coordinates"
-    grid_coordinates_help: "Click on grid cells in the map above to select this location's area"
-    type: "Location Type"
-    type_placeholder: "Select location type..."
-    color: "Location Color"
-    color_help: "Color used to mark this location on the map"
-    capacity: "Capacity"
-    capacity_help: "Maximum number of people this location can hold (optional)"
-    place: "Linked Story Place"
-    place_placeholder: "Link to existing story place (optional)"
-    place_help: "Associate this map location with a story place entity"
-    description: 'Click in grid to select location'
-    description_placeholder: "Describe this location and its purpose"
+  role: "Role"
+  character: "Character"
+sort_by: "Sort by"
+default_sort: "Default sorting"
+sort:
+  character_title: "Character title"
+  priority: "Priority"
+  vote_score: "Vote score"
+  ascending: "Ascending"
+  descending: "Descending"
+sort_order: "Sort order"
+user: "User"
+filter_tags: "Filter by Tags"
 
+game_map:
+  name: "Map Name"
+  name_placeholder: "Enter map name (e.g., Game Venue, Forest Area)"
+  description: "Description"
+  description_placeholder: "Describe this map and its purpose"
+  image_file: "Map Image"
+  image_file_help: "Upload an image of the venue/area (JPG, PNG, GIF, WEBP - max 10MB)"
+  image_file_invalid: "Please upload a valid image file (JPG, PNG, GIF, WEBP)"
+  grid_rows: "Grid Rows"
+  grid_rows_help: "Number of horizontal rows in the grid (1-100)"
+  grid_columns: "Grid Columns"
+  grid_columns_help: "Number of vertical columns in the grid (1-100)"
+  grid_opacity: "Grid Opacity"
+  grid_opacity_help: "Transparency of the grid overlay (0.0 = invisible, 1.0 = fully visible)"
+  grid_visible: "Show Grid"
+  grid_visible_help: "Toggle grid visibility on the map"
+
+map_location:
+  name: "Location Name"
+  name_placeholder: "Enter location name (e.g., Main Hall, Forest Clearing)"
+  grid_coordinates: "Grid Coordinates"
+  grid_coordinates_help: "Click on grid cells in the map above to select this location's area"
+  type: "Location Type"
+  type_placeholder: "Select location type..."
+  color: "Location Color"
+  color_help: "Color used to mark this location on the map"
+  capacity: "Capacity"
+  capacity_help: "Maximum number of people this location can hold (optional)"
+  place: "Linked Story Place"
+  place_placeholder: "Link to existing story place (optional)"
+  place_help: "Associate this map location with a story place entity"
+  description: 'Click in grid to select location'
+  description_placeholder: "Describe this location and its purpose"
+
+
+# Event Planner
+planning_resource:
+  name: 'Resource Name'
+  name_placeholder: 'e.g., NPC Guard #1'
+  type: 'Resource Type'
+  description: 'Description'
+  quantity: 'Quantity Available'
+  shareable: 'Shareable Resource'
+  shareable_help: 'Allow multiple simultaneous bookings'
+  available_from: 'Available From'
+  available_until: 'Available Until'
+  character: 'Linked Character'
+  character_placeholder: 'Select character (optional)'
+  item: 'Linked Item'
+  item_placeholder: 'Select item (optional)'
+  participant: 'Linked Participant'
+  participant_placeholder: 'Select participant (optional)'
+scheduled_event:
+  title: 'Event Title'
+  title_placeholder: 'e.g., Tavern Brawl Scene'
+  description: 'Description'
+  start_time: 'Start Time'
+  end_time: 'End Time'
+  setup_minutes: 'Setup Time (minutes)'
+  setup_minutes_help: 'Preparation time before event'
+  cleanup_minutes: 'Cleanup Time (minutes)'
+  cleanup_minutes_help: 'Teardown time after event'
+  status: 'Status'
+  visible_to_players: 'Visible to Players'
+  organizer_notes: 'Organizer Notes'
+  organizer_notes_help: 'Internal notes (not visible to players)'
+  location: 'Location'
+  location_placeholder: 'Select location (optional)'
+  quest: 'Related Quest'
+  quest_placeholder: 'Link to quest (optional)'
+  thread: 'Related Thread'
+  thread_placeholder: 'Link to thread (optional)'
+  event: 'Related Story Event'
+  event_placeholder: 'Link to story event (optional)'
+filter:
+  resource:
+    name: 'Resource Name'
+    name_placeholder: 'Search by name...'
+    type: 'Resource Type'
+    shareable: 'Availability'
+  event:
+    title: 'Event Title'
+    title_placeholder: 'Search by title...'
+    status: 'Status'
+    location: 'Location'
+    start_date: 'Start Date'
+    end_date: 'End Date'
+  all_types: 'All Types'
+  all_statuses: 'All Statuses'
+  all_locations: 'All Locations'
+  all: 'All'
+  shareable: 'Shareable Only'
+  exclusive: 'Exclusive Only'
 
 enum:
   location_type:

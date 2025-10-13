@@ -176,8 +176,12 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.filter_applications'|trans }}</h6>
+                    <a href="{{ path('backoffice_larp_applications_suggest_allocation', {larp: larp.id}) }}"
+                       class="btn btn-primary">
+                        <i class="bi bi-magic"></i> {{ 'backoffice.larp.applications.suggest_allocation'|trans }}
+                    </a>
                 </div>
                 <div class="card-body p-0">
                     {% include 'includes/filter_form.html.twig' with { form: filterForm, larp: larp } %}
@@ -191,38 +195,59 @@
                                         <th>{{ 'backoffice.larp.applications.status'|trans }}</th>
                                         <th>{{ 'backoffice.larp.applications.character_choices'|trans }}</th>
                                         <th>{{ 'backoffice.larp.applications.applied'|trans }}</th>
-                                        <th>{{ 'common.actions'|trans }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for application in applications %}
                                         <tr>
-                                            <td>{{ application.contactEmail }}</td>
+                                            <td>
+                                                <a href="{{ path('backoffice_larp_applications_view', {larp: larp.id, application: application.id}) }}"
+                                                   class="text-decoration-none">
+                                                    {{ application.contactEmail }}
+                                                </a>
+                                            </td>
                                             <td>
                                                 {% if application.status is defined %}
-                                                    <span class="badge badge-{{ application.status == 'pending' ? 'warning' : (application.status == 'approved' ? 'success' : 'danger') }}">
+                                                    {% set statusClass = 'secondary' %}
+                                                    {% if application.status.value == 'new' %}
+                                                        {% set statusClass = 'primary' %}
+                                                    {% elseif application.status.value == 'consider' %}
+                                                        {% set statusClass = 'info' %}
+                                                    {% elseif application.status.value == 'offered' %}
+                                                        {% set statusClass = 'warning' %}
+                                                    {% elseif application.status.value == 'confirmed' %}
+                                                        {% set statusClass = 'success' %}
+                                                    {% elseif application.status.value == 'accepted' %}
+                                                        {% set statusClass = 'success' %}
+                                                    {% elseif application.status.value == 'declined' %}
+                                                        {% set statusClass = 'danger' %}
+                                                    {% elseif application.status.value == 'rejected' %}
+                                                        {% set statusClass = 'danger' %}
+                                                    {% endif %}
+                                                    <span class="badge bg-{{ statusClass }}">
                                                         {{ application.status.value|upper }}
                                                     </span>
                                                 {% else %}
-                                                    <span class="badge badge-secondary">UNKNOWN</span>
+                                                    <span class="badge bg-secondary">UNKNOWN</span>
                                                 {% endif %}
                                             </td>
                                             <td>
                                                 {% for choice in application.choices %}
-                                                    <span class="badge badge-info">{{ choice.character.title }}</span>
+                                                    <span class="badge bg-info me-1">
+                                                        {{ choice.character.title }}
+                                                        <span class="badge bg-light text-dark ms-1">#{{ choice.priority }}</span>
+                                                    </span>
                                                 {% endfor %}
                                             </td>
                                             <td>{{ application.createdAt|date('Y-m-d H:i') }}</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary">{{ 'backoffice.larp.applications.view'|trans }}</a>
-                                                <a href="#" class="btn btn-sm btn-success">{{ 'backoffice.larp.applications.approve'|trans }}</a>
-                                                <a href="#" class="btn btn-sm btn-danger">{{ 'backoffice.larp.applications.reject'|trans }}</a>
-                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+
+                        {# Pagination #}
+                        {% include 'includes/pagination.html.twig' with { pagination: pagination } %}
                     {% else %}
                         <p class="text-muted">{{ 'common.empty_list'|trans }}</p>
                     {% endif %}

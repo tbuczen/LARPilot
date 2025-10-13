@@ -2,7 +2,7 @@
 
 namespace App\Domain\Account\UseCase\RegisterUser;
 
-use App\Entity\Enum\SocialAccountProvider;
+use App\Domain\Integrations\Entity\Enum\SocialAccountProvider;
 
 readonly class RegisterUserCommand
 {

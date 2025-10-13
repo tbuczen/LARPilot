@@ -43,7 +43,6 @@
                 {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
             {% endif %}
 
-            {# Content based on view type #}
             {% if items is not empty %}
                 {% if view == 'characters' %}
                     {# Characters needing threads #}

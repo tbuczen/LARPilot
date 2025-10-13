@@ -2,9 +2,9 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\StoryObject\Character;
-use App\Entity\StoryObjectLogEntry;
-use App\Service\StoryObject\StoryObjectVersionService;
+use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Entity\StoryObjectLogEntry;
+use App\Domain\StoryObject\Service\StoryObjectVersionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
 use PHPUnit\Framework\TestCase;

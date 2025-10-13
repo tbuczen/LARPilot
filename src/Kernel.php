@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Helper\Logger;
+use App\Domain\Core\Service\Helper\Logger;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 

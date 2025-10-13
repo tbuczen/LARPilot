@@ -11,7 +11,7 @@
 
         <div class="card mt-4">
             <div class="card-header">
-                <h2>{{ provider.displayName() }}</h2>
+                <h2>{{ provider.getLabel() }}</h2>
             </div>
             <div class="card-body">
                 <p>{{ provider.descriptionKey() is not null ? provider.descriptionKey()|trans : '' }}</p>

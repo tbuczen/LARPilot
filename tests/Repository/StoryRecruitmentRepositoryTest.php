@@ -2,8 +2,7 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\StoryObject\StoryRecruitment;
-use App\Repository\StoryObject\StoryRecruitmentRepository;
+use App\Domain\StoryMarketplace\Entity\StoryRecruitment;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +17,7 @@ class StoryRecruitmentRepositoryTest extends TestCase
         $em->expects($this->once())->method('flush');
 
         $registry = $this->createMock(ManagerRegistry::class);
-        $repository = new class($registry, $em) extends StoryRecruitmentRepository {
+        $repository = new class($registry, $em) extends \App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository {
             public function __construct(ManagerRegistry $registry, private readonly EntityManagerInterface $em)
             {
                 parent::__construct($registry);

@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Domain\Integrations\Form\Models;
+
+use App\Domain\Integrations\Entity\Enum\ResourceType;
+use App\Domain\Integrations\Entity\ObjectFieldMapping;
+
+class SpreadsheetMappingModel extends ExternalResourceMappingModel
+{
+    public function __construct(
+        public ?ResourceType $mappingType = ResourceType::CHARACTER_LIST,
+        public ?int          $startingRow = 2,
+        public ?string       $sheetName = null,
+        public ?string       $endColumn = null,
+        /** @var array<string, string> */
+        public array         $mappings = []
+    ) {
+        parent::__construct($mappingType, $mappings);
+    }
+
+    public static function fromEntity(?ObjectFieldMapping $mapping): self
+    {
+        if (!$mapping instanceof ObjectFieldMapping) {
+            return new self();
+        }
+
+        $metaConfiguration = $mapping->getMetaConfiguration();
+        $mappingConfiguration = $mapping->getMappingConfiguration();
+        return new self(
+            $mapping->getFileType(),
+            $metaConfiguration['startingRow'] ?? null,
+            $metaConfiguration['sheetName'] ?? null,
+            $metaConfiguration['endColumn'] ?? null,
+            $mappingConfiguration ?? null
+        );
+    }
+}

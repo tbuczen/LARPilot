@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller\Backoffice;
 
-use App\Entity\Enum\LarpStageStatus;
-use App\Entity\Larp;
-use App\Entity\LarpParticipant;
-use App\Entity\User;
+use App\Domain\Account\Entity\User;
+use App\Domain\Core\Entity\Enum\LarpStageStatus;
+use App\Domain\Core\Entity\Larp;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route; // adjust to your User entity FQCN
-use Symfony\Component\Routing\RouteCollection; // adjust to your Larp entity FQCN
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
+
+// adjust to your User entity FQCN
+// adjust to your Core entity FQCN
 
 final class BackofficeAccessHappyPathTest extends WebTestCase
 {

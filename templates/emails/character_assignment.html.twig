@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border: 1px solid #dee2e6;
+        }
+        .character-box {
+            background-color: white;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .button-confirm {
+            background-color: #28a745;
+            color: white;
+        }
+        .button-decline {
+            background-color: #dc3545;
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ 'email.character_assignment.header'|trans }}</h1>
+    </div>
+
+    <div class="content">
+        <p>{{ 'email.character_assignment.greeting'|trans({'email': application.contactEmail}) }},</p>
+
+        <p>{{ 'email.character_assignment.intro'|trans({'larp': larp.title}) }}</p>
+
+        <div class="character-box">
+            <h2 style="margin-top: 0;">{{ characterTitle }}</h2>
+            <p><strong>{{ 'email.character_assignment.larp'|trans }}:</strong> {{ larp.title }}</p>
+            {% if larp.startDate %}
+                <p><strong>{{ 'email.character_assignment.date'|trans }}:</strong> {{ larp.startDate|date('Y-m-d') }}</p>
+            {% endif %}
+            {% if larp.location %}
+                <p><strong>{{ 'email.character_assignment.location'|trans }}:</strong> {{ larp.location.name }}</p>
+            {% endif %}
+        </div>
+
+        <p>{{ 'email.character_assignment.action_required'|trans }}</p>
+
+        <div class="button-container">
+            <a href="{{ confirmUrl }}" class="button button-confirm">
+                ✓ {{ 'email.character_assignment.confirm_button'|trans }}
+            </a>
+            <a href="{{ declineUrl }}" class="button button-decline">
+                ✗ {{ 'email.character_assignment.decline_button'|trans }}
+            </a>
+        </div>
+
+        <div class="warning">
+            <strong>{{ 'email.character_assignment.important'|trans }}:</strong>
+            {{ 'email.character_assignment.response_deadline'|trans }}
+        </div>
+
+        <p>{{ 'email.character_assignment.questions'|trans }}</p>
+
+        <p>{{ 'email.character_assignment.closing'|trans }}</p>
+    </div>
+
+    <div class="footer">
+        <p>{{ 'email.character_assignment.footer'|trans }}</p>
+        <p>{{ 'email.character_assignment.powered_by'|trans }} <strong>LARPilot</strong></p>
+    </div>
+</body>
+</html>

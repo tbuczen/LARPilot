@@ -2,22 +2,22 @@
 
 namespace App\DataFixtures\Dev;
 
-use App\Entity\Enum\CharacterType;
-use App\Entity\Enum\Gender;
-use App\Entity\Enum\LarpCharacterSystem;
-use App\Entity\Enum\LarpSetting;
-use App\Entity\Enum\LarpStageStatus;
-use App\Entity\Enum\LarpType;
-use App\Entity\Enum\RelationType;
-use App\Entity\Enum\TargetType;
-use App\Entity\Enum\UserRole;
-use App\Entity\Larp;
-use App\Entity\LarpParticipant;
-use App\Entity\Location;
-use App\Entity\StoryObject\Character;
-use App\Entity\StoryObject\Relation;
-use App\Entity\Tag;
-use App\Entity\User;
+use App\Domain\Account\Entity\User;
+use App\Domain\Core\Entity\Enum\Gender;
+use App\Domain\Core\Entity\Enum\LarpCharacterSystem;
+use App\Domain\Core\Entity\Enum\LarpSetting;
+use App\Domain\Core\Entity\Enum\LarpStageStatus;
+use App\Domain\Core\Entity\Enum\LarpType;
+use App\Domain\Core\Entity\Enum\ParticipantRole;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\LarpParticipant;
+use App\Domain\Core\Entity\Location;
+use App\Domain\Core\Entity\Tag;
+use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Entity\Enum\CharacterType;
+use App\Domain\StoryObject\Entity\Enum\RelationType;
+use App\Domain\StoryObject\Entity\Enum\TargetType;
+use App\Domain\StoryObject\Entity\Relation;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -85,10 +85,10 @@ final class DevSampleFixtures extends Fixture
         $manager->persist($larpDraft);
 
         // LarpParticipants: super admin as organizer for both; regular user as non-organizer for one
-        $adminP1 = $this->participant($superAdmin, $larpPublished, [UserRole::ORGANIZER]);
-        $adminP2 = $this->participant($superAdmin, $larpDraft, [UserRole::ORGANIZER]);
-        $userP1 = $this->participant($regularUser, $larpPublished, [UserRole::PLAYER]);
-        $userP2 = $this->participant($regularUser, $larpDraft, [UserRole::NPC_SHORT]);
+        $adminP1 = $this->participant($superAdmin, $larpPublished, [ParticipantRole::ORGANIZER]);
+        $adminP2 = $this->participant($superAdmin, $larpDraft, [ParticipantRole::ORGANIZER]);
+        $userP1 = $this->participant($regularUser, $larpPublished, [ParticipantRole::PLAYER]);
+        $userP2 = $this->participant($regularUser, $larpDraft, [ParticipantRole::NPC_SHORT]);
 
         foreach ([$adminP1, $adminP2, $userP1, $userP2] as $p) {
             $manager->persist($p);
@@ -196,7 +196,7 @@ final class DevSampleFixtures extends Fixture
             CharacterType::GameMaster,
             CharacterType::GenericNpc,
         ];
-        $genders = [Gender::Male, Gender::Female, Gender::Other, Gender::Unspecified];
+        $genders = [Gender::Male, Gender::Female, Gender::Other];
 
         $chars = [];
         for ($i = 1; $i <= $count; $i++) {

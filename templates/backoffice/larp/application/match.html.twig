@@ -18,110 +18,95 @@
         </div>
     </div>
 
-    {% for data in choices %}
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="mb-0">
-                    <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id, character: data.character.id }) }}" class="text-decoration-none">
-                        {{ data.character.title }}
-                    </a>
-                </h3>
+    {% if characterMatches is empty %}
+        <div class="card-body">
+            <div class="alert alert-info mb-0">
+                {{ 'common.empty_list'|trans }}
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
+        </div>
+    {% else %}
+        <div class="card-body">
+            {% for characterMatch in characterMatches %}
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <a href="{{ path('backoffice_larp_story_character_modify', {'larp': larp.id, 'character': characterMatch.characterId}) }}" class="text-black text-decoration-none">
+                            {{ characterMatch.characterTitle }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <thead>
                             <tr>
-                                <th>{{ 'common.user'|trans }}</th>
+                                <th>{{ 'backoffice.larp.applications.applicant'|trans }}</th>
                                 <th>{{ 'public.larp.application.priority'|trans }}</th>
                                 <th>{{ 'public.larp.application.justification'|trans }}</th>
-                                <th>{{ 'public.larp.application.visual'|trans }}</th>
-                                <th>{{ 'backoffice.larp.applications.vote_score'|trans }}</th>
-                                <th>{{ 'backoffice.larp.applications.vote_details'|trans }}</th>
+                                <th>{{ 'backoffice.common.votes'|trans }}</th>
                                 <th>{{ 'common.actions'|trans }}</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for choice in data.choices %}
-                                {% set choiceId = choice.id.toRfc4122() %}
-                                {% set userVote = userVotes[choiceId] ?? null %}
-                                {% set stats = voteStats[choiceId] ?? {upvotes: 0, downvotes: 0, total: 0} %}
+                            </thead>
+                            <tbody>
+                            {% for choice in characterMatch.choices %}
                                 <tr>
-                                    <td>{{ choice.application.user.username }} - {{ choice.application.contactEmail }}</td>
+                                    <td>{{ choice.applicantEmail }}</td>
                                     <td>
-                                        <span class="badge badge-{{ choice.priority == 1 ? 'success' : (choice.priority == 2 ? 'warning' : 'info') }}">
-                                            {{ choice.priority }}
-                                        </span>
+                                        <span class="badge bg-secondary">{{ choice.priority }}</span>
                                     </td>
+                                    <td>{{ choice.justification|default('-') }}</td>
                                     <td>
-                                        {% if choice.justification %}
-                                            <div class="text-truncate" style="max-width: 200px;" title="{{ choice.justification }}">
-                                                {{ choice.justification }}
-                                            </div>
-                                        {% else %}
-                                            <span class="text-muted">-</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if choice.visual %}
-                                            <div class="text-truncate" style="max-width: 200px;" title="{{ choice.visual }}">
-                                                {{ choice.visual }}
-                                            </div>
-                                        {% else %}
-                                            <span class="text-muted">-</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge badge-{{ stats.total > 0 ? 'success' : (stats.total < 0 ? 'danger' : 'secondary') }} me-2">
-                                                {{ stats.total }}
+                                            <span class="badge bg-{{ choice.voteStats.total > 0 ? 'success' : (choice.voteStats.total < 0 ? 'danger' : 'secondary') }}">
+                                                {{ choice.voteStats.total }}
                                             </span>
-                                            <small class="text-muted">
-                                                <i class="bi bi-arrow-up-circle text-success"></i> {{ stats.upvotes }}
-                                                <i class="bi bi-arrow-down-circle text-danger ms-1"></i> {{ stats.downvotes }}
-                                            </small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-info" 
-                                                onclick="showVoteDetails('{{ choiceId }}')"
-                                                title="{{ 'backoffice.larp.applications.view_vote_details'|trans }}">
-                                            <i class="bi bi-info-circle"></i>
-                                        </button>
+                                        <small class="text-muted">
+                                            (↑{{ choice.voteStats.upvotes }} ↓{{ choice.voteStats.downvotes }})
+                                        </small>
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-sm btn-{{ userVote and userVote.vote > 0 ? 'success' : 'outline-success' }}" 
-                                                    onclick="openVoteModal('{{ choiceId }}', 1, '{{ choice.character.title }}', '{{ choice.application.contactEmail }}')"
-                                                    title="{{ 'backoffice.larp.applications.upvote'|trans }}">
-                                                <i class="bi bi-arrow-up-circle"></i>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-success {{ userVotes[choice.id] is defined and userVotes[choice.id].vote > 0 ? 'active' : '' }}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#voteModal"
+                                                    data-choice-id="{{ choice.id }}"
+                                                    data-character="{{ choice.characterTitle }}"
+                                                    data-applicant="{{ choice.applicantEmail }}"
+                                                    data-vote="1">
+                                                <i class="bi bi-hand-thumbs-up"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-{{ userVote and userVote.vote < 0 ? 'danger' : 'outline-danger' }}" 
-                                                    onclick="openVoteModal('{{ choiceId }}', -1, '{{ choice.character.title }}', '{{ choice.application.contactEmail }}')"
-                                                    title="{{ 'backoffice.larp.applications.downvote'|trans }}">
-                                                <i class="bi bi-arrow-down-circle"></i>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-danger {{ userVotes[choice.id] is defined and userVotes[choice.id].vote < 0 ? 'active' : '' }}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#voteModal"
+                                                    data-choice-id="{{ choice.id }}"
+                                                    data-character="{{ choice.characterTitle }}"
+                                                    data-applicant="{{ choice.applicantEmail }}"
+                                                    data-vote="-1">
+                                                <i class="bi bi-hand-thumbs-down"></i>
+                                            </button>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-info"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#voteDetailsModal"
+                                                    data-choice-id="{{ choice.id }}"
+                                                    data-character="{{ choice.characterTitle }}"
+                                                    data-applicant="{{ choice.applicantEmail }}">
+                                                <i class="bi bi-info-circle"></i>
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </div>
-    {% else %}
-        <div class="alert alert-info">
-            {{ 'common.empty_list'|trans }}
-        </div>
-    {% endfor %}
-
-    {% if pagination.getTotalItemCount > 0 %}
-        <!-- Pagination -->
-        <div class="d-flex justify-content-center mt-4">
-            {{ knp_pagination_render(pagination) }}
+            {% endfor %}
         </div>
     {% endif %}
+
+
+    {% include 'includes/pagination.html.twig' with { pagination: pagination } %}
 
     <!-- Vote Modal -->
     <div class="modal fade" id="voteModal" tabindex="-1" aria-labelledby="voteModalLabel" aria-hidden="true">
@@ -184,65 +169,79 @@
     </div>
 
     <script>
-        function openVoteModal(choiceId, voteValue, character, applicant) {
-            document.getElementById('voteForm').action = `{{ path('backoffice_larp_applications_vote', {'larp': larp.id, 'choice': '__CHOICE_ID__'}) }}`.replace('__CHOICE_ID__', choiceId);
-            document.getElementById('voteValue').value = voteValue;
-            document.getElementById('voteCharacter').textContent = character;
-            document.getElementById('voteApplicant').textContent = applicant;
-            
-            const voteType = document.getElementById('voteType');
-            if (voteValue > 0) {
+        const voteModal = document.getElementById('voteModal');
+        voteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const choiceId = button.getAttribute('data-choice-id');
+            const character = button.getAttribute('data-character');
+            const applicant = button.getAttribute('data-applicant');
+            const voteValue = button.getAttribute('data-vote');
+
+            // Update form action
+            voteModal.querySelector('#voteForm').action =
+                `{{ path('backoffice_larp_applications_vote', {'larp': larp.id, 'choice': '__CHOICE_ID__'}) }}`
+                    .replace('__CHOICE_ID__', choiceId);
+
+            // Update form fields
+            voteModal.querySelector('#voteValue').value = voteValue;
+            voteModal.querySelector('#voteCharacter').textContent = character;
+            voteModal.querySelector('#voteApplicant').textContent = applicant;
+            voteModal.querySelector('#voteJustification').value = '';
+
+            // Update vote type badge
+            const voteType = voteModal.querySelector('#voteType');
+            if (parseInt(voteValue) > 0) {
                 voteType.textContent = '{{ 'backoffice.larp.applications.upvote'|trans }}';
                 voteType.className = 'badge bg-success';
             } else {
                 voteType.textContent = '{{ 'backoffice.larp.applications.downvote'|trans }}';
                 voteType.className = 'badge bg-danger';
             }
-            
-            const modal = new bootstrap.Modal(document.getElementById('voteModal'));
-            modal.show();
-        }
-        
-        function showVoteDetails(choiceId) {
-            fetch(`{{ path('backoffice_larp_applications_vote_details', {'larp': larp.id, 'choice': '__CHOICE_ID__'}) }}`.replace('__CHOICE_ID__', choiceId))
+        });
+
+        const voteDetailsModal = document.getElementById('voteDetailsModal');
+        voteDetailsModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const choiceId = button.getAttribute('data-choice-id');
+            const character = button.getAttribute('data-character');
+            const applicant = button.getAttribute('data-applicant');
+
+            voteDetailsModal.querySelector('#detailsCharacter').textContent = character;
+            voteDetailsModal.querySelector('#detailsApplicant').textContent = applicant;
+
+            const voteList = voteDetailsModal.querySelector('#voteDetailsList');
+            voteList.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
+
+            fetch(`{{ path('backoffice_larp_applications_vote_details', {'larp': larp.id, 'choice': '__CHOICE_ID__'}) }}`
+                .replace('__CHOICE_ID__', choiceId))
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('detailsCharacter').textContent = data.character;
-                    document.getElementById('detailsApplicant').textContent = data.applicant;
-                    
-                    const voteList = document.getElementById('voteDetailsList');
-                    voteList.innerHTML = '';
-                    
                     if (data.votes.length === 0) {
                         voteList.innerHTML = '<div class="alert alert-info">{{ 'backoffice.larp.applications.no_votes_yet'|trans }}</div>';
-                    } else {
-                        data.votes.forEach(vote => {
-                            const voteItem = document.createElement('div');
-                            voteItem.className = 'card mb-2';
-                            voteItem.innerHTML = `
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <strong>${vote.user}</strong>
-                                            <span class="badge ${vote.isUpvote ? 'bg-success' : 'bg-danger'} ms-2">
-                                                ${vote.isUpvote ? '{{ 'backoffice.larp.applications.upvote'|trans }}' : '{{ 'backoffice.larp.applications.downvote'|trans }}'}
-                                            </span>
-                                        </div>
-                                        <small class="text-muted">${vote.createdAt}</small>
-                                    </div>
-                                    ${vote.justification ? `<div class="mt-2"><small>${vote.justification}</small></div>` : ''}
-                                </div>
-                            `;
-                            voteList.appendChild(voteItem);
-                        });
+                        return;
                     }
-                    
-                    const modal = new bootstrap.Modal(document.getElementById('voteDetailsModal'));
-                    modal.show();
+
+                    voteList.innerHTML = data.votes.map(vote => `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <strong>${vote.user}</strong>
+                                        <span class="badge ${vote.isUpvote ? 'bg-success' : 'bg-danger'} ms-2">
+                                            ${vote.isUpvote ? '{{ 'backoffice.larp.applications.upvote'|trans }}' : '{{ 'backoffice.larp.applications.downvote'|trans }}'}
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">${vote.createdAt}</small>
+                                </div>
+                                ${vote.justification ? `<div class="mt-2"><small>${vote.justification}</small></div>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
                 })
                 .catch(error => {
                     console.error('Error fetching vote details:', error);
+                    voteList.innerHTML = '<div class="alert alert-danger">{{ 'common.error'|trans }}</div>';
                 });
-        }
+        });
     </script>
 {% endblock %}

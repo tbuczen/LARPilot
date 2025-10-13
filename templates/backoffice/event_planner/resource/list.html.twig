@@ -1,0 +1,113 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block title %}{{ 'backoffice.event_planner.resource.list'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_dashboard', { larp: larp.id }) }}">{{ larp.title }}</a></li>
+    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
+    <li class="breadcrumb-item active">{{ 'backoffice.event_planner.resource.list'|trans }}</li>
+{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'backoffice.event_planner.resource.list'|trans }}</h2>
+                <div class="d-flex gap-2">
+                    <a href="{{ path('backoffice_event_planner_resource_modify', { larp: larp.id }) }}"
+                       class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> {{ 'common.create'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {# Filter form #}
+            {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+
+            {% if resources is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                {% include 'includes/sort_th.html.twig' with {
+                                    field: 'name',
+                                    label: 'common.name'|trans
+                                } %}
+                                {% include 'includes/sort_th.html.twig' with {
+                                    field: 'type',
+                                    label: 'backoffice.event_planner.resource.type'|trans
+                                } %}
+                                <th>{{ 'backoffice.event_planner.resource.quantity'|trans }}</th>
+                                <th>{{ 'backoffice.event_planner.resource.shareable'|trans }}</th>
+                                <th>{{ 'backoffice.event_planner.resource.availability'|trans }}</th>
+                                <th>{{ 'common.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resource in resources %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('backoffice_event_planner_resource_modify', {
+                                            larp: larp.id, resource: resource.id
+                                        }) }}">
+                                            <strong>{{ resource.name }}</strong>
+                                        </a>
+                                        {% if resource.linkedEntityTitle %}
+                                            <br><small class="text-muted">{{ resource.linkedEntityTitle }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <i class="{{ resource.type.icon }}"></i> {{ resource.type.label }}
+                                    </td>
+                                    <td>{{ resource.quantity }}</td>
+                                    <td>
+                                        {% if resource.shareable %}
+                                            <span class="badge bg-success">{{ 'common.yes'|trans }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ 'common.no'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if resource.availableFrom or resource.availableUntil %}
+                                            <small>
+                                                {% if resource.availableFrom %}
+                                                    {{ 'backoffice.event_planner.resource.from'|trans }}: {{ resource.availableFrom|date('Y-m-d H:i') }}<br>
+                                                {% endif %}
+                                                {% if resource.availableUntil %}
+                                                    {{ 'backoffice.event_planner.resource.until'|trans }}: {{ resource.availableUntil|date('Y-m-d H:i') }}
+                                                {% endif %}
+                                            </small>
+                                        {% else %}
+                                            <span class="text-muted">{{ 'backoffice.event_planner.resource.always_available'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal"
+                                                data-item-id="{{ resource.id }}"
+                                                data-item-name="{{ resource.name }}"
+                                                data-delete-url="{{ path('backoffice_event_planner_resource_delete', {
+                                                    larp: larp.id, resource: resource.id
+                                                }) }}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'includes/pagination.html.twig' with { pagination: resources } %}
+            {% else %}
+                <div class="p-4">
+                    <p class="text-muted">{{ 'backoffice.event_planner.resource.empty_list'|trans }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'includes/delete_modal.html.twig' %}
+{% endblock %}

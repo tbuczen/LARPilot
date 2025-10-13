@@ -1,0 +1,102 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block title %}{{ 'backoffice.event_planner.event.list'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_dashboard', { larp: larp.id }) }}">{{ larp.title }}</a></li>
+    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
+    <li class="breadcrumb-item active">{{ 'backoffice.event_planner.event.list'|trans }}</li>
+{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'backoffice.event_planner.event.list'|trans }}</h2>
+                <div class="d-flex gap-2">
+                    <a href="{{ path('backoffice_event_planner_event_modify', { larp: larp.id }) }}"
+                       class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> {{ 'common.create'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+
+            {% if events is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                {% include 'includes/sort_th.html.twig' with {
+                                    field: 'title',
+                                    label: 'common.title'|trans
+                                } %}
+                                {% include 'includes/sort_th.html.twig' with {
+                                    field: 'startTime',
+                                    label: 'backoffice.event_planner.event.start_time'|trans
+                                } %}
+                                <th>{{ 'backoffice.event_planner.event.duration'|trans }}</th>
+                                <th>{{ 'backoffice.event_planner.event.location'|trans }}</th>
+                                <th>{{ 'common.status'|trans }}</th>
+                                <th>{{ 'common.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                                <tr {% if event.hasUnresolvedConflicts %}class="table-warning"{% endif %}>
+                                    <td>
+                                        <a href="{{ path('backoffice_event_planner_event_view', {
+                                            larp: larp.id, event: event.id
+                                        }) }}">
+                                            <strong>{{ event.title }}</strong>
+                                        </a>
+                                        {% if event.hasUnresolvedConflicts %}
+                                            <span class="badge bg-danger ms-2">
+                                                <i class="bi bi-exclamation-triangle"></i> {{ 'backoffice.event_planner.event.has_conflicts'|trans }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ event.startTime|date('Y-m-d H:i') }}</td>
+                                    <td>{{ event.durationMinutes }} {{ 'common.minutes'|trans }}</td>
+                                    <td>{{ event.location ? event.location.name : '-' }}</td>
+                                    <td>
+                                        <span class="badge {{ event.status.badgeClass }}">
+                                            {{ event.status.label }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('backoffice_event_planner_event_modify', {
+                                            larp: larp.id, event: event.id
+                                        }) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal"
+                                                data-item-id="{{ event.id }}"
+                                                data-item-name="{{ event.title }}"
+                                                data-delete-url="{{ path('backoffice_event_planner_event_delete', {
+                                                    larp: larp.id, event: event.id
+                                                }) }}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'includes/pagination.html.twig' with { pagination: events } %}
+            {% else %}
+                <div class="p-4">
+                    <p class="text-muted">{{ 'backoffice.event_planner.event.empty_list'|trans }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'includes/delete_modal.html.twig' %}
+{% endblock %}

@@ -2,12 +2,12 @@
 
 namespace App\Command;
 
-use App\Entity\Enum\UserRole;
-use App\Entity\Larp;
-use App\Entity\LarpApplication;
-use App\Entity\LarpParticipant;
-use App\Entity\StoryObject\Character;
-use App\Entity\User;
+use App\Domain\Account\Entity\User;
+use App\Domain\Application\Entity\LarpApplication;
+use App\Domain\Core\Entity\Enum\ParticipantRole;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\LarpParticipant;
+use App\Domain\StoryObject\Entity\Character;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -108,7 +108,7 @@ class SeedLarpFixturesCommand extends Command
     /**
      * Ensure exactly one participant per organizer role for the given LARP.
      *
-     * @return LarpParticipant[] keyed by role value
+     * @return \App\Domain\Core\Controller\Backoffice\LarpParticipant[] keyed by role value
      */
     private function ensureOrganizerParticipants(ObjectRepository $participantRepo, Larp $larp, array $users): array
     {
@@ -117,7 +117,7 @@ class SeedLarpFixturesCommand extends Command
         $picker = $this->userPicker($users);
         $result = [];
 
-        foreach (UserRole::getOrganizers() as $role) {
+        foreach (ParticipantRole::getOrganizers() as $role) {
             $roleValue = $role->value;
 
             if (isset($byRole[$roleValue])) {
@@ -156,7 +156,7 @@ class SeedLarpFixturesCommand extends Command
      * Ensure we have at least N player participants for this LARP.
      * Returns the full current list of player participants (existing + newly created).
      *
-     * @return LarpParticipant[]
+     * @return \App\Domain\Core\Controller\Backoffice\LarpParticipant[]
      */
     private function ensurePlayerParticipantsForCharactersCount(ObjectRepository $participantRepo, Larp $larp, array $users, int $requiredCount): array
     {
@@ -164,7 +164,7 @@ class SeedLarpFixturesCommand extends Command
             ->andWhere('p.larp = :larp')
             ->andWhere('JSONB_EXISTS(p.roles, :key) = TRUE') // or ->andWhere('JSONB_EXISTS(p.roles, :key)')
             ->setParameter('larp', $larp)
-            ->setParameter('key', UserRole::PLAYER->value)
+            ->setParameter('key', ParticipantRole::PLAYER->value)
             ->getQuery()
             ->getResult();
 
@@ -178,7 +178,7 @@ class SeedLarpFixturesCommand extends Command
             $p = new LarpParticipant();
             $p->setUser($picker());
             $p->setLarp($larp);
-            $p->setRoles([UserRole::PLAYER]);
+            $p->setRoles([ParticipantRole::PLAYER]);
             $this->em->persist($p);
             $existingPlayers[] = $p;
         }
@@ -266,11 +266,11 @@ class SeedLarpFixturesCommand extends Command
     /**
      * Build a map of role => existing participant, for the given LARP (first participant found with that role).
      *
-     * @return array<string,LarpParticipant>
+     * @return array<string,\App\Domain\Core\Controller\Backoffice\\App\Domain\Core\Entity\LarpParticipant>
      */
     private function getExistingRolesMap(ObjectRepository $participantRepo, Larp $larp): array
     {
-        /** @var LarpParticipant[] $all */
+        /** @var \App\Domain\Core\Controller\Backoffice\LarpParticipant[] $all */
         $all = $participantRepo->createQueryBuilder('p')
             ->andWhere('p.larp = :larp')
             ->setParameter('larp', $larp)

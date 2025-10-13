@@ -54,7 +54,7 @@ make rector-fix
 **ECS Rules Applied**:
 - PSR-12 coding standard
 - `NoUnusedImportsFixer`: Removes unused `use` statements
-- `FullyQualifiedStrictTypesFixer`: Replaces FQDN class references with imported classes (e.g., `\App\Entity\User` → `User` with proper import)
+- `FullyQualifiedStrictTypesFixer`: Replaces FQDN class references with imported classes (e.g., `\App\Domain\Account\Entity\User` → `User` with proper import)
 - `OrderedImportsFixer`: Sorts imports alphabetically (classes, functions, constants)
 - `BlankLineAfterNamespaceFixer`: Ensures blank line after namespace declaration
 
@@ -71,6 +71,43 @@ php bin/console doctrine:fixtures:load
 ```
 
 ## Architecture
+
+LARPilot follows a **Domain-Driven Design (DDD)** approach with modular architecture. The codebase is organized into domain-based namespaces under `src/Domain/`, with each domain being self-contained. See [`docs/DOMAIN_ARCHITECTURE.md`](docs/DOMAIN_ARCHITECTURE.md) for complete domain organization, boundaries, and migration strategy.
+
+**Key Domains**:
+- **Infrastructure** (Shared Kernel): Cross-cutting concerns, shared utilities, base classes
+- **Account**: User authentication and profile management
+- **Public**: Public-facing LARP discovery and character sheets
+- **Larp**: Core LARP event lifecycle (central aggregate)
+- **StoryObject**: Story elements (Character, Thread, Quest, Event, Faction, Item, Place, Relation)
+- **Application**: Player applications and character matching
+- **Participant**: LARP participant management (players, GMs, staff)
+- **StoryMarketplace**: Quest/thread recruitment system
+- **Kanban**: Task management for LARP organization
+- **Incident**: Incident reporting and tracking
+- **Map**: Geographic mapping and location management
+- **EventPlanning**: Event scheduling, resource management, conflict detection
+- **Integration**: External service integrations (Google Sheets, Docs, Calendar)
+
+**Domain Structure**:
+```
+src/Domain/{DomainName}/
+    ├── Entity/              # Domain entities
+    ├── Repository/          # Data access layer
+    ├── Service/             # Domain business logic
+    ├── DTO/                 # Data Transfer Objects
+    ├── UseCase/             # Commands/Queries/Handlers
+    ├── Controller/          # HTTP layer
+    ├── Form/                # Symfony forms (Type, Filter, DataTransformer)
+    └── Validator/           # Domain-specific validators
+
+templates/domain/{domain_name}/
+    └── entity_name/         # Domain-specific templates
+```
+
+**Template Organization**:
+- Global templates (base, includes, macros) in `/templates`
+- Domain-specific templates in `/templates/domain/{domain_name}/`
 
 ### Core Entity Structure
 
@@ -92,13 +129,19 @@ php bin/console doctrine:fixtures:load
 
 ### Controller Organization
 
-Controllers are organized by access level:
-- `src/Controller/Public/`: Public-facing pages
+Controllers are organized by domain under `src/Domain/{DomainName}/Controller/`:
+- Public domain: Public-facing pages (`src/Domain/Public/Controller/`)
+- StoryObject domain: Story management (`src/Domain/StoryObject/Controller/`)
+- Larp domain: LARP operations (`src/Domain/Larp/Controller/`)
+- Integration domain: Google APIs (`src/Domain/Integration/Controller/`)
+- EventPlanning domain: Event scheduling (`src/Domain/EventPlanning/Controller/`)
+- Other domains: Kanban, Incident, Map, Application, Participant
+
+**Legacy organization** (being refactored):
 - `src/Controller/Backoffice/`: Organizer/admin interface (requires `ROLE_USER`)
-- `src/Controller/Backoffice/Story/`: Story management (characters, threads, quests, etc.)
-- `src/Controller/Backoffice/Larp/`: LARP-level operations
-- `src/Controller/Backoffice/Integrations/`: Google API integrations
 - `src/Controller/API/`: API endpoints
+
+See [`docs/DOMAIN_ARCHITECTURE.md`](docs/DOMAIN_ARCHITECTURE.md) for complete domain organization.
 
 ### Security & Access Control
 
@@ -178,20 +221,34 @@ The `AutocompleteController` handles AJAX creation requests. See `docs/tom-selec
 
 ### Services
 
-Service organization:
-- `src/Service/StoryObject/`: Story-related business logic
-- `src/Service/Integrations/`: Google API integration services
-- `src/Service/Larp/`: LARP-specific services
-- `src/Service/Infrastructure/`: Core infrastructure services
+Services are organized by domain under `src/Domain/{DomainName}/Service/`:
+- StoryObject domain: Story-related business logic
+- Integration domain: Google API integration services
+- Larp domain: LARP-specific services
+- Application domain: Application matching and voting
+- EventPlanning domain: Conflict detection and scheduling
+- Infrastructure domain: Core infrastructure services (shared utilities)
+
+**Legacy organization** (being refactored):
+- `src/Service/StoryObject/`: Being moved to domain structure
+- `src/Service/Integrations/`: Being moved to domain structure
+- `src/Service/Larp/`: Being moved to domain structure
 
 ### Form System
 
-Forms use Symfony Form component with extensions:
-- `src/Form/`: Form types
-- `src/Form/Extension/`: Form type extensions (e.g., `FindOrCreateEntityExtension`)
-- `src/Form/DataTransformer/`: Data transformers
-- `src/Form/Filter/`: Filter forms for list views
-- Translation domain: `forms` (see `translations/forms.en.yaml`)
+Forms are organized by domain under `src/Domain/{DomainName}/Form/`:
+- `Type/`: Form types for domain entities
+- `Filter/`: Filter forms for list views
+- `DataTransformer/`: Domain-specific data transformers
+
+**Shared form utilities** (Infrastructure domain):
+- `src/Domain/Infrastructure/Form/Extension/`: Form extensions (e.g., `FindOrCreateEntityExtension`)
+- `src/Domain/Infrastructure/Form/DataTransformer/`: Shared transformers (JSON, Money)
+
+**Legacy organization** (being refactored):
+- `src/Form/`: Original form location
+
+Translation domain: `forms` (see `translations/forms.en.yaml`)
 
 #### Form Filtering Pattern
 
@@ -450,3 +507,86 @@ Test database uses suffix `_test` (configured in `config/packages/doctrine.yaml`
 - **Static Analysis**: PHPStan with strict rules
 - **Rector**: Automated refactoring to PHP 8.2 standards
 - Always run quality tools before committing changes
+
+## Event Planning System (POC)
+
+The Event Planning system helps LARP organizers schedule events, manage resources, and detect conflicts. This is a Proof of Concept implementation with core functionality.
+
+**Controller Namespace**: `src/Controller/Backoffice/EventPlanner/`
+- `ResourceController`: Manage planning resources (NPCs, staff, props, equipment)
+- `ScheduledEventController`: Schedule and manage timed events  
+- `CalendarController`: Visual calendar with FullCalendar integration
+
+**Key Entities**:
+- `PlanningResource`: Resources that can be assigned to events (NPCs, staff, equipment, etc.)
+  - Types via `PlanningResourceType` enum (NPC, STAFF_GM, STAFF_TECH, PROP, EQUIPMENT, etc.)
+  - Links to `Character`, `Item`, or `LarpParticipant` entities
+  - Availability windows and quantity tracking
+  - Shareable vs exclusive resources
+- `ScheduledEvent`: Timed events with location, resources, and story links
+  - Links to `Quest`, `Thread`, `Event` (story objects)
+  - Links to `MapLocation` for venue placement
+  - Setup/cleanup time buffers
+  - Status tracking via `EventStatus` enum
+- `ResourceBooking`: Junction table linking events to resources
+  - Quantity needed, required vs optional
+  - Booking status tracking
+- `ScheduledEventConflict`: Detected scheduling conflicts
+  - Conflict types and severity levels
+  - Resolution tracking
+
+**Services**:
+- `ConflictDetectionService` (`src/Service/EventPlanning/`): Detects resource double-booking conflicts (POC scope)
+  - `detectConflicts()`: Check event for all conflicts
+  - `isResourceAvailable()`: Check specific resource availability
+  - `getAvailableQuantity()`: Get remaining resource quantity
+
+**Forms**:
+- `PlanningResourceType`: Resource CRUD with linked entities
+- `ScheduledEventType`: Event scheduling with story links
+- `PlanningResourceFilterType`: Filter resources by type, name, shareability
+- `ScheduledEventFilterType`: Filter events by status, location, date range
+
+**Templates**:
+- `backoffice/event_planner/resource/`: Resource management views
+- `backoffice/event_planner/event/`: Event scheduling views  
+- `backoffice/event_planner/calendar/`: FullCalendar week view
+
+**Frontend**:
+- `event_calendar_controller.js`: Stimulus controller for FullCalendar integration
+  - Week view focused on LARP dates
+  - Click events to view details
+  - Color-coded by status and conflicts
+  - FullCalendar loaded via CDN (v6.1.10)
+
+**Menu Access**: 
+Event Planner dropdown in LARP menu (`templates/backoffice/larp/_menu.html.twig`) with:
+- Calendar View
+- Scheduled Events List
+- Resources List
+
+**Translation Keys**: 
+All labels in `translations/messages.en.yaml` under:
+- `backoffice.event_planner.*`
+- `forms.planning_resource.*`
+- `forms.scheduled_event.*`
+
+**POC Limitations** (Future Enhancements):
+- Only basic resource double-booking detection implemented
+- No drag-and-drop rescheduling (use forms)
+- No character timeline validation
+- No resolution suggestions
+- No PDF/Calendar export
+- No advanced conflict types (location capacity, staff overload, etc.)
+
+**Next Steps for Production**:
+1. Implement remaining conflict types (location capacity, character impossibilities)
+2. Add `ConflictResolutionService` with auto-suggestions
+3. Resource timeline visualization
+4. Drag-and-drop calendar editing
+5. Export schedules (PDF, iCal)
+6. Real-time AJAX conflict checking
+7. Character timeline tracking
+8. Staff schedule generation
+
+**Documentation**: See `docs/EVENT_PLANNING_SYSTEM.md` for full requirements and architecture.

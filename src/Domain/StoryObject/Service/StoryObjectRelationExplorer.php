@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Domain\StoryObject\Service;
+
+use App\Domain\StoryObject\Service\GraphEdgeBuilder;
+use App\Domain\StoryObject\Service\GraphNodeBuilder;
+
+readonly class StoryObjectRelationExplorer
+{
+    public function __construct(
+        private GraphNodeBuilder $nodeBuilder,
+        private GraphEdgeBuilder $edgeBuilder,
+    ) {
+    }
+
+    public function getGraphFromResults(iterable $objects): array
+    {
+        $objects = is_array($objects) ? $objects : [...$objects];
+        
+        $graphData = $this->nodeBuilder->buildNodes($objects);
+        $edges = $this->edgeBuilder->buildEdges($objects, $graphData['validNodeIds']);
+        
+        return [
+            'nodes' => $graphData['nodes'],
+            'edges' => $edges,
+        ];
+    }
+}

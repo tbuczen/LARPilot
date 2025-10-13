@@ -2,8 +2,8 @@
 
 namespace App\Twig\Components;
 
-use App\Form\Integrations\FileMappingType;
-use App\Form\Models\ExternalResourceMappingModel;
+use App\Domain\Integrations\Form\Integrations\FileMappingType;
+use App\Domain\Integrations\Form\Models\ExternalResourceMappingModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;

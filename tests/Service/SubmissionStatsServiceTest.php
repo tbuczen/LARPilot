@@ -2,13 +2,13 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\Larp;
-use App\Entity\LarpApplication;
-use App\Entity\LarpApplicationChoice;
-use App\Entity\StoryObject\Character;
-use App\Entity\StoryObject\Faction;
-use App\Repository\LarpApplicationRepository;
-use App\Service\Larp\SubmissionStatsService;
+use App\Domain\Application\Entity\LarpApplication;
+use App\Domain\Application\Entity\LarpApplicationChoice;
+use App\Domain\Application\Repository\LarpApplicationRepository;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Larp\Service\SubmissionStatsService;
+use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Entity\Faction;
 use PHPUnit\Framework\TestCase;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 

@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'public.application.decline_character_title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h3 class="mb-0">
+                            <i class="bi bi-x-circle"></i> {{ 'public.application.decline_character_title'|trans }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h5>{{ larp.title }}</h5>
+                            {% if larp.startDate %}
+                                <p><strong>{{ 'common.date'|trans }}:</strong> {{ larp.startDate|date('Y-m-d') }}</p>
+                            {% endif %}
+                            {% if larp.location %}
+                                <p><strong>{{ 'common.location'|trans }}:</strong> {{ larp.location.name }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="character-info bg-light p-4 rounded mb-4">
+                            <h4 class="text-center mb-3">{{ character.title }}</h4>
+                            {% if character.description %}
+                                <div class="mb-3">
+                                    {{ character.description|sanitize_html }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <h5><i class="bi bi-exclamation-triangle"></i> {{ 'public.application.decline_warning_title'|trans }}</h5>
+                            <p>{{ 'public.application.decline_warning_text'|trans }}</p>
+                        </div>
+
+                        <form method="post" id="declineForm">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                                <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-secondary btn-lg">
+                                    <i class="bi bi-arrow-left"></i> {{ 'common.cancel'|trans }}
+                                </a>
+                                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#declineModal">
+                                    <i class="bi bi-x-circle"></i> {{ 'public.application.yes_decline'|trans }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Decline Confirmation Modal #}
+    <div class="modal fade" id="declineModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">{{ 'public.application.decline_modal_title'|trans }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>{{ 'public.application.decline_modal_question'|trans }}</strong></p>
+                    <p class="text-muted">{{ character.title }} - {{ larp.title }}</p>
+                    <p>{{ 'public.application.decline_modal_info'|trans }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ 'common.cancel'|trans }}
+                    </button>
+                    <button type="submit" form="declineForm" class="btn btn-danger">
+                        <i class="bi bi-x-circle"></i> {{ 'public.application.decline_final'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -2,3 +2,19 @@ parameters:
     level: 6
     paths:
         - src
+
+    # Domain Boundary Enforcement Rules
+    # Prevents violations of domain architecture principles
+    ignoreErrors:
+        # Allow legacy code during migration - remove these as domains are migrated
+        - '#Access to an undefined property App\\Controller\\.*#'
+
+    # Custom rules for domain boundary enforcement
+    rules:
+        - App\PHPStan\Rules\DomainBoundaryRule
+
+services:
+    -
+        class: App\PHPStan\Rules\DomainBoundaryRule
+        tags:
+            - phpstan.rules.rule

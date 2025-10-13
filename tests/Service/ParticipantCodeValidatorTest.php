@@ -2,9 +2,9 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\Larp;
-use App\Service\Larp\ParticipantCodeGenerator;
-use App\Service\Larp\ParticipantCodeValidator;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Larp\Service\ParticipantCodeGenerator;
+use App\Domain\Larp\Service\ParticipantCodeValidator;
 use PHPUnit\Framework\TestCase;
 
 class ParticipantCodeValidatorTest extends TestCase

@@ -2,8 +2,8 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\LarpInvitation;
-use App\Form\InvitationType;
+use App\Domain\Core\Entity\LarpInvitation;
+use App\Domain\Core\Form\InvitationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;

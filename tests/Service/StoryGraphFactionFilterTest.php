@@ -2,13 +2,13 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\StoryObject\Character;
-use App\Entity\StoryObject\Faction;
-use App\Entity\StoryObject\Quest;
-use App\Entity\StoryObject\Thread;
-use App\Service\Larp\StoryObjectRelationExplorer;
-use App\Service\StoryObject\Graph\GraphEdgeBuilder;
-use App\Service\StoryObject\Graph\GraphNodeBuilder;
+use App\Domain\Larp\Service\StoryObjectRelationExplorer;
+use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Entity\Faction;
+use App\Domain\StoryObject\Entity\Quest;
+use App\Domain\StoryObject\Entity\Thread;
+use App\Domain\StoryObject\Service\GraphEdgeBuilder;
+use App\Domain\StoryObject\Service\GraphNodeBuilder;
 use PHPUnit\Framework\TestCase;
 
 class StoryGraphFactionFilterTest extends TestCase

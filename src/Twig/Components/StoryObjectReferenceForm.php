@@ -2,10 +2,10 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\ExternalReference;
-use App\Entity\StoryObject\StoryObject;
-use App\Form\ExternalReferenceType;
-use App\Repository\ExternalReferenceRepository;
+use App\Domain\Integrations\Entity\ExternalReference;
+use App\Domain\Integrations\Form\ExternalReferenceType;
+use App\Domain\Integrations\Repository\ExternalReferenceRepository;
+use App\Domain\StoryObject\Entity\StoryObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;

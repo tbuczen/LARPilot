@@ -8,7 +8,7 @@ framework:
                 type: 'method'
                 property: 'marking'
             supports:
-                - App\Entity\Larp
+                - App\Domain\Core\Entity\Larp
             initial_marking: DRAFT
             places:
                 - DRAFT

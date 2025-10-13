@@ -35,3 +35,9 @@ yarn-error.log
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+###> claude-code ###
+# Local environment-specific Claude Code configs
+.claude/mcp_config.local.json
+.claude/settings.local.json
+###< claude-code ###

@@ -2,11 +2,11 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Enum\LarpIncidentStatus;
-use App\Entity\Larp;
-use App\Entity\LarpIncident;
-use App\Entity\Location;
-use App\Form\Filter\LarpIncidentFilterType;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\Location;
+use App\Domain\Incidents\Entity\Enum\LarpIncidentStatus;
+use App\Domain\Incidents\Entity\LarpIncident;
+use App\Domain\Incidents\Form\Filter\LarpIncidentFilterType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class LarpIncidentsTemplateTest extends KernelTestCase

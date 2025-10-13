@@ -1,0 +1,99 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block title %}
+    {% if isNew %}
+        {{ 'backoffice.event_planner.event.create'|trans }}
+    {% else %}
+        {{ 'backoffice.event_planner.event.edit'|trans }} - {{ event.title }}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_view', { larp: larp.id }) }}">{{ larp.title }}</a></li>
+    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
+    <li class="breadcrumb-item"><a href="{{ path('backoffice_event_planner_event_list', { larp: larp.id }) }}">{{ 'backoffice.event_planner.event.list'|trans }}</a></li>
+    <li class="breadcrumb-item active">
+        {% if isNew %}{{ 'common.create'|trans }}{% else %}{{ event.title }}{% endif %}
+    </li>
+{% endblock %}
+
+{% block larp_content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h2 class="mb-0">
+                        {% if isNew %}
+                            {{ 'backoffice.event_planner.event.create'|trans }}
+                        {% else %}
+                            {{ 'backoffice.event_planner.event.edit'|trans }}
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.description) }}
+
+                        <hr>
+                        <h5>{{ 'backoffice.event_planner.event.timing'|trans }}</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.startTime) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.endTime) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.setupMinutes) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.cleanupMinutes) }}
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h5>{{ 'backoffice.event_planner.event.location_and_story'|trans }}</h5>
+                        {{ form_row(form.location) }}
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{ form_row(form.quest) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_row(form.thread) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_row(form.event) }}
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h5>{{ 'backoffice.event_planner.event.settings'|trans }}</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.status) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.visibleToPlayers) }}
+                            </div>
+                        </div>
+                        {{ form_row(form.organizerNotes) }}
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> {{ 'common.save'|trans }}
+                            </button>
+                            <a href="{{ path('backoffice_event_planner_event_list', { larp: larp.id }) }}"
+                               class="btn btn-secondary">
+                                {{ 'common.cancel'|trans }}
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

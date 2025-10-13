@@ -2,10 +2,10 @@
 
 namespace App\Domain\Account\UseCase\RegisterUser;
 
-use App\Entity\User;
-use App\Entity\UserSocialAccount;
-use App\Repository\UserRepository;
-use App\Repository\UserSocialAccountRepository;
+use App\Domain\Account\Entity\User;
+use App\Domain\Account\Entity\UserSocialAccount;
+use App\Domain\Account\Repository\UserRepository;
+use App\Domain\Account\Repository\UserSocialAccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 

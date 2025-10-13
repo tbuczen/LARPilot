@@ -1,19 +1,104 @@
-base:
-    resource: '../src/Controller/'
-    type: attribute
-    prefix: /
+# Account Domain
+account_public:
+  resource: '../src/Domain/Account/Controller/Public/'
+  type: attribute
+  prefix: /
 
-public:
-    resource: '../src/Controller/Public/'
-    type: attribute
-    prefix: /
+account_backoffice:
+  resource: '../src/Domain/Account/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
 
-backoffice:
-    resource: '../src/Controller/Backoffice/'
-    type: attribute
-    prefix: /backoffice
+# Application Domain
+application_public:
+  resource: '../src/Domain/Application/Controller/Public/'
+  type: attribute
+  prefix: /
 
-api:
-    resource: '../src/Controller/API/'
-    type: attribute
-    prefix: /api
+application_backoffice:
+  resource: '../src/Domain/Application/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# Core Domain
+core_public:
+  resource: '../src/Domain/Core/Controller/Public/'
+  type: attribute
+  prefix: /
+
+core_backoffice:
+  resource: '../src/Domain/Core/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# EventPlanning Domain
+event_planning_public:
+  resource: '../src/Domain/EventPlanning/Controller/Public/'
+  type: attribute
+  prefix: /
+
+event_planning_backoffice:
+  resource: '../src/Domain/EventPlanning/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# Incidents Domain
+incidents_public:
+  resource: '../src/Domain/Incidents/Controller/Public/'
+  type: attribute
+  prefix: /
+
+incidents_backoffice:
+  resource: '../src/Domain/Incidents/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# Integrations Domain
+integrations_public:
+  resource: '../src/Domain/Integrations/Controller/Public/'
+  type: attribute
+  prefix: /
+
+integrations_backoffice:
+  resource: '../src/Domain/Integrations/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# Kanban Domain
+kanban_backoffice:
+  resource: '../src/Domain/Kanban/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# Map Domain
+map_public:
+  resource: '../src/Domain/Map/Controller/Public/'
+  type: attribute
+  prefix: /
+
+map_backoffice:
+  resource: '../src/Domain/Map/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# StoryMarketplace Domain
+story_marketplace_backoffice:
+  resource: '../src/Domain/StoryMarketplace/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+# StoryObject Domain
+story_object_public:
+  resource: '../src/Domain/StoryObject/Controller/Public/'
+  type: attribute
+  prefix: /
+
+story_object_api:
+  resource: '../src/Domain/StoryObject/Controller/API/'
+  type: attribute
+  prefix: /
+
+story_object_backoffice:
+  resource: '../src/Domain/StoryObject/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice

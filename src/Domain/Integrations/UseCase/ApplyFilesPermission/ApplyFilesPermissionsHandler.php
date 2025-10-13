@@ -3,12 +3,12 @@
 
 namespace App\Domain\Integrations\UseCase\ApplyFilesPermission;
 
-use App\Entity\LarpIntegration;
-use App\Entity\SharedFile;
-use App\Repository\LarpIntegrationRepository;
-use App\Repository\SharedFileRepository;
-use App\Service\Integrations\IntegrationManager;
-use App\Service\Integrations\Sharing\DriveSharingServiceProvider;
+use App\Domain\Integrations\Entity\LarpIntegration;
+use App\Domain\Integrations\Entity\SharedFile;
+use App\Domain\Integrations\Repository\LarpIntegrationRepository;
+use App\Domain\Integrations\Repository\SharedFileRepository;
+use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\Sharing\DriveSharingServiceProvider;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class ApplyFilesPermissionsHandler

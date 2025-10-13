@@ -2,9 +2,9 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\Larp;
-use App\Entity\SavedFormFilter;
-use App\Repository\SavedFormFilterRepository;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\SavedFormFilter;
+use App\Domain\Core\Repository\SavedFormFilterRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;

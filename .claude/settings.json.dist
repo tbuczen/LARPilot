@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git mv:*)",
+      "Bash(php bin/console make:migration:*)",
+      "Bash(docker compose exec:*)",
+      "Bash(npm --version)",
+      "Bash(uvx:*)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enabledMcpjsonServers": [
+    "filesystem",
+    "web-search",
+    "git"
+  ],
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem"
+      ]
+    },
+    "serena": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        "/home/urias/Projects/LARPilot"
+      ],
+      "env": {}
+    },
+    "web-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@302ai/web-search-mcp"
+      ]
+    }
+  },
+  "enableAllProjectMcpServers": true
+}

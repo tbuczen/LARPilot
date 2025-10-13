@@ -24,12 +24,66 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            App:
-                type: attribute
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+            Core:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Core/Entity'
+              prefix: 'App\Domain\Core\Entity'
+              alias: Core
+            Account:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Account/Entity'
+              prefix: 'App\Domain\Account\Entity'
+              alias: Account
+            Application:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Application/Entity'
+              prefix: 'App\Domain\Application\Entity'
+              alias: Application
+            EventPlanning:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/EventPlanning/Entity'
+              prefix: 'App\Domain\EventPlanning\Entity'
+              alias: EventPlanning
+            Incidents:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Incidents/Entity'
+              prefix: 'App\Domain\Incidents\Entity'
+              alias: Incidents
+            Integrations:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Integrations/Entity'
+              prefix: 'App\Domain\Integrations\Entity'
+              alias: Integrations
+            Kanban:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Kanban/Entity'
+              prefix: 'App\Domain\Kanban\Entity'
+              alias: Kanban
+            Map:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Map/Entity'
+              prefix: 'App\Domain\Map\Entity'
+              alias: Map
+            StoryMarketplace:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/StoryMarketplace/Entity'
+              prefix: 'App\Domain\StoryMarketplace\Entity'
+              alias: StoryMarketplace
+            StoryObject:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/StoryObject/Entity'
+              prefix: 'App\Domain\StoryObject\Entity'
+              alias: StoryObject
             loggable:
                 type: attribute
                 alias: Gedmo

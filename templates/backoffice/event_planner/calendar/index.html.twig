@@ -1,0 +1,73 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block title %}{{ 'backoffice.event_planner.calendar.title'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_dashboard', { larp: larp.id }) }}">{{ larp.title }}</a></li>
+    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
+    <li class="breadcrumb-item active">{{ 'backoffice.event_planner.calendar.title'|trans }}</li>
+{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">{{ 'backoffice.event_planner.calendar.title'|trans }}</h2>
+                <div>
+                    <a href="{{ path('backoffice_event_planner_event_modify', { larp: larp.id }) }}"
+                       class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> {{ 'backoffice.event_planner.event.create'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="calendar"
+                 data-controller="event-calendar"
+                 data-event-calendar-larp-id-value="{{ larp.id.toRfc4122 }}"
+                 data-event-calendar-events-url-value="{{ path('backoffice_event_planner_calendar_events_api', { larp: larp.id }) }}"
+                 data-event-calendar-initial-start-value="{{ defaultStart|date('Y-m-d') }}"
+                 data-event-calendar-initial-end-value="{{ defaultEnd|date('Y-m-d') }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h5 class="mb-0">{{ 'backoffice.event_planner.calendar.legend'|trans }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>{{ 'backoffice.event_planner.calendar.status_colors'|trans }}</h6>
+                    <ul class="list-unstyled">
+                        <li><span class="badge bg-secondary">■</span> Draft</li>
+                        <li><span class="badge bg-success">■</span> Confirmed</li>
+                        <li><span class="badge bg-primary">■</span> In Progress</li>
+                        <li><span class="badge bg-info">■</span> Completed</li>
+                        <li><span class="badge bg-danger">■</span> Has Conflicts</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>{{ 'backoffice.event_planner.calendar.tips'|trans }}</h6>
+                    <ul>
+                        <li>{{ 'backoffice.event_planner.calendar.tip_click'|trans }}</li>
+                        <li>{{ 'backoffice.event_planner.calendar.tip_week_view'|trans }}</li>
+                        <li>{{ 'backoffice.event_planner.calendar.tip_conflicts'|trans }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+{% endblock %}

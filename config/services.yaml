@@ -16,22 +16,20 @@ services:
             $serviceAccountJsonPath: '%env(resolve:GOOGLE_SERVICE_ACCOUNT_JSON)%'
 
     _instanceof:
-        App\Service\Integrations\IntegrationServiceInterface:
+        App\Domain\Integrations\Service\IntegrationServiceInterface:
             tags: [ 'app.integration' ]
+        Symfony\Component\Security\Core\Authorization\Voter\VoterInterface:
+          tags: [ 'security.voter' ]
 
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+            - '../src/Domain/*/Entity'
             - '../src/Kernel.php'
 
-    App\Helper\Logger:
+    App\Domain\Core\Service\Helper\Logger:
         public: true
-
-    App\Security\Voter\:
-        resource: '../src/Security/Voter'
-        tags: [ 'security.voter' ]
 
     App\Twig\:
         exclude:
@@ -39,12 +37,12 @@ services:
         resource: '../src/Twig/'
         tags: [ 'twig.extension' ]
 
-    App\Service\Integrations\Sharing\DriveSharingServiceProvider:
+    App\Domain\Integrations\Service\Sharing\DriveSharingServiceProvider:
         arguments:
             $services:
-                integration_google_drive: '@App\Service\Integrations\Sharing\GoogleDriveSharingService'
+                integration_google_drive: 'App\Domain\Integrations\Service\Sharing\GoogleDriveSharingService'
 
-    App\Service\Integrations\IntegrationServiceProvider:
+    App\Domain\Integrations\Service\IntegrationServiceProvider:
         arguments:
             $integrationServices: !tagged_iterator app.integration
 

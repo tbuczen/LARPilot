@@ -2,9 +2,9 @@
 
 namespace App\Tests\Form;
 
-use App\Entity\Enum\ResourceType;
-use App\Form\Integrations\FileMappingType;
-use App\Form\Models\ExternalResourceMappingModel;
+use App\Domain\Integrations\Entity\Enum\ResourceType;
+use App\Domain\Integrations\Form\Integrations\FileMappingType;
+use App\Domain\Integrations\Form\Models\ExternalResourceMappingModel;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 
@@ -48,11 +48,11 @@ class FileMappingTypeTest extends TypeTestCase
     public function testSubFormMappingTypes(): void
     {
         $this->assertSame(
-            \App\Form\Integrations\CharacterDocMappingType::class,
+            \App\Domain\Integrations\Form\Integrations\CharacterDocMappingType::class,
             ResourceType::CHARACTER_DOC->getSubForm()
         );
         $this->assertSame(
-            \App\Form\Integrations\EventDocMappingType::class,
+            \App\Domain\Integrations\Form\Integrations\EventDocMappingType::class,
             ResourceType::EVENT_DOC->getSubForm()
         );
     }

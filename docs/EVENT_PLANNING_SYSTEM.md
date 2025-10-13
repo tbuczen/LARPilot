@@ -853,11 +853,7 @@ export default class extends Controller {
 
 namespace App\Service\EventPlanning;
 
-use App\Entity\ScheduledEvent;
-use App\Entity\Resource;
-use App\Entity\ScheduledEventConflict;
-use App\Entity\Enum\ConflictType;
-use App\Entity\Enum\ConflictSeverity;
+use App\Domain\EventPlanning\Entity\Enum\ConflictSeverity;use App\Domain\EventPlanning\Entity\Enum\ConflictType;use App\Domain\EventPlanning\Entity\ScheduledEvent;use App\Domain\EventPlanning\Entity\ScheduledEventConflict;use App\Entity\Resource;
 
 class ConflictDetectionService
 {

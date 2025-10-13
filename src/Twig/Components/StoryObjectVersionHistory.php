@@ -2,8 +2,8 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\StoryObject\StoryObject;
-use App\Service\StoryObject\StoryObjectVersionService;
+use App\Domain\StoryObject\Entity\StoryObject;
+use App\Domain\StoryObject\Service\StoryObjectVersionService;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;

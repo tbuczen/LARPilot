@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'public.application.confirm_character_title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="mb-0">
+                            <i class="bi bi-check-circle"></i> {{ 'public.application.confirm_character_title'|trans }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h5>{{ larp.title }}</h5>
+                            {% if larp.startDate %}
+                                <p><strong>{{ 'common.date'|trans }}:</strong> {{ larp.startDate|date('Y-m-d') }}</p>
+                            {% endif %}
+                            {% if larp.location %}
+                                <p><strong>{{ 'common.location'|trans }}:</strong> {{ larp.location.name }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="character-info bg-light p-4 rounded mb-4">
+                            <h4 class="text-center mb-3">{{ character.title }}</h4>
+                            {% if character.description %}
+                                <div class="mb-3">
+                                    {{ character.description|sanitize_html }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <h5><i class="bi bi-exclamation-triangle"></i> {{ 'public.application.confirm_warning_title'|trans }}</h5>
+                            <p>{{ 'public.application.confirm_warning_text'|trans }}</p>
+                        </div>
+
+                        <form method="post" id="confirmForm">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                                <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-secondary btn-lg">
+                                    <i class="bi bi-arrow-left"></i> {{ 'common.cancel'|trans }}
+                                </a>
+                                <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                                    <i class="bi bi-check-circle"></i> {{ 'public.application.yes_confirm'|trans }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Confirmation Modal #}
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">{{ 'public.application.confirm_modal_title'|trans }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>{{ 'public.application.confirm_modal_question'|trans }}</strong></p>
+                    <p class="text-muted">{{ character.title }} - {{ larp.title }}</p>
+                    <p>{{ 'public.application.confirm_modal_info'|trans }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ 'common.cancel'|trans }}
+                    </button>
+                    <button type="submit" form="confirmForm" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> {{ 'public.application.confirm_final'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

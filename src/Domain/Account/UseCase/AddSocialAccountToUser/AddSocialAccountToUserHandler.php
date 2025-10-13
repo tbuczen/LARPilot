@@ -2,8 +2,8 @@
 
 namespace App\Domain\Account\UseCase\AddSocialAccountToUser;
 
-use App\Entity\UserSocialAccount;
-use App\Repository\UserRepository;
+use App\Domain\Account\Entity\UserSocialAccount;
+use App\Domain\Account\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 

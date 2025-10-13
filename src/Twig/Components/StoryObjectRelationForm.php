@@ -2,11 +2,11 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\Enum\TargetType;
-use App\Entity\StoryObject\Relation;
-use App\Entity\StoryObject\StoryObject;
-use App\Form\RelationType;
-use App\Repository\StoryObject\RelationRepository;
+use App\Domain\StoryObject\Entity\Enum\TargetType;
+use App\Domain\StoryObject\Entity\Relation;
+use App\Domain\StoryObject\Entity\StoryObject;
+use App\Domain\StoryObject\Form\RelationType;
+use App\Domain\StoryObject\Repository\RelationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;

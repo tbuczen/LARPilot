@@ -100,5 +100,5 @@ ich roli i głównych klas.
 
 
 ### TomSelect 
-[TomSelect and AJAX creation of data](./docs/tom-select_ajax.md)
+[TomSelect and AJAX creation of data](docs/technical/tom-select_ajax.md)
 

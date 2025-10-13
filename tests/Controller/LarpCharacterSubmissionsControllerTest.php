@@ -2,16 +2,16 @@
 
 namespace App\Tests\Controller;
 
-use App\Controller\Backoffice\CharacterSubmissionsController;
-use App\Entity\Larp;
-use App\Entity\LarpApplication;
-use App\Entity\LarpApplicationChoice;
-use App\Entity\StoryObject\Character;
-use App\Entity\User;
-use App\Repository\LarpApplicationChoiceRepository;
-use App\Repository\LarpApplicationRepository;
+use App\Domain\Account\Entity\User;
+use App\Domain\Application\Controller\Backoffice\CharacterApplicationsController;
+use App\Domain\Application\Entity\LarpApplication;
+use App\Domain\Application\Entity\LarpApplicationChoice;
+use App\Domain\Application\Repository\LarpApplicationChoiceRepository;
+use App\Domain\Application\Repository\LarpApplicationRepository;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Larp\Service\SubmissionStatsService;
+use App\Domain\StoryObject\Entity\Character;
 use App\Service\Larp\LarpApplicationDashboardService;
-use App\Service\Larp\SubmissionStatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class TestController extends CharacterSubmissionsController
+class TestController extends CharacterApplicationsController
 {
     public function __construct(
         TranslatorInterface $translator,
