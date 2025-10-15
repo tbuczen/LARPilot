@@ -13,6 +13,7 @@ common:
   larps: LARPs
   incident: Incident
   incidents: Incidents
+  tags: Tags
   menu:
     toggle: 'Menu'
   create: 'Create'
@@ -107,6 +108,8 @@ common:
   roles: 'Roles'
   optional: 'optional'
   date: 'Date'
+  view: 'View'
+  minutes: 'Minutes'
 
 #Translations specific to public part of the app
 public:
@@ -367,7 +370,7 @@ backoffice:
     threads: "Threads"
     quests: "Quests"
     events: "Events"
-    characters_needing_threads: "Characters Needing Threads"
+    characters: "Characters"
     available: "Available Characters"
     toggle: "Toggle"
     view_recruitments: "View Recruitments"

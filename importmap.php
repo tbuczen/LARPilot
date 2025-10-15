@@ -155,4 +155,34 @@ return [
     'dagre' => [
         'version' => '0.8.5',
     ],
+    'fullcalendar' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/common' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/core' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/daygrid' => [
+        'version' => '5.11.5',
+    ],
+    'tslib' => [
+        'version' => '2.5.0',
+    ],
+    'preact' => [
+        'version' => '10.12.1',
+    ],
+    'preact/compat' => [
+        'version' => '10.12.1',
+    ],
+    'preact/hooks' => [
+        'version' => '10.12.1',
+    ],
+    '@fullcalendar/timegrid' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/list' => [
+        'version' => '5.11.5',
+    ],
 ];

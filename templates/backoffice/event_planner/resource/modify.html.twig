@@ -8,23 +8,9 @@
     {% endif %}
 {% endblock %}
 
-{% block breadcrumb %}
-    {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_view', { larp: larp.id }) }}">{{ larp.title }}</a></li>
-    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
-    <li class="breadcrumb-item"><a href="{{ path('backoffice_event_planner_resource_list', { larp: larp.id }) }}">{{ 'backoffice.event_planner.resource.list'|trans }}</a></li>
-    <li class="breadcrumb-item active">
-        {% if isNew %}
-            {{ 'common.create'|trans }}
-        {% else %}
-            {{ resource.name }}
-        {% endif %}
-    </li>
-{% endblock %}
-
 {% block larp_content %}
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card mt-4">
                 <div class="card-header">
                     <h2 class="mb-0">

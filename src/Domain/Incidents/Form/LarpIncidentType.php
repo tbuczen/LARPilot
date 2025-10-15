@@ -2,8 +2,8 @@
 
 namespace App\Domain\Incidents\Form;
 
-use App\Domain\Incidents\Entity\LarpIncident;
 use App\Domain\Core\Service\ParticipantCodeValidator;
+use App\Domain\Incidents\Entity\LarpIncident;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

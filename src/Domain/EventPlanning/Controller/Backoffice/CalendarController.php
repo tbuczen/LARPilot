@@ -36,8 +36,12 @@ class CalendarController extends BaseController
         Larp $larp,
         ScheduledEventRepository $eventRepository
     ): JsonResponse {
-        $start = new \DateTime($request->query->get('start'));
-        $end = new \DateTime($request->query->get('end'));
+        $startStr = $request->query->get('start');
+        $endStr = $request->query->get('end');
+
+        // Simple approach: just take the date/time part, ignore timezone
+        $start = new \DateTime(substr($startStr, 0, 19)); // 2025-09-21T00:00:00
+        $end = new \DateTime(substr($endStr, 0, 19));
 
         $events = $eventRepository->findByLarpAndDateRange($larp, $start, $end);
 
@@ -72,8 +76,12 @@ class CalendarController extends BaseController
         Larp $larp,
         PlanningResourceRepository $resourceRepository
     ): JsonResponse {
-        $start = new \DateTime($request->query->get('start'));
-        $end = new \DateTime($request->query->get('end'));
+        $startStr = $request->query->get('start');
+        $endStr = $request->query->get('end');
+
+        // Simple approach: just take the date/time part, ignore timezone
+        $start = new \DateTime(substr($startStr, 0, 19)); // 2025-09-21T00:00:00
+        $end = new \DateTime(substr($endStr, 0, 19));
 
         $resources = $resourceRepository->findAvailableDuring($larp, $start, $end);
 

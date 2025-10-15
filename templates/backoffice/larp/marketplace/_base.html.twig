@@ -1,0 +1,46 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'backoffice.marketplace.title'|trans }}</h2>
+            </div>
+
+            {# View tabs #}
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'threads' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_threads_list', {larp: larp.id}) }}">
+                        {{ 'backoffice.marketplace.threads'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'quests' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_quests_list', {larp: larp.id}) }}">
+                        {{ 'backoffice.marketplace.quests'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'events' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_events_list', {larp: larp.id}) }}">
+                        {{ 'backoffice.marketplace.events'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'characters' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_characters_list', {larp: larp.id}) }}">
+                        {{ 'backoffice.marketplace.characters'|trans }}
+                        {% if active_tab == 'characters' and characters is defined and characters.totalItemCount is defined %}
+                            <span class="badge bg-danger ms-1">{{ characters.totalItemCount }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body p-0">
+            {% block marketplace_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

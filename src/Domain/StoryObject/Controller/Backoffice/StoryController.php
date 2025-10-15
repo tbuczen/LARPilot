@@ -4,9 +4,9 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Larp\Service\StoryObjectRelationExplorer;
 use App\Domain\StoryObject\Form\Filter\StoryGraphFilterType;
 use App\Domain\StoryObject\Repository\StoryObjectRepository;
+use App\Domain\StoryObject\Service\StoryObjectRelationExplorer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

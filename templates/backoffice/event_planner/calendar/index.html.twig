@@ -64,10 +64,19 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-{% endblock %}
+{#{% block importmap %}#}
+{#    {{ parent() }}#}
+{#    <script type="importmap">#}
+{#    {#}
+{#        "imports": {#}
+{#            "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.10",#}
+{#            "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.10",#}
+{#            "@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.10",#}
+{#            "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.10"#}
+{#        }#}
+{#    }#}
+{#    </script>#}
+{#{% endblock %}#}

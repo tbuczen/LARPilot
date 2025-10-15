@@ -26,26 +26,6 @@ readonly class MarketplaceService
     ) {
     }
 
-    /**
-     * Get characters that need more threads (below minimum threshold).
-     *
-     * @return array<Character>
-     */
-    public function getCharactersNeedingThreads(Larp $larp): array
-    {
-        $minThreads = $larp->getMinThreadsPerCharacter();
-
-        $qb = $this->characterRepository->createQueryBuilder('c');
-        $qb->leftJoin('c.threads', 't')
-            ->where('c.larp = :larp')
-            ->setParameter('larp', $larp)
-            ->groupBy('c.id, c.inGameName, c.postLarpFate, c.gender, c.preferredGender')
-            ->having('COUNT(t.id) < :minThreads')
-            ->setParameter('minThreads', $minThreads)
-            ->orderBy('COUNT(t.id)', 'ASC');
-
-        return $qb->getQuery()->getResult();
-    }
 
     /**
      * Get threads that match player preferences and need characters.
@@ -142,64 +122,6 @@ readonly class MarketplaceService
         usort($suggestions, fn ($a, $b) => $b['matchScore'] <=> $a['matchScore']);
 
         return $suggestions;
-    }
-
-    /**
-     * Search threads by tags.
-     *
-     * @param Tag[] $tags
-     *
-     * @return Thread[]
-     */
-    public function searchThreadsByTags(Larp $larp, array $tags): array
-    {
-        if (empty($tags)) {
-            return [];
-        }
-
-        $qb = $this->threadRepository->createQueryBuilder('t');
-        $qb->join('t.tags', 'tag')
-            ->where('t.larp = :larp')
-            ->andWhere('tag IN (:tags)')
-            ->setParameter('larp', $larp)
-            ->setParameter('tags', $tags)
-            ->groupBy('t.id')
-            ->orderBy('COUNT(tag.id)', 'DESC');
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Search characters by tags for thread recruitment.
-     *
-     * @param Tag[] $tags
-     *
-     * @return Character[]
-     */
-    public function searchCharactersByTags(Larp $larp, array $tags, bool $onlyNeedingThreads = false): array
-    {
-        if (empty($tags)) {
-            return [];
-        }
-
-        $qb = $this->characterRepository->createQueryBuilder('c');
-        $qb->join('c.tags', 'tag')
-            ->where('c.larp = :larp')
-            ->andWhere('tag IN (:tags)')
-            ->setParameter('larp', $larp)
-            ->setParameter('tags', $tags);
-
-        if ($onlyNeedingThreads) {
-            $minThreads = $larp->getMinThreadsPerCharacter();
-            $qb->leftJoin('c.threads', 't')
-                ->groupBy('c.id')
-                ->having('COUNT(t.id) < :minThreads')
-                ->setParameter('minThreads', $minThreads);
-        }
-
-        $qb->orderBy('c.title', 'ASC');
-
-        return $qb->getQuery()->getResult();
     }
 
     /**

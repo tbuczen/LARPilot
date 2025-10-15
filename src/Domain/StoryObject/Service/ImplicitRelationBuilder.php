@@ -8,7 +8,6 @@ use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Entity\Thread;
-use function App\Service\StoryObject\Graph\sort;
 
 readonly class ImplicitRelationBuilder
 {

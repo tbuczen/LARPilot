@@ -2,9 +2,9 @@
 
 namespace App\Domain\Core\UseCase\GenerateInvitation;
 
+use App\Domain\Core\DTO\GenerateInvitationDTO;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpInvitation;
-use App\Domain\Core\DTO\GenerateInvitationDTO;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class GenerateInvitationHandler

@@ -2,7 +2,10 @@
 
 namespace App\Domain\StoryObject\Service;
 
+use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Faction;
+use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Entity\Thread;
 
@@ -26,7 +29,7 @@ class GroupTracker
     private function addToApropriateGroup(string $parentId, StoryObject $object): void
     {
         // If we have a character, find its faction
-        if ($object instanceof \App\Domain\StoryObject\Entity\Character) {
+        if ($object instanceof Character) {
             $faction = $object->getFactions()->first();
             if ($faction instanceof Faction) {
                 $this->factionGroups[$parentId] = $faction;
@@ -34,7 +37,7 @@ class GroupTracker
         }
 
         // If we have a quest or event, find its thread
-        if ($object instanceof \App\Domain\StoryObject\Entity\Quest || $object instanceof \App\Domain\StoryObject\Entity\Event) {
+        if ($object instanceof Quest || $object instanceof Event) {
             $thread = $object->getThread();
             if ($thread instanceof Thread) {
                 $this->threadGroups[$parentId] = $thread;

@@ -89,12 +89,12 @@ class PlanningResourceType extends AbstractType
                 'label' => 'planning_resource.participant',
                 'required' => false,
                 'placeholder' => 'planning_resource.participant_placeholder',
-                'choice_label' => fn (LarpParticipant $p) => $p->getUser()->getFullName(),
+                'choice_label' => fn (LarpParticipant $p) => $p->getUser()->getUsername(),
                 'query_builder' => fn ($repo) => $repo->createQueryBuilder('p')
                     ->join('p.user', 'u')
                     ->where('p.larp = :larp')
                     ->setParameter('larp', $larp)
-                    ->orderBy('u.firstName', 'ASC'),
+                    ->orderBy('u.username', 'ASC'),
                 'autocomplete' => true,
             ]);
     }

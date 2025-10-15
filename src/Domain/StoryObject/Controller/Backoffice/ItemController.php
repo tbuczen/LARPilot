@@ -4,8 +4,8 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Integrations\Service\IntegrationManager;
 use App\Domain\Core\Service\LarpManager;
+use App\Domain\Integrations\Service\IntegrationManager;
 use App\Domain\StoryObject\Entity\Item;
 use App\Domain\StoryObject\Form\Filter\ItemFilterType;
 use App\Domain\StoryObject\Form\ItemType;

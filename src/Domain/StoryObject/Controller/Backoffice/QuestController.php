@@ -4,8 +4,8 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Integrations\Service\IntegrationManager;
 use App\Domain\Core\Service\LarpManager;
+use App\Domain\Integrations\Service\IntegrationManager;
 use App\Domain\StoryMarketplace\Entity\Enum\RecruitmentProposalStatus;
 use App\Domain\StoryMarketplace\Entity\RecruitmentProposal;
 use App\Domain\StoryMarketplace\Entity\StoryRecruitment;

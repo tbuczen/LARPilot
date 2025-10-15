@@ -3,10 +3,10 @@
 namespace App\Twig\Components;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Service\ParticipantCodeValidator;
 use App\Domain\Incidents\Entity\LarpIncident;
 use App\Domain\Incidents\Form\LarpIncidentType;
 use App\Domain\Incidents\Repository\LarpIncidentRepository;
-use App\Domain\Core\Service\ParticipantCodeValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;

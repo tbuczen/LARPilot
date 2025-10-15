@@ -4,7 +4,6 @@ namespace App\Domain\StoryObject\Service;
 
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Repository\RelationRepository;
-use function App\Service\StoryObject\Graph\sort;
 
 readonly class GraphEdgeBuilder
 {

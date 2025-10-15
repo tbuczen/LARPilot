@@ -2,7 +2,7 @@
 
 namespace App\Domain\Map\Form;
 
-use App\Domain\Larp\Form\DataTransformer\JsonToArrayTransformer;
+use App\Domain\Core\Form\DataTransformer\JsonToArrayTransformer;
 use App\Domain\Map\Entity\Enum\LocationType;
 use App\Domain\Map\Entity\MapLocation;
 use App\Domain\StoryObject\Entity\Place;

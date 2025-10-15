@@ -139,4 +139,3 @@ class CharacterApplicationController extends BaseController
         ]);
     }
 }
-

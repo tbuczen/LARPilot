@@ -1,4 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
+import 'fullcalendar';
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
 
 export default class extends Controller {
     static values = {
@@ -13,15 +18,10 @@ export default class extends Controller {
     }
 
     initializeCalendar() {
-        // FullCalendar is loaded via CDN in the template
-        if (typeof FullCalendar === 'undefined') {
-            console.error('FullCalendar library not loaded');
-            return;
-        }
-
         const calendarEl = this.element;
 
-        this.calendar = new FullCalendar.Calendar(calendarEl, {
+        this.calendar = new Calendar(calendarEl, {
+            plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
             initialView: 'timeGridWeek',
             initialDate: this.initialStartValue,
             headerToolbar: {

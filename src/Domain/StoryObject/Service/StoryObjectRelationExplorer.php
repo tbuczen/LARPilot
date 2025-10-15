@@ -2,9 +2,6 @@
 
 namespace App\Domain\StoryObject\Service;
 
-use App\Domain\StoryObject\Service\GraphEdgeBuilder;
-use App\Domain\StoryObject\Service\GraphNodeBuilder;
-
 readonly class StoryObjectRelationExplorer
 {
     public function __construct(
