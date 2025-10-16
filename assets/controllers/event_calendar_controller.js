@@ -15,6 +15,7 @@ export default class extends Controller {
 
     connect() {
         this.initializeCalendar();
+        this.setupFilterHandling();
     }
 
     initializeCalendar() {
@@ -38,7 +39,8 @@ export default class extends Controller {
 
             // Event source
             events: (info, successCallback, failureCallback) => {
-                fetch(`${this.eventsUrlValue}?start=${info.startStr}&end=${info.endStr}`)
+                const url = this.buildEventsUrl(info.startStr, info.endStr);
+                fetch(url)
                     .then(response => response.json())
                     .then(data => successCallback(data))
                     .catch(error => {
@@ -73,6 +75,65 @@ export default class extends Controller {
         });
 
         this.calendar.render();
+    }
+
+    buildEventsUrl(start, end) {
+        const url = new URL(this.eventsUrlValue, window.location.origin);
+        url.searchParams.set('start', start);
+        url.searchParams.set('end', end);
+
+        // Get filter values from form
+        const filterParams = this.getFilterParams();
+        for (const [key, value] of Object.entries(filterParams)) {
+            if (value) {
+                url.searchParams.set(key, value);
+            }
+        }
+
+        return url.toString();
+    }
+
+    getFilterParams() {
+        const params = {};
+        const form = document.querySelector('form[name="scheduled_event_filter"]');
+
+        if (!form) return params;
+
+        const formData = new FormData(form);
+        for (const [key, value] of formData.entries()) {
+            // Extract field name from form field name (e.g., "scheduled_event_filter[title]" -> "title")
+            const match = key.match(/\[([^\]]+)\]$/);
+            if (match && value) {
+                params[match[1]] = value;
+            }
+        }
+
+        return params;
+    }
+
+    setupFilterHandling() {
+        const form = document.querySelector('form[name="scheduled_event_filter"]');
+        if (!form) return;
+
+        // Reload calendar events when filter is submitted
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (this.calendar) {
+                this.calendar.refetchEvents();
+            }
+        });
+
+        // Also reload when filter is cleared
+        const clearButton = form.querySelector('[data-clear-filters]');
+        if (clearButton) {
+            clearButton.addEventListener('click', () => {
+                setTimeout(() => {
+                    if (this.calendar) {
+                        this.calendar.refetchEvents();
+                    }
+                }, 100);
+            });
+        }
     }
 
     disconnect() {

@@ -22,13 +22,18 @@
                 </div>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
+            {# Filter Form #}
+            {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+
+            <div class="p-3">
             <div id="calendar"
                  data-controller="event-calendar"
                  data-event-calendar-larp-id-value="{{ larp.id.toRfc4122 }}"
                  data-event-calendar-events-url-value="{{ path('backoffice_event_planner_calendar_events_api', { larp: larp.id }) }}"
                  data-event-calendar-initial-start-value="{{ defaultStart|date('Y-m-d') }}"
                  data-event-calendar-initial-end-value="{{ defaultEnd|date('Y-m-d') }}">
+            </div>
             </div>
         </div>
     </div>
@@ -66,17 +71,3 @@
     {{ parent() }}
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
 {% endblock %}
-
-{#{% block importmap %}#}
-{#    {{ parent() }}#}
-{#    <script type="importmap">#}
-{#    {#}
-{#        "imports": {#}
-{#            "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.10",#}
-{#            "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.10",#}
-{#            "@fullcalendar/timegrid": "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.10",#}
-{#            "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.10"#}
-{#        }#}
-{#    }#}
-{#    </script>#}
-{#{% endblock %}#}

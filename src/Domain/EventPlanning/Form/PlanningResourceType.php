@@ -60,18 +60,6 @@ class PlanningResourceType extends AbstractType
                 'required' => false,
                 'widget' => 'single_text',
             ])
-            ->add('character', EntityType::class, [
-                'class' => Character::class,
-                'label' => 'planning_resource.character',
-                'required' => false,
-                'placeholder' => 'planning_resource.character_placeholder',
-                'choice_label' => 'title',
-                'query_builder' => fn ($repo) => $repo->createQueryBuilder('c')
-                    ->where('c.larp = :larp')
-                    ->setParameter('larp', $larp)
-                    ->orderBy('c.title', 'ASC'),
-                'autocomplete' => true,
-            ])
             ->add('item', EntityType::class, [
                 'class' => Item::class,
                 'label' => 'planning_resource.item',

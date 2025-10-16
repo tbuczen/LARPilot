@@ -7,6 +7,7 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\LarpParticipantRepository;
 use App\Domain\Kanban\Entity\Enum\KanbanStatus;
 use App\Domain\Kanban\Entity\KanbanTask;
+use App\Domain\Kanban\Form\Filter\KanbanTaskFilterType;
 use App\Domain\Kanban\Form\KanbanTaskType;
 use App\Domain\Kanban\Repository\KanbanTaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,13 +20,48 @@ use Symfony\Component\Routing\Attribute\Route;
 class KanbanController extends BaseController
 {
     #[Route('', name: 'board', methods: ['GET'])]
-    public function board(Larp $larp, KanbanTaskRepository $repository): Response
+    public function board(Request $request, Larp $larp, KanbanTaskRepository $repository): Response
     {
-        $tasks = $repository->findBy(['larp' => $larp], ['position' => 'ASC']);
+        // Create filter form
+        $filterForm = $this->createForm(KanbanTaskFilterType::class, null, ['larp' => $larp]);
+        $filterForm->handleRequest($request);
+
+        // Build base query
+        $qb = $repository->createQueryBuilder('kt')
+            ->where('kt.larp = :larp')
+            ->setParameter('larp', $larp)
+            ->orderBy('kt.position', 'ASC');
+
+        // Apply filters
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+
+        // Handle priority filter manually
+        if ($filterForm->isSubmitted() && $filterForm->get('priority')->getData()) {
+            $priorityFilter = $filterForm->get('priority')->getData();
+
+            switch ($priorityFilter) {
+                case 'high':
+                    $qb->andWhere('kt.priority >= 7');
+                    break;
+                case 'medium':
+                    $qb->andWhere('kt.priority >= 4 AND kt.priority < 7');
+                    break;
+                case 'low':
+                    $qb->andWhere('kt.priority > 0 AND kt.priority < 4');
+                    break;
+                case 'none':
+                    $qb->andWhere('kt.priority = 0');
+                    break;
+            }
+        }
+
+        $tasks = $qb->getQuery()->getResult();
         $this->entityPreloader->preload($tasks, 'assignedTo');
+
         return $this->render('backoffice/larp/kanban/board.html.twig', [
             'larp' => $larp,
             'tasks' => $tasks,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 

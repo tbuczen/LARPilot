@@ -36,6 +36,12 @@
                         {% endif %}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'factions' %}active{% endif %}"
+                       href="{{ path('backoffice_larp_story_marketplace_factions_list', {larp: larp.id}) }}">
+                        {{ 'backoffice.marketplace.factions'|trans }}
+                    </a>
+                </li>
             </ul>
         </div>
 

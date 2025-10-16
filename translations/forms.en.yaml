@@ -147,6 +147,10 @@ sort:
 sort_order: "Sort order"
 user: "User"
 filter_tags: "Filter by Tags"
+filter_thread: "Filter by Thread"
+filter_quest: "Filter by Quest"
+filter_event: "Filter by Event"
+filter_character: "Filter by Character"
 
 game_map:
   name: "Map Name"
@@ -235,9 +239,23 @@ filter:
     location: 'Location'
     start_date: 'Start Date'
     end_date: 'End Date'
+    resource: 'Resource'
+    character: 'Character/NPC'
+  kanban_task:
+    priority: 'Priority'
+    assigned_to: 'Assigned To'
+    status: 'Status'
+    priority_high: 'High Priority (7+)'
+    priority_medium: 'Medium Priority (4-6)'
+    priority_low: 'Low Priority (1-3)'
+    priority_none: 'No Priority (0)'
   all_types: 'All Types'
   all_statuses: 'All Statuses'
   all_locations: 'All Locations'
+  all_resources: 'All Resources'
+  all_characters: 'All Characters'
+  all_priorities: 'All Priorities'
+  all_users: 'All Users'
   all: 'All'
   shareable: 'Shareable Only'
   exclusive: 'Exclusive Only'

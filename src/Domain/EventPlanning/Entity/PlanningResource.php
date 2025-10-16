@@ -9,22 +9,25 @@ use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
 use App\Domain\EventPlanning\Entity\Enum\PlanningResourceType;
 use App\Domain\EventPlanning\Repository\PlanningResourceRepository;
-use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Item;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: PlanningResourceRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 class PlanningResource implements Timestampable, CreatorAwareInterface, \Stringable
 {
     use UuidTraitEntity;
     use TimestampableEntity;
     use CreatorAwareTrait;
+    use SoftDeleteableEntity;
 
     #[ORM\ManyToOne(targetEntity: Larp::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -50,10 +53,6 @@ class PlanningResource implements Timestampable, CreatorAwareInterface, \Stringa
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $availableUntil = null;
-
-    #[ORM\ManyToOne(targetEntity: Character::class)]
-    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    private ?Character $character = null;
 
     #[ORM\ManyToOne(targetEntity: Item::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -161,17 +160,6 @@ class PlanningResource implements Timestampable, CreatorAwareInterface, \Stringa
         return $this;
     }
 
-    public function getCharacter(): ?Character
-    {
-        return $this->character;
-    }
-
-    public function setCharacter(?Character $character): self
-    {
-        $this->character = $character;
-        return $this;
-    }
-
     public function getItem(): ?Item
     {
         return $this->item;
@@ -243,13 +231,10 @@ class PlanningResource implements Timestampable, CreatorAwareInterface, \Stringa
     }
 
     /**
-     * Get linked entity title (character, item, or participant)
+     * Get linked entity title (item or participant)
      */
     public function getLinkedEntityTitle(): ?string
     {
-        if ($this->character) {
-            return $this->character->getTitle();
-        }
         if ($this->item) {
             return $this->item->getTitle();
         }
@@ -257,5 +242,13 @@ class PlanningResource implements Timestampable, CreatorAwareInterface, \Stringa
             return $this->participant->getUser()->getFullName();
         }
         return null;
+    }
+
+    /**
+     * Check if resource has active bookings
+     */
+    public function hasActiveBookings(): bool
+    {
+        return $this->bookings->count() > 0;
     }
 }

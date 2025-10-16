@@ -4,9 +4,7 @@ namespace App\Domain\StoryMarketplace\Service;
 
 use App\Domain\Application\Entity\LarpApplication;
 use App\Domain\Application\Repository\LarpApplicationRepository;
-use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Tag;
-use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\Thread;

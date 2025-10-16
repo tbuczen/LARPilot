@@ -66,13 +66,17 @@ export default class extends Controller {
     }
 
     editTask(event) {
-        if (!this.hasModalTitleTarget) {
-            console.error('modalTitle target not found');
+        if (!this.hasModalTitleTarget || !this.hasModalBodyTarget) {
+            console.error('Modal targets not found');
             return;
         }
-        
+
         const taskId = event.target.dataset.taskId;
         this.modalTitleTarget.textContent = 'Edit Task';
+
+        // Show loader while loading content
+        this.modalBodyTarget.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
+
         this._loadContent(this.editUrlValue.replace('TASK_ID', taskId));
     }
 

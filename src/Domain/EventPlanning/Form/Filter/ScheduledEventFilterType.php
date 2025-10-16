@@ -4,7 +4,9 @@ namespace App\Domain\EventPlanning\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\EventPlanning\Entity\Enum\EventStatus;
+use App\Domain\EventPlanning\Entity\PlanningResource;
 use App\Domain\Map\Entity\MapLocation;
+use App\Domain\StoryObject\Entity\Character;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -47,18 +49,43 @@ class ScheduledEventFilterType extends AbstractType
             ]);
 
         if ($larp) {
-            $builder->add('location', EntityType::class, [
-                'class' => MapLocation::class,
-                'label' => 'filter.event.location',
-                'required' => false,
-                'placeholder' => 'filter.all_locations',
-                'choice_label' => 'name',
-                'query_builder' => fn ($repo) => $repo->createQueryBuilder('ml')
-                    ->join('ml.map', 'm')
-                    ->where('m.larp = :larp')
-                    ->setParameter('larp', $larp)
-                    ->orderBy('ml.name', 'ASC'),
-            ]);
+            $builder
+                ->add('location', EntityType::class, [
+                    'class' => MapLocation::class,
+                    'label' => 'filter.event.location',
+                    'required' => false,
+                    'placeholder' => 'filter.all_locations',
+                    'choice_label' => 'name',
+                    'query_builder' => fn ($repo) => $repo->createQueryBuilder('ml')
+                        ->join('ml.map', 'm')
+                        ->where('m.larp = :larp')
+                        ->setParameter('larp', $larp)
+                        ->orderBy('ml.name', 'ASC'),
+                ])
+                ->add('resource', EntityType::class, [
+                    'class' => PlanningResource::class,
+                    'label' => 'filter.event.resource',
+                    'required' => false,
+                    'placeholder' => 'filter.all_resources',
+                    'choice_label' => 'name',
+                    'autocomplete' => true,
+                    'query_builder' => fn ($repo) => $repo->createQueryBuilder('pr')
+                        ->where('pr.larp = :larp')
+                        ->setParameter('larp', $larp)
+                        ->orderBy('pr.name', 'ASC'),
+                ])
+                ->add('character', EntityType::class, [
+                    'class' => Character::class,
+                    'label' => 'filter.event.character',
+                    'required' => false,
+                    'placeholder' => 'filter.all_characters',
+                    'choice_label' => 'title',
+                    'autocomplete' => true,
+                    'query_builder' => fn ($repo) => $repo->createQueryBuilder('c')
+                        ->where('c.larp = :larp')
+                        ->setParameter('larp', $larp)
+                        ->orderBy('c.title', 'ASC'),
+                ]);
         }
     }
 

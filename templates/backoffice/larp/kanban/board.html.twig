@@ -1,6 +1,10 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
+    <div class="mb-4">
+        {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+    </div>
+
     <div class="kanban-board"
          data-controller="kanban"
          data-kanban-update-url-value="{{ path('backoffice_larp_kanban_task_update', {larp: larp.id, task: 'TASK_ID'}) }}"

@@ -6,6 +6,7 @@ use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\EventPlanning\Entity\Enum\EventStatus;
 use App\Domain\EventPlanning\Entity\ScheduledEvent;
+use App\Domain\EventPlanning\Form\Filter\ScheduledEventFilterType;
 use App\Domain\EventPlanning\Repository\PlanningResourceRepository;
 use App\Domain\EventPlanning\Repository\ScheduledEventRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,16 +18,21 @@ use Symfony\Component\Routing\Attribute\Route;
 class CalendarController extends BaseController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(Larp $larp): Response
+    public function index(Request $request, Larp $larp): Response
     {
         // Calculate default calendar view: week of LARP
         $defaultStart = $larp->getStartDate() ?? new \DateTime();
         $defaultEnd = $larp->getEndDate() ?? (clone $defaultStart)->modify('+7 days');
 
+        // Create filter form
+        $filterForm = $this->createForm(ScheduledEventFilterType::class, null, ['larp' => $larp]);
+        $filterForm->handleRequest($request);
+
         return $this->render('backoffice/event_planner/calendar/index.html.twig', [
             'larp' => $larp,
             'defaultStart' => $defaultStart,
             'defaultEnd' => $defaultEnd,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 
@@ -43,7 +49,46 @@ class CalendarController extends BaseController
         $start = new \DateTime(substr($startStr, 0, 19)); // 2025-09-21T00:00:00
         $end = new \DateTime(substr($endStr, 0, 19));
 
-        $events = $eventRepository->findByLarpAndDateRange($larp, $start, $end);
+        // Build base query
+        $qb = $eventRepository->createQueryBuilder('se')
+            ->where('se.larp = :larp')
+            ->andWhere('se.startTime <= :end')
+            ->andWhere('se.endTime >= :start')
+            ->setParameter('larp', $larp)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        // Apply filters from query parameters
+        if ($title = $request->query->get('title')) {
+            $qb->andWhere('se.title LIKE :title')
+                ->setParameter('title', '%' . $title . '%');
+        }
+
+        if ($status = $request->query->get('status')) {
+            $qb->andWhere('se.status = :status')
+                ->setParameter('status', $status);
+        }
+
+        if ($locationId = $request->query->get('location')) {
+            $qb->andWhere('se.location = :location')
+                ->setParameter('location', $locationId);
+        }
+
+        if ($resourceId = $request->query->get('resource')) {
+            $qb->join('se.resourceBookings', 'rb')
+                ->join('rb.resource', 'r')
+                ->andWhere('r.id = :resource')
+                ->setParameter('resource', $resourceId);
+        }
+
+        if ($characterId = $request->query->get('character')) {
+            $qb->join('se.resourceBookings', 'rb2')
+                ->join('rb2.resource', 'r2')
+                ->andWhere('r2.character = :character')
+                ->setParameter('character', $characterId);
+        }
+
+        $events = $qb->getQuery()->getResult();
 
         $calendarEvents = [];
         foreach ($events as $event) {

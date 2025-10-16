@@ -40,4 +40,5 @@ phpstan.neon
 # Local environment-specific Claude Code configs
 .claude/mcp_config.local.json
 .claude/settings.local.json
+.mcp.json
 ###< claude-code ###

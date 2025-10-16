@@ -3,6 +3,7 @@
 namespace App\Domain\Application\Controller\Backoffice;
 
 use App\Domain\Application\Entity\Enum\SubmissionStatus;
+use App\Domain\Application\Entity\LarpApplication;
 use App\Domain\Application\Entity\LarpApplicationChoice;
 use App\Domain\Application\Entity\LarpApplicationVote;
 use App\Domain\Application\Form\Filter\LarpApplicationChoiceFilterType;
@@ -377,7 +378,7 @@ class CharacterApplicationsController extends BaseController
         string $characterTitle
     ): void {
         $confirmUrl = $this->generateUrl(
-            'public_application_confirm_character',
+            'public_larp_application_confirm_character',
             [
                 'larp' => $larp->getId()->toRfc4122(),
                 'application' => $application->getId()->toRfc4122(),
@@ -387,7 +388,7 @@ class CharacterApplicationsController extends BaseController
         );
 
         $declineUrl = $this->generateUrl(
-            'public_application_decline_character',
+            'public_larp_application_decline_character',
             [
                 'larp' => $larp->getId()->toRfc4122(),
                 'application' => $application->getId()->toRfc4122(),

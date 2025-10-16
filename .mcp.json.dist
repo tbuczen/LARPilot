@@ -1,31 +1,6 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(git mv:*)",
-      "Bash(php bin/console make:migration:*)",
-      "Bash(docker compose exec:*)",
-      "Bash(npm --version)",
-      "Bash(uvx:*)",
-      "Bash(cat:*)",
-      "mcp__serena__find_symbol",
-      "mcp__serena__replace_symbol_body",
-      "mcp__serena__insert_after_symbol",
-      "mcp__serena__get_symbols_overview",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:fullcalendar.io)",
-      "mcp__serena__list_dir",
-      "mcp__serena__find_file",
-      "mcp__serena__think_about_collected_information",
-      "mcp__serena__think_about_whether_you_are_done"
-    ],
-    "deny": [],
-    "ask": []
-  },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "filesystem",
-    "web-search",
-    "git"
   ],
   "mcpServers": {
     "filesystem": {
