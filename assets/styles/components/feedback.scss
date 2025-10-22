@@ -1,0 +1,152 @@
+// Feedback Widget Styles
+
+// Floating feedback button
+.feedback-float-button {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    border: none;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    // Ensure button is on top but below modals
+    z-index: 1040;
+
+    // Responsive positioning
+    @media (max-width: 767.98px) {
+        bottom: 16px;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+}
+
+// Screenshot preview styles
+#screenshotPreview {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+    }
+}
+
+// Context accordion customization
+#contextAccordion {
+    .accordion-button {
+        font-size: 0.875rem;
+        padding: 0.75rem 1rem;
+        background-color: #f8f9fa;
+
+        &:not(.collapsed) {
+            background-color: #e9ecef;
+            color: #212529;
+        }
+
+        &:focus {
+            box-shadow: none;
+            border-color: rgba(0, 0, 0, 0.125);
+        }
+    }
+
+    .accordion-body {
+        padding: 1rem;
+        font-size: 0.875rem;
+        background-color: #f8f9fa;
+    }
+}
+
+// Modal customization for feedback
+#feedbackModal {
+    .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-select,
+    .form-control {
+        &:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    // Button group spacing
+    .d-flex.gap-2 {
+        gap: 0.5rem !important;
+    }
+}
+
+// Alert message animations
+#feedbackError,
+#feedbackSuccess {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Loading spinner animation
+.spinner-border {
+    animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Ensure modal appears above feedback button
+.modal {
+    z-index: 1055;
+}
+
+.modal-backdrop {
+    z-index: 1050;
+}

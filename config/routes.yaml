@@ -42,6 +42,12 @@ event_planning_backoffice:
   type: attribute
   prefix: /backoffice
 
+# Feedback Domain
+feedback_api:
+  resource: '../src/Domain/Feedback/Controller/API/'
+  type: attribute
+  prefix: /
+
 # Incidents Domain
 incidents_public:
   resource: '../src/Domain/Incidents/Controller/Public/'

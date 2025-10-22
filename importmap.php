@@ -185,4 +185,7 @@ return [
     '@fullcalendar/list' => [
         'version' => '5.11.5',
     ],
+    'html2canvas' => [
+        'version' => '1.4.1',
+    ],
 ];

@@ -43,6 +43,20 @@
             {% endfor %}
         {% endfor %}
     </div>
+
+    {# Feedback Widget #}
+    <div data-controller="feedback"
+         data-feedback-api-url-value="{{ path('api_feedback_submit') }}"
+         data-feedback-user-email-value="{{ app.user ? app.user.contactEmail : '' }}"
+         data-feedback-user-name-value="{{ app.user ? app.user.username : ''  }}"
+         data-feedback-user-id-value="{{ app.user ? app.user.id : '' }}">
+        <button type="button" class="feedback-float-button btn btn-primary"
+                data-action="click->feedback#open"
+                title="Send Feedback">
+            <i class="bi bi-chat-left-text"></i>
+        </button>
+    </div>
+
     {% block body %}{% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
