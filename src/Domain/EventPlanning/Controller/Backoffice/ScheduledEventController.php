@@ -76,12 +76,12 @@ class ScheduledEventController extends BaseController
             if (!empty($conflicts)) {
                 $this->addFlash(
                     'warning',
-                    $this->translator->trans('backoffice.event_planner.event.conflicts_detected', [
+                    $this->translator->trans('event_planner.event.conflicts_detected', [
                         'count' => count($conflicts),
                     ])
                 );
             } else {
-                $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+                $this->addFlash('success', $this->translator->trans('success_save'));
             }
 
             return $this->redirectToRoute('backoffice_event_planner_event_view', [
@@ -117,7 +117,7 @@ class ScheduledEventController extends BaseController
         ScheduledEvent $event
     ): Response {
         $repository->remove($event);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_event_planner_event_list', [
             'larp' => $larp->getId(),

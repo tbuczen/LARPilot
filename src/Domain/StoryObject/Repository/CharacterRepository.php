@@ -39,7 +39,6 @@ class CharacterRepository extends BaseRepository implements ListableRepositoryIn
 
     public function createCharactersNeedingThreadsQueryBuilder(Larp $larp, int $minThreads): QueryBuilder
     {
-
         $em = $this->getEntityManager();
         $subQb = $em->createQueryBuilder();
         $subQb->select('c2.id')

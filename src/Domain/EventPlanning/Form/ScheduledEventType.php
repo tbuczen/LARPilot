@@ -96,6 +96,10 @@ class ScheduledEventType extends AbstractType
                     ->setParameter('larp', $larp)
                     ->orderBy('q.title', 'ASC'),
                 'autocomplete' => true,
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
             ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,
@@ -108,6 +112,10 @@ class ScheduledEventType extends AbstractType
                     ->setParameter('larp', $larp)
                     ->orderBy('t.title', 'ASC'),
                 'autocomplete' => true,
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
             ])
             ->add('event', EntityType::class, [
                 'class' => Event::class,
@@ -120,6 +128,10 @@ class ScheduledEventType extends AbstractType
                     ->setParameter('larp', $larp)
                     ->orderBy('e.title', 'ASC'),
                 'autocomplete' => true,
+                'tom_select_options' => [
+                    'create' => true,
+                    'persist' => false,
+                ],
             ]);
     }
 

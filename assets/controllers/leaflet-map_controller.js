@@ -13,8 +13,6 @@ export default class extends Controller {
     };
 
     connect() {
-        console.log('Leaflet map viewer controller connected');
-        console.log('Locations to display:', this.locationsValue);
         this.initMap();
     }
 
@@ -101,21 +99,16 @@ export default class extends Controller {
 
     addLocationMarkers(width, height) {
         if (!this.locationsValue || this.locationsValue.length === 0) {
-            console.log('No locations to display');
             return;
         }
 
-        console.log(`Adding markers for ${this.locationsValue.length} locations`);
         const cellWidth = width / this.gridColumnsValue;
         const cellHeight = height / this.gridRowsValue;
 
         this.locationsValue.forEach(location => {
             if (!location.gridCoordinates || location.gridCoordinates.length === 0) {
-                console.log(`Location ${location.name} has no grid coordinates`);
                 return;
             }
-
-            console.log(`Processing location: ${location.name} with coordinates:`, location.gridCoordinates);
 
             const markerColor = location.color || '#3388ff';
 
@@ -166,7 +159,6 @@ export default class extends Controller {
             popupContent += `Cells: ${location.gridCoordinates.join(', ')}`;
 
             marker.bindPopup(popupContent);
-            console.log(`Added marker for location: ${location.name} at [${centerY}, ${centerX}]`);
         });
     }
 

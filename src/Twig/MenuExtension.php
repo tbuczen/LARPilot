@@ -25,14 +25,14 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
 
         $this->menuItems = [
             [
-                'label' => $this->translator->trans('common.larps', domain: 'messages'),
+                'label' => $this->translator->trans('larp.plural', domain: 'messages'),
                 'url' => $this->router->generate('public_larp_list'),
             ]
         ];
 
         if ($user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             $this->menuItems[] = [
-                'label' => $this->translator->trans('common.account'),
+                'label' => $this->translator->trans('account.singular'),
                 'url' => '#',
                 'children' => [
                     [
@@ -44,48 +44,48 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
                         'url' => $this->router->generate('account_social_accounts'),
                     ],
                     [
-                        'label' => $this->translator->trans('common.logout'),
+                        'label' => $this->translator->trans('logout'),
                         'url' => $this->router->generate('_logout_main'),
                     ],
                 ],
             ];
 
             $this->menuItems[] = [
-                'label' => $this->translator->trans('common.incidents'),
+                'label' => $this->translator->trans('incidents'),
                 'url' => '#',
                 'children' => [
                     [
-                        'label' => $this->translator->trans('common.create'),
+                        'label' => $this->translator->trans('create'),
                         'url' => $this->router->generate('incident_create'),
                     ],
                     [
-                        'label' => $this->translator->trans('common.list'),
+                        'label' => $this->translator->trans('list'),
                         'url' => $this->router->generate('incident_list'),
                     ],
                 ],
             ];
 
             $this->menuItems[] = [
-                'label' => $this->translator->trans('common.backoffice'),
+                'label' => $this->translator->trans('backoffice_title'),
                 'url' => '#',
                 'children' => [
                     [
-                        'label' => $this->translator->trans('backoffice.location.list'),
+                        'label' => $this->translator->trans('larp.location.list'),
                         'url' => $this->router->generate('backoffice_location_list'),
                     ],
                     [
-                        'label' => $this->translator->trans('backoffice.larp.list'),
+                        'label' => $this->translator->trans('larp.list'),
                         'url' => $this->router->generate('backoffice_larp_list'),
                     ],
                     [
-                        'label' => $this->translator->trans('backoffice.larp.create'),
+                        'label' => $this->translator->trans('larp.create'),
                         'url' => $this->router->generate('backoffice_larp_create'),
                     ],
                 ],
             ];
         } else {
             $this->menuItems[] = [
-                'label' => $this->translator->trans('common.login'),
+                'label' => $this->translator->trans('login'),
                 'url' => $this->router->generate('sso_connect'),
             ];
         }

@@ -12,7 +12,17 @@ readonly class StoryObjectRelationExplorer
 
     public function getGraphFromResults(iterable $objects): array
     {
-        $objects = is_array($objects) ? $objects : [...$objects];
+        // Handle grouped results from repository
+        if (is_array($objects) && isset($objects['threads'], $objects['characters'], $objects['factions'])) {
+            $objects = array_merge(
+                $objects['threads'],
+                $objects['characters'],
+                $objects['factions'],
+                $objects['quests'] ?? []
+            );
+        } elseif (!is_array($objects)) {
+            $objects = [...$objects];
+        }
         
         $graphData = $this->nodeBuilder->buildNodes($objects);
         $edges = $this->edgeBuilder->buildEdges($objects, $graphData['validNodeIds']);

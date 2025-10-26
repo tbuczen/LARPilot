@@ -12,6 +12,12 @@ export default class extends Controller {
     async connect() {
         this.textarea = this.element;
 
+        // Store original required state and remove it to prevent HTML5 validation on hidden field
+        this.wasRequired = this.textarea.hasAttribute('required');
+        if (this.wasRequired) {
+            this.textarea.removeAttribute('required');
+        }
+
         if (!this.hasLarpValue) {
             const match = window.location.pathname.match(/\/larp\/([^/]+)/);
             this.larpValue = match ? match[1] : null;
@@ -90,6 +96,7 @@ export default class extends Controller {
             theme: 'snow',
             modules: {
                 toolbar: [
+                    ['font', 'size'],
                     ['bold', 'italic', 'underline'],
                     [{ list: 'ordered' }, { list: 'bullet' }],
                     ['link'],
@@ -127,6 +134,11 @@ export default class extends Controller {
                     },
                 }
             },
+            //.editorholder {
+            //   height: 500px;
+            //   display: flex;
+            //   flex-flow: column;
+            // }
         });
 
         if (this.textarea.value) {
@@ -138,7 +150,40 @@ export default class extends Controller {
         }
 
         this.quill.on('text-change', () => this._syncToTextarea());
-        this.textarea.form?.addEventListener('submit', () => this._syncToTextarea());
+
+        // Add form validation handler
+        if (this.textarea.form) {
+            this.formSubmitHandler = (e) => {
+                this._syncToTextarea();
+
+                // Custom validation if field was originally required
+                if (this.wasRequired) {
+                    const text = this.quill.getText().trim();
+                    if (!text) {
+                        e.preventDefault();
+                        this.wrapper.classList.add('is-invalid');
+
+                        // Show validation message
+                        let feedback = this.wrapper.nextElementSibling;
+                        if (!feedback || !feedback.classList.contains('invalid-feedback')) {
+                            feedback = document.createElement('div');
+                            feedback.className = 'invalid-feedback';
+                            feedback.style.display = 'block';
+                            this.wrapper.parentNode.insertBefore(feedback, this.wrapper.nextSibling);
+                        }
+                        feedback.textContent = 'This field is required.';
+                        return false;
+                    } else {
+                        this.wrapper.classList.remove('is-invalid');
+                        const feedback = this.wrapper.nextElementSibling;
+                        if (feedback && feedback.classList.contains('invalid-feedback')) {
+                            feedback.remove();
+                        }
+                    }
+                }
+            };
+            this.textarea.form.addEventListener('submit', this.formSubmitHandler);
+        }
     }
 
     _ensureEditorHost() {
@@ -154,6 +199,17 @@ export default class extends Controller {
 
     disconnect() {
         this._syncToTextarea();
+
+        // Remove form submit handler
+        if (this.textarea.form && this.formSubmitHandler) {
+            this.textarea.form.removeEventListener('submit', this.formSubmitHandler);
+        }
+
+        // Restore required attribute if it was originally there
+        if (this.wasRequired) {
+            this.textarea.setAttribute('required', 'required');
+        }
+
         if (this.wrapper && this.wrapper.parentNode) {
             this.wrapper.parentNode.removeChild(this.wrapper);
         }

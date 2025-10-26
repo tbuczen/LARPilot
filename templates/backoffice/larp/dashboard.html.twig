@@ -1,13 +1,13 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
-{% block title %}{{ 'common.settings'|trans }} - {{ larp.title }}{% endblock %}
+{% block title %}{{ 'settings'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">{{ 'common.dashboard'|trans }}</h5>
+                    <h5 class="card-title mb-0">{{ 'dashboard'|trans }}</h5>
                 </div>
                 <div class="card-body">
                     <p class="text-muted">{{ larp.description|raw }}</p>
@@ -21,7 +21,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.event.status'|trans }}</h6>
+                    <h6 class="card-title">{{ 'event.status'|trans }}</h6>
                     <span class="badge badge-{{ larp.status.value == 'draft' ? 'secondary' : (larp.status.value == 'active' ? 'success' : 'primary') }} fs-6">
                         {{ larp.status.value|upper }}
                     </span>
@@ -31,12 +31,12 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.event.days_until'|trans }}</h6>
+                    <h6 class="card-title">{{ 'event.days_until'|trans }}</h6>
                     <h4 class="text-{{ dashboard.timing.daysUntilEvent < 0 ? 'danger' : (dashboard.timing.daysUntilEvent < 7 ? 'warning' : 'success') }}">
                         {% if dashboard.timing.daysUntilEvent is not null %}
-                            {{ dashboard.timing.daysUntilEvent < 0 ? ('common.event.passed'|trans) : dashboard.timing.daysUntilEvent ~ ' ' ~ 'common.days'|trans }}
+                            {{ dashboard.timing.daysUntilEvent < 0 ? ('event.passed'|trans) : dashboard.timing.daysUntilEvent ~ ' ' ~ 'days'|trans }}
                         {% else %}
-                            {{ 'common.not_set'|trans }}
+                            {{ 'not_set'|trans }}
                         {% endif %}
                     </h4>
                 </div>
@@ -45,12 +45,12 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.event.duration'|trans }}</h6>
+                    <h6 class="card-title">{{ 'event.duration'|trans }}</h6>
                     <h4 class="text-info">
                         {% if dashboard.timing.duration is not null %}
-                            {{ dashboard.timing.duration }} {{ dashboard.timing.duration != 1 ? 'common.days'|trans : 'common.day'|trans }}
+                            {{ dashboard.timing.duration }} {{ dashboard.timing.duration != 1 ? 'days'|trans : 'day'|trans }}
                         {% else %}
-                            {{ 'common.not_set'|trans }}
+                            {{ 'not_set'|trans }}
                         {% endif %}
                     </h4>
                 </div>
@@ -59,7 +59,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.location'|trans }}</h6>
+                    <h6 class="card-title">{{ 'location'|trans }}</h6>
                     {% if larp.location %}
                         <p class="mb-0">
                             <a href="{{ path('public_location_details', { slug: larp.location.slug }) }}" target="_blank" rel="noopener">
@@ -67,7 +67,7 @@
                             </a>
                         </p>
                     {% else %}
-                        <p class="mb-0">{{ 'common.not_set'|trans }}</p>
+                        <p class="mb-0">{{ 'not_set'|trans }}</p>
                     {% endif %}                </div>
             </div>
         </div>
@@ -78,7 +78,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.applications.total'|trans }}</h6>
+                    <h6 class="card-title">{{ 'applications.total'|trans }}</h6>
                     <h3 class="text-primary">{{ dashboard.applications.total }}</h3>
                 </div>
             </div>
@@ -86,7 +86,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.applications.pending'|trans }}</h6>
+                    <h6 class="card-title">{{ 'applications.pending'|trans }}</h6>
                     <h3 class="text-warning">{{ dashboard.applications.pending }}</h3>
                 </div>
             </div>
@@ -94,7 +94,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.participants.confirmed'|trans }}</h6>
+                    <h6 class="card-title">{{ 'participants.confirmed'|trans }}</h6>
                     <h3 class="text-success">{{ dashboard.participants.total }}</h3>
                 </div>
             </div>
@@ -102,7 +102,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.participants.max_character_choices'|trans }}</h6>
+                    <h6 class="card-title">{{ 'participants.max_character_choices'|trans }}</h6>
                     <h3 class="text-info">{{ dashboard.participants.maxChoices }}</h3>
                 </div>
             </div>
@@ -114,7 +114,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.characters.total'|trans }}</h6>
+                    <h6 class="card-title">{{ 'characters.total'|trans }}</h6>
                     <h3 class="text-primary">{{ dashboard.characters.total }}</h3>
                 </div>
             </div>
@@ -122,7 +122,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.characters.assigned'|trans }}</h6>
+                    <h6 class="card-title">{{ 'characters.assigned'|trans }}</h6>
                     <h3 class="text-success">{{ dashboard.characters.assigned }}</h3>
                 </div>
             </div>
@@ -130,7 +130,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.characters.available'|trans }}</h6>
+                    <h6 class="card-title">{{ 'characters.available'|trans }}</h6>
                     <h3 class="text-warning">{{ dashboard.characters.unassigned }}</h3>
                 </div>
             </div>
@@ -138,7 +138,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.factions.active'|trans }}</h6>
+                    <h6 class="card-title">{{ 'factions.active'|trans }}</h6>
                     <h3 class="text-info">{{ dashboard.factions.total }}</h3>
                 </div>
             </div>
@@ -150,7 +150,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.skills.available'|trans }}</h6>
+                    <h6 class="card-title">{{ 'skills.available'|trans }}</h6>
                     <h3 class="text-primary">{{ dashboard.skills.total }}</h3>
                 </div>
             </div>
@@ -158,7 +158,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.events.sub'|trans }}</h6>
+                    <h6 class="card-title">{{ 'events.sub'|trans }}</h6>
                     <h3 class="text-success">{{ dashboard.events.total }}</h3>
                 </div>
             </div>
@@ -166,7 +166,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.integrations.count'|trans }}</h6>
+                    <h6 class="card-title">{{ 'integrations.count'|trans }}</h6>
                     <h3 class="text-info">{{ dashboard.integrations.total }}</h3>
                 </div>
             </div>
@@ -174,7 +174,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'common.event.dates'|trans }}</h6>
+                    <h6 class="card-title">{{ 'event.dates'|trans }}</h6>
                     <small class="text-muted">
                         {% if larp.startDate %}
                             {{ larp.startDate|date('M d, Y') }}
@@ -182,7 +182,7 @@
                                 - {{ larp.endDate|date('M d, Y') }}
                             {% endif %}
                         {% else %}
-                            {{ 'common.not_set'|trans }}
+                            {{ 'not_set'|trans }}
                         {% endif %}
                     </small>
                 </div>
@@ -196,7 +196,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="card-title mb-0">{{ 'common.factions.distribution'|trans }}</h6>
+                    <h6 class="card-title mb-0">{{ 'factions.distribution'|trans }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -204,7 +204,7 @@
                         <div class="col-md-4 mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span><a href="{{ path('backoffice_larp_story_faction_modify', {'larp': larp.id, 'faction' : faction.id}) }}">{{ faction.title }}</a></span>
-                                <span class="badge badge-primary">{{ faction.participants }} {{ 'common.participants.list'|trans }}</span>
+                                <span class="badge badge-primary">{{ faction.participants }} {{ 'participants.list'|trans }}</span>
                             </div>
                         </div>
                         {% endfor %}
@@ -220,23 +220,23 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="card-title mb-0">{{ 'common.quick_actions'|trans }}</h6>
+                    <h6 class="card-title mb-0">{{ 'quick_actions'|trans }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="btn-group" role="group">
                         {% if dashboard.applications.pending > 0 %}
                         <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-warning">
-                            {{ 'common.applications.review'|trans }} ({{ dashboard.applications.pending }})
+                            {{ 'applications.review'|trans }} ({{ dashboard.applications.pending }})
                         </a>
                         {% endif %}
                         {% if dashboard.characters.unassigned > 0 %}
                         <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-info">
-                            {{ 'common.characters.assign'|trans }} ({{ dashboard.characters.unassigned }})
+                            {{ 'characters.assign'|trans }} ({{ dashboard.characters.unassigned }})
                         </a>
                         {% endif %}
-                        <a href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}" class="btn btn-primary">{{ 'common.participants.manage'|trans }}</a>
-{#                        <a href="#" class="btn btn-success">{{ 'common.send_announcement'|trans }}</a>#}
-{#                        <a href="#" class="btn btn-outline-secondary">{{ 'common.generate_reports'|trans }}</a>#}
+                        <a href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}" class="btn btn-primary">{{ 'participants.manage'|trans }}</a>
+{#                        <a href="#" class="btn btn-success">{{ 'send_announcement'|trans }}</a>#}
+{#                        <a href="#" class="btn btn-outline-secondary">{{ 'generate_reports'|trans }}</a>#}
                     </div>
                 </div>
             </div>

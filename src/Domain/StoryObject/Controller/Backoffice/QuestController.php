@@ -16,6 +16,7 @@ use App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository;
 use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Form\Filter\QuestFilterType;
 use App\Domain\StoryObject\Form\QuestType;
+use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\QuestRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,6 +53,7 @@ class QuestController extends BaseController
         Request                 $request,
         Larp                    $larp,
         QuestRepository $questRepository,
+        CharacterRepository $characterRepository,
         ?Quest          $quest = null,
     ): Response {
         $new = false;
@@ -59,6 +61,15 @@ class QuestController extends BaseController
             $quest = new Quest();
             $quest->setLarp($larp);
             $new = true;
+            
+            // Pre-fill with character from query parameter
+            $characterId = $request->query->get('character');
+            if ($characterId) {
+                $character = $characterRepository->find($characterId);
+                if ($character && $character->getLarp() === $larp) {
+                    $quest->addInvolvedCharacter($character);
+                }
+            }
         }
 
         $form = $this->createForm(QuestType::class, $quest, ['larp' => $larp]);
@@ -67,7 +78,7 @@ class QuestController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $questRepository->save($quest);
             $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $quest);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_quest_list', ['larp' => $larp->getId()]);
         }
 
@@ -89,7 +100,7 @@ class QuestController extends BaseController
             $treeData = $request->request->get('decisionTree', '[]');
             $quest->setDecisionTree(json_decode($treeData, true) ?? []);
             $questRepository->save($quest);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
         }
 
         return $this->render('backoffice/larp/quest/tree.html.twig', [
@@ -117,7 +128,7 @@ class QuestController extends BaseController
 
         $questRepository->remove($quest);
 
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_story_quest_list', [
             'larp' => $larp->getId(),
@@ -209,7 +220,7 @@ class QuestController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recruitmentRepository->save($recruitment);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
 
             return $this->redirectToRoute('backoffice_larp_story_quest_list', [
                 'larp' => $larp->getId(),

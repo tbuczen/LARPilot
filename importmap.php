@@ -26,10 +26,14 @@ return [
         'version' => '2.27.0',
     ],
     'sortablejs' => [
-        'path' => './assets/vendor/sortable.esm.js',
+        'version' => '1.15.6',
     ],
     './styles/app.scss' => [
         'path' => './assets/styles/app.scss',
+        'type' => 'css',
+    ],
+    './styles/fullcalendar.css' => [
+        'path' => './assets/styles/fullcalendar.css',
         'type' => 'css',
     ],
     './controllers/integrations/folder_browser_controller.js' => [
@@ -155,18 +159,6 @@ return [
     'dagre' => [
         'version' => '0.8.5',
     ],
-    'fullcalendar' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/common' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/core' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/daygrid' => [
-        'version' => '5.11.5',
-    ],
     'tslib' => [
         'version' => '2.5.0',
     ],
@@ -179,10 +171,25 @@ return [
     'preact/hooks' => [
         'version' => '10.12.1',
     ],
+    'fullcalendar' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/core' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/common' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/daygrid' => [
+        'version' => '5.11.5',
+    ],
     '@fullcalendar/timegrid' => [
         'version' => '5.11.5',
     ],
     '@fullcalendar/list' => [
+        'version' => '5.11.5',
+    ],
+    '@fullcalendar/interaction' => [
         'version' => '5.11.5',
     ],
     'html2canvas' => [

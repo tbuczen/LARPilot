@@ -1,23 +1,23 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
-{% block title %}{{ 'backoffice.event_planner.event.list'|trans }} - {{ larp.title }}{% endblock %}
+{% block title %}{{ 'event_planner.event.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block breadcrumb %}
     {{ parent() }}
     <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_dashboard', { larp: larp.id }) }}">{{ larp.title }}</a></li>
-    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
-    <li class="breadcrumb-item active">{{ 'backoffice.event_planner.event.list'|trans }}</li>
+    <li class="breadcrumb-item">{{ 'event_planner.title'|trans }}</li>
+    <li class="breadcrumb-item active">{{ 'event_planner.event.list'|trans }}</li>
 {% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'backoffice.event_planner.event.list'|trans }}</h2>
+                <h2 class="mb-0">{{ 'event_planner.event.list'|trans }}</h2>
                 <div class="d-flex gap-2">
                     <a href="{{ path('backoffice_event_planner_event_modify', { larp: larp.id }) }}"
                        class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> {{ 'common.create'|trans }}
+                        <i class="bi bi-plus-circle"></i> {{ 'create'|trans }}
                     </a>
                 </div>
             </div>
@@ -32,16 +32,16 @@
                             <tr>
                                 {% include 'includes/sort_th.html.twig' with {
                                     field: 'title',
-                                    label: 'common.title'|trans
+                                    label: 'title'|trans
                                 } %}
                                 {% include 'includes/sort_th.html.twig' with {
                                     field: 'startTime',
-                                    label: 'backoffice.event_planner.event.start_time'|trans
+                                    label: 'event_planner.event.start_time'|trans
                                 } %}
-                                <th>{{ 'backoffice.event_planner.event.duration'|trans }}</th>
-                                <th>{{ 'backoffice.event_planner.event.location'|trans }}</th>
-                                <th>{{ 'common.status'|trans }}</th>
-                                <th>{{ 'common.actions'|trans }}</th>
+                                <th>{{ 'event_planner.event.duration'|trans }}</th>
+                                <th>{{ 'event_planner.event.location'|trans }}</th>
+                                <th>{{ 'status'|trans }}</th>
+                                <th>{{ 'actions'|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,12 +55,12 @@
                                         </a>
                                         {% if event.hasUnresolvedConflicts %}
                                             <span class="badge bg-danger ms-2">
-                                                <i class="bi bi-exclamation-triangle"></i> {{ 'backoffice.event_planner.event.has_conflicts'|trans }}
+                                                <i class="bi bi-exclamation-triangle"></i> {{ 'event_planner.event.has_conflicts'|trans }}
                                             </span>
                                         {% endif %}
                                     </td>
                                     <td>{{ event.startTime|date('Y-m-d H:i') }}</td>
-                                    <td>{{ event.durationMinutes }} {{ 'common.minutes'|trans }}</td>
+                                    <td>{{ event.durationMinutes }} {{ 'minutes'|trans }}</td>
                                     <td>{{ event.location ? event.location.name : '-' }}</td>
                                     <td>
                                         <span class="badge {{ event.status.badgeClass }}">
@@ -92,7 +92,7 @@
                 {% include 'includes/pagination.html.twig' with { pagination: events } %}
             {% else %}
                 <div class="p-4">
-                    <p class="text-muted">{{ 'backoffice.event_planner.event.empty_list'|trans }}</p>
+                    <p class="text-muted">{{ 'event_planner.event.empty_list'|trans }}</p>
                 </div>
             {% endif %}
         </div>

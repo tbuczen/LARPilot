@@ -10,7 +10,11 @@ use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Repository\LarpParticipantRepository;
 use App\Domain\StoryObject\Entity\Enum\CharacterType;
 use App\Domain\StoryObject\Entity\Faction;
+use App\Domain\StoryObject\Entity\Quest;
+use App\Domain\StoryObject\Entity\Thread;
 use App\Domain\StoryObject\Repository\FactionRepository;
+use App\Domain\StoryObject\Repository\QuestRepository;
+use App\Domain\StoryObject\Repository\ThreadRepository;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -70,6 +74,7 @@ class CharacterFilterType extends AbstractType
                 'query_builder' => function (LarpParticipantRepository $repo) use ($larp): \Doctrine\ORM\QueryBuilder {
                     $qb = $repo->createQueryBuilder('p')
                         ->join('p.user', 'u')
+                        ->addSelect('u')
                         ->andWhere('p.larp = :larp')
                         ->setParameter('larp', $larp)
                         ->orderBy('u.username', 'ASC');
@@ -92,6 +97,36 @@ class CharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
+            ])
+            ->add('threads', EntityType::class, [
+                'class' => Thread::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (ThreadRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
+            ])
+            ->add('quests', EntityType::class, [
+                'class' => Quest::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (QuestRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('q')
+                    ->where('q.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('q.title', 'ASC'),
             ]);
     }
 

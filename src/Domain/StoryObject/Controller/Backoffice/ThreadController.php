@@ -16,6 +16,7 @@ use App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository;
 use App\Domain\StoryObject\Entity\Thread;
 use App\Domain\StoryObject\Form\Filter\ThreadFilterType;
 use App\Domain\StoryObject\Form\ThreadType;
+use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\ThreadRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,6 +53,7 @@ class ThreadController extends BaseController
         Request                                               $request,
         Larp                                                  $larp,
         ThreadRepository                                      $threadRepository,
+        CharacterRepository                                   $characterRepository,
         \App\Domain\StoryObject\Service\StoryObjectTextLinker $textLinker,
         ?Thread                                               $thread = null,
     ): Response {
@@ -60,6 +62,15 @@ class ThreadController extends BaseController
             $thread = new Thread();
             $thread->setLarp($larp);
             $new = true;
+            
+            // Pre-fill with character from query parameter
+            $characterId = $request->query->get('character');
+            if ($characterId) {
+                $character = $characterRepository->find($characterId);
+                if ($character && $character->getLarp() === $larp) {
+                    $thread->addInvolvedCharacter($character);
+                }
+            }
         }
 
         $form = $this->createForm(ThreadType::class, $thread, ['larp' => $larp]);
@@ -73,7 +84,7 @@ class ThreadController extends BaseController
 
             $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $thread);
 
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_thread_list', ['larp' => $larp->getId()]);
         }
 
@@ -95,7 +106,7 @@ class ThreadController extends BaseController
             $treeData = $request->request->get('decisionTree', '[]');
             $thread->setDecisionTree(json_decode($treeData, true) ?? []);
             $threadRepository->save($thread);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
         }
 
         return $this->render('backoffice/larp/thread/tree.html.twig', [
@@ -123,7 +134,7 @@ class ThreadController extends BaseController
 
         $threadRepository->remove($thread);
 
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_story_thread_list', [
             'larp' => $larp->getId(),
@@ -215,7 +226,7 @@ class ThreadController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recruitmentRepository->save($recruitment);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
 
             return $this->redirectToRoute('backoffice_larp_story_thread_list', [
                 'larp' => $larp->getId(),

@@ -58,6 +58,7 @@ class ParticipantFilterType extends AbstractType
                 ],
                 'query_builder' => fn (UserRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('u')
                     ->innerJoin('u.larpParticipants', 'lp')
+                    ->select('lp')
                     ->where('lp.larp = :larp')
                     ->setParameter('larp', $larp),
             ])

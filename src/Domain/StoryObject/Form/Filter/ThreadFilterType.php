@@ -3,10 +3,14 @@
 namespace App\Domain\StoryObject\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\Tag;
+use App\Domain\Core\Repository\TagRepository;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
+use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\FactionRepository;
+use App\Domain\StoryObject\Repository\QuestRepository;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -25,6 +29,24 @@ class ThreadFilterType extends AbstractType
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
+            ->add('description', Filters\TextFilterType::class, [
+                'condition_pattern' => FilterOperands::STRING_CONTAINS,
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (TagRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
+            ])
             ->add('involvedFactions', EntityType::class, [
                 'class' => Faction::class,
                 'choice_label' => 'title',
@@ -37,7 +59,8 @@ class ThreadFilterType extends AbstractType
                 ],
                 'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
-                    ->setParameter('larp', $larp),
+                    ->setParameter('larp', $larp)
+                    ->orderBy('f.title', 'ASC'),
             ])
             ->add('involvedCharacters', EntityType::class, [
                 'class' => Character::class,
@@ -49,9 +72,25 @@ class ThreadFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
-                    ->where('f.larp = :larp')
-                    ->setParameter('larp', $larp),
+                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                    ->where('c.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('c.title', 'ASC'),
+            ])
+            ->add('quests', EntityType::class, [
+                'class' => Quest::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (QuestRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('q')
+                    ->where('q.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('q.title', 'ASC'),
             ])
         ;
     }

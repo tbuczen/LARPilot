@@ -4,14 +4,16 @@ namespace App\Domain\EventPlanning\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\EventPlanning\Entity\Enum\EventStatus;
 use App\Domain\EventPlanning\Entity\ScheduledEvent;
 use App\Domain\EventPlanning\Form\Filter\ScheduledEventFilterType;
 use App\Domain\EventPlanning\Repository\PlanningResourceRepository;
 use App\Domain\EventPlanning\Repository\ScheduledEventRepository;
+use App\Domain\EventPlanning\Service\CalendarEventFormatter;
+use App\Domain\EventPlanning\Service\ScheduledEventService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/larp/{larp}/event-planner/calendar', name: 'backoffice_event_planner_calendar_')]
@@ -22,7 +24,7 @@ class CalendarController extends BaseController
     {
         // Calculate default calendar view: week of LARP
         $defaultStart = $larp->getStartDate() ?? new \DateTime();
-        $defaultEnd = $larp->getEndDate() ?? (clone $defaultStart)->modify('+7 days');
+        $defaultEnd = $larp->getEndDate() ?? (new \DateTime($defaultStart->format('Y-m-d H:i:s')))->modify('+7 days');
 
         // Create filter form
         $filterForm = $this->createForm(ScheduledEventFilterType::class, null, ['larp' => $larp]);
@@ -40,7 +42,8 @@ class CalendarController extends BaseController
     public function eventsApi(
         Request $request,
         Larp $larp,
-        ScheduledEventRepository $eventRepository
+        ScheduledEventRepository $eventRepository,
+        CalendarEventFormatter $formatter
     ): JsonResponse {
         $startStr = $request->query->get('start');
         $endStr = $request->query->get('end');
@@ -92,24 +95,7 @@ class CalendarController extends BaseController
 
         $calendarEvents = [];
         foreach ($events as $event) {
-            $calendarEvents[] = [
-                'id' => $event->getId()->toRfc4122(),
-                'title' => $event->getTitle(),
-                'start' => $event->getStartTime()->format('c'),
-                'end' => $event->getEndTime()->format('c'),
-                'backgroundColor' => $this->getEventColor($event),
-                'borderColor' => $this->getEventBorderColor($event),
-                'url' => $this->generateUrl('backoffice_event_planner_event_view', [
-                    'larp' => $larp->getId(),
-                    'event' => $event->getId(),
-                ]),
-                'extendedProps' => [
-                    'status' => $event->getStatus()->value,
-                    'location' => $event->getLocation()?->getName(),
-                    'hasConflicts' => $event->hasUnresolvedConflicts(),
-                    'description' => $event->getDescription(),
-                ],
-            ];
+            $calendarEvents[] = $formatter->formatEvent($event, $larp);
         }
 
         return $this->json($calendarEvents);
@@ -146,27 +132,107 @@ class CalendarController extends BaseController
         return $this->json($calendarResources);
     }
 
-    private function getEventColor(ScheduledEvent $event): string
-    {
-        if ($event->hasUnresolvedConflicts()) {
-            return '#dc3545'; // Red for conflicts
-        }
+    #[Route('/events/create', name: 'create_event_api', methods: ['POST'])]
+    public function createEventApi(
+        Request $request,
+        Larp $larp,
+        ScheduledEventService $eventService,
+        CalendarEventFormatter $formatter
+    ): JsonResponse {
+        try {
+            $data = json_decode($request->getContent(), true);
 
-        return match ($event->getStatus()) {
-            EventStatus::DRAFT => '#6c757d',
-            EventStatus::CONFIRMED => '#28a745',
-            EventStatus::IN_PROGRESS => '#007bff',
-            EventStatus::COMPLETED => '#17a2b8',
-            EventStatus::CANCELLED => '#6c757d',
-        };
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->json([
+                    'success' => false,
+                    'message' => 'Invalid JSON in request body',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Validate required fields
+            if (empty($data['start']) || empty($data['end'])) {
+                return $this->json([
+                    'success' => false,
+                    'message' => 'Missing required fields: start and end times',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Parse dates from FullCalendar ISO format
+            $start = new \DateTimeImmutable($data['start']);
+            $end = new \DateTimeImmutable($data['end']);
+
+            // Create event via service
+            $event = $eventService->createEvent(
+                $larp,
+                $start,
+                $end,
+                $data['title'] ?? null
+            );
+
+            // Return event data in FullCalendar format using formatter
+            // Use modify route for newly created events to allow immediate editing
+            return $this->json([
+                'success' => true,
+                'event' => $formatter->formatEvent($event, $larp, 'backoffice_event_planner_event_modify'),
+            ], Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Failed to create event: ' . $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    private function getEventBorderColor(ScheduledEvent $event): string
-    {
-        if ($event->hasUnresolvedConflicts()) {
-            return '#bd2130';
+    #[Route('/events/{event}', name: 'update_event_api', methods: ['PATCH'])]
+    public function updateEventApi(
+        Request $request,
+        Larp $larp,
+        ScheduledEvent $event,
+        ScheduledEventService $eventService
+    ): JsonResponse {
+        // Verify event belongs to this LARP
+        if ($event->getLarp() !== $larp) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Event does not belong to this LARP',
+            ], Response::HTTP_FORBIDDEN);
         }
 
-        return $this->getEventColor($event);
+        try {
+            $data = json_decode($request->getContent(), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->json([
+                    'success' => false,
+                    'message' => 'Invalid JSON in request body',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Validate required fields
+            if (empty($data['start']) || empty($data['end'])) {
+                return $this->json([
+                    'success' => false,
+                    'message' => 'Missing required fields: start and end times',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            // Parse dates from FullCalendar ISO format
+            $start = new \DateTimeImmutable($data['start']);
+            $end = new \DateTimeImmutable($data['end']);
+
+            // Update event times via service
+            $eventService->updateEventTimes($event, $start, $end);
+
+            // Return success
+            return $this->json([
+                'success' => true,
+                'message' => 'Event times updated successfully',
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Failed to update event: ' . $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

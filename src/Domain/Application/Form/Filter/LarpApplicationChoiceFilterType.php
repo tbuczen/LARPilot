@@ -58,6 +58,7 @@ class LarpApplicationChoiceFilterType extends AbstractType
                     $qb = $filterQuery->getQueryBuilder();
                     $qb
                         ->join('ch.factions', 'f')
+                        ->addSelect('f')
                         ->andWhere('f = :filter_faction')
                         ->setParameter('filter_faction', $values['value']);
                     return null;

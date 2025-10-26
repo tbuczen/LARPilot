@@ -18,7 +18,7 @@
             {% for status in ['TODO','IN_PROGRESS','DONE'] %}
                 <div class="col-md-4">
                     <div class="kanban-column" data-kanban-target="column" data-status="{{ status }}">
-                        <h5>{{ status|trans({}, 'messages') }}</h5>
+                        <h5>{{ ('kanban.status.' ~ status|lower)|trans }}</h5>
 
                         <ul class="list-unstyled kanban-tasks" data-kanban-target="taskList">
                             {% for task in tasks %}

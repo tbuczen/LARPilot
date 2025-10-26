@@ -129,4 +129,13 @@ class LarpRepository extends ServiceEntityRepository
                ->setParameter('maxDuration', $filters['maxDuration']);
         }
     }
+
+    public function save(Larp $larp, bool $flush = true): void
+    {
+        $this->getEntityManager()->persist($larp);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }

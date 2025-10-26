@@ -5,18 +5,18 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">{{ 'backoffice.larp.applications.suggested_allocations'|trans }}</h5>
+                    <h5 class="card-title mb-0">{{ 'larp.applications.suggested_allocations'|trans }}</h5>
                     <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> {{ 'common.back'|trans }}
+                        <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
                     </a>
                 </div>
                 <div class="card-body">
                     <p class="text-muted">
-                        {{ 'backoffice.larp.applications.allocation_explanation'|trans }}
+                        {{ 'larp.applications.allocation_explanation'|trans }}
                     </p>
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle"></i>
-                        {{ 'backoffice.larp.applications.allocation_algorithm_info'|trans }}
+                        {{ 'larp.applications.allocation_algorithm_info'|trans }}
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title mb-0">{{ 'backoffice.larp.applications.proposed_matches'|trans }} ({{ suggestions|length }})</h6>
+                            <h6 class="card-title mb-0">{{ 'larp.applications.proposed_matches'|trans }} ({{ suggestions|length }})</h6>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
@@ -39,12 +39,12 @@
                                             <th style="width: 50px;">
                                                 <input type="checkbox" id="selectAll" class="form-check-input">
                                             </th>
-                                            <th>{{ 'backoffice.larp.applications.character'|trans }}</th>
-                                            <th>{{ 'backoffice.larp.applications.applicant'|trans }}</th>
-                                            <th>{{ 'backoffice.larp.applications.priority'|trans }}</th>
-                                            <th>{{ 'backoffice.larp.applications.vote_score'|trans }}</th>
-                                            <th>{{ 'backoffice.larp.applications.total_score'|trans }}</th>
-                                            <th>{{ 'backoffice.larp.applications.justification'|trans }}</th>
+                                            <th>{{ 'larp.applications.character'|trans }}</th>
+                                            <th>{{ 'larp.applications.applicant'|trans }}</th>
+                                            <th>{{ 'larp.applications.priority'|trans }}</th>
+                                            <th>{{ 'larp.applications.vote_score'|trans }}</th>
+                                            <th>{{ 'larp.applications.total_score'|trans }}</th>
+                                            <th>{{ 'larp.applications.justification'|trans }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,7 +92,7 @@
                                                                 class="btn btn-sm btn-outline-info"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#justificationModal{{ loop.index0 }}">
-                                                            <i class="bi bi-eye"></i> {{ 'common.view'|trans }}
+                                                            <i class="bi bi-eye"></i> {{ 'view'|trans }}
                                                         </button>
                                                     {% else %}
                                                         <span class="text-muted">-</span>
@@ -106,17 +106,17 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title">{{ 'backoffice.larp.applications.player_justification'|trans }}</h5>
+                                                                <h5 class="modal-title">{{ 'larp.applications.player_justification'|trans }}</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p><strong>{{ 'backoffice.larp.applications.character'|trans }}:</strong> {{ suggestion.characterTitle }}</p>
-                                                                <p><strong>{{ 'backoffice.larp.applications.applicant'|trans }}:</strong> {{ suggestion.applicantEmail }}</p>
+                                                                <p><strong>{{ 'larp.applications.character'|trans }}:</strong> {{ suggestion.characterTitle }}</p>
+                                                                <p><strong>{{ 'larp.applications.applicant'|trans }}:</strong> {{ suggestion.applicantEmail }}</p>
                                                                 <hr>
                                                                 <p>{{ suggestion.justification|nl2br }}</p>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'common.close'|trans }}</button>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -135,10 +135,10 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-between">
                         <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-secondary">
-                            {{ 'common.cancel'|trans }}
+                            {{ 'cancel'|trans }}
                         </a>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmAllocationModal">
-                            <i class="bi bi-send"></i> {{ 'backoffice.larp.applications.send_allocations'|trans }}
+                            <i class="bi bi-send"></i> {{ 'larp.applications.send_allocations'|trans }}
                         </button>
                     </div>
                 </div>
@@ -150,21 +150,21 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ 'backoffice.larp.applications.confirm_allocation'|trans }}</h5>
+                        <h5 class="modal-title">{{ 'larp.applications.confirm_allocation'|trans }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>{{ 'backoffice.larp.applications.confirm_allocation_message'|trans }}</p>
+                        <p>{{ 'larp.applications.confirm_allocation_message'|trans }}</p>
                         <p class="text-warning">
                             <i class="bi bi-exclamation-triangle"></i>
-                            {{ 'backoffice.larp.applications.email_will_be_sent'|trans }}
+                            {{ 'larp.applications.email_will_be_sent'|trans }}
                         </p>
                         <p id="selectedCount" class="text-muted"></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'common.cancel'|trans }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
                         <button type="submit" form="allocationForm" class="btn btn-primary">
-                            {{ 'backoffice.larp.applications.confirm_send'|trans }}
+                            {{ 'larp.applications.confirm_send'|trans }}
                         </button>
                     </div>
                 </div>
@@ -196,7 +196,7 @@
 
                 function updateSelectedCount() {
                     const selectedCount = Array.from(allocationCheckboxes).filter(cb => cb.checked).length;
-                    selectedCountElement.textContent = `${selectedCount} {{ 'backoffice.larp.applications.allocations_selected'|trans }}`;
+                    selectedCountElement.textContent = `${selectedCount} {{ 'larp.applications.allocations_selected'|trans }}`;
                 }
 
                 // Initialize count
@@ -208,7 +208,7 @@
             <div class="col-12">
                 <div class="alert alert-warning">
                     <i class="bi bi-exclamation-triangle"></i>
-                    {{ 'backoffice.larp.applications.no_suggestions'|trans }}
+                    {{ 'larp.applications.no_suggestions'|trans }}
                 </div>
             </div>
         </div>

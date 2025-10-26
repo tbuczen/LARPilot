@@ -12,20 +12,18 @@ Local development is performed on Docker, most of the useful commands are availa
 ### Setup & Build
 ```bash
 # Install PHP dependencies
-composer install
+make install
 
 # Setup JavaScript environment (run in order)
-php bin/console importmap:install
-php bin/console sass:build
-php bin/console asset-map:compile
+make assets
 
 # Run database migrations
-php bin/console doctrine:migrations:migrate
+make migrate
 ```
 
-### Development Server
+### Development Server (Docker)
 ```bash
-symfony server:start
+make start
 ```
 
 ### Quality Tools
@@ -59,6 +57,7 @@ make rector-fix
 - `BlankLineAfterNamespaceFixer`: Ensures blank line after namespace declaration
 
 ### Database Operations
+All run on docker 
 ```bash
 # Create new migration
 php bin/console make:migration
@@ -357,7 +356,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
 <div class="card mt-4">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-0">{{ 'backoffice.larp.tag.list'|trans }}</h2>
+            <h2 class="mb-0">{{ 'larp.tag.list'|trans }}</h2>
             <div class="d-flex gap-2">
                 <a href="{{ path('backoffice_larp_story_tag_modify', { larp: larp.id }) }}"
                    class="btn btn-success">
@@ -508,85 +507,6 @@ Test database uses suffix `_test` (configured in `config/packages/doctrine.yaml`
 - **Rector**: Automated refactoring to PHP 8.2 standards
 - Always run quality tools before committing changes
 
-## Event Planning System (POC)
 
-The Event Planning system helps LARP organizers schedule events, manage resources, and detect conflicts. This is a Proof of Concept implementation with core functionality.
-
-**Controller Namespace**: `src/Controller/Backoffice/EventPlanner/`
-- `ResourceController`: Manage planning resources (NPCs, staff, props, equipment)
-- `ScheduledEventController`: Schedule and manage timed events  
-- `CalendarController`: Visual calendar with FullCalendar integration
-
-**Key Entities**:
-- `PlanningResource`: Resources that can be assigned to events (NPCs, staff, equipment, etc.)
-  - Types via `PlanningResourceType` enum (NPC, STAFF_GM, STAFF_TECH, PROP, EQUIPMENT, etc.)
-  - Links to `Character`, `Item`, or `LarpParticipant` entities
-  - Availability windows and quantity tracking
-  - Shareable vs exclusive resources
-- `ScheduledEvent`: Timed events with location, resources, and story links
-  - Links to `Quest`, `Thread`, `Event` (story objects)
-  - Links to `MapLocation` for venue placement
-  - Setup/cleanup time buffers
-  - Status tracking via `EventStatus` enum
-- `ResourceBooking`: Junction table linking events to resources
-  - Quantity needed, required vs optional
-  - Booking status tracking
-- `ScheduledEventConflict`: Detected scheduling conflicts
-  - Conflict types and severity levels
-  - Resolution tracking
-
-**Services**:
-- `ConflictDetectionService` (`src/Service/EventPlanning/`): Detects resource double-booking conflicts (POC scope)
-  - `detectConflicts()`: Check event for all conflicts
-  - `isResourceAvailable()`: Check specific resource availability
-  - `getAvailableQuantity()`: Get remaining resource quantity
-
-**Forms**:
-- `PlanningResourceType`: Resource CRUD with linked entities
-- `ScheduledEventType`: Event scheduling with story links
-- `PlanningResourceFilterType`: Filter resources by type, name, shareability
-- `ScheduledEventFilterType`: Filter events by status, location, date range
-
-**Templates**:
-- `backoffice/event_planner/resource/`: Resource management views
-- `backoffice/event_planner/event/`: Event scheduling views  
-- `backoffice/event_planner/calendar/`: FullCalendar week view
-
-**Frontend**:
-- `event_calendar_controller.js`: Stimulus controller for FullCalendar integration
-  - Week view focused on LARP dates
-  - Click events to view details
-  - Color-coded by status and conflicts
-  - FullCalendar loaded via CDN (v6.1.10)
-
-**Menu Access**: 
-Event Planner dropdown in LARP menu (`templates/backoffice/larp/_menu.html.twig`) with:
-- Calendar View
-- Scheduled Events List
-- Resources List
-
-**Translation Keys**: 
-All labels in `translations/messages.en.yaml` under:
-- `backoffice.event_planner.*`
-- `forms.planning_resource.*`
-- `forms.scheduled_event.*`
-
-**POC Limitations** (Future Enhancements):
-- Only basic resource double-booking detection implemented
-- No drag-and-drop rescheduling (use forms)
-- No character timeline validation
-- No resolution suggestions
-- No PDF/Calendar export
-- No advanced conflict types (location capacity, staff overload, etc.)
-
-**Next Steps for Production**:
-1. Implement remaining conflict types (location capacity, character impossibilities)
-2. Add `ConflictResolutionService` with auto-suggestions
-3. Resource timeline visualization
-4. Drag-and-drop calendar editing
-5. Export schedules (PDF, iCal)
-6. Real-time AJAX conflict checking
-7. Character timeline tracking
-8. Staff schedule generation
-
-**Documentation**: See `docs/EVENT_PLANNING_SYSTEM.md` for full requirements and architecture.
+**Documentation**: 
+see `docs/*` for full requirements and architecture.

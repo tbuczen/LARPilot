@@ -28,7 +28,7 @@ class InvitationController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $invitationRepository->save($invitation);
 
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_invitations_list', ['id' => $larp->getId()]);
         }
 
@@ -55,7 +55,7 @@ class InvitationController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $invitation->setLarp($larp);
             $invitationRepository->save($invitation);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_invitations_list', ['larp' => $larp->getId()]);
         }
 
@@ -72,7 +72,7 @@ class InvitationController extends BaseController
         LarpInvitation           $invitation,
     ): Response {
         $invitationRepository->remove($invitation);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_invitations_list', [
             'larp' => $larp->getId(),

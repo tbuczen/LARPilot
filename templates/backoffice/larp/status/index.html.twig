@@ -146,13 +146,13 @@
                 <div class="mb-2">
                     <strong>{{ 'larp.status.visible_everyone'|trans }}:</strong>
                     <span class="badge badge-{{ currentStatus.isVisibleForEveryone() ? 'success' : 'secondary' }}">
-                        {{ currentStatus.isVisibleForEveryone() ? 'common.yes'|trans : 'common.no'|trans }}
+                        {{ currentStatus.isVisibleForEveryone() ? 'yes'|trans : 'no'|trans }}
                     </span>
                 </div>
                 <div>
                     <strong>{{ 'larp.status.visible_organizers'|trans }}:</strong>
                     <span class="badge badge-{{ currentStatus.isVisibleForOrganizers() ? 'success' : 'secondary' }}">
-                        {{ currentStatus.isVisibleForOrganizers() ? 'common.yes'|trans : 'common.no'|trans }}
+                        {{ currentStatus.isVisibleForOrganizers() ? 'yes'|trans : 'no'|trans }}
                     </span>
                 </div>
             </div>

@@ -85,10 +85,10 @@ updateNodeReferenceBadge()     // Show count badge on Reference nodes ✨ NEW
 Added comprehensive translations for decision tree functionality:
 
 #### Translation Keys Added:
-- `backoffice.larp.quest.tree` → "Decision Tree"
-- `backoffice.larp.quest.tree_editor` → "Quest Decision Tree Editor"
-- `backoffice.larp.thread.tree` → "Decision Tree"
-- `backoffice.larp.thread.tree_editor` → "Thread Decision Tree Editor"
+- `larp.quest.tree` → "Decision Tree"
+- `larp.quest.tree_editor` → "Quest Decision Tree Editor"
+- `larp.thread.tree` → "Decision Tree"
+- `larp.thread.tree_editor` → "Thread Decision Tree Editor"
 
 #### New Translation Section: `decision_tree`
 - **node_types**: start, decision, outcome, reference, end

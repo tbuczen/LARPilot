@@ -1,23 +1,23 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
-{% block title %}{{ 'backoffice.event_planner.calendar.title'|trans }} - {{ larp.title }}{% endblock %}
+{% block title %}{{ 'event_planner.calendar.title'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block breadcrumb %}
     {{ parent() }}
     <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_dashboard', { larp: larp.id }) }}">{{ larp.title }}</a></li>
-    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
-    <li class="breadcrumb-item active">{{ 'backoffice.event_planner.calendar.title'|trans }}</li>
+    <li class="breadcrumb-item">{{ 'event_planner.title'|trans }}</li>
+    <li class="breadcrumb-item active">{{ 'event_planner.calendar.title'|trans }}</li>
 {% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-                <h2 class="mb-0">{{ 'backoffice.event_planner.calendar.title'|trans }}</h2>
+                <h2 class="mb-0">{{ 'event_planner.calendar.title'|trans }}</h2>
                 <div>
                     <a href="{{ path('backoffice_event_planner_event_modify', { larp: larp.id }) }}"
                        class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> {{ 'backoffice.event_planner.event.create'|trans }}
+                        <i class="bi bi-plus-circle"></i> {{ 'event_planner.event.create'|trans }}
                     </a>
                 </div>
             </div>
@@ -31,6 +31,7 @@
                  data-controller="event-calendar"
                  data-event-calendar-larp-id-value="{{ larp.id.toRfc4122 }}"
                  data-event-calendar-events-url-value="{{ path('backoffice_event_planner_calendar_events_api', { larp: larp.id }) }}"
+                 data-event-calendar-create-event-url-value="{{ path('backoffice_event_planner_calendar_create_event_api', { larp: larp.id }) }}"
                  data-event-calendar-initial-start-value="{{ defaultStart|date('Y-m-d') }}"
                  data-event-calendar-initial-end-value="{{ defaultEnd|date('Y-m-d') }}">
             </div>
@@ -40,12 +41,12 @@
 
     <div class="card mt-3">
         <div class="card-header">
-            <h5 class="mb-0">{{ 'backoffice.event_planner.calendar.legend'|trans }}</h5>
+            <h5 class="mb-0">{{ 'event_planner.calendar.legend'|trans }}</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <h6>{{ 'backoffice.event_planner.calendar.status_colors'|trans }}</h6>
+                    <h6>{{ 'event_planner.calendar.status_colors'|trans }}</h6>
                     <ul class="list-unstyled">
                         <li><span class="badge bg-secondary">■</span> Draft</li>
                         <li><span class="badge bg-success">■</span> Confirmed</li>
@@ -55,11 +56,12 @@
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    <h6>{{ 'backoffice.event_planner.calendar.tips'|trans }}</h6>
+                    <h6>{{ 'event_planner.calendar.tips'|trans }}</h6>
                     <ul>
-                        <li>{{ 'backoffice.event_planner.calendar.tip_click'|trans }}</li>
-                        <li>{{ 'backoffice.event_planner.calendar.tip_week_view'|trans }}</li>
-                        <li>{{ 'backoffice.event_planner.calendar.tip_conflicts'|trans }}</li>
+                        <li>Click and drag on the calendar to create a new event</li>
+                        <li>{{ 'event_planner.calendar.tip_click'|trans }}</li>
+                        <li>{{ 'event_planner.calendar.tip_week_view'|trans }}</li>
+                        <li>{{ 'event_planner.calendar.tip_conflicts'|trans }}</li>
                     </ul>
                 </div>
             </div>
@@ -69,5 +71,5 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.css" rel="stylesheet">
 {% endblock %}

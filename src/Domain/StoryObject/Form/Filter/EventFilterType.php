@@ -3,7 +3,13 @@
 namespace App\Domain\StoryObject\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\Tag;
+use App\Domain\Core\Repository\TagRepository;
+use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\Thread;
+use App\Domain\StoryObject\Repository\CharacterRepository;
+use App\Domain\StoryObject\Repository\FactionRepository;
 use App\Domain\StoryObject\Repository\ThreadRepository;
 use Doctrine\ORM\QueryBuilder;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterOperands;
@@ -24,11 +30,29 @@ class EventFilterType extends AbstractType
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
+            ->add('description', Filters\TextFilterType::class, [
+                'condition_pattern' => FilterOperands::STRING_CONTAINS,
+            ])
             ->add('startTime', Filters\DateTimeFilterType::class, [
                 'widget' => 'single_text',
             ])
             ->add('endTime', Filters\DateTimeFilterType::class, [
                 'widget' => 'single_text',
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (TagRepository $repo): QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
             ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,
@@ -38,12 +62,42 @@ class EventFilterType extends AbstractType
                 'autocomplete' => true,
                 'data_extraction_method' => 'default',
                 'tom_select_options' => [
-//                    'plugins' =>  ['dropdown_input']
-                'hideSelected' => false
+                    'hideSelected' => false
                 ],
-                'query_builder' => fn (ThreadRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (ThreadRepository $repo): QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
+            ])
+            ->add('involvedFactions', EntityType::class, [
+                'class' => Faction::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (FactionRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
-                    ->setParameter('larp', $larp),
+                    ->setParameter('larp', $larp)
+                    ->orderBy('f.title', 'ASC'),
+            ])
+            ->add('involvedCharacters', EntityType::class, [
+                'class' => Character::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (CharacterRepository $repo): QueryBuilder => $repo->createQueryBuilder('c')
+                    ->where('c.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('c.title', 'ASC'),
             ])
         ;
     }

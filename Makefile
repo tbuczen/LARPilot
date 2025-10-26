@@ -53,6 +53,9 @@ db-shell:
 up:
 	docker compose up -d --build
 
+start:
+	docker compose up
+
 down:
 	docker compose down
 

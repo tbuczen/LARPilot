@@ -5,9 +5,9 @@
         <div class="card-header">
             <h2>
                 {% if isNew %}
-                    {{ 'backoffice.larp.map.create'|trans }}
+                    {{ 'larp.map.create'|trans }}
                 {% else %}
-                    {{ 'backoffice.larp.map.edit'|trans }} - {{ map.name }}
+                    {{ 'larp.map.edit'|trans }} - {{ map.name }}
                 {% endif %}
             </h2>
         </div>
@@ -16,10 +16,10 @@
             {{ form_widget(form) }}
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">
-                    {{ 'common.save'|trans }}
+                    {{ 'save'|trans }}
                 </button>
                 <a href="{{ path('backoffice_larp_map_list', { larp: larp.id }) }}" class="btn btn-secondary">
-                    {{ 'common.cancel'|trans }}
+                    {{ 'cancel'|trans }}
                 </a>
             </div>
             {{ form_end(form) }}

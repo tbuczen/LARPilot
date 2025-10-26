@@ -47,7 +47,7 @@ class TagController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $tagRepository->save($tag);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
 
             return $this->redirectToRoute('backoffice_larp_story_tag_list', ['larp' => $larp->getId()]);
         }
@@ -63,7 +63,7 @@ class TagController extends BaseController
     public function delete(Larp $larp, TagRepository $tagRepository, Tag $tag): Response
     {
         $tagRepository->remove($tag);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_story_tag_list', ['larp' => $larp->getId()]);
     }

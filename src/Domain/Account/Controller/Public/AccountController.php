@@ -25,7 +25,7 @@ class AccountController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('account_settings');
         }
 

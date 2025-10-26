@@ -62,7 +62,7 @@ class ResourceController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->save($resource);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
 
             return $this->redirectToRoute('backoffice_event_planner_resource_list', [
                 'larp' => $larp->getId(),
@@ -84,7 +84,7 @@ class ResourceController extends BaseController
         PlanningResource $resource
     ): Response {
         $repository->remove($resource);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_event_planner_resource_list', [
             'larp' => $larp->getId(),

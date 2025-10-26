@@ -6,7 +6,6 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
 use App\Domain\EventPlanning\Entity\Enum\PlanningResourceType as PlanningResourceTypeEnum;
 use App\Domain\EventPlanning\Entity\PlanningResource;
-use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Item;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

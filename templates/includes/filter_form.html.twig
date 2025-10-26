@@ -13,9 +13,9 @@
             <div class="mb-3">
                 <label class="form-label">&nbsp;</label>
                 <div class="d-block">
-                    <button type="submit" class="btn btn-outline-primary">{{ 'common.filter'|trans }}</button>
+                    <button type="submit" class="btn btn-outline-primary">{{ 'filter'|trans }}</button>
                     <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
-                       class="btn btn-outline-secondary">{{ 'common.clear'|trans }}</a>
+                       class="btn btn-outline-secondary">{{ 'clear'|trans }}</a>
                     {% if larp is defined %}
                     <div class="d-inline-block">
                         {{ component('SaveFilterForm', {

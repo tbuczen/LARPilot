@@ -38,18 +38,22 @@ final class DomainBoundaryRule implements Rule
      */
     private const DOMAIN_DEPENDENCIES = [
         'Infrastructure' => [], // Shared kernel, no dependencies on other domains
-        'Account' => ['Infrastructure'],
-        'Public' => ['Infrastructure', 'Account', 'Larp'],
-        'Larp' => ['Infrastructure', 'Account'],
-        'StoryObject' => ['Infrastructure', 'Larp'],
-        'Application' => ['Infrastructure', 'Larp', 'StoryObject', 'Participant'],
-        'Participant' => ['Infrastructure', 'Account', 'Larp'],
-        'StoryMarketplace' => ['Infrastructure', 'Larp', 'StoryObject'],
-        'Kanban' => ['Infrastructure', 'Larp'],
-        'Incident' => ['Infrastructure', 'Larp'],
-        'Map' => ['Infrastructure', 'Larp'],
-        'EventPlanning' => ['Infrastructure', 'Larp', 'StoryObject', 'Map', 'Participant'],
-        'Integration' => ['Infrastructure', 'Larp', 'StoryObject'],
+        'Core' => [], // Shared kernel (legacy name, being migrated to Infrastructure)
+        'Account' => ['Infrastructure', 'Core'],
+        'Public' => ['Infrastructure', 'Core', 'Account', 'Larp'],
+        'Larp' => ['Infrastructure', 'Core', 'Account'],
+        'StoryObject' => ['Infrastructure', 'Core', 'Larp'],
+        'Application' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Participant'],
+        'Participant' => ['Infrastructure', 'Core', 'Account', 'Larp'],
+        'StoryMarketplace' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
+        'Kanban' => ['Infrastructure', 'Core', 'Larp'],
+        'Incident' => ['Infrastructure', 'Core', 'Larp'],
+        'Incidents' => ['Infrastructure', 'Core', 'Larp'], // Alias for Incident
+        'Map' => ['Infrastructure', 'Core', 'Larp'],
+        'EventPlanning' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Map', 'Participant'],
+        'Integration' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
+        'Integrations' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'], // Alias for Integration
+        'Feedback' => ['Infrastructure', 'Core'],
     ];
 
     public function getNodeType(): string

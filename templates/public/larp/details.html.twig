@@ -26,7 +26,7 @@
                                         <p class="text-muted">{{ 'public.larp.login_required_description'|trans }}</p>
                                     </div>
                                     <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary btn-lg">
-                                        <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'common.login'|trans }}
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'login'|trans }}
                                     </a>
                                 </div>
                             {% elseif userIsParticipant %}

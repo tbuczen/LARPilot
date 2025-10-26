@@ -6,9 +6,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="importModalLabel">{{ 'backoffice.larp.import_options'|trans }}</h5>
+                    <h5 class="modal-title" id="importModalLabel">{{ 'larp.import_options'|trans }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="{{ 'common.close'|trans }}"></button>
+                            aria-label="{{ 'close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
                     {% if integrations is defined and integrations|length > 0 %}
@@ -16,18 +16,18 @@
                             <!-- Option for Google Spreadsheet import -->
                             <a href="{{ path('backoffice_larp_story_character_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}"
                                class="btn btn-primary">
-                                {{ 'backoffice.larp.import_google'|trans }}
+                                {{ 'larp.import_google'|trans }}
                             </a>
                         {% endfor %}
                     {% endif %}
                     <a href="{{ path('backoffice_larp_story_character_import_file', {'larp': larp.id}) }}"
                        class="btn btn-secondary">
-                        {{ 'backoffice.larp.import_file'|trans }}
+                        {{ 'larp.import_file'|trans }}
                     </a>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light"
-                            data-bs-dismiss="modal">{{ 'common.close'|trans }}</button>
+                            data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
         </div>
@@ -36,13 +36,13 @@
     <div class="card mt-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'backoffice.larp.character.list'|trans }}</h2>
+                <h2 class="mb-0">{{ 'larp.character.list'|trans }}</h2>
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
-                        {{ 'backoffice.larp.import_characters'|trans }}
+                        {{ 'larp.import_characters'|trans }}
                     </button>
                     <a href="{{ path('backoffice_larp_story_character_modify', { larp: larp.id }) }}" class="btn btn-success">
-                        {{ 'common.create'|trans }}
+                        {{ 'create'|trans }}
                     </a>
                 </div>
             </div>
@@ -57,22 +57,22 @@
                 <tr>
                     {% include 'includes/sort_th.html.twig' with {
                         field: 'title',
-                        label: 'common.name'|trans
+                        label: 'name'|trans
                     } %}
 
                     {% include 'includes/sort_th.html.twig' with {
                         field: 'gender',
-                        label: 'common.gender'|trans
+                        label: 'gender'|trans
                     } %}
 
-                    <th>{{ 'common.description'|trans }}</th>
+                    <th>{{ 'description'|trans }}</th>
 
                     {% include 'includes/sort_th.html.twig' with {
                         field: 'factions.title',
-                        label: 'backoffice.larp.faction.name'|trans
+                        label: 'larp.faction.name'|trans
                     } %}
 
-                    <th>{{ 'common.actions'|trans }}</th>
+                    <th>{{ 'actions'|trans }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -93,12 +93,12 @@
                                     class="btn btn-sm btn-danger"
                                     data-bs-toggle="modal"
                                     data-bs-target="#globalDeleteCharacterModal"
-                                    data-delete-text=" {{ 'common.delete'|trans }}"
+                                    data-delete-text=" {{ 'delete'|trans }}"
                                     data-character-id="{{ character.id }}"
                                     data-character-name="{{ character.title }}"
                                     data-delete-url-base="{{ path('backoffice_larp_story_character_delete', { larp: larp.id, character: 'CHARACTER_ID', integrations: 'INTEGRATIONS_FLAG' }) }}"
                             >
-                                {{ 'common.delete'|trans }}
+                                {{ 'delete'|trans }}
                             </button>
                         </td>
                     </tr>
@@ -108,7 +108,7 @@
             </div>
             {% include 'includes/pagination.html.twig' with { pagination: characters } %}
             {% else %}
-                <p class="text-muted p-3">{{ 'common.empty_list'|trans }}</p>
+                <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
             {% endif %}
         </div>
     </div>
@@ -118,20 +118,20 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="globalDeleteCharacterModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
-                    {{ 'backoffice.common.confirmation'|trans() }}
+                    {{ 'confirmation'|trans() }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'common.cancel'|trans }}
+                        {{ 'cancel'|trans }}
                     </button>
                     <a href="#" id="deleteOnlyLarpilot" class="btn btn-danger">
-                        {{ 'backoffice.larp.character.delete_only_larpilot'|trans }}
+                        {{ 'larp.character.delete_only_larpilot'|trans }}
                     </a>
                     <a href="#" id="deleteWithIntegrations" class="btn btn-danger">
-                        {{ 'backoffice.larp.character.delete_larpilot_and_integrations'|trans }}
+                        {{ 'larp.character.delete_larpilot_and_integrations'|trans }}
                     </a>
                 </div>
             </div>

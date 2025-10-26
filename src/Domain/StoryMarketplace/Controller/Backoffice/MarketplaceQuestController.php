@@ -4,7 +4,7 @@ namespace App\Domain\StoryMarketplace\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\StoryMarketplace\Form\Filter\MarketplaceFilterType;
+use App\Domain\StoryObject\Form\Filter\QuestFilterType;
 use App\Domain\StoryObject\Repository\QuestRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ class MarketplaceQuestController extends BaseController
         Request $request,
         QuestRepository $questRepository
     ): Response {
-        $filterForm = $this->createForm(MarketplaceFilterType::class, null, ['larp' => $larp]);
+        $filterForm = $this->createForm(QuestFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
 
         $qb = $questRepository->createQueryBuilder('q')
@@ -27,13 +27,8 @@ class MarketplaceQuestController extends BaseController
             ->setParameter('larp', $larp)
             ->orderBy('q.title', 'ASC');
 
-        // Apply tag filtering if provided
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $selectedTags = $filterForm->get('tags')->getData();
-            if ($selectedTags && !$selectedTags->isEmpty()) {
-                $qb = $questRepository->createQuestsByTagsQueryBuilder($larp, $selectedTags->toArray());
-            }
-        }
+        // Apply filters using FilterBuilderUpdater
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
 
         $pagination = $this->getPagination($qb, $request);
 

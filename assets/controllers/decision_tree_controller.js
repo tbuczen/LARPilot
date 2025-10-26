@@ -545,11 +545,6 @@ export default class extends Controller {
                 const treeData = this.serializeTree();
                 const jsonString = JSON.stringify(treeData);
                 this.inputTarget.value = jsonString;
-
-                console.log('Form submitting with tree data:', jsonString);
-                console.log('Input element:', this.inputTarget);
-                console.log('Input name:', this.inputTarget.name);
-                console.log('Input value length:', this.inputTarget.value.length);
             });
         }
     }
@@ -1021,16 +1016,12 @@ export default class extends Controller {
 
                 // Fetch from API
                 const apiUrl = `/api/larp/${this.larpIdValue}/story-object/mention-search?query=${encodeURIComponent(query)}`;
-                console.log('Fetching story objects from:', apiUrl);
 
                 fetch(apiUrl)
                     .then(response => {
-                        console.log('API response status:', response.status);
                         return response.json();
                     })
                     .then(data => {
-                        console.log('API response data:', data);
-
                         // Flatten grouped results - API returns array of {type, items:[]}
                         const allObjects = [];
 
@@ -1048,7 +1039,6 @@ export default class extends Controller {
                             });
                         }
 
-                        console.log('Processed objects:', allObjects);
                         callback(allObjects);
                     })
                     .catch(error => {

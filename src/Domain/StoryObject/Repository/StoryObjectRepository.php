@@ -7,6 +7,8 @@ use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Faction;
+use App\Domain\StoryObject\Entity\Quest;
+use App\Domain\StoryObject\Entity\Relation;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Entity\Thread;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -49,7 +51,7 @@ class StoryObjectRepository extends BaseRepository
      * @param Collection<int, Thread>|Thread[]       $threads
      * @param Collection<int, Character>|Character[] $characters
      * @param Collection<int, Faction>|Faction[]     $factions
-     * @return StoryObject[]
+     * @return array{threads: Thread[], characters: Character[], factions: Faction[], quests: Quest[]}
      */
     public function findForGraph(
         Larp $larp,
@@ -57,55 +59,60 @@ class StoryObjectRepository extends BaseRepository
         iterable $characters = [],
         iterable $factions = [],
     ): array {
-        $allIds = [];
+        // Normalize input IDs
+        $inputThreadIds = $this->normalizeIds($threads);
+        $inputCharacterIds = $this->normalizeIds($characters);
+        $inputFactionIds = $this->normalizeIds($factions);
         
-        // Get base filtered objects
-        $threadIds = $this->normalizeIds($threads);
-        $characterIds = $this->normalizeIds($characters);
-        $factionIds = $this->normalizeIds($factions);
+        // Determine which types need filtering
+        $hasThreadFilter = $inputThreadIds !== [];
+        $hasCharacterFilter = $inputCharacterIds !== [];
+        $hasFactionFilter = $inputFactionIds !== [];
+        $hasAnyFilter = $hasThreadFilter || $hasCharacterFilter || $hasFactionFilter;
         
-        // If no filters, return all objects
-        if ($threadIds === [] && $characterIds === [] && $factionIds === []) {
-            return $this->createQueryBuilder('so')
-                ->where('so.larp = :larp')
-                ->andWhere('so NOT INSTANCE OF ' . \App\Domain\StoryObject\Entity\Relation::class)
-                ->setParameter('larp', $larp)
-                ->getQuery()
-                ->getResult();
+        // If no filters, return all entities with preloading
+        if (!$hasAnyFilter) {
+            return $this->fetchAllEntitiesGrouped($larp);
         }
         
-        // Add directly selected objects
-        $allIds = array_merge($allIds, $threadIds, $characterIds, $factionIds);
+        // Collect all connected IDs for relation lookup
+        $allIds = array_merge($inputThreadIds, $inputCharacterIds, $inputFactionIds);
         
         // Add connected objects for each selected thread
-        foreach ($threadIds as $threadId) {
+        foreach ($inputThreadIds as $threadId) {
             $allIds = array_merge($allIds, $this->getConnectedToThread($larp, $threadId));
         }
         
         // Add connected objects for each selected character
-        foreach ($characterIds as $characterId) {
+        foreach ($inputCharacterIds as $characterId) {
             $allIds = array_merge($allIds, $this->getConnectedToCharacter($larp, $characterId));
         }
         
         // Add connected objects for each selected faction
-        foreach ($factionIds as $factionId) {
+        foreach ($inputFactionIds as $factionId) {
             $allIds = array_merge($allIds, $this->getConnectedToFaction($larp, $factionId));
         }
         
         $allIds = array_unique($allIds);
         
-        if ($allIds === []) {
-            return [];
-        }
+        // Add IDs from Relations (source and target)
+        $relationIds = $this->getRelatedObjectIds($larp, $allIds);
+        $allIds = array_merge($allIds, $relationIds);
+        $allIds = array_unique($allIds);
+
+        // Separate IDs by type
+        $allThreadIds = $this->findIdsByType($larp, Thread::class, $allIds);
+        $allCharacterIds = $this->findIdsByType($larp, Character::class, $allIds);
+        $allFactionIds = $this->findIdsByType($larp, Faction::class, $allIds);
+        $allQuestIds = $this->findIdsByType($larp, Quest::class, $allIds);
         
-        return $this->createQueryBuilder('so')
-            ->where('so.larp = :larp')
-            ->andWhere('so.id IN (:ids)')
-            ->andWhere('so NOT INSTANCE OF ' . \App\Domain\StoryObject\Entity\Relation::class)
-            ->setParameter('larp', $larp)
-            ->setParameter('ids', $allIds)
-            ->getQuery()
-            ->getResult();
+        // Fetch entities (excluding input) or all if no filter for that type
+        $threadIdsToFetch = $hasThreadFilter ? array_diff($allThreadIds, $inputThreadIds) : $allThreadIds;
+        $characterIdsToFetch = $hasCharacterFilter ? array_diff($allCharacterIds, $inputCharacterIds) : $allCharacterIds;
+        $factionIdsToFetch = $hasFactionFilter ? array_diff($allFactionIds, $inputFactionIds) : $allFactionIds;
+        $questIdsToFetch = $allQuestIds; // Always fetch all connected quests
+
+        return $this->fetchEntitiesGrouped($larp, $threadIdsToFetch, $characterIdsToFetch, $factionIdsToFetch, $questIdsToFetch);
     }
 
     /**
@@ -165,7 +172,7 @@ class StoryObjectRepository extends BaseRepository
     
         // Get quests and events for this thread
         $ids = array_merge($ids, $this->fetchIds(
-            'SELECT q.id FROM ' . \App\Domain\StoryObject\Entity\Quest::class . ' q WHERE q.larp = :larp AND q.thread = :threadId',
+            'SELECT q.id FROM ' . Quest::class . ' q WHERE q.larp = :larp AND q.thread = :threadId',
             ['larp' => $larp, 'threadId' => $threadId]
         ));
     
@@ -205,7 +212,7 @@ class StoryObjectRepository extends BaseRepository
         ));
     
         $ids = array_merge($ids, $this->fetchIds(
-            'SELECT q.id FROM ' . \App\Domain\StoryObject\Entity\Quest::class . ' q JOIN q.involvedCharacters c WHERE q.larp = :larp AND c.id = :characterId',
+            'SELECT q.id FROM ' . Quest::class . ' q JOIN q.involvedCharacters c WHERE q.larp = :larp AND c.id = :characterId',
             ['larp' => $larp, 'characterId' => $characterId]
         ));
     
@@ -234,7 +241,7 @@ class StoryObjectRepository extends BaseRepository
         ));
     
         $ids = array_merge($ids, $this->fetchIds(
-            'SELECT q.id FROM ' . \App\Domain\StoryObject\Entity\Quest::class . ' q JOIN q.involvedFactions f WHERE q.larp = :larp AND f.id = :factionId',
+            'SELECT q.id FROM ' . Quest::class . ' q JOIN q.involvedFactions f WHERE q.larp = :larp AND f.id = :factionId',
             ['larp' => $larp, 'factionId' => $factionId]
         ));
     
@@ -244,5 +251,268 @@ class StoryObjectRepository extends BaseRepository
         ));
     
         return $ids;
+    }
+
+    /**
+     * Fetch all entities grouped by type with preloading.
+     *
+     * @return array{threads: Thread[], characters: Character[], factions: Faction[], quests: Quest[]}
+     */
+    private function fetchAllEntitiesGrouped(Larp $larp): array
+    {
+        $threads = $this->fetchThreads($larp);
+        $characters = $this->fetchCharacters($larp);
+        $factions = $this->fetchFactions($larp);
+        $quests = $this->fetchQuests($larp);
+        
+        // TODO: Add entity preloader here
+        // $this->entityPreloader->preload($characters, ['factions', 'threads', 'quests']);
+        // $this->entityPreloader->preload($threads, ['involvedCharacters', 'involvedFactions']);
+        // $this->entityPreloader->preload($quests, ['involvedCharacters', 'involvedFactions', 'thread']);
+        // $this->entityPreloader->preload($factions, ['members']);
+        return [
+            'threads' => $threads,
+            'characters' => $characters,
+            'factions' => $factions,
+            'quests' => $quests,
+        ];
+    }
+
+    /**
+     * Fetch specific entities grouped by type with preloading.
+     *
+     * @param array<string> $threadIds
+     * @param array<string> $characterIds
+     * @param array<string> $factionIds
+     * @param array<string> $questIds
+     * @return array{threads: Thread[], characters: Character[], factions: Faction[], quests: Quest[]}
+     */
+    private function fetchEntitiesGrouped(
+        Larp $larp,
+        array $threadIds,
+        array $characterIds,
+        array $factionIds,
+        array $questIds
+    ): array {
+        $threads = $this->fetchThreadsByIds($larp, $threadIds);
+        $characters = $this->fetchCharactersByIds($larp, $characterIds);
+        $factions = $this->fetchFactionsByIds($larp, $factionIds);
+        $quests = $this->fetchQuestsByIds($larp, $questIds);
+        
+        // TODO: Add entity preloader here
+        // $this->entityPreloader->preload($characters, ['factions', 'threads', 'quests']);
+        // $this->entityPreloader->preload($threads, ['involvedCharacters', 'involvedFactions']);
+        // $this->entityPreloader->preload($quests, ['involvedCharacters', 'involvedFactions', 'thread']);
+        // $this->entityPreloader->preload($factions, ['members']);
+        
+        return [
+            'threads' => $threads,
+            'characters' => $characters,
+            'factions' => $factions,
+            'quests' => $quests,
+        ];
+    }
+
+    /**
+     * @return Thread[]
+     */
+    private function fetchThreads(Larp $larp): array
+    {
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF ' . Thread::class)
+            ->setParameter('larp', $larp)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param array<string> $ids
+     * @return Thread[]
+     */
+    private function fetchThreadsByIds(Larp $larp, array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF ' . Thread::class)
+            ->andWhere('so.id IN (:ids)')
+            ->setParameter('larp', $larp)
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Character[]
+     */
+    private function fetchCharacters(Larp $larp): array
+    {
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF ' . Character::class)
+            ->setParameter('larp', $larp)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param array<string> $ids
+     * @return Character[]
+     */
+    private function fetchCharactersByIds(Larp $larp, array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF ' . Character::class)
+            ->andWhere('so.id IN (:ids)')
+            ->setParameter('larp', $larp)
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Faction[]
+     */
+    private function fetchFactions(Larp $larp): array
+    {
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF ' . Faction::class)
+            ->setParameter('larp', $larp)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param array<string> $ids
+     * @return Faction[]
+     */
+    private function fetchFactionsByIds(Larp $larp, array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF ' . Faction::class)
+            ->andWhere('so.id IN (:ids)')
+            ->setParameter('larp', $larp)
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Quest[]
+     */
+    private function fetchQuests(Larp $larp): array
+    {
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF :type')
+            ->setParameter('larp', $larp)
+            ->setParameter('type', Quest::class)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param array<string> $ids
+     * @return Quest[]
+     */
+    private function fetchQuestsByIds(Larp $larp, array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('so')
+            ->where('so.larp = :larp')
+            ->andWhere('so INSTANCE OF ' . Quest::class)
+            ->andWhere('so.id IN (:ids)')
+            ->setParameter('larp', $larp)
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Get IDs of a specific type from a list of mixed IDs.
+     *
+     * @template T of StoryObject
+     * @param class-string<T> $type
+     * @param array<string> $ids
+     * @return array<string>
+     */
+    private function findIdsByType(Larp $larp, string $type, array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+
+        $dql = 'SELECT so.id FROM ' . StoryObject::class . ' so 
+                WHERE so.larp = :larp 
+                AND so INSTANCE OF :type 
+                AND so.id IN (:ids)';
+
+        $rows = $this->getEntityManager()->createQuery($dql)
+            ->setParameter('larp', $larp)
+            ->setParameter('type', $type)
+            ->setParameter('ids', $ids)
+            ->getSingleColumnResult();
+
+        return array_map(
+            static fn ($id): string => $id instanceof Uuid ? $id->toRfc4122() : (string) $id,
+            $rows
+        );
+    }
+
+    /**
+     * Get IDs of story objects referenced in Relations.
+     *
+     * @param Larp $larp
+     * @param array<string> $objectIds
+     * @return array<string>
+     */
+    private function getRelatedObjectIds(Larp $larp, array $objectIds): array
+    {
+        if ($objectIds === []) {
+            return [];
+        }
+        
+        // Get all Relations where from or to is in our object IDs
+        $dql = 'SELECT IDENTITY(r.from) as fromId, IDENTITY(r.to) as toId 
+                FROM ' . Relation::class . ' r 
+                WHERE r.larp = :larp 
+                AND (r.from IN (:ids) OR r.to IN (:ids))';
+        
+        $rows = $this->getEntityManager()->createQuery($dql)
+            ->setParameter('larp', $larp)
+            ->setParameter('ids', $objectIds)
+            ->getResult();
+        
+        $relatedIds = [];
+        foreach ($rows as $row) {
+            if ($row['fromId'] !== null) {
+                $id = $row['fromId'] instanceof Uuid ? $row['fromId']->toRfc4122() : (string) $row['fromId'];
+                $relatedIds[] = $id;
+            }
+            if ($row['toId'] !== null) {
+                $id = $row['toId'] instanceof Uuid ? $row['toId']->toRfc4122() : (string) $row['toId'];
+                $relatedIds[] = $id;
+            }
+        }
+        
+        return array_unique($relatedIds);
     }
 }

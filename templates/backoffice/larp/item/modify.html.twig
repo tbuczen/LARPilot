@@ -4,7 +4,7 @@
     <div class="card mb-4 shadow-sm">
         <div class="card-header">
             <h5 class="card-title mb-0">
-                {{ item.title ? item.title : 'common.new'|trans }}
+                {{ item.title ? item.title : 'new'|trans }}
             </h5>
         </div>
         <div class="card-body">
@@ -67,7 +67,7 @@
             
             <div class="d-flex justify-content-between">
                 <a href="{{ path('backoffice_larp_story_item_list', {'larp': larp.id}) }}" class="btn btn-outline-secondary">
-                    {{ 'common.cancel'|trans }}
+                    {{ 'cancel'|trans }}
                 </a>
 
             </div>
@@ -88,7 +88,7 @@
                     aria-controls="relationsCollapse"
             >
             <span class="fw-bold">
-                {{ 'backoffice.larp.relation.list'|trans }}
+                {{ 'larp.relation.list'|trans }}
             </span>
                 <svg xmlns="http://www.w3.org/2000/svg"
                      width="20" height="20"
@@ -119,7 +119,7 @@
                     aria-controls="referencesCollapse"
             >
             <span class="fw-bold">
-                {{ 'backoffice.larp.reference.list'|trans }}
+                {{ 'larp.reference.list'|trans }}
             </span>
                 <svg xmlns="http://www.w3.org/2000/svg"
                      width="20" height="20"
@@ -150,7 +150,7 @@
                     aria-controls="versionHistoryCollapse"
             >
             <span class="fw-bold">
-                {{ 'backoffice.larp.version_history'|trans }}
+                {{ 'larp.version_history'|trans }}
             </span>
                 <svg xmlns="http://www.w3.org/2000/svg"
                      width="20" height="20"
@@ -174,4 +174,4 @@
 
 {% endblock %}
 
-{% block title %}{{ larp.title }} - {{ item.title ?? 'common.new'|trans }}{% endblock %}
+{% block title %}{{ larp.title }} - {{ item.title ?? 'new'|trans }}{% endblock %}

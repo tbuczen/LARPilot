@@ -3,8 +3,10 @@
 namespace App\Domain\Core\Form;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\Location;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,7 +20,7 @@ class LarpType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
+            ->add('title', TextType::class, [
                 'label' => 'larp.name',
             ])
             ->add('description', TextareaType::class, [
@@ -27,9 +29,13 @@ class LarpType extends AbstractType
                     'data-controller' => 'wysiwyg',
                 ],
             ])
-            ->add('location', TextType::class, [
-                'label' => 'larp.location',
+            ->add('location', EntityType::class, [
+                'class' => Location::class,
+                'choice_label' => 'title',
+                'placeholder' => 'Select a location',
                 'required' => false,
+                'autocomplete' => true,
+                'attr' => ['class' => 'form-select']
             ])
             ->add('startDate', DateTimeType::class, [
                 'label' => 'larp.start_date',

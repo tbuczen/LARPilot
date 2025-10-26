@@ -12,12 +12,13 @@ export default class extends Controller {
         coordinatesTarget: String
     };
 
+    static targets = ['colorInput'];
+
     connect() {
-        console.log('Leaflet map editor controller connected');
-        console.log('Coordinates target ID:', this.coordinatesTargetValue);
         this.selectedCells = new Set();
         this.cellLayers = {};
         this.initMap();
+        this.setupColorChangeListener();
     }
 
     disconnect() {
@@ -123,13 +124,17 @@ export default class extends Controller {
 
     toggleCell(row, col, cellLayer) {
         const cellLabel = this.getCellLabel(row, col);
+        const color = this.getCurrentColor();
 
         if (this.selectedCells.has(cellLabel)) {
             this.selectedCells.delete(cellLabel);
             cellLayer.setStyle({ fillOpacity: 0 });
         } else {
             this.selectedCells.add(cellLabel);
-            cellLayer.setStyle({ fillOpacity: 0.3 });
+            cellLayer.setStyle({
+                fillColor: color,
+                fillOpacity: 0.3
+            });
         }
 
         this.updateFormField();
@@ -153,12 +158,14 @@ export default class extends Controller {
             try {
                 const coordinates = JSON.parse(input.value);
                 if (Array.isArray(coordinates) && coordinates.length > 0) {
-                    console.log('Loading existing coordinates:', coordinates);
+                    const color = this.getCurrentColor();
                     coordinates.forEach(coord => {
                         this.selectedCells.add(coord);
                         if (this.cellLayers[coord]) {
-                            this.cellLayers[coord].setStyle({ fillOpacity: 0.3 });
-                            console.log('Highlighted cell:', coord);
+                            this.cellLayers[coord].setStyle({
+                                fillColor: color,
+                                fillOpacity: 0.3
+                            });
                         } else {
                             console.warn('Cell layer not found for:', coord);
                         }
@@ -167,8 +174,34 @@ export default class extends Controller {
             } catch (e) {
                 console.error('Failed to parse existing coordinates:', e, 'Value:', input.value);
             }
-        } else {
-            console.log('No existing coordinates found. Input:', input, 'Value:', input?.value);
+        }
+    }
+
+    getCurrentColor() {
+        // Try to get color from the color input field
+        const colorInput = document.getElementById('map_location_color');
+        if (colorInput && colorInput.value) {
+            return colorInput.value;
+        }
+        return '#3388ff'; // Default blue color
+    }
+
+    setupColorChangeListener() {
+        // Listen for color changes and update selected cells
+        const colorInput = document.getElementById('map_location_color');
+        if (colorInput) {
+            colorInput.addEventListener('input', () => {
+                const newColor = this.getCurrentColor();
+                // Update all selected cells with the new color
+                this.selectedCells.forEach(cellLabel => {
+                    if (this.cellLayers[cellLabel]) {
+                        this.cellLayers[cellLabel].setStyle({
+                            fillColor: newColor,
+                            fillOpacity: 0.3
+                        });
+                    }
+                });
+            });
         }
     }
 

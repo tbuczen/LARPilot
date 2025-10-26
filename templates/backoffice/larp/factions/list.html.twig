@@ -1,25 +1,25 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
-{% block title %}{{ 'backoffice.larp.faction.list'|trans }} - {{ larp.title }}{% endblock %}
+{% block title %}{{ 'larp.faction.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="importModalLabel">{{ 'backoffice.larp.import_options'|trans }}</h5>
+                    <h5 class="modal-title" id="importModalLabel">{{ 'larp.import_options'|trans }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="{{ 'common.close'|trans }}"></button>
+                            aria-label="{{ 'close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
                     <a href="{{ path('backoffice_larp_story_faction_import_file', {'larp': larp.id}) }}"
                        class="btn btn-secondary">
-                        {{ 'backoffice.larp.import_file'|trans }}
+                        {{ 'larp.import_file'|trans }}
                     </a>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light"
-                            data-bs-dismiss="modal">{{ 'common.close'|trans }}</button>
+                            data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
         </div>
@@ -28,10 +28,10 @@
     <div class="card mt-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'backoffice.larp.faction.list'|trans }}</h2>
+                <h2 class="mb-0">{{ 'larp.faction.list'|trans }}</h2>
                 <div class="d-flex gap-2">
                     <a href="{{ path('backoffice_larp_story_faction_modify', { larp: larp.id }) }}" class="btn btn-success">
-                        {{ 'common.create'|trans }}
+                        {{ 'create'|trans }}
                     </a>
                 </div>
             </div>
@@ -46,10 +46,10 @@
                 <tr>
                     {% include 'includes/sort_th.html.twig' with {
                         field: 'title',
-                        label: 'common.name'|trans
+                        label: 'name'|trans
                     } %}
-                    <th>{{ 'common.description'|trans }}</th>
-                    <th>{{ 'common.actions'|trans }}</th>
+                    <th>{{ 'description'|trans }}</th>
+                    <th>{{ 'actions'|trans }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,17 +60,17 @@
                                 {{ faction.title }}
                             </a>
                            </td>
-                        <td>{{ faction.description|sanitize_html|default('-') }}</td>
+                        <td>{{ faction.description|truncate_words(7)|raw }}</td>
                         <td>
                             <button type="button"
                                     class="btn btn-sm btn-danger"
                                     data-bs-toggle="modal"
                                     data-bs-target="#globalDeleteFactionModal"
-                                    data-delete-text=" {{ 'common.delete'|trans }}"
+                                    data-delete-text=" {{ 'delete'|trans }}"
                                     data-character-id="{{ faction.id }}"
                                     data-character-name="{{ faction.title }}"
                                     data-delete-url-base="{{ path('backoffice_larp_story_faction_delete', { larp: larp.id, faction: 'CHARACTER_ID' }) }}">
-                                {{ 'common.delete'|trans }}
+                                {{ 'delete'|trans }}
                             </button>
                         </td>
                     </tr>
@@ -79,7 +79,7 @@
             </table>
             </div>
             {% else %}
-                <p class="text-muted p-3">{{ 'common.empty_list'|trans }}</p>
+                <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
             {% endif %}
         </div>
     </div>
@@ -89,17 +89,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="globalDeleteFactionModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
-                    {{ 'backoffice.common.confirmation'|trans() }}
+                    {{ 'confirmation'|trans() }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'common.cancel'|trans }}
+                        {{ 'cancel'|trans }}
                     </button>
                     <a href="#" id="deleteOnlyLarpilot" class="btn btn-danger">
-                        {{ 'backoffice.larp.faction.delete_only_larpilot'|trans }}
+                        {{ 'larp.faction.delete_only_larpilot'|trans }}
                     </a>
                 </div>
             </div>

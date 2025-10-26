@@ -196,7 +196,6 @@ export default class extends Controller {
 
         this.cy.on('tap', 'node', (event) => {
             const node = event.target;
-            console.log(`Clicked node type=${node.data('type')} id=${node.id()}`);
         });
 
         this.cy.on('mouseover', 'node', (event) => {

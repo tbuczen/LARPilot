@@ -70,7 +70,7 @@ class CharacterController extends BaseController
 
             $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $character);
 
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_character_list', ['larp' => $larp->getId()]);
         }
 
@@ -104,7 +104,7 @@ class CharacterController extends BaseController
 
         $characterRepository->remove($character);
 
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_story_character_list', [
             'larp' => $larp->getId(),

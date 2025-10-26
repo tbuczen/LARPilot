@@ -5,15 +5,15 @@
 {% block breadcrumb %}
     {{ parent() }}
     <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_view', { larp: larp.id }) }}">{{ larp.title }}</a></li>
-    <li class="breadcrumb-item">{{ 'backoffice.event_planner.title'|trans }}</li>
-    <li class="breadcrumb-item"><a href="{{ path('backoffice_event_planner_event_list', { larp: larp.id }) }}">{{ 'backoffice.event_planner.event.list'|trans }}</a></li>
+    <li class="breadcrumb-item">{{ 'event_planner.title'|trans }}</li>
+    <li class="breadcrumb-item"><a href="{{ path('backoffice_event_planner_event_list', { larp: larp.id }) }}">{{ 'event_planner.event.list'|trans }}</a></li>
     <li class="breadcrumb-item active">{{ event.title }}</li>
 {% endblock %}
 
 {% block larp_content %}
     {% if conflicts is not empty %}
         <div class="alert alert-warning">
-            <h5><i class="bi bi-exclamation-triangle"></i> {{ 'backoffice.event_planner.event.conflicts_detected_title'|trans }}</h5>
+            <h5><i class="bi bi-exclamation-triangle"></i> {{ 'event_planner.event.conflicts_detected_title'|trans }}</h5>
             <ul class="mb-0">
                 {% for conflict in conflicts %}
                     <li>
@@ -32,7 +32,7 @@
                     <div>
                         <a href="{{ path('backoffice_event_planner_event_modify', { larp: larp.id, event: event.id }) }}"
                            class="btn btn-primary">
-                            <i class="bi bi-pencil"></i> {{ 'common.edit'|trans }}
+                            <i class="bi bi-pencil"></i> {{ 'edit'|trans }}
                         </a>
                     </div>
                 </div>
@@ -41,42 +41,42 @@
                         <p>{{ event.description|nl2br }}</p>
                     {% endif %}
 
-                    <h5>{{ 'backoffice.event_planner.event.details'|trans }}</h5>
+                    <h5>{{ 'event_planner.event.details'|trans }}</h5>
                     <dl class="row">
-                        <dt class="col-sm-4">{{ 'backoffice.event_planner.event.start_time'|trans }}</dt>
+                        <dt class="col-sm-4">{{ 'event_planner.event.start_time'|trans }}</dt>
                         <dd class="col-sm-8">{{ event.startTime|date('Y-m-d H:i') }}</dd>
 
-                        <dt class="col-sm-4">{{ 'backoffice.event_planner.event.end_time'|trans }}</dt>
+                        <dt class="col-sm-4">{{ 'event_planner.event.end_time'|trans }}</dt>
                         <dd class="col-sm-8">{{ event.endTime|date('Y-m-d H:i') }}</dd>
 
-                        <dt class="col-sm-4">{{ 'backoffice.event_planner.event.duration'|trans }}</dt>
-                        <dd class="col-sm-8">{{ event.durationMinutes }} {{ 'common.minutes'|trans }}</dd>
+                        <dt class="col-sm-4">{{ 'event_planner.event.duration'|trans }}</dt>
+                        <dd class="col-sm-8">{{ event.durationMinutes }} {{ 'minutes'|trans }}</dd>
 
                         {% if event.setupMinutes > 0 or event.cleanupMinutes > 0 %}
-                            <dt class="col-sm-4">{{ 'backoffice.event_planner.event.setup_cleanup'|trans }}</dt>
+                            <dt class="col-sm-4">{{ 'event_planner.event.setup_cleanup'|trans }}</dt>
                             <dd class="col-sm-8">
                                 Setup: {{ event.setupMinutes }} min, Cleanup: {{ event.cleanupMinutes }} min
                             </dd>
                         {% endif %}
 
-                        <dt class="col-sm-4">{{ 'common.status'|trans }}</dt>
+                        <dt class="col-sm-4">{{ 'status'|trans }}</dt>
                         <dd class="col-sm-8">
                             <span class="badge {{ event.status.badgeClass }}">{{ event.status.label }}</span>
                         </dd>
 
                         {% if event.location %}
-                            <dt class="col-sm-4">{{ 'backoffice.event_planner.event.location'|trans }}</dt>
+                            <dt class="col-sm-4">{{ 'event_planner.event.location'|trans }}</dt>
                             <dd class="col-sm-8">{{ event.location.name }}</dd>
                         {% endif %}
 
                         {% if event.storyObjectReference %}
-                            <dt class="col-sm-4">{{ 'backoffice.event_planner.event.story_link'|trans }}</dt>
+                            <dt class="col-sm-4">{{ 'event_planner.event.story_link'|trans }}</dt>
                             <dd class="col-sm-8">{{ event.storyObjectReference }}</dd>
                         {% endif %}
                     </dl>
 
                     {% if event.organizerNotes %}
-                        <h5>{{ 'backoffice.event_planner.event.organizer_notes'|trans }}</h5>
+                        <h5>{{ 'event_planner.event.organizer_notes'|trans }}</h5>
                         <p class="text-muted">{{ event.organizerNotes|nl2br }}</p>
                     {% endif %}
                 </div>
@@ -86,7 +86,7 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">{{ 'backoffice.event_planner.event.resources'|trans }}</h5>
+                    <h5 class="mb-0">{{ 'event_planner.event.resources'|trans }}</h5>
                 </div>
                 <div class="card-body">
                     {% if event.resourceBookings is not empty %}
@@ -104,7 +104,7 @@
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p class="text-muted">{{ 'backoffice.event_planner.event.no_resources'|trans }}</p>
+                        <p class="text-muted">{{ 'event_planner.event.no_resources'|trans }}</p>
                     {% endif %}
                 </div>
             </div>

@@ -2,9 +2,9 @@
 
 {% block title %}
     {% if isNew %}
-        {{ 'backoffice.event_planner.resource.create'|trans }}
+        {{ 'event_planner.resource.create'|trans }}
     {% else %}
-        {{ 'backoffice.event_planner.resource.edit'|trans }} - {{ resource.name }}
+        {{ 'event_planner.resource.edit'|trans }} - {{ resource.name }}
     {% endif %}
 {% endblock %}
 
@@ -15,9 +15,9 @@
                 <div class="card-header">
                     <h2 class="mb-0">
                         {% if isNew %}
-                            {{ 'backoffice.event_planner.resource.create'|trans }}
+                            {{ 'event_planner.resource.create'|trans }}
                         {% else %}
-                            {{ 'backoffice.event_planner.resource.edit'|trans }}
+                            {{ 'event_planner.resource.edit'|trans }}
                         {% endif %}
                     </h2>
                 </div>
@@ -44,7 +44,7 @@
                         </div>
 
                         <hr>
-                        <h5>{{ 'backoffice.event_planner.resource.availability_window'|trans }}</h5>
+                        <h5>{{ 'event_planner.resource.availability_window'|trans }}</h5>
                         <div class="row">
                             <div class="col-md-6">
                                 {{ form_row(form.availableFrom) }}
@@ -55,18 +55,18 @@
                         </div>
 
                         <hr>
-                        <h5>{{ 'backoffice.event_planner.resource.linked_entities'|trans }}</h5>
-                        <p class="text-muted small">{{ 'backoffice.event_planner.resource.linked_entities_help'|trans }}</p>
+                        <h5>{{ 'event_planner.resource.linked_entities'|trans }}</h5>
+                        <p class="text-muted small">{{ 'event_planner.resource.linked_entities_help'|trans }}</p>
                         {{ form_row(form.item) }}
                         {{ form_row(form.participant) }}
 
                         <div class="mt-4">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> {{ 'common.save'|trans }}
+                                <i class="bi bi-check-circle"></i> {{ 'save'|trans }}
                             </button>
                             <a href="{{ path('backoffice_event_planner_resource_list', { larp: larp.id }) }}"
                                class="btn btn-secondary">
-                                {{ 'common.cancel'|trans }}
+                                {{ 'cancel'|trans }}
                             </a>
                         </div>
                     {{ form_end(form) }}

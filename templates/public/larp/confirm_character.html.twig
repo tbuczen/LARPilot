@@ -16,10 +16,10 @@
                         <div class="alert alert-info">
                             <h5>{{ larp.title }}</h5>
                             {% if larp.startDate %}
-                                <p><strong>{{ 'common.date'|trans }}:</strong> {{ larp.startDate|date('Y-m-d') }}</p>
+                                <p><strong>{{ 'date'|trans }}:</strong> {{ larp.startDate|date('Y-m-d') }}</p>
                             {% endif %}
                             {% if larp.location %}
-                                <p><strong>{{ 'common.location'|trans }}:</strong> {{ larp.location.name }}</p>
+                                <p><strong>{{ 'location'|trans }}:</strong> {{ larp.location.name }}</p>
                             {% endif %}
                         </div>
 
@@ -40,7 +40,7 @@
                         <form method="post" id="confirmForm">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
                                 <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-secondary btn-lg">
-                                    <i class="bi bi-arrow-left"></i> {{ 'common.cancel'|trans }}
+                                    <i class="bi bi-arrow-left"></i> {{ 'cancel'|trans }}
                                 </a>
                                 <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#confirmModal">
                                     <i class="bi bi-check-circle"></i> {{ 'public.application.yes_confirm'|trans }}
@@ -68,7 +68,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'common.cancel'|trans }}
+                        {{ 'cancel'|trans }}
                     </button>
                     <button type="submit" form="confirmForm" class="btn btn-success">
                         <i class="bi bi-check-circle"></i> {{ 'public.application.confirm_final'|trans }}

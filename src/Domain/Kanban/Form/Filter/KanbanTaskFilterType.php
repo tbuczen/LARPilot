@@ -34,10 +34,8 @@ class KanbanTaskFilterType extends AbstractType
                 'label' => 'filter.kanban_task.status',
                 'required' => false,
                 'placeholder' => 'filter.all_statuses',
-                'choices' => array_combine(
-                    array_map(fn (KanbanStatus $s) => $s->value, KanbanStatus::cases()),
-                    array_map(fn (KanbanStatus $s) => $s->value, KanbanStatus::cases())
-                ),
+                'choice_label' => fn (KanbanStatus $status): string => 'kanban_task.status.' . strtolower($status->value),
+                'choices' => KanbanStatus::cases(),
             ]);
 
         if ($larp) {
@@ -49,7 +47,8 @@ class KanbanTaskFilterType extends AbstractType
                     'placeholder' => 'filter.all_users',
                     'choice_label' => fn (LarpParticipant $p) => $p->getUser()->getUsername(),
                     'query_builder' => fn ($repo) => $repo->createQueryBuilder('p')
-                        ->join('p.user', 'u')
+                        ->innerJoin('p.user', 'u')
+                        ->addSelect('u')
                         ->where('p.larp = :larp')
                         ->setParameter('larp', $larp)
                         ->orderBy('u.username', 'ASC'),

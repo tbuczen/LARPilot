@@ -10,7 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\StoryObject\Entity\Quest>
+ * @extends BaseRepository<Quest>
  *
  * @method null|Quest find($id, $lockMode = null, $lockVersion = null)
  * @method null|Quest findOneBy(array $criteria, array $orderBy = null)

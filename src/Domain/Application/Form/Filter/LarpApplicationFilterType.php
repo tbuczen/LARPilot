@@ -7,6 +7,7 @@ use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\FactionRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,7 +28,7 @@ class LarpApplicationFilterType extends AbstractType
                 'autocomplete' => true,
                 'placeholder' => 'choose',
                 'data_extraction_method' => 'default',
-                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                'query_builder' => fn (CharacterRepository $repo): QueryBuilder => $repo->createQueryBuilder('c')
                     ->where('c.larp = :larp')
                     ->setParameter('larp', $larp),
             ])
@@ -38,7 +39,7 @@ class LarpApplicationFilterType extends AbstractType
                 'autocomplete' => true,
                 'placeholder' => 'choose',
                 'data_extraction_method' => 'default',
-                'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
+                'query_builder' => fn (FactionRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ]);

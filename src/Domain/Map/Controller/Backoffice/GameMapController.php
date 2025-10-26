@@ -81,12 +81,12 @@ class GameMapController extends BaseController
                     );
                     $map->setImageFile($newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('error', $this->translator->trans('backoffice.larp.map.upload_error'));
+                    $this->addFlash('error', $this->translator->trans('larp.map.upload_error'));
                 }
             }
 
             $mapRepository->save($map);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
 
             return $this->redirectToRoute('backoffice_larp_map_view', [
                 'larp' => $larp->getId(),
@@ -107,10 +107,24 @@ class GameMapController extends BaseController
     {
         $locations = $locationRepository->findByMap($map);
 
+        // Serialize locations for JavaScript with all required fields
+        $locationsData = array_map(function (MapLocation $location) {
+            return [
+                'id' => $location->getId()->toString(),
+                'name' => $location->getName(),
+                'gridCoordinates' => $location->getGridCoordinates(),
+                'color' => $location->getColor(),
+                'type' => $location->getType()?->value,
+                'capacity' => $location->getCapacity(),
+                'description' => $location->getDescription(),
+            ];
+        }, $locations);
+
         return $this->render('backoffice/larp/map/view.html.twig', [
             'larp' => $larp,
             'map' => $map,
             'locations' => $locations,
+            'locationsData' => $locationsData,
         ]);
     }
 
@@ -118,7 +132,7 @@ class GameMapController extends BaseController
     public function delete(Larp $larp, GameMapRepository $mapRepository, GameMap $map): Response
     {
         $mapRepository->remove($map);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_map_list', ['larp' => $larp->getId()]);
     }
@@ -150,7 +164,7 @@ class GameMapController extends BaseController
             }
 
             $locationRepository->save($location);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
 
             return $this->redirectToRoute('backoffice_larp_map_view', [
                 'larp' => $larp->getId(),
@@ -175,7 +189,7 @@ class GameMapController extends BaseController
         MapLocation $location
     ): Response {
         $locationRepository->remove($location);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_map_view', [
             'larp' => $larp->getId(),

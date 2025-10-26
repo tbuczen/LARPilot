@@ -23,18 +23,18 @@ class FactionFilterType extends AbstractType
         $larp = $options['larp'];
 
         $builder
-            ->add('tags', EntityType::class, [
-                'class' => Tag::class,
-                'choice_label' => 'title',
-                'multiple' => true,
-                'required' => false,
-                'label' => 'filter_tags',
-                'autocomplete' => true,
-                'query_builder' => fn (EntityRepository $er) => $er->createQueryBuilder('t')
-                    ->where('t.larp = :larp')
-                    ->setParameter('larp', $larp)
-                    ->orderBy('t.title', 'ASC'),
-            ])
+//            ->add('tags', EntityType::class, [
+//                'class' => Tag::class,
+//                'choice_label' => 'title',
+//                'multiple' => true,
+//                'required' => false,
+//                'label' => 'filter_tags',
+//                'autocomplete' => true,
+//                'query_builder' => fn (EntityRepository $er) => $er->createQueryBuilder('t')
+//                    ->where('t.larp = :larp')
+//                    ->setParameter('larp', $larp)
+//                    ->orderBy('t.title', 'ASC'),
+//            ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,
                 'choice_label' => 'title',

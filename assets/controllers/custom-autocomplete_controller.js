@@ -22,9 +22,7 @@ export default class extends Controller {
     _onPreConnect(event) {
         const { urlValue, typeValue } = this;
         event.detail.options.create = function (input, callback) {
-            // 'a'
             const data = new FormData();
-            console.log(data);
             data.append('title', input);
             data.append('type', typeValue);
             fetch(urlValue, {

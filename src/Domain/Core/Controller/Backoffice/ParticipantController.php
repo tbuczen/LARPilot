@@ -53,7 +53,7 @@ class ParticipantController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $participant->setLarp($larp);
             $participantRepository->save($participant);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_participant_list', ['larp' => $larp->getId()]);
         }
 
@@ -71,7 +71,7 @@ class ParticipantController extends BaseController
         LarpParticipant           $participant,
     ): Response {
         $participantRepository->remove($participant);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_participant_list', [
             'larp' => $larp->getId(),

@@ -10,13 +10,13 @@
             data-bs-target="#{{ modalId }}"
             {% if parameters is empty %}disabled{% endif %}
     >
-        {{ 'common.save_filter'|trans }}
+        {{ 'save_filter'|trans }}
     </button>
 
     {% if savedFilters is not empty %}
     <select id="{{ selectId }}" class="form-select d-inline-block w-auto">
 
-            <option data-parameters="" value="">{{ 'common.choose'|trans }}</option>
+            <option data-parameters="" value="">{{ 'choose'|trans }}</option>
             {% for filter in savedFilters %}
                 <option  data-parameters="{{ filter.parameters|url_encode }}" value="{{ filter.id }}">{{ filter.name }}</option>
             {% endfor %}
@@ -28,7 +28,7 @@
             data-bs-toggle="modal"
             data-bs-target="#manageFiltersModal_{{ formName }}"
     >
-        ⚙ {{ 'common.manage_filters'|trans }}
+        ⚙ {{ 'manage_filters'|trans }}
     </button>
     {% endif %}
 
@@ -36,23 +36,23 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ 'common.save_filter'|trans }}</h5>
+                    <h5 class="modal-title">{{ 'save_filter'|trans }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="{{ 'common.close'|trans }}"></button>
+                            aria-label="{{ 'close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
-                    <label class="form-label">{{ 'common.save_filter'|trans }}</label>
+                    <label class="form-label">{{ 'save_filter'|trans }}</label>
                     <input
                             type="text"
                             class="form-control mb-3"
                             name="name"
                             data-model="norender|name"
-                            placeholder="{{ 'common.name'|trans }}"
+                            placeholder="{{ 'name'|trans }}"
                     >
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'common.close'|trans }}
+                        {{ 'close'|trans }}
                     </button>
                     <button
                             type="button"
@@ -62,7 +62,7 @@
                             data-live-action-param="save"
                             data-bs-dismiss="modal"
                     >
-                        {{ 'common.save'|trans }}
+                        {{ 'save'|trans }}
                     </button>
                 </div>
             </div>
@@ -73,12 +73,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ 'common.manage_filters'|trans }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                    <h5 class="modal-title">{{ 'manage_filters'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
                     {% if savedFilters is empty %}
-                        <p class="text-muted">{{ 'common.no_saved_filters'|trans }}</p>
+                        <p class="text-muted">{{ 'no_saved_filters'|trans }}</p>
                     {% else %}
                         <ul class="list-group">
                             {% for filter in savedFilters %}
@@ -117,7 +117,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'common.close'|trans }}
+                        {{ 'close'|trans }}
                     </button>
                 </div>
             </div>

@@ -28,6 +28,20 @@ readonly class LarpManager
         return $this->larpRepository->find($larpId);
     }
 
+    public function createLarp(Larp $larp, User $creator): Larp
+    {
+        // Add creator as organizer
+        $participant = new LarpParticipant();
+        $participant->setUser($creator);
+        $participant->setLarp($larp);
+        $participant->setRoles([\App\Domain\Core\Entity\Enum\ParticipantRole::ORGANIZER]);
+
+        $this->larpRepository->save($larp, false);
+        $this->larpParticipantRepository->save($participant, true);
+
+        return $larp;
+    }
+
     /**
      * @return LarpIntegration[]
      */

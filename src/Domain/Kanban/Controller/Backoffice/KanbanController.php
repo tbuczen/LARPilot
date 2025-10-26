@@ -22,17 +22,14 @@ class KanbanController extends BaseController
     #[Route('', name: 'board', methods: ['GET'])]
     public function board(Request $request, Larp $larp, KanbanTaskRepository $repository): Response
     {
-        // Create filter form
         $filterForm = $this->createForm(KanbanTaskFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
 
-        // Build base query
         $qb = $repository->createQueryBuilder('kt')
             ->where('kt.larp = :larp')
             ->setParameter('larp', $larp)
             ->orderBy('kt.position', 'ASC');
 
-        // Apply filters
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
 
         // Handle priority filter manually
@@ -56,8 +53,8 @@ class KanbanController extends BaseController
         }
 
         $tasks = $qb->getQuery()->getResult();
-        $this->entityPreloader->preload($tasks, 'assignedTo');
-
+        $participants = $this->entityPreloader->preload($tasks, 'assignedTo');
+        $users = $this->entityPreloader->preload($participants, 'user');
         return $this->render('backoffice/larp/kanban/board.html.twig', [
             'larp' => $larp,
             'tasks' => $tasks,

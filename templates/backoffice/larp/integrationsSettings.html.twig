@@ -1,11 +1,11 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block title %}
-    {{ 'backoffice.larp.integrationSettings'|trans }}
+    {{ 'larp.integrationSettings'|trans }}
 {% endblock %}
 
 {% block larp_content %}
-    <h3>{{ 'backoffice.larp.integrationSettings'|trans }}</h3>
+    <h3>{{ 'larp.integrationSettings'|trans }}</h3>
     {% for provider in availableProviders %}
         {% set current = integrations|filter(i => i.provider.sameAs(provider))|first %}
 
@@ -17,16 +17,16 @@
                 <p>{{ provider.descriptionKey() is not null ? provider.descriptionKey()|trans : '' }}</p>
 
                 {% if current == false %}
-                    <p>{{ 'common.not_connected'|trans }}</p>
+                    <p>{{ 'not_connected'|trans }}</p>
                     <a href="{{ path('backoffice_larp_connect_integration', { id: larp.id, provider: provider.value }) }}"
                        class="btn btn-primary">
-                        {{ 'common.connect'|trans }}
+                        {{ 'connect'|trans }}
                     </a>
                 {% else %}
                     {% if provider.integrationSettingsTemplate() %}
                         {% include 'backoffice/larp/integrations/' ~ provider.integrationSettingsTemplate() with { integration: current, larp: larp } %}
                     {% else %}
-                        <p>{{ 'common.connected'|trans }}</p>
+                        <p>{{ 'connected'|trans }}</p>
                     {% endif %}
                 {% endif %}
             </div>

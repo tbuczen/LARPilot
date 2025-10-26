@@ -11,7 +11,7 @@
                 </h2>
                 <a href="{{ path('backoffice_larp_story_marketplace_characters_list', {larp: larp.id}) }}"
                    class="btn btn-secondary">
-                    {{ 'common.back'|trans }}
+                    {{ 'back'|trans }}
                 </a>
             </div>
         </div>
@@ -20,15 +20,15 @@
             {# Thread status alert #}
             {% if needsMoreThreads %}
                 <div class="alert alert-warning">
-                    <strong>{{ 'backoffice.marketplace.needs_threads'|trans }}</strong>
-                    {{ 'backoffice.marketplace.needs_threads_detail'|trans({
+                    <strong>{{ 'marketplace.needs_threads'|trans }}</strong>
+                    {{ 'marketplace.needs_threads_detail'|trans({
                         '%current%': threadCount,
                         '%minimum%': minThreads
                     }) }}
                 </div>
             {% else %}
                 <div class="alert alert-success">
-                    {{ 'backoffice.marketplace.has_enough_threads'|trans({
+                    {{ 'marketplace.has_enough_threads'|trans({
                         '%current%': threadCount,
                         '%minimum%': minThreads
                     }) }}
@@ -38,31 +38,31 @@
             {# Character info #}
             <div class="row mb-4">
                 <div class="col-md-6">
-                    <h5>{{ 'common.description'|trans }}</h5>
+                    <h5>{{ 'description'|trans }}</h5>
                     <p>{{ character.description|sanitize_html|default('-') }}</p>
                 </div>
                 <div class="col-md-6">
-                    <h5>{{ 'common.tags'|trans }}</h5>
+                    <h5>{{ 'tags'|trans }}</h5>
                     {% if character.tags|length > 0 %}
                         {% for tag in character.tags %}
                             <span class="badge bg-secondary">{{ tag.title }}</span>
                         {% endfor %}
                     {% else %}
-                        <p class="text-muted">{{ 'backoffice.marketplace.no_tags'|trans }}</p>
+                        <p class="text-muted">{{ 'marketplace.no_tags'|trans }}</p>
                     {% endif %}
                 </div>
             </div>
 
             {# Current threads #}
-            <h4 class="mt-4">{{ 'backoffice.marketplace.current_threads'|trans }}</h4>
+            <h4 class="mt-4">{{ 'marketplace.current_threads'|trans }}</h4>
             {% if currentThreads|length > 0 %}
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered">
                         <thead class="table-light">
                             <tr>
-                                <th>{{ 'common.title'|trans }}</th>
-                                <th>{{ 'common.description'|trans }}</th>
-                                <th>{{ 'common.tags'|trans }}</th>
+                                <th>{{ 'title'|trans }}</th>
+                                <th>{{ 'description'|trans }}</th>
+                                <th>{{ 'tags'|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,20 +87,20 @@
                     </table>
                 </div>
             {% else %}
-                <p class="text-muted">{{ 'backoffice.marketplace.no_current_threads'|trans }}</p>
+                <p class="text-muted">{{ 'marketplace.no_current_threads'|trans }}</p>
             {% endif %}
 
             {# Suggested threads #}
-            <h4 class="mt-4">{{ 'backoffice.marketplace.suggested_threads'|trans }}</h4>
+            <h4 class="mt-4">{{ 'marketplace.suggested_threads'|trans }}</h4>
             {% if suggestedThreads|length > 0 %}
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered">
                         <thead class="table-light">
                             <tr>
-                                <th>{{ 'common.title'|trans }}</th>
-                                <th>{{ 'common.description'|trans }}</th>
-                                <th>{{ 'backoffice.marketplace.matching_tags'|trans }}</th>
-                                <th>{{ 'common.actions'|trans }}</th>
+                                <th>{{ 'title'|trans }}</th>
+                                <th>{{ 'description'|trans }}</th>
+                                <th>{{ 'marketplace.matching_tags'|trans }}</th>
+                                <th>{{ 'actions'|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,7 +127,7 @@
                                         <a href="{{ path('backoffice_larp_story_thread_modify', {
                                             larp: larp.id, thread: thread.id
                                         }) }}" class="btn btn-sm btn-primary">
-                                            {{ 'common.view'|trans }}
+                                            {{ 'view'|trans }}
                                         </a>
                                     </td>
                                 </tr>
@@ -136,7 +136,7 @@
                     </table>
                 </div>
             {% else %}
-                <p class="text-muted">{{ 'backoffice.marketplace.no_suggestions'|trans }}</p>
+                <p class="text-muted">{{ 'marketplace.no_suggestions'|trans }}</p>
             {% endif %}
         </div>
     </div>

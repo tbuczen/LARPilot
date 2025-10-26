@@ -6,6 +6,7 @@ use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\StoryMarketplace\Service\MarketplaceService;
 use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Form\Filter\CharacterFilterType;
 use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\ThreadRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,16 @@ class MarketplaceCharacterController extends BaseController
         Request $request,
         CharacterRepository $characterRepository
     ): Response {
+        $filterForm = $this->createForm(CharacterFilterType::class, null, ['larp' => $larp]);
+        $filterForm->handleRequest($request);
+
         $qb = $characterRepository->createCharactersNeedingThreadsQueryBuilder(
             $larp,
             $larp->getMinThreadsPerCharacter()
         );
+
+        // Apply filters using FilterBuilderUpdater
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
 
         $pagination = $this->getPagination($qb, $request);
 
@@ -32,6 +39,7 @@ class MarketplaceCharacterController extends BaseController
             'larp' => $larp,
             'characters' => $pagination,
             'minThreadsPerCharacter' => $larp->getMinThreadsPerCharacter(),
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 

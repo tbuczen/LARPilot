@@ -40,13 +40,11 @@ export function applyFactionGroupLayout(cy) {
             index
         });
         
-        console.log(`Group ${index}: ${characterCount} characters, radius: ${circleRadius}`);
     });
     
     // Calculate spacing based on the largest radius to ensure no overlap
     const groupSpacing = Math.max(400, maxRadius * 2.8);
-    console.log(`Using groupSpacing: ${groupSpacing}, maxRadius: ${maxRadius}`);
-    
+
     // Second pass: position all groups
     groupData.forEach((data) => {
         const { group, characters, faction, circleRadius, index } = data;
@@ -77,7 +75,5 @@ export function applyFactionGroupLayout(cy) {
         }
     });
     
-    console.log("Faction groups layout applied");
-    // Fit the view to show all groups
     cy.fit(groups, 50); // 50px padding
 }

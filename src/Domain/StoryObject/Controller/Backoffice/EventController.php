@@ -70,7 +70,7 @@ class EventController extends BaseController
 
             $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $event);
 
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_event_list', ['larp' => $larp->getId()]);
         }
 
@@ -99,7 +99,7 @@ class EventController extends BaseController
 
         $eventRepository->remove($event);
 
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_story_event_list', [
             'larp' => $larp->getId(),
@@ -191,7 +191,7 @@ class EventController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recruitmentRepository->save($recruitment);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
 
             return $this->redirectToRoute('backoffice_larp_story_event_list', [
                 'larp' => $larp->getId(),

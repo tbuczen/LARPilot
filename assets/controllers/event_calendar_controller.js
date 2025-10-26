@@ -4,11 +4,13 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
+import interactionPlugin from '@fullcalendar/interaction';
 
 export default class extends Controller {
     static values = {
         larpId: String,
         eventsUrl: String,
+        createEventUrl: String,
         initialStart: String,
         initialEnd: String
     };
@@ -22,7 +24,7 @@ export default class extends Controller {
         const calendarEl = this.element;
 
         this.calendar = new Calendar(calendarEl, {
-            plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+            plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
             initialView: 'timeGridWeek',
             initialDate: this.initialStartValue,
             headerToolbar: {
@@ -36,6 +38,10 @@ export default class extends Controller {
             allDaySlot: false,
             height: 'auto',
             nowIndicator: true,
+            editable: true,
+            selectable: true,
+            selectMirror: true,
+            dayMaxEvents: true,
 
             // Event source
             events: (info, successCallback, failureCallback) => {
@@ -71,6 +77,21 @@ export default class extends Controller {
                     window.location.href = info.event.url;
                     info.jsEvent.preventDefault();
                 }
+            },
+
+            // Drag-to-create handler
+            select: (info) => {
+                this.createEventFromSelection(info);
+            },
+
+            // Drag-and-drop handler for rescheduling
+            eventDrop: (info) => {
+                this.updateEventTimes(info);
+            },
+
+            // Resize handler
+            eventResize: (info) => {
+                this.updateEventTimes(info);
             }
         });
 
@@ -134,6 +155,102 @@ export default class extends Controller {
                 }, 100);
             });
         }
+    }
+
+    async createEventFromSelection(info) {
+        // Prompt for event title
+        const title = prompt('Enter event title:', 'New Event');
+
+        if (!title) {
+            // User cancelled
+            this.calendar.unselect();
+            return;
+        }
+
+        try {
+            const response = await fetch(this.createEventUrlValue, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: title,
+                    start: info.startStr,
+                    end: info.endStr
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Add the new event to the calendar
+                this.calendar.addEvent(data.event);
+
+                // Show success message
+                this.showNotification('Event created successfully!', 'success');
+
+                // Navigate to edit page after a short delay
+                setTimeout(() => {
+                    window.location.href = data.event.url;
+                }, 1000);
+            } else {
+                this.showNotification('Failed to create event: ' + data.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error creating event:', error);
+            this.showNotification('An error occurred while creating the event', 'error');
+        } finally {
+            this.calendar.unselect();
+        }
+    }
+
+    async updateEventTimes(info) {
+        const event = info.event;
+
+        try {
+            const response = await fetch(this.createEventUrlValue.replace('/create', `/${event.id}`), {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    start: event.start.toISOString(),
+                    end: event.end ? event.end.toISOString() : null
+                })
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                // Revert the change
+                info.revert();
+                this.showNotification('Failed to update event: ' + data.message, 'error');
+            } else {
+                this.showNotification('Event updated successfully!', 'success');
+            }
+        } catch (error) {
+            console.error('Error updating event:', error);
+            info.revert();
+            this.showNotification('An error occurred while updating the event', 'error');
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        // Create a simple Bootstrap alert
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+        alert.style.zIndex = '9999';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        document.body.appendChild(alert);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            alert.remove();
+        }, 3000);
     }
 
     disconnect() {

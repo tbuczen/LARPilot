@@ -30,7 +30,7 @@ class CharacterApplicationController extends BaseController
         }
 
         if ($repository->findOneBy(['larp' => $larp, 'user' => $this->getUser()])) {
-            $this->addFlash('error', 'backoffice.larp.applications.already_submitted');
+            $this->addFlash('error', 'larp.applications.already_submitted');
             return $this->redirectToRoute('public_larp_details', ['slug' => $larp->getSlug()]);
         }
 

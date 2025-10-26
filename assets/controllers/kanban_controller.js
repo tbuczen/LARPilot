@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import Sortable from '../vendor/sortable.esm.js';
-// import {values} from "../../public/assets/vendor/lodash-es/lodash-es.index-BAEpLOo";
+import Sortable from 'sortablejs';
 
 export default class extends Controller {
     static targets = ['column', 'taskList', 'task', 'modalOverlay', 'modalTitle', 'modalBody', 'modalFooter'];
@@ -14,8 +13,6 @@ export default class extends Controller {
     };
 
     connect() {
-        console.log('Kanban controller connected');
-        
         this.taskListTargets.forEach(taskList => {
             Sortable.create(taskList, {
                 group: 'kanban',
@@ -41,8 +38,6 @@ export default class extends Controller {
 
     // Modal Methods
     showCreateModal() {
-        console.log('showCreateModal called');
-        
         if (!this.hasModalTitleTarget || !this.hasModalOverlayTarget) {
             console.error('Modal targets not found');
             return;
@@ -238,8 +233,7 @@ export default class extends Controller {
     }
 
     _loadContent(url) {
-        console.log('Loading content from:', url);
-        
+
         if (!this.hasModalBodyTarget) {
             console.error('modalBody target not found');
             return;

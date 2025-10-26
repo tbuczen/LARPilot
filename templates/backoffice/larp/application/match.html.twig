@@ -2,16 +2,16 @@
 
 {% block larp_content %}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>{{ 'backoffice.larp.applications.match'|trans }}</h2>
+        <h2>{{ 'larp.applications.match'|trans }}</h2>
         <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> {{ 'common.back'|trans }}
+            <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
         </a>
     </div>
 
     <!-- Filter Form -->
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="card-title mb-0">{{ 'common.filter'|trans }}</h5>
+            <h5 class="card-title mb-0">{{ 'filter'|trans }}</h5>
         </div>
         <div class="card-body">
             {% include 'includes/filter_form.html.twig' with { form: filterForm, larp: larp } %}
@@ -21,7 +21,7 @@
     {% if characterMatches is empty %}
         <div class="card-body">
             <div class="alert alert-info mb-0">
-                {{ 'common.empty_list'|trans }}
+                {{ 'empty_list'|trans }}
             </div>
         </div>
     {% else %}
@@ -39,11 +39,11 @@
                         <table class="table table-sm">
                             <thead>
                             <tr>
-                                <th>{{ 'backoffice.larp.applications.applicant'|trans }}</th>
+                                <th>{{ 'larp.applications.applicant'|trans }}</th>
                                 <th>{{ 'public.larp.application.priority'|trans }}</th>
                                 <th>{{ 'public.larp.application.justification'|trans }}</th>
-                                <th>{{ 'backoffice.common.votes'|trans }}</th>
-                                <th>{{ 'common.actions'|trans }}</th>
+                                <th>{{ 'votes'|trans }}</th>
+                                <th>{{ 'actions'|trans }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -114,30 +114,30 @@
             <div class="modal-content">
                 <form id="voteForm" method="post">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="voteModalLabel">{{ 'backoffice.larp.applications.cast_vote'|trans }}</h5>
+                        <h5 class="modal-title" id="voteModalLabel">{{ 'larp.applications.cast_vote'|trans }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <strong>{{ 'common.character'|trans }}:</strong> <span id="voteCharacter"></span>
+                            <strong>{{ 'character'|trans }}:</strong> <span id="voteCharacter"></span>
                         </div>
                         <div class="mb-3">
-                            <strong>{{ 'backoffice.larp.applications.applicant'|trans }}:</strong> <span id="voteApplicant"></span>
+                            <strong>{{ 'larp.applications.applicant'|trans }}:</strong> <span id="voteApplicant"></span>
                         </div>
                         <div class="mb-3">
-                            <strong>{{ 'backoffice.larp.applications.vote_type'|trans }}:</strong> 
+                            <strong>{{ 'larp.applications.vote_type'|trans }}:</strong>
                             <span id="voteType" class="badge"></span>
                         </div>
                         <div class="mb-3">
-                            <label for="voteJustification" class="form-label">{{ 'backoffice.larp.applications.vote_justification'|trans }}</label>
+                            <label for="voteJustification" class="form-label">{{ 'larp.applications.vote_justification'|trans }}</label>
                             <textarea class="form-control" id="voteJustification" name="justification" rows="3" 
-                                      placeholder="{{ 'backoffice.larp.applications.vote_justification_placeholder'|trans }}"></textarea>
+                                      placeholder="{{ 'larp.applications.vote_justification_placeholder'|trans }}"></textarea>
                         </div>
                         <input type="hidden" id="voteValue" name="vote" value="">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'common.cancel'|trans }}</button>
-                        <button type="submit" class="btn btn-primary">{{ 'backoffice.larp.applications.submit_vote'|trans }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'larp.applications.submit_vote'|trans }}</button>
                     </div>
                 </form>
             </div>
@@ -149,20 +149,20 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="voteDetailsModalLabel">{{ 'backoffice.larp.applications.vote_details'|trans }}</h5>
+                    <h5 class="modal-title" id="voteDetailsModalLabel">{{ 'larp.applications.vote_details'|trans }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <strong>{{ 'common.character'|trans }}:</strong> <span id="detailsCharacter"></span>
+                        <strong>{{ 'character'|trans }}:</strong> <span id="detailsCharacter"></span>
                     </div>
                     <div class="mb-3">
-                        <strong>{{ 'backoffice.larp.applications.applicant'|trans }}:</strong> <span id="detailsApplicant"></span>
+                        <strong>{{ 'larp.applications.applicant'|trans }}:</strong> <span id="detailsApplicant"></span>
                     </div>
                     <div id="voteDetailsList"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'common.close'|trans }}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
         </div>
@@ -191,10 +191,10 @@
             // Update vote type badge
             const voteType = voteModal.querySelector('#voteType');
             if (parseInt(voteValue) > 0) {
-                voteType.textContent = '{{ 'backoffice.larp.applications.upvote'|trans }}';
+                voteType.textContent = '{{ 'larp.applications.upvote'|trans }}';
                 voteType.className = 'badge bg-success';
             } else {
-                voteType.textContent = '{{ 'backoffice.larp.applications.downvote'|trans }}';
+                voteType.textContent = '{{ 'larp.applications.downvote'|trans }}';
                 voteType.className = 'badge bg-danger';
             }
         });
@@ -217,7 +217,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.votes.length === 0) {
-                        voteList.innerHTML = '<div class="alert alert-info">{{ 'backoffice.larp.applications.no_votes_yet'|trans }}</div>';
+                        voteList.innerHTML = '<div class="alert alert-info">{{ 'larp.applications.no_votes_yet'|trans }}</div>';
                         return;
                     }
 
@@ -228,7 +228,7 @@
                                     <div>
                                         <strong>${vote.user}</strong>
                                         <span class="badge ${vote.isUpvote ? 'bg-success' : 'bg-danger'} ms-2">
-                                            ${vote.isUpvote ? '{{ 'backoffice.larp.applications.upvote'|trans }}' : '{{ 'backoffice.larp.applications.downvote'|trans }}'}
+                                            ${vote.isUpvote ? '{{ 'larp.applications.upvote'|trans }}' : '{{ 'larp.applications.downvote'|trans }}'}
                                         </span>
                                     </div>
                                     <small class="text-muted">${vote.createdAt}</small>
@@ -240,7 +240,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching vote details:', error);
-                    voteList.innerHTML = '<div class="alert alert-danger">{{ 'common.error'|trans }}</div>';
+                    voteList.innerHTML = '<div class="alert alert-danger">{{ 'error'|trans }}</div>';
                 });
         });
     </script>

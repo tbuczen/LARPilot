@@ -122,14 +122,12 @@ class FeedbackService
             ]);
 
             throw new \RuntimeException("FreeScout API returned unexpected status code: {$statusCode}");
-
         } catch (\Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface $e) {
             $this->logger->error('Failed to connect to FreeScout API', [
                 'error' => $e->getMessage(),
             ]);
 
             throw new \RuntimeException('Failed to connect to FreeScout helpdesk system', 0, $e);
-
         } catch (\Exception $e) {
             $this->logger->error('Error submitting feedback to FreeScout', [
                 'error' => $e->getMessage(),

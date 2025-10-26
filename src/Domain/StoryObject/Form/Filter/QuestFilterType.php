@@ -3,6 +3,8 @@
 namespace App\Domain\StoryObject\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\Tag;
+use App\Domain\Core\Repository\TagRepository;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\Thread;
@@ -27,6 +29,24 @@ class QuestFilterType extends AbstractType
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
+            ->add('description', Filters\TextFilterType::class, [
+                'condition_pattern' => FilterOperands::STRING_CONTAINS,
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'required' => false,
+                'autocomplete' => true,
+                'data_extraction_method' => 'default',
+                'tom_select_options' => [
+                    'hideSelected' => false
+                ],
+                'query_builder' => fn (TagRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
+            ])
             ->add('thread', EntityType::class, [
                 'class' => Thread::class,
                 'choice_label' => 'title',
@@ -37,9 +57,10 @@ class QuestFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => fn (ThreadRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
-                    ->where('f.larp = :larp')
-                    ->setParameter('larp', $larp),
+                'query_builder' => fn (ThreadRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('t')
+                    ->where('t.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('t.title', 'ASC'),
             ])
             ->add('involvedFactions', EntityType::class, [
                 'class' => Faction::class,
@@ -53,7 +74,8 @@ class QuestFilterType extends AbstractType
                 ],
                 'query_builder' => fn (FactionRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
-                    ->setParameter('larp', $larp),
+                    ->setParameter('larp', $larp)
+                    ->orderBy('f.title', 'ASC'),
             ])
             ->add('involvedCharacters', EntityType::class, [
                 'class' => Character::class,
@@ -65,9 +87,10 @@ class QuestFilterType extends AbstractType
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
-                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('f')
-                    ->where('f.larp = :larp')
-                    ->setParameter('larp', $larp),
+                'query_builder' => fn (CharacterRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('c')
+                    ->where('c.larp = :larp')
+                    ->setParameter('larp', $larp)
+                    ->orderBy('c.title', 'ASC'),
             ]);
     }
 

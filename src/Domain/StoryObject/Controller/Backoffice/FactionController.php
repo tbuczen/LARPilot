@@ -77,7 +77,7 @@ class FactionController extends BaseController
                 }
             }
 
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_faction_list', ['larp' => $larp->getId()]);
         }
 
@@ -107,7 +107,7 @@ class FactionController extends BaseController
 
         $factionRepository->remove($faction);
 
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
 
         return $this->redirectToRoute('backoffice_larp_story_faction_list', [
             'larp' => $larp->getId(),

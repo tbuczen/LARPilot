@@ -58,7 +58,7 @@ class PlaceController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $placeRepository->save($place);
             $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $place);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
         }
 
@@ -84,7 +84,7 @@ class PlaceController extends BaseController
         }
 
         $placeRepository->remove($place);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
         return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
     }
 

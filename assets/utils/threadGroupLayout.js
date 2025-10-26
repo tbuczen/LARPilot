@@ -40,13 +40,11 @@ export function applyThreadGroupLayout(cy) {
             index
         });
         
-        console.log(`Thread Group ${index}: ${totalItems} items, ${itemsPerRow}x${rows} grid, size: ${groupWidth}x${groupHeight}`);
     });
     
     // Calculate spacing between groups
     const groupSpacing = Math.max(300, maxWidth + 50);
-    console.log(`Using groupSpacing: ${groupSpacing}, maxSize: ${maxWidth}x${maxHeight}`);
-    
+
     // Second pass: position all groups
     groupData.forEach((data) => {
         const { group, thread, quests, events, itemsPerRow, groupWidth, groupHeight, index } = data;
@@ -86,7 +84,5 @@ export function applyThreadGroupLayout(cy) {
         }
     });
     
-    console.log("Thread groups layout applied");
-    // Fit the view to show all groups
     cy.fit(groups, 50); // 50px padding
 }

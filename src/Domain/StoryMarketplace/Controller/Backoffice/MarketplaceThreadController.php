@@ -4,7 +4,7 @@ namespace App\Domain\StoryMarketplace\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\StoryMarketplace\Form\Filter\MarketplaceFilterType;
+use App\Domain\StoryObject\Form\Filter\ThreadFilterType;
 use App\Domain\StoryObject\Repository\ThreadRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ class MarketplaceThreadController extends BaseController
         Request $request,
         ThreadRepository $threadRepository
     ): Response {
-        $filterForm = $this->createForm(MarketplaceFilterType::class, null, ['larp' => $larp]);
+        $filterForm = $this->createForm(ThreadFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
 
         $qb = $threadRepository->createQueryBuilder('t')
@@ -27,13 +27,7 @@ class MarketplaceThreadController extends BaseController
             ->setParameter('larp', $larp)
             ->orderBy('t.title', 'ASC');
 
-        // Apply tag filtering if provided
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $selectedTags = $filterForm->get('tags')->getData();
-            if ($selectedTags && !$selectedTags->isEmpty()) {
-                $qb = $threadRepository->createThreadsByTagsQueryBuilder($larp, $selectedTags->toArray());
-            }
-        }
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
 
         $pagination = $this->getPagination($qb, $request);
 

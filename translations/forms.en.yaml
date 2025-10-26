@@ -226,6 +226,7 @@ scheduled_event:
   thread_placeholder: 'Link to thread (optional)'
   event: 'Related Story Event'
   event_placeholder: 'Link to story event (optional)'
+
 filter:
   resource:
     name: 'Resource Name'
@@ -259,6 +260,13 @@ filter:
   all: 'All'
   shareable: 'Shareable Only'
   exclusive: 'Exclusive Only'
+
+kanban_task:
+  status:
+    todo: 'To Do'
+    in_progress: 'In Progress'
+    done: 'Done'
+    cancelled: 'Cancelled'
 
 enum:
   location_type:

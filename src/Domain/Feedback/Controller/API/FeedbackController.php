@@ -77,7 +77,6 @@ class FeedbackController extends AbstractController
                 'ticketId' => $ticketId,
                 'message' => 'Feedback submitted successfully',
             ], Response::HTTP_CREATED);
-
         } catch (\InvalidArgumentException $e) {
             $this->logger->warning('Invalid feedback submission', [
                 'error' => $e->getMessage(),
@@ -87,7 +86,6 @@ class FeedbackController extends AbstractController
                 'success' => false,
                 'message' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
-
         } catch (\Exception $e) {
             $this->logger->error('Failed to submit feedback', [
                 'error' => $e->getMessage(),

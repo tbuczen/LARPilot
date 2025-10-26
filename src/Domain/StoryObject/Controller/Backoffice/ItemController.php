@@ -61,7 +61,7 @@ class ItemController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $itemRepository->save($item);
             $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $item);
-            $this->addFlash('success', $this->translator->trans('backoffice.common.success_save'));
+            $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
         }
 
@@ -87,7 +87,7 @@ class ItemController extends BaseController
         }
 
         $itemRepository->remove($item);
-        $this->addFlash('success', $this->translator->trans('backoffice.common.success_delete'));
+        $this->addFlash('success', $this->translator->trans('success_delete'));
         return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
     }
 

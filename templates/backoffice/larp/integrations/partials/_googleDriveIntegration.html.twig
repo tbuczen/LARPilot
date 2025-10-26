@@ -1,4 +1,4 @@
-<h5>{{ 'backoffice.larp.integration.current'|trans }}: {{ integration.provider.name }}</h5>
+<h5>{{ 'larp.integration.current'|trans }}: {{ integration.provider.name }}</h5>
 <strong>Scopes:</strong>
 <ul>
     {% for scope in integration.scopes|split(' ') %}
@@ -10,14 +10,14 @@
 {% set nowPlus30 = 'now'|date_modify('+30 seconds') %}
 {% if integration.expiresAt < nowPlus30 %}
     <div class="alert alert-warning">
-        {{ 'backoffice.larp.integration.expired'|trans }}
+        {{ 'larp.integration.expired'|trans }}
     </div>
     <a
             href="{{ path('backoffice_larp_connect_integration', { id: larp.id, provider: provider.value }) }}"
             target="_blank"
             class="btn btn-primary"
     >
-        {{ 'backoffice.larp.integration.reconnect'|trans }}
+        {{ 'larp.integration.reconnect'|trans }}
     </a>
 {% else %}
 
@@ -35,12 +35,12 @@
             data-initial-files="{{ sharedFilesArray|json_encode }}"
             data-mappings-base-url="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id , sharedFile: '__FILE_ID__'  }) }}"
     >
-        <p>{{ 'backoffice.larp.file_select.open_picker_desc'|trans }}</p>
+        <p>{{ 'larp.file_select.open_picker_desc'|trans }}</p>
         <button
                 class="btn btn-success"
                 data-action="click->google-file-picker#openPicker"
         >
-            {{ 'common.open'|trans }}
+            {{ 'open'|trans }}
         </button>
         <div data-google-file-picker-target="selectedFiles" class="mt-3"></div>
         <form
@@ -58,10 +58,10 @@
                     data-google-file-picker-target="saveButton"
                     disabled
             >
-                {{ 'common.save'|trans }}
+                {{ 'save'|trans }}
             </button>
             <a href="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id}) }}" class="btn btn-secondary">
-                {{ 'backoffice.mapping.title'|trans }}
+                {{ 'mapping.title'|trans }}
             </a>
 
         </form>

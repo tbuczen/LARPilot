@@ -14,7 +14,7 @@
                 {% endif %}
                 {% if openFilePath %}
                     <a href="{{ path(openFilePath, { larp: larp.id, provider: file.integration.provider.value, externalFileId: file.fileId }) }}" target="_blank" class="btn btn-outline-secondary btn-sm">
-                        {{ 'common.open'|trans }}
+                        {{ 'open'|trans }}
                     </a>
                 {% endif %}
             </div>
@@ -30,7 +30,7 @@
                                 <div>
                                     <span class="badge bg-secondary">{{ mapping.fileType.value|capitalize }}</span>
                                     <a href="{{ path(configureMappingPath, { larp: larp.id, sharedFile: file.id, provider: file.integration.provider.value, mapping: mapping.id }) }}" class="btn btn-link btn-sm p-0 ms-2">
-                                        {{ 'common.edit'|trans }}
+                                        {{ 'edit'|trans }}
                                     </a>
                                 </div>
                                 {% if useMappingPath %}
@@ -41,7 +41,7 @@
                             </div>
                             <button class="btn btn-sm btn-link mt-1 ps-0" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#config-{{ mapping.id }}">
-                                {{ 'common.show_details'|trans }}
+                                {{ 'show_details'|trans }}
                             </button>
                             <div class="collapse" id="config-{{ mapping.id }}">
                                 <div class="d-flex gap-3 flex-wrap">

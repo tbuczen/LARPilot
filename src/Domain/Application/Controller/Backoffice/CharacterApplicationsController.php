@@ -64,6 +64,8 @@ class CharacterApplicationsController extends BaseController
         // Get legacy stats for compatibility
         $stats = $statsService->getStatsForLarp($larp);
 
+        $this->entityPreloader->preload($applications, 'user');
+
         return $this->render('backoffice/larp/application/list.html.twig', [
             'larp' => $larp,
             'filterForm' => $filterForm->createView(),
@@ -146,13 +148,13 @@ class CharacterApplicationsController extends BaseController
         $justification = $request->request->get('justification', '');
 
         if (!in_array($voteValue, [1, -1])) {
-            $this->addFlash('error', 'backoffice.larp.applications.invalid_vote');
+            $this->addFlash('error', 'larp.applications.invalid_vote');
             return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
         }
 
         $user = $this->getUser();
         if (!$user instanceof UserInterface) {
-            $this->addFlash('error', 'backoffice.larp.applications.login_required');
+            $this->addFlash('error', 'larp.applications.login_required');
             return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
         }
 
@@ -182,7 +184,7 @@ class CharacterApplicationsController extends BaseController
 
         $em->flush();
 
-        $this->addFlash('success', 'backoffice.larp.applications.vote_recorded');
+        $this->addFlash('success', 'larp.applications.vote_recorded');
         
         return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
     }
@@ -257,12 +259,12 @@ class CharacterApplicationsController extends BaseController
     ): Response {
         // Verify the choice belongs to this application
         if ($choice->getApplication() !== $application) {
-            throw $this->createAccessDeniedException('backoffice.larp.applications.choice_not_in_application');
+            throw $this->createAccessDeniedException('larp.applications.choice_not_in_application');
         }
 
         // Check user has appropriate role (ORGANIZER or MAIN_STORY_WRITER)
         if (!$this->isGranted('ROLE_ORGANIZER') && !$this->isGranted('ROLE_MAIN_STORY_WRITER')) {
-            $this->addFlash('error', 'backoffice.larp.applications.insufficient_permissions');
+            $this->addFlash('error', 'larp.applications.insufficient_permissions');
             return $this->redirectToRoute('backoffice_larp_applications_view', [
                 'larp' => $larp->getId(),
                 'application' => $application->getId()
@@ -283,12 +285,12 @@ class CharacterApplicationsController extends BaseController
                 $choice->getCharacter()->getTitle()
             );
 
-            $this->addFlash('success', $this->translator->trans('backoffice.larp.applications.character_offered', [
+            $this->addFlash('success', $this->translator->trans('larp.applications.character_offered', [
                 'character' => $choice->getCharacter()->getTitle(),
                 'applicant' => $application->getContactEmail()
             ]));
         } catch (\Exception $e) {
-            $this->addFlash('error', 'backoffice.larp.applications.email_failed: ' . $e->getMessage());
+            $this->addFlash('error', 'larp.applications.email_failed: ' . $e->getMessage());
         }
 
         return $this->redirectToRoute('backoffice_larp_applications_view', [
@@ -321,7 +323,7 @@ class CharacterApplicationsController extends BaseController
         $allocations = $request->request->all('allocations');
 
         if (empty($allocations)) {
-            $this->addFlash('error', 'backoffice.larp.applications.no_allocations_selected');
+            $this->addFlash('error', 'larp.applications.no_allocations_selected');
             return $this->redirectToRoute('backoffice_larp_applications_suggest_allocation', ['larp' => $larp->getId()]);
         }
 
@@ -357,14 +359,14 @@ class CharacterApplicationsController extends BaseController
 
                 $successCount++;
             } catch (\Exception $e) {
-                $this->addFlash('warning', 'backoffice.larp.applications.allocation_failed: ' . $e->getMessage());
+                $this->addFlash('warning', 'larp.applications.allocation_failed: ' . $e->getMessage());
             }
         }
 
         $em->flush();
 
         if ($successCount > 0) {
-            $this->addFlash('success', $this->translator->trans('backoffice.larp.applications.allocations_sent', ['count' => $successCount]));
+            $this->addFlash('success', $this->translator->trans('larp.applications.allocations_sent', ['count' => $successCount]));
         }
 
         return $this->redirectToRoute('backoffice_larp_applications_list', ['larp' => $larp->getId()]);

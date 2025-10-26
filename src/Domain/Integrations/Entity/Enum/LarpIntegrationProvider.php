@@ -29,12 +29,12 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
     public function descriptionKey(): ?string
     {
         return match ($this) {
-            self::Google => 'backoffice.larp.integration.googleDriveDescription',
-            self::Trello => 'backoffice.larp.integration.trelloDescription',
-            self::Miro => 'backoffice.larp.integration.miroDescription',
-            self::Asana => 'backoffice.larp.integration.asanaDescription',
-            self::Facebook => 'backoffice.larp.integration.facebookDescription',
-            self::Discord => 'backoffice.larp.integration.discordDescription',
+            self::Google => 'larp.integration.googleDriveDescription',
+            self::Trello => 'larp.integration.trelloDescription',
+            self::Miro => 'larp.integration.miroDescription',
+            self::Asana => 'larp.integration.asanaDescription',
+            self::Facebook => 'larp.integration.facebookDescription',
+            self::Discord => 'larp.integration.discordDescription',
         };
     }
 

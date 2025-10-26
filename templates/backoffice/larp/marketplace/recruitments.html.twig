@@ -1,12 +1,12 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% block larp_content %}
-    <h2>{{ 'backoffice.recruitment.open'|trans }}</h2>
+    <h2>{{ 'recruitment.open'|trans }}</h2>
     <ul>
         {% for recruitment in recruitments %}
             <li>{{ recruitment.type }} ({{ recruitment.requiredNumber }})</li>
         {% else %}
-            <li>{{ 'backoffice.recruitment.none'|trans }}</li>
+            <li>{{ 'recruitment.none'|trans }}</li>
         {% endfor %}
     </ul>
 {% endblock %}

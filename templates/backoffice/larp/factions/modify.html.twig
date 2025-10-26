@@ -3,7 +3,7 @@
 {% block larp_content %}
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title mb-0">{{ 'common.faction'|trans }}</h5>
+            <h5 class="card-title mb-0">{{ 'faction'|trans }}</h5>
         </div>
         <div class="card-body">
             {{ form_start(form) }}
@@ -15,14 +15,14 @@
     {% if faction.members is defined and faction.members is not empty %}
         <div class="card mt-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">{{ 'backoffice.larp.character.list'|trans }}</h5>
+                <h5 class="card-title mb-0">{{ 'larp.character.list'|trans }}</h5>
             </div>
             <div class="card-body p-0">
                 <table class="table table-striped table-hover mb-0">
                     <thead class="table-light">
                     <tr>
-                        <th>{{ 'common.name'|trans }}</th>
-                        <th>{{ 'common.gender'|trans }}</th>
+                        <th>{{ 'name'|trans }}</th>
+                        <th>{{ 'gender.singular'|trans }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -43,4 +43,4 @@
     {% endif %}
 {% endblock %}
 
-{% block title %}{{ 'common.faction'|trans }} - {{ faction.getTitle() ?? 'common.new'|trans }}{% endblock %}
+{% block title %}{{ 'faction'|trans }} - {{ faction.getTitle() ?? 'new'|trans }}{% endblock %}

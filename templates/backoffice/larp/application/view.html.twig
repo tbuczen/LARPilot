@@ -6,21 +6,21 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">
-                        <i class="bi bi-file-text"></i> {{ 'backoffice.larp.applications.view_application'|trans }}
+                        <i class="bi bi-file-text"></i> {{ 'larp.applications.view_application'|trans }}
                     </h5>
                     <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> {{ 'common.back'|trans }}
+                        <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
                     </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h6>{{ 'backoffice.larp.applications.applicant_info'|trans }}</h6>
+                            <h6>{{ 'larp.applications.applicant_info'|trans }}</h6>
                             <dl class="row">
-                                <dt class="col-sm-4">{{ 'backoffice.larp.applications.applicant'|trans }}:</dt>
+                                <dt class="col-sm-4">{{ 'larp.applications.applicant'|trans }}:</dt>
                                 <dd class="col-sm-8">{{ application.contactEmail }}</dd>
 
-                                <dt class="col-sm-4">{{ 'backoffice.larp.applications.status'|trans }}:</dt>
+                                <dt class="col-sm-4">{{ 'larp.applications.status'|trans }}:</dt>
                                 <dd class="col-sm-8">
                                     {% set statusClass = 'secondary' %}
                                     {% if application.status.value == 'new' %}
@@ -41,25 +41,25 @@
                                     <span class="badge bg-{{ statusClass }}">{{ application.status.value|upper }}</span>
                                 </dd>
 
-                                <dt class="col-sm-4">{{ 'backoffice.larp.applications.applied'|trans }}:</dt>
+                                <dt class="col-sm-4">{{ 'larp.applications.applied'|trans }}:</dt>
                                 <dd class="col-sm-8">{{ application.createdAt|date('Y-m-d H:i') }}</dd>
                             </dl>
                         </div>
                         <div class="col-md-6">
-                            <h6>{{ 'backoffice.larp.applications.preferences'|trans }}</h6>
+                            <h6>{{ 'larp.applications.preferences'|trans }}</h6>
                             <dl class="row">
                                 {% if application.favouriteStyle %}
-                                    <dt class="col-sm-4">{{ 'backoffice.larp.applications.favourite_style'|trans }}:</dt>
+                                    <dt class="col-sm-4">{{ 'larp.applications.favourite_style'|trans }}:</dt>
                                     <dd class="col-sm-8">{{ application.favouriteStyle }}</dd>
                                 {% endif %}
 
                                 {% if application.triggers %}
-                                    <dt class="col-sm-4">{{ 'backoffice.larp.applications.triggers'|trans }}:</dt>
+                                    <dt class="col-sm-4">{{ 'larp.applications.triggers'|trans }}:</dt>
                                     <dd class="col-sm-8"><span class="text-danger">{{ application.triggers }}</span></dd>
                                 {% endif %}
 
                                 {% if application.preferredTags|length > 0 %}
-                                    <dt class="col-sm-4">{{ 'backoffice.larp.applications.preferred_tags'|trans }}:</dt>
+                                    <dt class="col-sm-4">{{ 'larp.applications.preferred_tags'|trans }}:</dt>
                                     <dd class="col-sm-8">
                                         {% for tag in application.preferredTags %}
                                             <span class="badge bg-success me-1">{{ tag.title }}</span>
@@ -68,7 +68,7 @@
                                 {% endif %}
 
                                 {% if application.unwantedTags|length > 0 %}
-                                    <dt class="col-sm-4">{{ 'backoffice.larp.applications.unwanted_tags'|trans }}:</dt>
+                                    <dt class="col-sm-4">{{ 'larp.applications.unwanted_tags'|trans }}:</dt>
                                     <dd class="col-sm-8">
                                         {% for tag in application.unwantedTags %}
                                             <span class="badge bg-danger me-1">{{ tag.title }}</span>
@@ -81,7 +81,7 @@
 
                     {% if application.notes %}
                         <div class="mt-3">
-                            <h6>{{ 'backoffice.larp.applications.notes'|trans }}</h6>
+                            <h6>{{ 'larp.applications.notes'|trans }}</h6>
                             <div class="alert alert-info">
                                 {{ application.notes|nl2br }}
                             </div>
@@ -98,7 +98,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
-                        <i class="bi bi-person-badge"></i> {{ 'backoffice.larp.applications.character_choices'|trans }}
+                        <i class="bi bi-person-badge"></i> {{ 'larp.applications.character_choices'|trans }}
                     </h5>
                 </div>
                 <div class="card-body p-0">
@@ -129,21 +129,21 @@
 
                                     {% if choice.justification %}
                                         <div class="mb-3">
-                                            <strong>{{ 'backoffice.larp.applications.player_justification'|trans }}:</strong>
+                                            <strong>{{ 'larp.applications.player_justification'|trans }}:</strong>
                                             <p class="mb-0">{{ choice.justification|nl2br }}</p>
                                         </div>
                                     {% endif %}
 
                                     {% if choice.visual %}
                                         <div class="mb-3">
-                                            <strong>{{ 'backoffice.larp.applications.visual_description'|trans }}:</strong>
+                                            <strong>{{ 'larp.applications.visual_description'|trans }}:</strong>
                                             <p class="mb-0">{{ choice.visual|nl2br }}</p>
                                         </div>
                                     {% endif %}
 
                                     {# Vote Details #}
                                     <div class="mt-3">
-                                        <strong>{{ 'backoffice.larp.applications.organizer_votes'|trans }}:</strong>
+                                        <strong>{{ 'larp.applications.organizer_votes'|trans }}:</strong>
                                         <span class="badge {% if choice.votes > 0 %}bg-success{% elseif choice.votes < 0 %}bg-danger{% else %}bg-secondary{% endif %} ms-2">
                                             {{ choice.votes > 0 ? '+' : '' }}{{ choice.votes }}
                                         </span>
@@ -152,7 +152,7 @@
                                             <button type="button" class="btn btn-sm btn-outline-info ms-2"
                                                     data-bs-toggle="collapse"
                                                     data-bs-target="#voteDetails{{ choiceId|replace({'-': ''}) }}">
-                                                <i class="bi bi-eye"></i> {{ 'backoffice.larp.applications.view_votes'|trans }} ({{ votes|length }})
+                                                <i class="bi bi-eye"></i> {{ 'larp.applications.view_votes'|trans }} ({{ votes|length }})
                                             </button>
 
                                             <div class="collapse mt-2" id="voteDetails{{ choiceId|replace({'-': ''}) }}">
@@ -160,10 +160,10 @@
                                                     <table class="table table-sm">
                                                         <thead>
                                                             <tr>
-                                                                <th>{{ 'backoffice.larp.applications.voter'|trans }}</th>
-                                                                <th>{{ 'backoffice.larp.applications.vote'|trans }}</th>
-                                                                <th>{{ 'backoffice.larp.applications.justification'|trans }}</th>
-                                                                <th>{{ 'common.date'|trans }}</th>
+                                                                <th>{{ 'larp.applications.voter'|trans }}</th>
+                                                                <th>{{ 'larp.applications.vote'|trans }}</th>
+                                                                <th>{{ 'larp.applications.justification'|trans }}</th>
+                                                                <th>{{ 'date'|trans }}</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -193,39 +193,39 @@
                                     {# Voting Form #}
                                     <div class="card bg-light">
                                         <div class="card-body">
-                                            <h6 class="card-title">{{ 'backoffice.larp.applications.cast_vote'|trans }}</h6>
+                                            <h6 class="card-title">{{ 'larp.applications.cast_vote'|trans }}</h6>
 
                                             <form method="post" action="{{ path('backoffice_larp_applications_vote', {larp: larp.id, choice: choice.id}) }}">
                                                 <div class="mb-3">
-                                                    <label class="form-label">{{ 'backoffice.larp.applications.your_vote'|trans }}</label>
+                                                    <label class="form-label">{{ 'larp.applications.your_vote'|trans }}</label>
                                                     <div class="btn-group w-100" role="group">
                                                         <input type="radio" class="btn-check" name="vote" value="1"
                                                                id="upvote{{ choiceId|replace({'-': ''}) }}"
                                                                {% if userVote and userVote.vote > 0 %}checked{% endif %}>
                                                         <label class="btn btn-outline-success" for="upvote{{ choiceId|replace({'-': ''}) }}">
-                                                            <i class="bi bi-hand-thumbs-up"></i> {{ 'backoffice.larp.applications.upvote'|trans }}
+                                                            <i class="bi bi-hand-thumbs-up"></i> {{ 'larp.applications.upvote'|trans }}
                                                         </label>
 
                                                         <input type="radio" class="btn-check" name="vote" value="-1"
                                                                id="downvote{{ choiceId|replace({'-': ''}) }}"
                                                                {% if userVote and userVote.vote < 0 %}checked{% endif %}>
                                                         <label class="btn btn-outline-danger" for="downvote{{ choiceId|replace({'-': ''}) }}">
-                                                            <i class="bi bi-hand-thumbs-down"></i> {{ 'backoffice.larp.applications.downvote'|trans }}
+                                                            <i class="bi bi-hand-thumbs-down"></i> {{ 'larp.applications.downvote'|trans }}
                                                         </label>
                                                     </div>
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="justification{{ choiceId|replace({'-': ''}) }}" class="form-label">
-                                                        {{ 'backoffice.larp.applications.vote_justification'|trans }} ({{ 'common.optional'|trans }})
+                                                        {{ 'larp.applications.vote_justification'|trans }} ({{ 'optional'|trans }})
                                                     </label>
                                                     <textarea class="form-control" id="justification{{ choiceId|replace({'-': ''}) }}"
                                                               name="justification" rows="2"
-                                                              placeholder="{{ 'backoffice.larp.applications.vote_justification_placeholder'|trans }}">{{ userVote ? userVote.justification : '' }}</textarea>
+                                                              placeholder="{{ 'larp.applications.vote_justification_placeholder'|trans }}">{{ userVote ? userVote.justification : '' }}</textarea>
                                                 </div>
 
                                                 <button type="submit" class="btn btn-primary w-100">
-                                                    <i class="bi bi-check-circle"></i> {{ 'backoffice.larp.applications.submit_vote'|trans }}
+                                                    <i class="bi bi-check-circle"></i> {{ 'larp.applications.submit_vote'|trans }}
                                                 </button>
                                             </form>
 
@@ -234,14 +234,14 @@
                                                 <hr>
                                                 <form method="post"
                                                       action="{{ path('backoffice_larp_applications_accept_choice', {larp: larp.id, application: application.id, choice: choice.id}) }}"
-                                                      onsubmit="return confirm('{{ 'backoffice.larp.applications.confirm_accept_choice'|trans({'character': choice.character.title, 'applicant': application.contactEmail}) }}');">
+                                                      onsubmit="return confirm('{{ 'larp.applications.confirm_accept_choice'|trans({'character': choice.character.title, 'applicant': application.contactEmail}) }}');">
                                                     <button type="submit" class="btn btn-success w-100"
                                                             {% if application.status.value in ['offered', 'confirmed', 'declined'] %}disabled{% endif %}>
-                                                        <i class="bi bi-send"></i> {{ 'backoffice.larp.applications.accept_and_send'|trans }}
+                                                        <i class="bi bi-send"></i> {{ 'larp.applications.accept_and_send'|trans }}
                                                     </button>
                                                     {% if application.status.value in ['offered', 'confirmed', 'declined'] %}
                                                         <small class="text-muted d-block mt-2">
-                                                            {{ 'backoffice.larp.applications.already_processed'|trans }}
+                                                            {{ 'larp.applications.already_processed'|trans }}
                                                         </small>
                                                     {% endif %}
                                                 </form>
@@ -260,7 +260,7 @@
     <div class="row mb-4">
         <div class="col-12 text-center">
             <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> {{ 'common.back'|trans }}
+                <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
             </a>
         </div>
     </div>

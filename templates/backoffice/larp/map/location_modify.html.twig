@@ -5,12 +5,12 @@
         <div class="card-header">
             <h2>
                 {% if isNew %}
-                    {{ 'backoffice.larp.map.location_create'|trans }}
+                    {{ 'larp.map.location_create'|trans }}
                 {% else %}
-                    {{ 'backoffice.larp.map.location_edit'|trans }} - {{ location.name }}
+                    {{ 'larp.map.location_edit'|trans }} - {{ location.name }}
                 {% endif %}
             </h2>
-            <p class="mb-0">{{ 'backoffice.larp.map.on_map'|trans }}: {{ map.name }}</p>
+            <p class="mb-0">{{ 'larp.map.on_map'|trans }}: {{ map.name }}</p>
         </div>
         <div class="card-body">
             {% if map.imageFile %}
@@ -25,7 +25,7 @@
                     <div id="map-editor" style="height: 500px; width: 100%; border: 1px solid #ddd;" class="mb-3"></div>
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle"></i>
-                        {{ 'backoffice.larp.map.location_select_help'|trans }}
+                        {{ 'larp.map.location_select_help'|trans }}
                     </div>
                 </div>
             {% endif %}
@@ -34,10 +34,10 @@
             {{ form_widget(form) }}
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">
-                    {{ 'common.save'|trans }}
+                    {{ 'save'|trans }}
                 </button>
                 <a href="{{ path('backoffice_larp_map_view', { larp: larp.id, map: map.id }) }}" class="btn btn-secondary">
-                    {{ 'common.cancel'|trans }}
+                    {{ 'cancel'|trans }}
                 </a>
             </div>
             {{ form_end(form) }}

@@ -7,15 +7,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="confirmModalLabel-{{ formId }}">{{ 'common.confirm'|trans }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'common.close'|trans }}"></button>
+                    <h5 class="modal-title" id="confirmModalLabel-{{ formId }}">{{ 'confirm'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
                 </div>
                 <div class="modal-body">
                     <p>{{ confirmMessage|trans }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'common.cancel'|trans }}</button>
-                    <button type="button" class="btn btn-danger" onclick="document.getElementById('{{ formId }}').submit();">{{ 'common.confirm'|trans }}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                    <button type="button" class="btn btn-danger" onclick="document.getElementById('{{ formId }}').submit();">{{ 'confirm'|trans }}</button>
                 </div>
             </div>
         </div>
