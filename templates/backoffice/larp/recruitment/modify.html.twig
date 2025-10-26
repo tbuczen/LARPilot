@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block larp_title %}{{ (recruitment is defined and recruitment.id ? 'larp.recruitment.modify' : 'larp.recruitment.create')|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     {{ form_start(form) }}
     {{ form_widget(form) }}

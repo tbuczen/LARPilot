@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/marketplace/_base.html.twig' %}
 
+{% block larp_title %}{{ 'marketplace.characters_list'|trans }} - {{ larp.title }}{% endblock %}
+
 {% set active_tab = 'characters' %}
 
 {% block marketplace_content %}

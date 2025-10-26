@@ -4,6 +4,7 @@ namespace App\Domain\Kanban\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
+use App\Domain\Integrations\Entity\Enum\ReferenceType;
 use App\Domain\Kanban\Entity\Enum\KanbanStatus;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -27,7 +28,7 @@ class KanbanTaskFilterType extends AbstractType
                     'filter.kanban_task.priority_high' => 'high',
                     'filter.kanban_task.priority_medium' => 'medium',
                     'filter.kanban_task.priority_low' => 'low',
-                    'filter.kanban_task.priority_none' => 'none',
+                    'filter.kanban_task.priority_none' => '0',
                 ],
             ])
             ->add('status', ChoiceType::class, [
@@ -35,6 +36,7 @@ class KanbanTaskFilterType extends AbstractType
                 'required' => false,
                 'placeholder' => 'filter.all_statuses',
                 'choice_label' => fn (KanbanStatus $status): string => 'kanban_task.status.' . strtolower($status->value),
+                'choice_value' => fn (?KanbanStatus $choice) => $choice?->value,
                 'choices' => KanbanStatus::cases(),
             ]);
 

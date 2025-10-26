@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block larp_title %}{{ (tag is defined and tag.id ? 'larp.tag.modify' : 'larp.tag.create')|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     <div>
         {{ form_start(form) }}

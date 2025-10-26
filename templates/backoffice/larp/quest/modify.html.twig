@@ -14,5 +14,5 @@
     {% endif %}
 {% endblock %}
 
-{% block title %}{{ ''|trans }}{% endblock %}
+{% block larp_title %}{{ (quest is defined and quest.id ? 'larp.quest.modify' : 'larp.quest.create')|trans }} - {{ larp.title }}{% endblock %}
 

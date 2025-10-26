@@ -1,8 +1,6 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
-{% block title %}
-    {{ 'larp.integrationSettings'|trans }}
-{% endblock %}
+{% block larp_title %}{{ 'larp.integrationSettings'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <h3>{{ 'larp.integrationSettings'|trans }}</h3>

@@ -18,6 +18,7 @@ endif
 .PHONY: up build install migrate assets dev start stop clean logs
 .PHONY: test test-unit test-filter lint lint-fix stan ecs ecs-fix qa
 .PHONY: db-wait db-create db-drop db-migrate db-reset db-status db-shell
+.PHONY: deploy deploy-no-pull deploy-deps deploy-assets deploy-cache
 
 # Wait until Postgres is ready (inside compose network)
 db-wait:
@@ -125,3 +126,41 @@ rector-fix:
 
 # Combined quality gate
 qa: ecs stan test
+
+# ============================================================================
+# SHARED HOSTING DEPLOYMENT (without Docker)
+# ============================================================================
+
+# Full deployment with git pull
+deploy:
+	@echo "🚀 Starting deployment..."
+	git pull
+	$(MAKE) deploy-no-pull
+
+# Deployment without git pull
+deploy-no-pull: deploy-deps deploy-cache deploy-assets
+	@echo "✅ Deployment complete!"
+
+# Install/update PHP dependencies (production mode)
+deploy-deps:
+	@echo "📦 Installing PHP dependencies..."
+	composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+	@echo "🗄️  Running database migrations..."
+	php bin/console doctrine:migrations:migrate --no-interaction
+
+# Compile and update frontend assets
+deploy-assets:
+	@echo "🎨 Building frontend assets..."
+	rm -rf public/assets/*
+	php bin/console importmap:install
+	php bin/console sass:build || true
+	php bin/console asset-map:compile
+	composer dump-autoload --optimize
+
+# Clear and warm up cache
+deploy-cache:
+	@echo "🧹 Clearing cache..."
+	php bin/console cache:clear --env=prod --no-warmup
+	php bin/console cache:warmup --env=prod
+	@echo "🔧 Setting permissions..."
+	chmod -R 775 var/cache var/log || true

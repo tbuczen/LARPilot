@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block larp_title %}{{ 'larp.map.view'|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     <div class="card mt-4">
         <div class="card-header">
@@ -25,7 +27,7 @@
             {% if map.description %}
                 <div class="mb-3">
                     <strong>{{ 'description'|trans }}:</strong>
-                    {{ map.description|truncate_words(10)|raw|default('-') }}
+                    {{ map.description|truncate_words(10) }}
                 </div>
             {% endif %}
 

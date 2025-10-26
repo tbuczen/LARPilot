@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block larp_title %}{{ 'marketplace.recruitments'|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     <h2>{{ 'recruitment.open'|trans }}</h2>
     <ul>

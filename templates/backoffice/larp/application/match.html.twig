@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block larp_title %}{{ 'larp.applications.match'|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>{{ 'larp.applications.match'|trans }}</h2>

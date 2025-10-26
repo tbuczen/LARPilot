@@ -1,10 +1,13 @@
 {% extends 'public/base.html.twig' %}
 
+{% block title %}
+    {{ 'larp.singular'|trans }} - {{ larp.title }}
+{% endblock %}
+
 {% block body %}
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <!-- LARP Info Header -->
                 {% include 'public/larp/_info_header.html.twig' with {
                     'larp': larp,
                     'showManageButton': true

@@ -17,5 +17,5 @@
     </div>
 {% endblock %}
 
-{% block title %}{{ ''|trans }}{% endblock %}
+{% block larp_title %}{{ (participant is defined and participant.id ? 'larp.participant.modify' : 'larp.participant.create')|trans }} - {{ larp.title }}{% endblock %}
 

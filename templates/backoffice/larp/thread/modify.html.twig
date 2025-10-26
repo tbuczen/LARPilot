@@ -14,5 +14,5 @@
     {% endif %}
 {% endblock %}
 
-{% block title %}{{ ''|trans }}{% endblock %}
+{% block larp_title %}{{ (thread is defined and thread.id ? 'larp.thread.modify' : 'larp.thread.create')|trans }} - {{ larp.title }}{% endblock %}
 

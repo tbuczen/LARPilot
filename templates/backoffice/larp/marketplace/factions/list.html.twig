@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/marketplace/_base.html.twig' %}
 
+{% block larp_title %}{{ 'marketplace.factions_list'|trans }} - {{ larp.title }}{% endblock %}
+
 {% set active_tab = 'factions' %}
 
 {% block marketplace_content %}
@@ -26,7 +28,7 @@
                                     {{ faction.title }}
                                 </a>
                             </td>
-                            <td>{{ faction.description|sanitize_html|striptags|u.truncate(100, '...') }}</td>
+                            <td>{{ faction.description|truncate_words(10) }}</td>
                                <td>
                                 <div class="small">
                                     {% set hasContent = false %}

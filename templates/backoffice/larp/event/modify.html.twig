@@ -8,5 +8,5 @@
     </div>
 {% endblock %}
 
-{% block title %}{{ ''|trans }}{% endblock %}
+{% block larp_title %}{{ (event is defined and event.id ? 'larp.event.modify' : 'larp.event.create')|trans }} - {{ larp.title }}{% endblock %}
 

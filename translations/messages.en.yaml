@@ -18,7 +18,6 @@ name: 'Name'
 description: 'Description'
 list: 'List'
 logout: 'Log Out'
-backoffice: 'Admin Panel'
 manage: 'Manage in Admin'
 general: 'Dashboard'
 open: 'Open'
@@ -119,6 +118,10 @@ larp:
   invitation:
     singular: 'Invitation'
     plural: 'Invitations'
+    list: 'Invitations'
+    create: 'Create Invitation'
+    modify: 'Edit Invitation'
+    view: 'Invitation Details'
     expired: 'Invitation expired'
     you_are_invited: 'You are invited to join as'
     accepted: 'You have been added as participant for the larp!'
@@ -168,18 +171,28 @@ larp:
   valid_until: "Valid Until"
   no_invitations: "No invitations have been generated."
   create: 'Create LARP'
+  modify: 'Edit LARP'
   preview: 'Preview'
+  settings: 'LARP Settings'
   dashboard:
     title: 'Dashboard'
+  kanban:
+    board: 'Task Board'
   faction:
     name: 'Faction'
     list: 'Factions'
+    create: 'Create Faction'
+    modify: 'Edit Faction'
+    view: 'Faction Details'
     delete_title: "Delete faction \"%name%\"?"
     delete_only_larpilot: "Delete only in LARPilot"
     delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
   character:
     name: 'Character'
     list: 'Characters'
+    create: 'Create Character'
+    modify: 'Edit Character'
+    view: 'Character Details'
     delete_title: "Delete character \"%name%\"?"
     delete_only_larpilot: "Delete only in LARPilot"
     delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
@@ -187,6 +200,9 @@ larp:
     title: 'Quest'
     name: 'Quest'
     list: 'Quests'
+    create: 'Create Quest'
+    modify: 'Edit Quest'
+    view: 'Quest Details'
     delete_only_larpilot: "Delete only in LARPilot"
     tree: 'Decision Tree'
     tree_editor: 'Quest Decision Tree Editor'
@@ -216,9 +232,11 @@ larp:
   threads: 'Threads'
   applications:
     title: 'Applications'
+    list: 'Applications'
+    match: 'Application Matching'
+    suggest_allocation: 'Suggest Character Allocation'
     missing: 'Characters without applications: %count%'
     already_submitted: 'You have already submitted an application.'
-    match: 'Application Matching'
     vote_success: 'Vote recorded'
     character_submissions: 'Character Submissions Dashboard'
     overview: 'Overview of all character applications for'
@@ -265,7 +283,6 @@ larp:
     invalid_vote: 'Invalid vote value'
     login_required: 'You must be logged in to vote'
     no_votes_yet: 'No votes have been cast yet'
-    suggest_allocation: 'Suggest Allocation'
     suggested_allocations: 'Suggested Character Allocations'
     allocation_explanation: 'Review the suggested character assignments based on player priorities and organizer votes'
     allocation_algorithm_info: 'Algorithm considers: organizer votes (×10), player priority (25-5 points), and ensures one character per player'
@@ -309,39 +326,74 @@ larp:
     list: 'Relations'
     add: 'Add Relation'
   thread:
+    singular: 'Thread'
+    plural: 'Threads'
     list: 'Threads'
+    create: 'Create Thread'
+    modify: 'Edit Thread'
+    view: 'Thread Details'
     tree: 'Decision Tree'
     tree_editor: 'Thread Decision Tree Editor'
   reference:
     list: 'External References'
     add: 'Add External Reference'
   story:
+    main: 'Story Management'
     main_title: 'Story'
   place:
+    singular: 'Place'
+    plural: 'Places'
     list: 'Places'
+    create: 'Create Place'
+    modify: 'Edit Place'
+    view: 'Place Details'
   item:
+    singular: 'Item'
+    plural: 'Items'
     list: 'Items'
+    create: 'Create Item'
+    modify: 'Edit Item'
+    view: 'Item Details'
   tag:
+    singular: 'Tag'
+    plural: 'Tags'
     list: 'Tags'
+    create: 'Create Tag'
+    modify: 'Edit Tag'
+    view: 'Tag Details'
   participant:
+    singular: 'Participant'
+    plural: 'Participants'
     list: 'Participants'
+    create: 'Add Participant'
+    modify: 'Edit Participant'
+    view: 'Participant Details'
   event:
+    singular: 'Event'
+    plural: 'Events'
     list: 'Events'
+    create: 'Create Event'
+    modify: 'Edit Event'
+    view: 'Event Details'
+    delete_only_larpilot: "Delete only in LARPilot"
   version_history: 'Version History'
   tasks: 'Tasks'
   map:
     singular: 'Map'
     plural: 'Maps'
+    list: 'Maps'
     create: 'Create Map'
+    modify: 'Edit Map'
+    view: 'View Map'
     upload_error: 'An error occurred while uploading the map file. Please try again.'
     grid_size: 'Grid Size'
     locations_count: 'Locations Count'
     add_location: 'Add location'
     location_create: 'Create location'
+    location_modify: 'Edit location'
     on_map: 'On map'
     location_edit: 'Edit location'
     edit: 'Edit Game Map'
-    view: 'View Map'
     empty_list: 'No maps have been created yet'
     no_image: 'No map image uploaded'
     locations: 'Map Locations'
@@ -356,14 +408,24 @@ larp:
     heading: "Configure Mapping"
     save: "Save Mapping"
   recruitment:
+    singular: 'Recruitment'
+    plural: 'Recruitments'
+    list: "Recruitments"
+    create: "Create Recruitment"
+    modify: "Edit Recruitment"
+    view: "Recruitment Details"
     open: "Open recruitments"
     none: "No recruitments"
   proposal:
+    singular: 'Proposal'
+    plural: 'Proposals'
     list: "Proposals"
+    create: "Create Proposal"
+    modify: "Edit Proposal"
+    view: "Proposal Details"
     accept: "Accept"
     reject: "Reject"
     none: "No proposals"
-    create: "Create Proposal"
   location:
     list: 'Locations'
   status:
@@ -396,12 +458,19 @@ larp:
 
 marketplace:
   singular: "Marketplace"
-  title: "Thread Marketplace"
-  threads: "Threads"
-  quests: "Quests"
-  events: "Events"
-  characters: "Characters"
-  factions: "Factions"
+  title: "Story Marketplace"
+  threads: "Thread Marketplace"
+  threads_list: "Thread Marketplace"
+  quests: "Quest Marketplace"
+  quests_list: "Quest Marketplace"
+  events: "Event Marketplace"
+  events_list: "Event Marketplace"
+  characters: "Character Marketplace"
+  characters_list: "Character Marketplace"
+  character_detail: "Character Details"
+  factions: "Faction Marketplace"
+  factions_list: "Faction Marketplace"
+  recruitments: "Recruitments"
   available: "Available Characters"
   involved_story_objects: "Involved Story Objects"
   no_story_objects: "No story objects"
@@ -425,7 +494,14 @@ marketplace:
   match_score: "Match Score"
 
 #Translations specific for Core Organizers backoffice
-backoffice_title: LARPilot Admin Panel
+backoffice_title: Admin Panel
+backoffice:
+  dashboard: 'Dashboard'
+  location:
+    list: 'Locations'
+    create: 'Create Location'
+    modify: 'Edit Location'
+    view: 'Location Details'
 
 #Account related translations for both player and organizers
 account:
@@ -478,7 +554,9 @@ event_planner:
   resource:
     list: 'Resources'
     create: 'Create Resource'
+    modify: 'Edit Resource'
     edit: 'Edit Resource'
+    view: 'Resource Details'
     type: 'Type'
     quantity: 'Quantity'
     shareable: 'Shareable'
@@ -494,6 +572,7 @@ event_planner:
   event:
     list: 'Scheduled Events'
     create: 'Create Event'
+    modify: 'Edit Event'
     edit: 'Edit Event'
     view: 'Event Details'
     title: 'Title'

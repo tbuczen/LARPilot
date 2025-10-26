@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block larp_title %}{{ 'larp.event.list'|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     <!-- Import Options Modal -->
     <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
@@ -49,11 +51,11 @@
                     } %}
                     {% include 'includes/sort_th.html.twig' with {
                         field: 'startTime',
-                        label: 'form.event.start_time'|trans({}, 'forms')
+                        label: 'event.start_time'|trans({}, 'forms')
                     } %}
                     {% include 'includes/sort_th.html.twig' with {
                         field: 'endTime',
-                        label: 'form.event.end_time'|trans({}, 'forms')
+                        label: 'event.end_time'|trans({}, 'forms')
                     } %}
                     <th>{{ 'description'|trans }}</th>
                     <th>{{ 'actions'|trans }}</th>
@@ -69,7 +71,7 @@
                             </td>
                         <td>{{ event.startTime ? event.startTime|date('Y-m-d H:i') : '-' }}</td>
                         <td>{{ event.endTime ? event.endTime|date('Y-m-d H:i') : '-' }}</td>
-                        <td>{{ event.description|truncate_words(10)|raw|default('-') }}</td>
+                        <td>{{ event.description|truncate_words(10) }}</td>
                         <td>
                             <button type="button"
                                     class="btn btn-sm btn-danger"

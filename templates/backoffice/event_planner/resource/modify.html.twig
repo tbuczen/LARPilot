@@ -1,10 +1,10 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
-{% block title %}
+{% block larp_title %}
     {% if isNew %}
-        {{ 'event_planner.resource.create'|trans }}
+        {{ 'event_planner.resource.create'|trans }} - {{ larp.title }}
     {% else %}
-        {{ 'event_planner.resource.edit'|trans }} - {{ resource.name }}
+        {{ 'event_planner.resource.modify'|trans }} - {{ resource.name }} - {{ larp.title }}
     {% endif %}
 {% endblock %}
 

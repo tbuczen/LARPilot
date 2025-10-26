@@ -8,4 +8,4 @@
     </div>
 {% endblock %}
 
-{% block title %}{{ ''|trans }}{% endblock %}
+{% block larp_title %}{{ (place is defined and place.id ? 'larp.place.modify' : 'larp.place.create')|trans }} - {{ larp.title }}{% endblock %}

@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% block larp_title %}{{ 'larp.kanban.board'|trans }} - {{ larp.title }}{% endblock %}
+
 {% block larp_content %}
     <div class="mb-4">
         {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
@@ -50,7 +52,7 @@
 
                                         {% if task.description %}
                                             <div class="task-description">
-                                                {{ task.description|striptags|u.truncate(100) }}
+                                                {{ task.description|truncate_words(10) }}
                                             </div>
                                         {% endif %}
 

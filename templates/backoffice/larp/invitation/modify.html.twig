@@ -7,5 +7,5 @@
     }) }}
 {% endblock %}
 
-{% block title %}{{ ''|trans }}{% endblock %}
+{% block larp_title %}{{ (invitation is defined and invitation.id ? 'larp.invitation.modify' : 'larp.invitation.create')|trans }} - {{ larp.title }}{% endblock %}
 
