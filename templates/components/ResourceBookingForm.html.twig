@@ -1,0 +1,57 @@
+{# templates/components/ResourceBookingForm.html.twig #}
+<div {{ attributes }} class="col-12 mb-3">
+    <div class="card bg-light shadow-sm">
+        <div class="card-body" data-loading="addClass(loading-overlay)">
+            {% if not saved %}
+                {{ form_start(form, {
+                    attr: {
+                        'data-action': 'live#action:prevent',
+                        'data-live-action-param': 'save'
+                    }
+                }) }}
+
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ form_row(form.resource, { attr: { 'data-model': 'norender|form.resource' } }) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_row(form.quantityNeeded, { attr: { 'data-model': 'norender|form.quantityNeeded' } }) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_row(form.required, { attr: { 'data-model': 'norender|form.required' } }) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_row(form.status, { attr: { 'data-model': 'norender|form.status' } }) }}
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary btn-sm mb-3 me-2">
+                            <i class="bi bi-check-circle"></i> {{ 'save'|trans }}
+                        </button>
+                        {% if initialFormData and initialFormData.id %}
+                            <button
+                                type="button"
+                                class="btn btn-danger btn-sm mb-3"
+                                data-action="live#action"
+                                data-live-action-param="delete"
+                            >
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        {{ form_row(form.notes, { attr: { 'data-model': 'norender|form.notes' } }) }}
+                    </div>
+                </div>
+
+                {{ form_end(form) }}
+            {% else %}
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i> {{ 'Resource booking saved successfully!'|trans }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

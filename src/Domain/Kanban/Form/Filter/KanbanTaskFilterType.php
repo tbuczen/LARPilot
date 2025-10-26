@@ -4,7 +4,6 @@ namespace App\Domain\Kanban\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
-use App\Domain\Integrations\Entity\Enum\ReferenceType;
 use App\Domain\Kanban\Entity\Enum\KanbanStatus;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

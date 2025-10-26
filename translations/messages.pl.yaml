@@ -1,170 +1,636 @@
-# Wszystkie wspólne tłumaczenia
-common:
-  actions: Akcje
-  save: Zapisz zmiany
-  confirm: Potwierdź
-  cancel: Anuluj
-  close: Zamknij
-  back: Wróć
-  next: Następny
-  previous: Poprzedni
-  welcome: Witaj
-  larp: LARP
-  larps: LARPy
-  incident: Incydent
-  incidents: Incydenty
-  menu:
-    toggle: Menu
-  create: Stwórz
-  name: Nazwa
-  description: Opis
-  list: Lista
-  logout: Wyloguj się
-  backoffice: Panel Admina
-  manage: Zarządzaj w Panelu
-  general: Ogólne
-  open: Otwórz
-  permission:
-    view: Zobacz
-    edit: Edytuj
-  empty_list: Lista jest pusta
-  not_connected: Niepołączony
-  connect: Połącz
-  connected: Połączony
-  edit: Edytuj
-  show_details: Pokaż szczegóły
-  delete: Usuń
-  login: Rejestracja / Logowanie
-  copy_link: Skopiuj link
-  link_copied: Link skopiowany!
-  role: Rola
-  character: Postać
-  valid_until: Ważne do
-  accept: Akceptuj
-  account: Konto
+actions: Akcje
+save: Zapisz zmiany
+confirm: Potwierdź
+cancel: Anuluj
+close: Zamknij
+back: Wróć
+next: Następny
+previous: Poprzedni
+welcome: Witaj
+larps: LARPy
+incident: Incydent
+incidents: Incydenty
+tags: Tagi
+menu:
+  toggle: 'Menu'
+create: 'Stwórz'
+name: 'Nazwa'
+description: 'Opis'
+list: 'Lista'
+logout: 'Wyloguj się'
+manage: 'Zarządzaj'
+general: 'Panel główny'
+open: 'Otwórz'
+permission:
+  view: 'Zobacz'
+  edit: 'Edytuj'
+empty_list: 'Lista jest pusta'
+not_connected: 'Niepołączony'
+connect: 'Połącz'
+connected: 'Połączony'
+edit: 'Edytuj'
+show_details: 'Pokaż szczegóły'
+delete: 'Usuń'
+login: 'Rejestracja / Logowanie'
+copy_link: 'Skopiuj link'
+link_copied: 'Link skopiowany!'
+role: 'Rola'
+character: 'Postać'
+valid_until: 'Ważne do'
+valid_to: 'Ważne do'
+accept: 'Akceptuj'
+filter: 'Filtruj'
+clear: 'Wyczyść'
+gender:
+  singular: 'Płeć'
+  plural: 'Płcie'
+  Male: "Mężczyzna"
+  Female: "Kobieta"
+  Other: "Inna"
+sort_by: 'Sortuj według'
+save_filter: 'Zapisz filtr'
+choose: "Wybierz..."
+saved_filter:
+  saved: 'Filtr zapisany'
+show_edit: 'Pokaż / Edytuj'
+new: 'Nowy'
+faction: 'Frakcja'
+manage_filters: 'Zarządzaj filtrami'
+dashboard: 'Panel główny'
+location: 'Lokalizacja'
+not_set: 'Nie ustawiono'
+days: 'dni'
+day: 'dzień'
+event:
+  passed: 'Wydarzenie minęło'
+  status: 'Status wydarzenia'
+  days_until: 'Dni do wydarzenia'
+  duration: 'Czas trwania'
+  dates: 'Daty wydarzenia'
+applications:
+  total: 'Wszystkie zgłoszenia'
+  pending: 'Zgłoszenia oczekujące'
+  review: 'Przejrzyj zgłoszenia'
+participant: 'Uczestnik'
+participants:
+  list: 'Uczestnicy'
+  confirmed: 'Potwierdzeni uczestnicy'
+  manage: 'Zarządzaj uczestnikami'
+  max_character_choices: 'Maks. wybór postaci'
+characters:
+  total: 'Wszystkie postacie'
+  assigned: 'Przypisane postacie'
+  available: 'Dostępne postacie'
+  assign: 'Przypisz postacie'
+factions:
+  active: 'Aktywne frakcje'
+  distribution: 'Rozkład frakcji'
+skills:
+  available: 'Dostępne umiejętności'
+events:
+  sub: 'Pod-wydarzenia'
+quick_actions: 'Szybkie akcje'
+send_announcement: 'Wyślij ogłoszenie'
+generate_reports: 'Generuj raporty'
+yes: 'Tak'
+no: 'Nie'
+details: 'Szczegóły'
+start_date: 'Data rozpoczęcia'
+end_date: 'Data zakończenia'
+status: 'Status'
+user: 'Użytkownik'
+view_all: 'Zobacz wszystkie'
+title: 'Tytuł'
+amount: 'Ilość'
+settings: 'Ustawienia'
+roles: 'Role'
+optional: 'opcjonalne'
+date: 'Data'
+view: 'Zobacz'
+minutes: 'Minuty'
 
-# Tłumaczenia dla części publicznej aplikacji
-public:
-  larp:
-    list: Lista LARPów
-    no_larps: Brak LARPów w bazie danych
-    invitations:
-      expired: Zaproszenie wygasło
-    invitation:
-      you_are_invited: Zaproszono Cię do udziału jako
-      accepted: Zostałeś dodany jako uczestnik LARPa!
-      login_to_accept: Zaloguj się, aby zaakceptować zaproszenie
 
-# Tłumaczenia dla Panelu Organizatora (Backoffice)
-backoffice:
-  main_title: Panel Administracyjny LARPilot
-  larp:
-    invitations: Zaproszenia
-    invitation_valid_for: Ważność (sekundy)
-    seconds: sekundy
-    generate_invitation: Wygeneruj zaproszenie
-    current_invitations: Aktualne zaproszenia
-    invitation_link: Link do zaproszenia
-    valid_until: Ważne do
-    no_invitations: Brak wygenerowanych zaproszeń.
-    create: Stwórz LARP
-    preview: Podgląd
-    list: Moje LARPy
-    characters:
-      list: Postacie
-      delete_title: Usuń postać "%name%"?
-      delete_only_larpilot: Usuń tylko w LARPilot
-      delete_larpilot_and_integrations: Usuń w LARPilot oraz wszystkich powiązanych integracjach
-    marketplace: Marketplace
-    factions: Frakcje
-    quests: Zadania
-    relations: Powiązania
-    events: Wydarzenia
-    integrations: Integracje
-    integrationSettings: Ustawienia Integracji
-    integration:
-      googleDrive: Integracja Google Drive
-      googleDriveDescription: Połącz swoje konto Google Drive, aby umożliwić LARPilot dostęp do Twoich plików. Umożliwi to przeglądanie i potencjalne zarządzanie wybranym folderem.
-      googleDriveConnect: Połącz z Google Drive
-      current: Aktualne integracje
-      expired: Integracja wygasła, aby dalej korzystać - połącz ponownie
-      reconnect: Połącz ponownie
-    import_characters: Importuj postacie
-    import_options: Opcje importu
-    import_file: Importuj z pliku CSV/XLSX
-    import_google: Importuj z Google Spreadsheet
-    file_select:
-      title: Wybierz pliki do udostępnienia LARPilot
-      open_picker_desc: Otwórz selektor plików Google, aby wybrać pliki do udostępnienia
-    reference:
-      list: 'Referencje zewnętrzne'
-      add: 'Dodaj referencję zewnętrzną'
-    participant:
-      list: 'Uczestnicy'
+larp:
+  singular: 'LARP'
+  plural: 'LARPy'
+  list: 'Lista LARPów'
+  no_larps: 'Brak opublikowanych LARPów w tym momencie'
+  invitation:
+    singular: 'Zaproszenie'
+    plural: 'Zaproszenia'
+    list: 'Zaproszenia'
+    create: 'Stwórz zaproszenie'
+    modify: 'Edytuj zaproszenie'
+    view: 'Szczegóły zaproszenia'
+    expired: 'Zaproszenie wygasło'
+    you_are_invited: 'Zostałeś zaproszony do wzięcia udziału jako'
+    accepted: 'Zostałeś dodany jako uczestnik LARPa!'
+    login_to_accept: 'Zaloguj się, aby zaakceptować zaproszenie'
+  character_application: 'Zgłoś się na LARP'
+  already_participant: 'Już bierzesz udział!'
+  login_required_to_apply: 'Musisz być zalogowany, aby się zgłosić'
+  login_required_description: 'wiadomości'
+  application_already_submitted: 'Już wysłałeś zgłoszenie'
+  application_open: 'Formularz zgłoszeniowy jest otwarty'
+  application_open_description: 'LARP jest gotowy do zebrania Twojego zgłoszenia'
+  apply_for_character: 'Zgłoś się na postać'
+  application_form: 'Formularz zgłoszeniowy'
+  submit_application: 'Wyślij zgłoszenie'
+  application_form_description: 'Użyj tego formularza, aby zgłosić się na najbardziej interesujące role, wybierz tagi, które Cię interesują, oraz tagi, których chcesz unikać w swojej rozgrywce (triggery)'
+  application_deadline: 'Termin zgłoszeń'
+  application:
+    priority: 'Priorytet'
+    justification: 'Uzasadnienie'
+    visual: 'Wizualizacja'
+    votes: 'Głosy'
+    not_your_application: 'To zgłoszenie nie należy do Ciebie'
+    not_offered: 'To przypisanie postaci nie jest dostępne'
+    character_confirmed: 'Gratulacje! Potwierdziłeś przypisanie postaci'
+    character_declined: 'Odrzuciłeś przypisanie postaci. Organizatorzy zostaną powiadomieni'
+    confirm_character_title: 'Potwierdź przypisanie postaci'
+    decline_character_title: 'Odrzuć przypisanie postaci'
+    confirm_warning_title: 'Ważne'
+    confirm_warning_text: 'Potwierdzając, zobowiązujesz się do grania tą postacią. Upewnij się, że możesz wziąć udział w wydarzeniu'
+    decline_warning_title: 'Czy jesteś pewien?'
+    decline_warning_text: 'Jeśli odrzucisz, możesz nie otrzymać innej oferty postaci. Zastanów się dobrze przed odrzuceniem'
+    yes_confirm: 'Tak, potwierdzam'
+    yes_decline: 'Tak, odrzucam'
+    confirm_modal_title: 'Ostateczne potwierdzenie'
+    confirm_modal_question: 'Czy na pewno chcesz zaakceptować tę postać?'
+    confirm_modal_info: 'Tej akcji nie można cofnąć. Od Ciebie będzie oczekiwane zagranie tą postacią na wydarzeniu'
+    decline_modal_title: 'Ostateczne potwierdzenie'
+    decline_modal_question: 'Czy na pewno chcesz odrzucić tę postać?'
+    decline_modal_info: 'Tej akcji nie można cofnąć. Organizatorzy zostaną powiadomieni o Twojej decyzji'
+    confirm_final: 'Potwierdź postać'
+    decline_final: 'Odrzuć postać'
+  invitation_valid_for: "Ważność (sekundy)"
+  seconds: "sekundy"
+  generate_invitation: "Wygeneruj zaproszenie"
+  current_invitations: "Aktualne zaproszenia"
+  invitation_link: "Link zaproszenia"
+  valid_until: "Ważne do"
+  no_invitations: "Nie wygenerowano żadnych zaproszeń."
+  create: 'Stwórz LARP'
+  modify: 'Edytuj LARP'
+  preview: 'Podgląd'
+  settings: 'Ustawienia LARPa'
+  dashboard:
+    title: 'Panel główny'
+  kanban:
+    board: 'Tablica zadań'
+  faction:
+    name: 'Frakcja'
+    list: 'Frakcje'
+    create: 'Stwórz frakcję'
+    modify: 'Edytuj frakcję'
+    view: 'Szczegóły frakcji'
+    delete_title: "Usunąć frakcję \"%name%\"?"
+    delete_only_larpilot: "Usuń tylko w LARPilot"
+    delete_larpilot_and_integrations: "Usuń w LARPilot i wszystkich połączonych integracjach"
+  character:
+    name: 'Postać'
+    list: 'Postacie'
+    create: 'Stwórz postać'
+    modify: 'Edytuj postać'
+    view: 'Szczegóły postaci'
+    delete_title: "Usunąć postać \"%name%\"?"
+    delete_only_larpilot: "Usuń tylko w LARPilot"
+    delete_larpilot_and_integrations: "Usuń w LARPilot i wszystkich połączonych integracjach"
+  quest:
+    title: 'Zadanie'
+    name: 'Zadanie'
+    list: 'Zadania'
+    create: 'Stwórz zadanie'
+    modify: 'Edytuj zadanie'
+    view: 'Szczegóły zadania'
+    delete_only_larpilot: "Usuń tylko w LARPilot"
+    tree: 'Drzewo decyzji'
+    tree_editor: 'Edytor drzewa decyzji zadania'
+  relations: 'Relacje fabularne'
+  events: 'Wydarzenia'
+  integrations: 'Integracje'
+  integrationSettings: 'Ustawienia integracji'
+  integration:
+    googleDrive: 'Integracja Google Drive'
+    googleDriveDescription: 'Połącz swoje konto Google Drive, aby umożliwić LARPilot dostęp do Twoich plików LARP. Umożliwi to aplikacji przeglądanie i potencjalne zarządzanie wybranym folderem.'
+    googleDriveConnect: 'Połącz z Google Drive'
+    current: 'Obecne integracje'
+    expired: 'Integracja wygasła, jeśli chcesz dalej z niej korzystać - połącz ponownie'
+    reconnect: 'Połącz ponownie'
+    facebookDescription: 'Połącz swoje konto Facebook, aby umożliwić LARPilot publikowanie aktualizacji w Twoim imieniu.'
+    discordDescription: 'Połącz swoje konto Discord, aby umożliwić LARPilot publikowanie aktualizacji w Twoim imieniu.'
+    asanaDescription: 'Połącz swoje konto Asana, aby umożliwić LARPilot synchronizację pracy.'
+    trelloDescription: 'Połącz swoje konto Trello, aby umożliwić LARPilot synchronizację pracy.'
+    miroDescription: 'Połącz swoje konto Miro, aby umożliwić LARPilot synchronizację tablicy.'
+  import_characters: "Importuj postacie"
+  import_options: "Opcje importu"
+  import_file: "Importuj z pliku CSV/XLSX"
+  import_google: "Importuj z arkusza Google"
+  file_select:
+    title: 'Wybierz pliki do udostępnienia LARPilot'
+    open_picker_desc: 'Otwórz selektor plików Google, aby wybrać pliki, które chcesz udostępnić LarpPilot'
+  threads: 'Wątki'
+  applications:
+    title: 'Zgłoszenia'
+    list: 'Zgłoszenia'
+    match: 'Dopasowywanie zgłoszeń'
+    suggest_allocation: 'Zaproponuj przydział postaci'
+    missing: 'Postacie bez zgłoszeń: %count%'
+    already_submitted: 'Już wysłałeś zgłoszenie.'
+    vote_success: 'Głos zarejestrowany'
+    character_submissions: 'Panel zgłoszeń na postacie'
+    overview: 'Przegląd wszystkich zgłoszeń na postacie dla'
+    most_wanted: 'Najbardziej pożądane postacie'
+    no_character_choices: 'Jeszcze brak wyborów postaci'
+    faction_interest: 'Zainteresowanie frakcjami'
+    no_faction_data: 'Brak danych o frakcjach'
+    choice: 'wybór'
+    choices: 'wybory'
+    choice_priority: 'Rozkład priorytetów wyborów'
+    priority: 'Priorytet'
+    approved: 'Zatwierdzony'
+    review_pending: 'Oczekuje na przegląd'
+    character_matching: 'Dopasowywanie postaci'
+    export_applications: 'Eksportuj zgłoszenia'
+    generate_reports: 'Generuj raporty'
+    filter_applications: 'Filtruj zgłoszenia'
+    applicant: 'Zgłaszający'
+    status: 'Status'
+    character_choices: 'Wybory postaci'
+    applied: 'Zgłoszono'
+    view: 'Zobacz'
+    approve: 'Zatwierdź'
+    reject: 'Odrzuć'
+    missing_applications: 'Brakujące zgłoszenia'
+    total_choices: 'Wszystkie wybory'
+    least_wanted: 'Najmniej pożądane postacie'
+    no_applications: 'Brak zgłoszeń'
+    high_interest: 'Wysokie zainteresowanie'
+    moderate_interest: 'Umiarkowane zainteresowanie'
+    low_interest: 'Niskie zainteresowanie'
+    very_low_interest: 'Bardzo niskie zainteresowanie'
+    cast_vote: 'Oddaj głos'
+    vote_type: 'Typ głosu'
+    vote_justification: 'Uzasadnienie'
+    vote_justification_placeholder: 'Proszę wyjaśnij swoje uzasadnienie dla tego głosu...'
+    submit_vote: 'Wyślij głos'
+    upvote: 'Głos pozytywny'
+    downvote: 'Głos negatywny'
+    vote_score: 'Wynik głosowania'
+    vote_details: 'Szczegóły głosowania'
+    view_vote_details: 'Zobacz szczegóły głosowania'
+    vote_recorded: 'Głos zarejestrowany pomyślnie'
+    invalid_vote: 'Nieprawidłowa wartość głosu'
+    login_required: 'Musisz być zalogowany, aby głosować'
+    no_votes_yet: 'Nie oddano jeszcze żadnych głosów'
+    suggested_allocations: 'Proponowane przydziały postaci'
+    allocation_explanation: 'Przejrzyj proponowane przypisania postaci na podstawie priorytetów graczy i głosów organizatorów'
+    allocation_algorithm_info: 'Algorytm uwzględnia: głosy organizatorów (×10), priorytet gracza (25-5 punktów) i zapewnia jedną postać na gracza'
+    proposed_matches: 'Proponowane dopasowania'
+    character: 'Postać'
+    total_score: 'Całkowity wynik'
+    justification: 'Uzasadnienie gracza'
+    player_justification: 'Uzasadnienie gracza'
+    send_allocations: 'Wyślij e-maile z przydziałami'
+    no_allocations_selected: 'Proszę wybrać co najmniej jeden przydział'
+    allocations_sent: 'Wysłano {count} e-maili z przypisaniem postaci'
+    allocation_failed: 'Nie udało się wysłać przydziału'
+    confirm_allocation: 'Potwierdź przydział'
+    confirm_allocation_message: 'Czy na pewno chcesz wysłać e-maile z przypisaniem postaci do wybranych zgłaszających?'
+    email_will_be_sent: 'Gracze otrzymają e-mail z linkami do zaakceptowania lub odrzucenia przypisania postaci'
+    confirm_send: 'Potwierdź i wyślij e-maile'
+    allocations_selected: 'przydziały wybrane'
+    no_suggestions: 'Brak propozycji przydziałów. Upewnij się, że zgłoszenia zostały wysłane i głosy zostały oddane'
+    view_application: 'Zobacz zgłoszenie'
+    applicant_info: 'Informacje o zgłaszającym'
+    preferences: 'Preferencje gracza'
+    favourite_style: 'Ulubiony styl gry'
+    triggers: 'Triggery / treści do unikania'
+    preferred_tags: 'Preferowane tagi'
+    unwanted_tags: 'Niechciane tagi'
+    notes: 'Dodatkowe notatki'
+    visual_description: 'Opis wizualny/kostiumu'
+    organizer_votes: 'Głosy organizatorów'
+    view_votes: 'Zobacz wszystkie głosy'
+    voter: 'Głosujący'
+    vote: 'Głos'
+    your_vote: 'Twój głos'
+    accept_and_send: 'Zaakceptuj i wyślij e-mail z ofertą'
+    confirm_accept_choice: 'Czy na pewno chcesz zaoferować postać "{character}" dla {applicant}? E-mail zostanie wysłany natychmiast.'
+    already_processed: 'Zgłoszenie już przetworzone'
+    character_offered: 'Postać {character} została zaoferowana dla {applicant}. E-mail wysłany pomyślnie.'
+    email_failed: 'Nie udało się wysłać e-maila'
+    insufficient_permissions: 'Nie masz uprawnień do akceptowania wyborów postaci. Tylko organizatorzy i główni scenarzyści mogą wykonać tę akcję.'
+    choice_not_in_application: 'Ten wybór nie należy do określonego zgłoszenia'
+  relation:
+    list: 'Relacje'
+    add: 'Dodaj relację'
+  thread:
+    singular: 'Wątek'
+    plural: 'Wątki'
+    list: 'Wątki'
+    create: 'Stwórz wątek'
+    modify: 'Edytuj wątek'
+    view: 'Szczegóły wątku'
+    tree: 'Drzewo decyzji'
+    tree_editor: 'Edytor drzewa decyzji wątku'
+  reference:
+    list: 'Referencje zewnętrzne'
+    add: 'Dodaj referencję zewnętrzną'
+  story:
+    main: 'Zarządzanie fabułą'
+    main_title: 'Fabuła'
+  place:
+    singular: 'Miejsce'
+    plural: 'Miejsca'
+    list: 'Miejsca'
+    create: 'Stwórz miejsce'
+    modify: 'Edytuj miejsce'
+    view: 'Szczegóły miejsca'
+  item:
+    singular: 'Przedmiot'
+    plural: 'Przedmioty'
+    list: 'Przedmioty'
+    create: 'Stwórz przedmiot'
+    modify: 'Edytuj przedmiot'
+    view: 'Szczegóły przedmiotu'
+  tag:
+    singular: 'Tag'
+    plural: 'Tagi'
+    list: 'Tagi'
+    create: 'Stwórz tag'
+    modify: 'Edytuj tag'
+    view: 'Szczegóły tagu'
+  participant:
+    singular: 'Uczestnik'
+    plural: 'Uczestnicy'
+    list: 'Uczestnicy'
+    create: 'Dodaj uczestnika'
+    modify: 'Edytuj uczestnika'
+    view: 'Szczegóły uczestnika'
+  event:
+    singular: 'Wydarzenie'
+    plural: 'Wydarzenia'
+    list: 'Wydarzenia'
+    create: 'Stwórz wydarzenie'
+    modify: 'Edytuj wydarzenie'
+    view: 'Szczegóły wydarzenia'
+    delete_only_larpilot: "Usuń tylko w LARPilot"
+  version_history: 'Historia wersji'
+  tasks: 'Zadania'
+  map:
+    singular: 'Mapa'
+    plural: 'Mapy'
+    list: 'Mapy'
+    create: 'Stwórz mapę'
+    modify: 'Edytuj mapę'
+    view: 'Zobacz mapę'
+    upload_error: 'Wystąpił błąd podczas przesyłania pliku mapy. Spróbuj ponownie.'
+    grid_size: 'Rozmiar siatki'
+    locations_count: 'Liczba lokalizacji'
+    add_location: 'Dodaj lokalizację'
+    location_create: 'Stwórz lokalizację'
+    location_modify: 'Edytuj lokalizację'
+    on_map: 'Na mapie'
+    location_edit: 'Edytuj lokalizację'
+    edit: 'Edytuj mapę gry'
+    empty_list: 'Nie utworzono jeszcze żadnych map'
+    no_image: 'Nie przesłano obrazu mapy'
+    locations: 'Lokalizacje mapy'
+    location_select_help: 'Kliknij na komórki siatki, aby wybrać obszar dla tej lokalizacji'
+
   google_drive_folders:
-    title: Foldery Google Drive
-    heading: Foldery Google Drive
-    no_folders: Nie znaleziono folderów.
+    title: "Foldery Google Drive"
+    heading: "Foldery Google Drive"
+    no_folders: "Nie znaleziono folderów."
   mapping:
-    title: Konfiguracja mapowania
-    heading: Skonfiguruj mapowanie
-    save: Zapisz mapowanie
-  common:
-    success_save: Zmiany zapisane pomyślnie
-    success_delete: Usunięto pomyślnie
-    confirmation: Czy na pewno chcesz kontynuować? Tej operacji nie można cofnąć.
+    title: "Konfiguracja mapowania"
+    heading: "Konfiguruj mapowanie"
+    save: "Zapisz mapowanie"
   recruitment:
+    singular: 'Rekrutacja'
+    plural: 'Rekrutacje'
+    list: "Rekrutacje"
+    create: "Stwórz rekrutację"
+    modify: "Edytuj rekrutację"
+    view: "Szczegóły rekrutacji"
     open: "Otwarte rekrutacje"
     none: "Brak rekrutacji"
-  marketplace:
-    available: "Dostępne postacie"
-    toggle: "Przełącz"
-    view_recruitments: "Zobacz rekrutacje"
   proposal:
+    singular: 'Propozycja'
+    plural: 'Propozycje'
     list: "Propozycje"
+    create: "Stwórz propozycję"
+    modify: "Edytuj propozycję"
+    view: "Szczegóły propozycji"
     accept: "Akceptuj"
     reject: "Odrzuć"
     none: "Brak propozycji"
-    create: "Utwórz propozycję"
+  location:
+    list: 'Lokalizacje'
+  status:
+    management: "Zarządzanie statusem"
+    current: "Obecny status"
+    available_transitions: "Dostępne akcje"
+    no_transitions: "W tej chwili nie ma dostępnych zmian statusu."
+    confirm_transition: "Czy na pewno chcesz %transition%?"
+    workflow: "Przegląd przepływu pracy"
+    visibility: "Ustawienia widoczności"
+    visible_everyone: "Widoczny dla wszystkich"
+    visible_organizers: "Widoczny dla organizatorów"
+    manage: "Zarządzaj statusem"
+    draft: "Szkic"
+    wip: "W trakcie prac"
+    published: "Opublikowany"
+    inquiries: "Otwarty na zgłoszenia"
+    confirmed: "Potwierdzony"
+    cancelled: "Anulowany"
+    completed: "Zakończony"
 
-# Tłumaczenia konta gracza/organizatora
+    draft.description: "Stan początkowy, widoczny tylko dla administratorów"
+    wip.description: "Prace w toku, widoczny dla organizatorów"
+    published.description: "Opublikowany i widoczny dla wszystkich"
+    inquiries.description: "Zbieranie zgłoszeń graczy"
+    confirmed.description: "Wydarzenie potwierdzone i odbędzie się"
+    cancelled.description: "Wydarzenie zostało anulowane"
+    completed.description: "Wydarzenie zostało zakończone"
+  properties: 'Właściwości'
+
+marketplace:
+  singular: "Marketplace"
+  title: "Marketplace fabularny"
+  threads: "Marketplace wątków"
+  threads_list: "Marketplace wątków"
+  quests: "Marketplace zadań"
+  quests_list: "Marketplace zadań"
+  events: "Marketplace wydarzeń"
+  events_list: "Marketplace wydarzeń"
+  characters: "Marketplace postaci"
+  characters_list: "Marketplace postaci"
+  character_detail: "Szczegóły postaci"
+  factions: "Marketplace frakcji"
+  factions_list: "Marketplace frakcji"
+  recruitments: "Rekrutacje"
+  available: "Dostępne postacie"
+  involved_story_objects: "Zaangażowane obiekty fabularne"
+  no_story_objects: "Brak obiektów fabularnych"
+  toggle: "Przełącz"
+  view_recruitments: "Zobacz rekrutacje"
+  min_threads_info: "Minimalna liczba wątków na postać: %count%"
+  current_threads: "Obecne wątki"
+  view_suggestions: "Zobacz propozycje"
+  involved: "Zaangażowany"
+  no_characters: "Brak zaangażowanych postaci"
+  needs_threads: "Ta postać potrzebuje więcej wątków!"
+  needs_threads_detail: "Obecnie ma %current% wątek(ów), ale potrzebuje co najmniej %minimum%"
+  has_enough_threads: "Ta postać ma wystarczająco wątków (%current% z minimum %minimum%)"
+  no_tags: "Nie przypisano tagów"
+  no_current_threads: "Nie przypisano obecnie wątków"
+  suggested_threads: "Proponowane wątki na podstawie tagów postaci"
+  matching_tags: "Pasujące tagi"
+  no_suggestions: "Brak dostępnych propozycji"
+  suggestions_for: "Propozycje dla"
+  player_preferences: "Preferencje gracza"
+  match_score: "Wynik dopasowania"
+
+#Tłumaczenia specyficzne dla panelu organizatorów
+backoffice_title: Panel admina
+backoffice:
+  dashboard: 'Panel główny'
+  location:
+    list: 'Lokalizacje'
+    create: 'Stwórz lokalizację'
+    modify: 'Edytuj lokalizację'
+    view: 'Szczegóły lokalizacji'
+
+#Tłumaczenia związane z kontem dla graczy i organizatorów
 account:
+  singular: 'Konto'
   larp:
     list: Twoje LARPy
-  settings: Ustawienia
-  connected_accounts: Lista połączonych kont
-  no_connected_accounts: Nie masz jeszcze połączonych kont społecznościowych.
-  link_another_social: Połącz inne konto społecznościowe
-  unlink: Odłącz
-  confirm_unlink: Czy na pewno chcesz odłączyć to konto? Tej operacji nie można cofnąć.
+  settings: "Ustawienia"
+  connected_accounts: "Lista połączonych kont"
+  no_connected_accounts: "Nie połączyłeś jeszcze żadnych kont społecznościowych."
+  link_another_social: "Połącz inne konto społecznościowe"
+  unlink: "Odłącz"
+  confirm_unlink: "Czy na pewno chcesz odłączyć to konto społecznościowe? Tej operacji nie można cofnąć."
 
-integrations:
+integration:
+  singular: 'Integracja'
+  plural: 'Integracje'
   file_select:
-    title: Wybierz plik
-    heading: Wybierz plik do importu
-    configure_mapping: Skonfiguruj nowe mapowanie
-    no_files: Nie znaleziono plików.
-    shared: Już udostępnione pliki
-    existing_mappings: Istniejące mapowania
-    use_mapping: Importuj używając tego mapowania
-
-file_select:
-  no_folders: Brak zasobów
+    title: "Wybierz plik"
+    heading: "Wybierz plik do importu"
+    configure_mapping: "Skonfiguruj nowe mapowanie"
+    no_files: "Nie znaleziono plików."
+    shared: "Już udostępnione pliki"
+    existing_mappings: 'Istniejące mapowania'
+    use_mapping: 'Importuj używając tego mapowania'
+    no_folders: 'Brak zasobów'
 
 login_page:
-  info: Jeśli już masz konto, zaloguj się i połącz konta w ustawieniach konta.
-  title: Rejestracja / Logowanie
+  info: "Jeśli już jesteś zarejestrowany i chcesz połączyć konta, najpierw zaloguj się i połącz je w ustawieniach konta."
+  title: 'Rejestracja / Logowanie'
 
-# Tłumaczenia ról użytkownika
+success_save: "Pomyślnie zapisano zmiany"
+success_delete: "Pomyślnie usunięto"
+confirmation: "Czy na pewno chcesz kontynuować? Tej akcji nie można cofnąć."
+votes: "Głosy"
+
+character_type:
+  player: "Gracz"
+  long_npc: "NPC długoterminowy"
+  short_npc: "NPC krótkoterminowy"
+  gm: "Mistrz gry"
+  generic_npc: "Generyczny NPC"
+relation_type:
+  friend: "Przyjaciel"
+  enemy: "Wróg"
+  family: "Rodzina"
+  ally: "Sojusznik"
+
+event_planner:
+  title: 'Planer wydarzeń'
+  resource:
+    list: 'Zasoby'
+    create: 'Stwórz zasób'
+    modify: 'Edytuj zasób'
+    edit: 'Edytuj zasób'
+    view: 'Szczegóły zasobu'
+    type: 'Typ'
+    quantity: 'Ilość'
+    shareable: 'Współdzielony'
+    shareable_help: 'Może być używany przez wiele wydarzeń jednocześnie'
+    availability: 'Dostępność'
+    availability_window: 'Okno dostępności'
+    from: 'Od'
+    until: 'Do'
+    always_available: 'Zawsze dostępny'
+    linked_entities: 'Powiązane encje'
+    linked_entities_help: 'Opcjonalne powiązania z postaciami, przedmiotami lub uczestnikami'
+    empty_list: 'Nie znaleziono zasobów. Stwórz swój pierwszy zasób, aby rozpocząć.'
+  event:
+    list: 'Zaplanowane wydarzenia'
+    create: 'Stwórz wydarzenie'
+    modify: 'Edytuj wydarzenie'
+    edit: 'Edytuj wydarzenie'
+    view: 'Szczegóły wydarzenia'
+    title: 'Tytuł'
+    start_time: 'Czas rozpoczęcia'
+    end_time: 'Czas zakończenia'
+    duration: 'Czas trwania'
+    location: 'Lokalizacja'
+    timing: 'Harmonogram'
+    location_and_story: 'Lokalizacja i fabuła'
+    settings: 'Ustawienia'
+    details: 'Szczegóły'
+    setup_cleanup: 'Przygotowanie/Sprzątanie'
+    setup_minutes: 'Czas przygotowania (minuty)'
+    setup_minutes_help: 'Czas potrzebny przed rozpoczęciem wydarzenia'
+    cleanup_minutes: 'Czas sprzątania (minuty)'
+    cleanup_minutes_help: 'Czas potrzebny po zakończeniu wydarzenia'
+    visible_to_players: 'Widoczne dla graczy'
+    organizer_notes: 'Notatki organizatora'
+    organizer_notes_help: 'Prywatne notatki (niewidoczne dla graczy)'
+    story_link: 'Link do fabuły'
+    resources: 'Zasoby'
+    no_resources: 'Nie przypisano zasobów'
+    has_conflicts: 'Konflikty'
+    empty_list: 'Brak zaplanowanych wydarzeń. Stwórz swoje pierwsze wydarzenie.'
+    conflicts_detected: 'Wykryto {count} konfliktów. Proszę przejrzeć.'
+    conflicts_detected_title: 'Wykryto konflikty harmonogramu'
+  calendar:
+    title: 'Widok kalendarza'
+    legend: 'Legenda'
+    status_colors: 'Kolory statusów'
+    tips: 'Wskazówki'
+    tip_click: 'Kliknij wydarzenie, aby zobaczyć szczegóły'
+    tip_week_view: 'Domyślny widok pokazuje tydzień LARPa'
+    tip_conflicts: 'Wydarzenia z konfliktami pokazane na czerwono'
+
+kanban:
+  status:
+    todo: 'Do zrobienia'
+    in_progress: 'W trakcie'
+    done: 'Zrobione'
+
+enum:
+  location_type:
+    indoor: "Wewnątrz"
+    outdoor: "Na zewnątrz"
+    special: "Specjalna"
+    transition: "Przejście"
+
+# Tłumaczenia enumeracji ról
 user_role:
   ROLE_ORGANIZER: 'Organizator'
-  ROLE_STAFF: 'Obsługa'
-  ROLE_MAIN_STORY_WRITER: 'Główny Pisarz Fabularny'
-  ROLE_STORY_WRITER: 'Pisarz Fabularny'
+  ROLE_STAFF: 'Personel'
+  ROLE_MAIN_STORY_WRITER: 'Główny scenarzysta'
+  ROLE_STORY_WRITER: 'Scenarzysta'
   ROLE_PHOTOGRAPHER: 'Fotograf'
   ROLE_CRAFTER: 'Rzemieślnik'
   ROLE_MAKEUP_ARTIST: 'Charakteryzator'
-  ROLE_GAME_MASTER: 'Mistrz Gry'
+  ROLE_GAME_MASTER: 'Mistrz gry'
   ROLE_NPC_LONG: 'NPC (długoterminowy)'
   ROLE_NPC_SHORT: 'NPC (krótkoterminowy)'
   ROLE_PLAYER: 'Gracz'
@@ -174,3 +640,105 @@ user_role:
   ROLE_OUTFIT_APPROVER: 'Osoba zatwierdzająca stroje'
   ROLE_ACCOUNTANT: 'Księgowy'
   ROLE_GASTRO: 'Gastronomia'
+
+# Tłumaczenia drzewa decyzji
+decision_tree:
+  node_types:
+    start: 'Węzeł startowy'
+    decision: 'Węzeł decyzyjny'
+    outcome: 'Węzeł wyniku'
+    reference: 'Węzeł referencyjny'
+    end: 'Węzeł końcowy'
+  edge_types:
+    choice: 'Wybór gracza'
+    consequence: 'Konsekwencja'
+    reference: 'Link referencyjny'
+  toolbar:
+    add_start: 'Dodaj Start'
+    add_decision: 'Dodaj Decyzję'
+    add_outcome: 'Dodaj Wynik'
+    add_reference: 'Dodaj Referencję'
+    add_end: 'Dodaj Koniec'
+    add_edge: 'Połącz węzły'
+    auto_layout: 'Automatyczny układ'
+    delete_selected: 'Usuń zaznaczone'
+  prompts:
+    node_title: 'Tytuł węzła:'
+    node_description: 'Opis węzła (opcjonalnie):'
+    edge_label: 'Etykieta krawędzi (wybór gracza/konsekwencja):'
+    edge_type: 'Typ krawędzi (wybór/konsekwencja/referencja):'
+    select_source_first: 'Najpierw wybierz węzeł źródłowy'
+    click_target: 'Kliknij na węzeł docelowy, aby utworzyć połączenie'
+    select_to_delete: 'Wybierz węzeł lub krawędź do usunięcia'
+  metadata:
+    story_objects: 'Obiekty fabularne'
+    conditions: 'Warunki'
+    consequences: 'Konsekwencje'
+    duration: 'Czas trwania'
+    location: 'Lokalizacja'
+    tags: 'Tagi'
+  condition_types:
+    has_item: 'Gracz ma przedmiot'
+    character_present: 'Postać jest obecna'
+    character_state: 'Postać ma stan'
+    faction_reputation: 'Reputacja frakcji'
+    quest_completed: 'Zadanie ukończone'
+    time_constraint: 'Ograniczenie czasowe'
+    location_match: 'W określonej lokalizacji'
+  consequence_types:
+    gain_item: 'Zdobądź przedmiot'
+    lose_item: 'Strać przedmiot'
+    relationship_change: 'Zmiana relacji'
+    quest_update: 'Aktualizacja zadania'
+    character_state_change: 'Zmiana stanu postaci'
+    information_reveal: 'Ujawnij informację'
+  roles:
+    required: 'Wymagany'
+    involved: 'Zaangażowany'
+    mentioned: 'Wspomniany'
+    rewarded: 'Nagrodzony'
+    lost: 'Utracony'
+  modal:
+    title: 'Zarządzaj referencjami obiektów fabularnych'
+    search_label: 'Szukaj i dodawaj obiekty fabularne:'
+    search_placeholder: 'Wpisz, aby szukać obiektów fabularnych...'
+    search_help: 'Szukaj postaci, przedmiotów, miejsc, frakcji i innych obiektów fabularnych do przypisania.'
+    current_references_label: 'Obecne referencje:'
+    no_references: 'Nie przypisano jeszcze obiektów fabularnych.'
+    remove_reference: 'Usuń'
+    cancel: 'Anuluj'
+    save: 'Zapisz referencje'
+  context_menu:
+    manage_story_objects: 'Zarządzaj obiektami fabularnymi...'
+    edit_node: 'Edytuj węzeł'
+    connect_to: 'Połącz z...'
+    delete_node: 'Usuń węzeł'
+    edit_edge: 'Edytuj krawędź'
+    delete_edge: 'Usuń krawędź'
+    add_start_node: 'Dodaj węzeł startowy'
+    add_decision_node: 'Dodaj węzeł decyzyjny'
+    add_outcome_node: 'Dodaj węzeł wyniku'
+    add_reference_node: 'Dodaj węzeł referencyjny'
+    add_end_node: 'Dodaj węzeł końcowy'
+    auto_layout: 'Automatyczny układ'
+
+email:
+  character_assignment:
+    subject: 'Przypisanie postaci do {larp}'
+    header: 'Przypisano Ci postać!'
+    greeting: 'Witaj {email}'
+    intro: 'Świetna wiadomość! Organizatorzy {larp} przypisali Ci postać na podstawie Twojego zgłoszenia i preferencji'
+    larp: 'LARP'
+    date: 'Data'
+    location: 'Lokalizacja'
+    action_required: 'Proszę potwierdź lub odrzuć to przypisanie postaci, klikając jeden z poniższych przycisków'
+    confirm_button: 'Potwierdzam - będę grać tą postacią'
+    decline_button: 'Odrzucam - nie mogę grać tą postacią'
+    important: 'Ważne'
+    response_deadline: 'Proszę odpowiedz tak szybko, jak to możliwe, aby organizatorzy mogli sfinalizować przypisania postaci'
+    questions: 'Jeśli masz jakiekolwiek pytania, skontaktuj się bezpośrednio z organizatorami LARPa'
+    closing: 'Czekamy na Ciebie na wydarzeniu!'
+    footer: 'To jest automatyczna wiadomość z systemu LARPilot'
+    powered_by: 'Obsługiwane przez'
+
+no_saved_filters: 'Brak zapisanych filtrów'

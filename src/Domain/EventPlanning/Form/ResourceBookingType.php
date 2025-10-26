@@ -59,6 +59,7 @@ class ResourceBookingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'csrf_protection' => false,
             'data_class' => ResourceBooking::class,
             'translation_domain' => 'forms',
             'larp' => null,

@@ -557,6 +557,7 @@ event_planner:
     modify: 'Edit Resource'
     edit: 'Edit Resource'
     view: 'Resource Details'
+    add: 'Add Resource'
     type: 'Type'
     quantity: 'Quantity'
     shareable: 'Shareable'

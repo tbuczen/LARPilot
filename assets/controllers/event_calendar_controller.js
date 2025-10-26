@@ -48,10 +48,17 @@ export default class extends Controller {
                 const url = this.buildEventsUrl(info.startStr, info.endStr);
                 fetch(url)
                     .then(response => response.json())
-                    .then(data => successCallback(data))
+                    .then(data => {
+                        successCallback(data);
+                        // Dispatch custom event when events are loaded (with bubbles: true)
+                        console.log('Calendar events loaded, dispatching event');
+                        this.element.dispatchEvent(new CustomEvent('calendar:eventsLoaded', { bubbles: true }));
+                    })
                     .catch(error => {
                         console.error('Error loading events:', error);
                         failureCallback(error);
+                        console.log('Calendar events failed, dispatching event');
+                        this.element.dispatchEvent(new CustomEvent('calendar:eventsLoaded', { bubbles: true }));
                     });
             },
 
@@ -141,6 +148,8 @@ export default class extends Controller {
             e.preventDefault();
             if (this.calendar) {
                 this.calendar.refetchEvents();
+                // Dispatch event to notify filter form that loading is complete
+                // The calendar will dispatch 'eventsLoaded' when done
             }
         });
 

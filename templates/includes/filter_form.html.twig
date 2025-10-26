@@ -1,5 +1,10 @@
 <div class="p-3">
-    {{ form_start(form, { method: 'get' }) }}
+    {{ form_start(form, {
+        method: 'get',
+        attr: {
+            'data-controller': 'filter-loading'
+        }
+    }) }}
     <div class="row g-2">
 
         {% for child in form %}
@@ -13,7 +18,15 @@
             <div class="mb-3">
                 <label class="form-label">&nbsp;</label>
                 <div class="d-block">
-                    <button type="submit" class="btn btn-outline-primary">{{ 'filter'|trans }}</button>
+                    <button type="submit"
+                            class="btn btn-outline-primary"
+                            data-filter-loading-target="submitButton">
+                        <span data-filter-loading-target="buttonText">{{ 'filter'|trans }}</span>
+                        <span class="spinner-border spinner-border-sm d-none"
+                              role="status"
+                              aria-hidden="true"
+                              data-filter-loading-target="spinner"></span>
+                    </button>
                     <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
                        class="btn btn-outline-secondary">{{ 'clear'|trans }}</a>
                     {% if larp is defined %}

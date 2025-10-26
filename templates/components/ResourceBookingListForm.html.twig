@@ -1,0 +1,29 @@
+{# templates/components/ResourceBookingListForm.html.twig #}
+<div {{ attributes }}>
+    <div class="row">
+    {% for booking in this.getExistingBookings() %}
+        {{ component('ResourceBookingForm', {
+            scheduledEvent: scheduledEvent,
+            initialFormData: booking
+        }) }}
+    {% endfor %}
+
+    {% if additionalForms > 0 %}
+        {% for i in 0..(additionalForms - 1) %}
+        {{ component('ResourceBookingForm', {
+            scheduledEvent: scheduledEvent,
+        }) }}
+        {% endfor %}
+    {% endif %}
+
+    </div>
+
+    <button
+            data-action="live#action"
+            data-live-action-param="addForm"
+            type="button"
+            class="btn btn-sm btn-success mt-2"
+    >
+        <i class="bi bi-plus-circle"></i> {{ 'Add Resource'|trans }}
+    </button>
+</div>

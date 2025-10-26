@@ -71,6 +71,18 @@
                         </div>
 
                         <hr>
+                        <h5>{{ 'event_planner.event.resources'|trans }}</h5>
+                        {% if event.id %}
+                            {{ component('ResourceBookingListForm', {
+                                scheduledEvent: event,
+                            }) }}
+                        {% else %}
+                            <div class="alert alert-info">
+                                {{ 'Please save the event first before adding resource bookings.'|trans }}
+                            </div>
+                        {% endif %}
+
+                        <hr>
                         <h5>{{ 'event_planner.event.settings'|trans }}</h5>
                         <div class="row">
                             <div class="col-md-6">

@@ -1,112 +1,288 @@
-form:
-  submit: "Zatwierdź"
-  choose: "Wybierz..."
-  character:
-    name: "Unikalna nazwa postaci"
-    in_game_name: "Imię w grze"
-    description: "Opis postaci"
-    available_for_recruitment: "Dostępny do rekrutacji"
-    faction: "Frakcja"
-    choose_faction: "Wybierz frakcję..."
-  faction:
-    name: "Unikalna nazwa frakcji"
-    description: "Opis frakcji"
-  invitation:
-    name: "Nazwa"
-    valid_to: "Kod zaproszenia ważny do"
-    role: "Rola"
-    character: "Wybierz postać..."
-  recruitment:
-    number: "Liczba potrzebnych"
-    type: "Typ"
-    notes: "Notatki"
-  proposal:
-    character: "Postać"
-    comment: "Komentarz"
-  mapping:
-    spreadsheet:
-      sheet_name: "Nazwa arkusza"
-      end_column: "Kolumna końcowa"
-      starting_row: "Wiersz startowy"
-    document:
-  larp:
-    create: "Stwórz nowy DRAFT LARP"
-    name: "Nazwa"
-    description: "Opis"
-    location: "Lokalizacja"
-    start_date: "Data rozpoczęcia"
-    end_date: "Data zakończenia"
-    integrations: "Integracje"
-    invitations: "Zaproszenia"
-    story: "Historia"
-  save_filter_name: "Nazwa filtru"
-  quest:
-    name: "Unikalna nazwa zadania"
-    description: "Opis zadania"
-    thread: "Przypisz do wątku"
-    factions: "Frakcje zaangażowane w zadanie"
-    characters: "Postacie zaangażowane w zadanie"
-    tags: "Tagi"
-  thread:
-    name: "Unikalna nazwa wątku"
-    description: "Opis wątku"
-    factions: "Frakcje zaangażowane w wątek"
-    characters: "Postacie zaangażowane w wątek"
-    tags: "Tagi"
-    choose_faction: "Wybierz frakcję..."
-  relation:
-    name: "Nazwa relacji"
-    description: "Opis relacji"
-    type: "Typ relacji"
-    fromType: "Typ strony posiadającej relację"
-    from: "Właściciel relacji"
-    toType: "Typ strony docelowej relacji"
-    to: "Powiązany"
-  external_reference:
-    name: "Nazwa"
-    mapping_type: "Typ mapowania"
-    reference_type: "Typ"
-    url: "URL"
-    toType: "Typ docelowy"
-  place:
-    name: "Unikalna nazwa miejsca"
-    description: "Opis miejsca"
-  item:
-    name: "Unikalna nazwa przedmiotu"
-    description: "Opis przedmiotu"
-    is_crafted: "Wytworzony"
-    is_purchased: "Kupiony"
-    quantity: "Ilość"
-    cost: "Koszt"
-  tag:
-    name: "Nazwa tagu"
-    description: "Opis tagu"
-    target: "Cel"
+common:
+  name: Nazwa
+submit: "Zatwierdź"
+choose: "Wybierz..."
+character_lbl: 'Postać'
+character:
+  name: "Unikalna nazwa postaci"
+  in_game_name: "Imię w grze"
+  description: "Opis postaci"
+  available_for_recruitment: "Dostępna do rekrutacji"
+  faction: "Frakcja"
+  choose_faction: "Wybierz frakcję..."
+  gender: "Płeć"
+  preferred_gender: "Preferowana płeć dla postaci"
+  preferred_gender_placeholder: "Unisex"
+  preferred_gender_help: "Wybierz preferowaną płeć dla tej postaci (np. Mężczyzna, Kobieta lub pozostaw puste dla dowolnej płci)"
+  tag: "Tagi definiujące rozgrywkę postaci"
+faction_lbl: 'Frakcja'
+faction:
+  name: "Unikalna nazwa frakcji"
+  description: "Opis frakcji"
+invitation:
+  name: "Nazwa"
+  valid_to: "Kod zaproszenia ważny do"
+  role: "Rola"
+  character: "Wybierz postać..."
+  is_reusable: "Wielokrotnego użytku"
+recruitment:
+  number: "Wymagana liczba"
+  type: "Typ"
+  notes: "Notatki"
+proposal:
+  character: "Postać"
+  comment: "Komentarz"
+mapping:
+  spreadsheet:
+    sheet_name: "Nazwa arkusza"
+    end_column: "Kolumna końcowa"
+    starting_row: "Wiersz początkowy"
+  document:
+larp:
+  create: "Stwórz nowy SZKIC LARPa"
+  name: "Nazwa"
+  description: "Opis"
+  location: "Lokalizacja"
+  start_date: "Data rozpoczęcia"
+  end_date: "Data zakończenia"
+  integrations: "Integracje"
+  invitations: "Zaproszenia"
+  story: "Fabuła"
+save_filter_name: "Nazwa filtru"
+quest:
+  name: "Unikalna nazwa zadania"
+  description: "Opis zadania"
+  thread: "Przypisz do wątku"
+  factions: "Frakcje zaangażowane w zadanie"
+  characters: "Postacie zaangażowane w zadanie"
+  tags: "Tagi"
+thread:
+  name: "Unikalna nazwa wątku"
+  description: "Opis wątku"
+  factions: "Frakcje zaangażowane w wątek"
+  characters: "Postacie zaangażowane w wątek"
+  tags: "Tagi"
+  choose_faction: "Wybierz frakcję..."
+relation:
+  name: "Nazwa relacji"
+  description: "Opis relacji"
+  type: "Typ relacji"
+  fromType: "Typ strony posiadającej relację"
+  from: "Właściciel relacji"
+  toType: "Typ strony docelowej relacji"
+  to: "Powiązany"
+external_reference:
+  name: "Nazwa"
+  mapping_type: "Typ mapowania"
+  reference_type: "Typ"
+  url: "URL"
+  toType: "Typ docelowy"
+place:
+  name: "Unikalna nazwa miejsca"
+  description: "Opis miejsca"
+item:
+  name: "Unikalna nazwa przedmiotu"
+  description: "Opis przedmiotu"
+  is_crafted: "Wytworzony"
+  is_purchased: "Kupiony"
+  quantity: "Ilość"
+  cost: "Koszt"
+tag:
+  name: "Nazwa tagu"
+  description: "Opis tagu"
+  target: "Cel"
+event:
+  name: "Nazwa wydarzenia"
+  description: "Opis wydarzenia"
+  place: "Miejsce"
+  choose_place: "Wybierz miejsce..."
+  factions: "Frakcje zaangażowane w wydarzenie"
+  characters: "Postacie zaangażowane w wydarzenie"
+  tags: "Tagi"
+  start_time: 'Czas rozpoczęcia'
+  end_time: 'Czas zakończenia'
+  choose_faction: 'Wybierz frakcję...'
+kanban:
+  title: "Tytuł zadania"
+  description: "Opis zadania"
+  assigned_to: "Przypisano do"
+  priority: "Priorytet"
+  due_date: "Termin"
+  unassigned: "Nieprzypisany"
+  visibility: "Widoczność"
+contact_email: 'Email kontaktowy'
+favourite_style: 'Ulubiony styl gry'
+triggers: 'Triggery / rzeczy do unikania'
+priority: 'Priorytet'
+justification: 'Uzasadnienie'
+visual: 'Pomysły wizualne'
+incident:
+  report_code: "Kod uczestnika"
+  description: "Opisz, co się wydarzyło"
+  allow_feedback: "Chcę feedback"
+  contact_accused: "Zezwól na kontakt z oskarżonym"
+  allow_mediator: "Zezwól na mediatora"
+  stay_anonymous: "Pozostań anonimowy"
+contact_email_help: "Alternatywny email dla tego zgłoszenia (opcjonalnie)"
+favourite_style_help: "Opisz swój preferowany styl roleplay, motywy, które lubisz, itp."
+preferred_tags: "Preferowane tagi"
+preferred_tags_help: "Wybierz tagi reprezentujące motywy lub elementy, które chciałbyś zobaczyć w swojej postaci"
+unwanted_tags: "Tagi do unikania"
+unwanted_tags_help: "Wybierz tagi reprezentujące motywy lub elementy, których wolałbyś unikać"
+character_choices: "Preferencje postaci"
+character_choices_help: "Przeciągnij i upuść, aby zmienić kolejność swoich preferencji postaci według priorytetu"
+select_tags: "Wybierz tagi..."
+participant:
+  user: "Użytkownik"
+  role: "Rola"
+  character: "Postać"
+sort_by: "Sortuj według"
+default_sort: "Domyślne sortowanie"
+sort:
+  character_title: "Tytuł postaci"
+  priority: "Priorytet"
+  vote_score: "Wynik głosowania"
+  ascending: "Rosnąco"
+  descending: "Malejąco"
+sort_order: "Kolejność sortowania"
+user: "Użytkownik"
+filter_tags: "Filtruj według tagów"
+filter_thread: "Filtruj według wątku"
+filter_quest: "Filtruj według zadania"
+filter_event: "Filtruj według wydarzenia"
+filter_character: "Filtruj według postaci"
+
+game_map:
+  name: "Nazwa mapy"
+  name_placeholder: "Wprowadź nazwę mapy (np. Miejsce gry, Obszar leśny)"
+  description: "Opis"
+  description_placeholder: "Opisz tę mapę i jej cel"
+  image_file: "Obraz mapy"
+  image_file_help: "Prześlij obraz miejsca/obszaru (JPG, PNG, GIF, WEBP - maks. 10MB)"
+  image_file_invalid: "Proszę przesłać poprawny plik obrazu (JPG, PNG, GIF, WEBP)"
+  grid_rows: "Wiersze siatki"
+  grid_rows_help: "Liczba poziomych wierszy w siatce (1-100)"
+  grid_columns: "Kolumny siatki"
+  grid_columns_help: "Liczba pionowych kolumn w siatce (1-100)"
+  grid_opacity: "Przezroczystość siatki"
+  grid_opacity_help: "Przezroczystość nakładki siatki (0.0 = niewidoczna, 1.0 = całkowicie widoczna)"
+  grid_visible: "Pokaż siatkę"
+  grid_visible_help: "Przełącz widoczność siatki na mapie"
+
+map_location:
+  name: "Nazwa lokalizacji"
+  name_placeholder: "Wprowadź nazwę lokalizacji (np. Główna sala, Polana leśna)"
+  grid_coordinates: "Współrzędne siatki"
+  grid_coordinates_help: "Kliknij na komórki siatki na mapie powyżej, aby wybrać obszar tej lokalizacji"
+  type: "Typ lokalizacji"
+  type_placeholder: "Wybierz typ lokalizacji..."
+  color: "Kolor lokalizacji"
+  color_help: "Kolor używany do oznaczenia tej lokalizacji na mapie"
+  capacity: "Pojemność"
+  capacity_help: "Maksymalna liczba osób, jaką może pomieścić ta lokalizacja (opcjonalnie)"
+  place: "Powiązane miejsce fabularne"
+  place_placeholder: "Połącz z istniejącym miejscem fabularnym (opcjonalnie)"
+  place_help: "Powiąż tę lokalizację mapy z encją miejsca fabularnego"
+  description: 'Kliknij w siatkę, aby wybrać lokalizację'
+  description_placeholder: "Opisz tę lokalizację i jej cel"
+
+
+# Planer wydarzeń
+planning_resource:
+  name: 'Nazwa zasobu'
+  name_placeholder: 'np. Strażnik NPC #1'
+  type: 'Typ zasobu'
+  description: 'Opis'
+  quantity: 'Dostępna ilość'
+  shareable: 'Zasób współdzielony'
+  shareable_help: 'Zezwól na wiele jednoczesnych rezerwacji'
+  available_from: 'Dostępny od'
+  available_until: 'Dostępny do'
+  character: 'Powiązana postać'
+  character_placeholder: 'Wybierz postać (opcjonalnie)'
+  item: 'Powiązany przedmiot'
+  item_placeholder: 'Wybierz przedmiot (opcjonalnie)'
+  participant: 'Powiązany uczestnik'
+  participant_placeholder: 'Wybierz uczestnika (opcjonalnie)'
+scheduled_event:
+  title: 'Tytuł wydarzenia'
+  title_placeholder: 'np. Scena bójki w tawernie'
+  description: 'Opis'
+  start_time: 'Czas rozpoczęcia'
+  end_time: 'Czas zakończenia'
+  setup_minutes: 'Czas przygotowania (minuty)'
+  setup_minutes_help: 'Czas przygotowania przed wydarzeniem'
+  cleanup_minutes: 'Czas sprzątania (minuty)'
+  cleanup_minutes_help: 'Czas sprzątania po wydarzeniu'
+  status: 'Status'
+  visible_to_players: 'Widoczne dla graczy'
+  organizer_notes: 'Notatki organizatora'
+  organizer_notes_help: 'Notatki wewnętrzne (niewidoczne dla graczy)'
+  location: 'Lokalizacja'
+  location_placeholder: 'Wybierz lokalizację (opcjonalnie)'
+  quest: 'Powiązane zadanie'
+  quest_placeholder: 'Połącz z zadaniem (opcjonalnie)'
+  thread: 'Powiązany wątek'
+  thread_placeholder: 'Połącz z wątkiem (opcjonalnie)'
+  event: 'Powiązane wydarzenie fabularne'
+  event_placeholder: 'Połącz z wydarzeniem fabularnym (opcjonalnie)'
+  resource_bookings: 'Rezerwacje zasobów'
+  resource_bookings_help: 'Przypisz zasoby potrzebne do tego wydarzenia'
+
+resource_booking:
+  resource: 'Zasób'
+  resource_placeholder: 'Wybierz zasób'
+  quantity_needed: 'Potrzebna ilość'
+  quantity_needed_help: 'Ile jednostek tego zasobu jest potrzebnych'
+  required: 'Wymagany'
+  required_help: 'Czy ten zasób jest obowiązkowy dla wydarzenia?'
+  notes: 'Notatki'
+  status: 'Status rezerwacji'
+
+filter:
+  resource:
+    name: 'Nazwa zasobu'
+    name_placeholder: 'Szukaj według nazwy...'
+    type: 'Typ zasobu'
+    shareable: 'Dostępność'
   event:
-    name: "Nazwa wydarzenia"
-    description: "Opis wydarzenia"
-    place: "Miejsce"
-    choose_place: "Wybierz miejsce..."
-    factions: "Frakcje zaangażowane w wydarzenie"
-    characters: "Postacie zaangażowane w wydarzenie"
-    tags: "Tagi"
-    start_time: 'Czas rozpoczęcia'
-    end_time: 'Czas zakończenia'
-    choose_faction: 'Wybierz frakcję...'
-  kanban:
-    title: "Tytuł zadania"
-    description: "Opis zadania"
-    assigned_to: "Przypisano do"
-  contact_email: 'Email kontaktowy'
-  favourite_style: 'Ulubiony styl gry'
-  triggers: 'Triggery / rzeczy do unikania'
-  priority: 'Priorytet'
-  justification: 'Uzasadnienie'
-  visual: 'Pomysły wizualne'
-  incident:
-    report_code: "Kod uczestnika"
-    description: "Opisz zdarzenie"
-    allow_feedback: "Chcę informację zwrotną"
-    contact_accused: "Pozwól na kontakt z oskarżonym"
-    allow_mediator: "Zgadzam się na mediatora"
-    stay_anonymous: "Pozostań anonimowy"
+    title: 'Tytuł wydarzenia'
+    title_placeholder: 'Szukaj według tytułu...'
+    status: 'Status'
+    location: 'Lokalizacja'
+    start_date: 'Data rozpoczęcia'
+    end_date: 'Data zakończenia'
+    resource: 'Zasób'
+    character: 'Postać/NPC'
+  kanban_task:
+    priority: 'Priorytet'
+    assigned_to: 'Przypisany do'
+    status: 'Status'
+    priority_high: 'Wysoki priorytet (7+)'
+    priority_medium: 'Średni priorytet (4-6)'
+    priority_low: 'Niski priorytet (1-3)'
+    priority_none: 'Brak priorytetu (0)'
+  all_types: 'Wszystkie typy'
+  all_statuses: 'Wszystkie statusy'
+  all_locations: 'Wszystkie lokalizacje'
+  all_resources: 'Wszystkie zasoby'
+  all_characters: 'Wszystkie postacie'
+  all_priorities: 'Wszystkie priorytety'
+  all_users: 'Wszyscy użytkownicy'
+  all: 'Wszystkie'
+  shareable: 'Tylko współdzielone'
+  exclusive: 'Tylko wyłączne'
+
+kanban_task:
+  status:
+    todo: 'Do zrobienia'
+    in_progress: 'W trakcie'
+    done: 'Zrobione'
+    cancelled: 'Anulowane'
+
+enum:
+  location_type:
+    indoor: "Wewnątrz"
+    outdoor: "Na zewnątrz"
+    special: "Specjalna"
+    transition: "Przejście"
