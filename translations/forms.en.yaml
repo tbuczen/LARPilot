@@ -226,6 +226,18 @@ scheduled_event:
   thread_placeholder: 'Link to thread (optional)'
   event: 'Related Story Event'
   event_placeholder: 'Link to story event (optional)'
+  resource_bookings: 'Resource Bookings'
+  resource_bookings_help: 'Assign resources needed for this event'
+
+resource_booking:
+  resource: 'Resource'
+  resource_placeholder: 'Select resource'
+  quantity_needed: 'Quantity Needed'
+  quantity_needed_help: 'How many units of this resource are needed'
+  required: 'Required'
+  required_help: 'Is this resource mandatory for the event?'
+  notes: 'Notes'
+  status: 'Booking Status'
 
 filter:
   resource:

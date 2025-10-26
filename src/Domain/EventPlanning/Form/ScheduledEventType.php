@@ -12,6 +12,7 @@ use App\Domain\StoryObject\Entity\Thread;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -132,6 +133,16 @@ class ScheduledEventType extends AbstractType
                     'create' => true,
                     'persist' => false,
                 ],
+            ])
+            ->add('resourceBookings', CollectionType::class, [
+                'entry_type' => ResourceBookingType::class,
+                'entry_options' => ['larp' => $larp],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'scheduled_event.resource_bookings',
+                'help' => 'scheduled_event.resource_bookings_help',
+                'attr' => ['class' => 'resource-bookings-collection'],
             ]);
     }
 
