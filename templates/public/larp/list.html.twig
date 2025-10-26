@@ -1,12 +1,12 @@
 {% extends 'public/base.html.twig' %}
 
-{% block title %}{{ 'public.larp.list'|trans }}{% endblock %}
+{% block title %}{{ 'larp.list'|trans }}{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <h1 class="mb-4">{{ 'public.larp.list'|trans }}</h1>
+            <h1 class="mb-4">{{ 'larp.list'|trans }}</h1>
 
             {% if filterForm is defined %}
                 {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
