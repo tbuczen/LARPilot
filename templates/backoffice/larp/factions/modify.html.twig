@@ -41,6 +41,10 @@
             </div>
         </div>
     {% endif %}
+
+    {# Mentions #}
+    {% include 'includes/story_object_mentions.html.twig' %}
+
 {% endblock %}
 
 {% block title %}{{ 'faction'|trans }} - {{ faction.getTitle() ?? 'new'|trans }}{% endblock %}

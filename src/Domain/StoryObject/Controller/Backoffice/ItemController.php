@@ -10,6 +10,7 @@ use App\Domain\StoryObject\Entity\Item;
 use App\Domain\StoryObject\Form\Filter\ItemFilterType;
 use App\Domain\StoryObject\Form\ItemType;
 use App\Domain\StoryObject\Repository\ItemRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Money\Currency;
 use Money\Money;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ class ItemController extends BaseController
     public function modify(
         LarpManager $larpManager,
         IntegrationManager $integrationManager,
+        StoryObjectMentionService $mentionService,
         Request $request,
         Larp $larp,
         ItemRepository $itemRepository,
@@ -65,10 +67,17 @@ class ItemController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
         }
 
+        // Get mentions only for existing items (not new ones)
+        $mentions = [];
+        if ($item->getId() !== null) {
+            $mentions = $mentionService->findMentions($item);
+        }
+
         return $this->render('backoffice/larp/item/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
             'item' => $item,
+            'mentions' => $mentions,
         ]);
     }
 

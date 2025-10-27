@@ -15,6 +15,7 @@ use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Form\CharacterType;
 use App\Domain\StoryObject\Form\Filter\CharacterFilterType;
 use App\Domain\StoryObject\Repository\CharacterRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -50,6 +51,7 @@ class CharacterController extends BaseController
     public function modify(
         LarpManager             $larpManager,
         IntegrationManager      $integrationManager,
+        StoryObjectMentionService $mentionService,
         Request                 $request,
         Larp                    $larp,
         CharacterRepository $characterRepository,
@@ -78,10 +80,17 @@ class CharacterController extends BaseController
         $this->entityPreloader->preload([$character], 'threads');
         $this->entityPreloader->preload([$character], 'tags');
 
+        // Get mentions only for existing characters (not new ones)
+        $mentions = [];
+        if ($character->getId() !== null) {
+            $mentions = $mentionService->findMentions($character);
+        }
+
         return $this->render('backoffice/larp/characters/modify.html.twig', [
             'character' => $character,
             'form' => $form->createView(),
             'larp' => $larp,
+            'mentions' => $mentions,
         ]);
     }
 

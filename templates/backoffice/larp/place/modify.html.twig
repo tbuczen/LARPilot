@@ -6,6 +6,10 @@
         {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>
+
+    {# Mentions #}
+    {% include 'includes/story_object_mentions.html.twig' %}
+
 {% endblock %}
 
 {% block larp_title %}{{ (place is defined and place.id ? 'larp.place.modify' : 'larp.place.create')|trans }} - {{ larp.title }}{% endblock %}

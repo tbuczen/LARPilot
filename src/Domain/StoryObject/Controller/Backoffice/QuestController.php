@@ -18,6 +18,7 @@ use App\Domain\StoryObject\Form\Filter\QuestFilterType;
 use App\Domain\StoryObject\Form\QuestType;
 use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\QuestRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -50,6 +51,7 @@ class QuestController extends BaseController
     public function modify(
         LarpManager             $larpManager,
         IntegrationManager      $integrationManager,
+        StoryObjectMentionService $mentionService,
         Request                 $request,
         Larp                    $larp,
         QuestRepository $questRepository,
@@ -82,10 +84,17 @@ class QuestController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_quest_list', ['larp' => $larp->getId()]);
         }
 
+        // Get mentions only for existing quests (not new ones)
+        $mentions = [];
+        if ($quest->getId() !== null) {
+            $mentions = $mentionService->findMentions($quest);
+        }
+
         return $this->render('backoffice/larp/quest/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
             'quest' => $quest,
+            'mentions' => $mentions,
         ]);
     }
 
