@@ -41,9 +41,9 @@ final class Version20251011230631 extends AbstractMigration
         $this->addSql('ALTER TABLE character_tags DROP CONSTRAINT fk_45d00efeb89790d2');
         $this->addSql('DROP INDEX idx_45d00efeb89790d2');
         $this->addSql('ALTER TABLE character_tags RENAME COLUMN larp_character_id TO character_id');
-//        $this->addSql('ALTER TABLE character_tags ADD CONSTRAINT FK_784080BE1136BE75 FOREIGN KEY (character_id) REFERENCES character (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-//        $this->addSql('CREATE INDEX IDX_784080BE1136BE75 ON character_tags (character_id)');
-//        $this->addSql('ALTER TABLE character_tags ADD PRIMARY KEY (character_id, tag_id)');
+        $this->addSql('ALTER TABLE character_tags ADD CONSTRAINT FK_784080BE1136BE75 FOREIGN KEY (character_id) REFERENCES character (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE INDEX IDX_784080BE1136BE75 ON character_tags (character_id)');
+        $this->addSql('ALTER TABLE character_tags ADD PRIMARY KEY (character_id, tag_id)');
         $this->addSql('ALTER INDEX idx_45d00efebad26311 RENAME TO IDX_784080BEBAD26311');
         $this->addSql('ALTER TABLE character_faction DROP CONSTRAINT fk_3da131b573ac70ca');
         $this->addSql('ALTER TABLE character_faction DROP CONSTRAINT fk_3da131b5b89790d2');
@@ -79,24 +79,28 @@ final class Version20251011230631 extends AbstractMigration
         $this->addSql('ALTER TABLE quest_involved_characters RENAME COLUMN larp_character_id TO character_id');
         $this->addSql('ALTER TABLE quest_involved_characters ADD CONSTRAINT FK_ADD0856C1136BE75 FOREIGN KEY (character_id) REFERENCES character (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_ADD0856C1136BE75 ON quest_involved_characters (character_id)');
+        $this->addSql('ALTER TABLE quest_involved_characters ADD PRIMARY KEY (quest_id, character_id)');
         $this->addSql('ALTER TABLE quest_involved_factions DROP CONSTRAINT fk_4232c17e73ac70ca');
         $this->addSql('DROP INDEX idx_4232c17e73ac70ca');
         $this->addSql('ALTER TABLE quest_involved_factions DROP CONSTRAINT quest_involved_factions_pkey');
         $this->addSql('ALTER TABLE quest_involved_factions RENAME COLUMN larp_faction_id TO faction_id');
         $this->addSql('ALTER TABLE quest_involved_factions ADD CONSTRAINT FK_4232C17E4448F8DA FOREIGN KEY (faction_id) REFERENCES faction (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_4232C17E4448F8DA ON quest_involved_factions (faction_id)');
+        $this->addSql('ALTER TABLE quest_involved_factions ADD PRIMARY KEY (quest_id, faction_id)');
         $this->addSql('ALTER TABLE thread_involved_characters DROP CONSTRAINT fk_cf6ad68b89790d2');
         $this->addSql('DROP INDEX idx_cf6ad68b89790d2');
         $this->addSql('ALTER TABLE thread_involved_characters DROP CONSTRAINT thread_involved_characters_pkey');
         $this->addSql('ALTER TABLE thread_involved_characters RENAME COLUMN larp_character_id TO character_id');
         $this->addSql('ALTER TABLE thread_involved_characters ADD CONSTRAINT FK_CF6AD681136BE75 FOREIGN KEY (character_id) REFERENCES character (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_CF6AD681136BE75 ON thread_involved_characters (character_id)');
+        $this->addSql('ALTER TABLE thread_involved_characters ADD PRIMARY KEY (thread_id, character_id)');
         $this->addSql('ALTER TABLE thread_involved_factions DROP CONSTRAINT fk_9b1f3dea73ac70ca');
         $this->addSql('DROP INDEX idx_9b1f3dea73ac70ca');
         $this->addSql('ALTER TABLE thread_involved_factions DROP CONSTRAINT thread_involved_factions_pkey');
         $this->addSql('ALTER TABLE thread_involved_factions RENAME COLUMN larp_faction_id TO faction_id');
         $this->addSql('ALTER TABLE thread_involved_factions ADD CONSTRAINT FK_9B1F3DEA4448F8DA FOREIGN KEY (faction_id) REFERENCES faction (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_9B1F3DEA4448F8DA ON thread_involved_factions (faction_id)');
+        $this->addSql('ALTER TABLE thread_involved_factions ADD PRIMARY KEY (thread_id, faction_id)');
     }
 
     public function down(Schema $schema): void
