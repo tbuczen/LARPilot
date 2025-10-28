@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Domain\Application\Service;
 
 use App\Domain\Application\Entity\LarpApplication;
 use App\Domain\Application\Entity\LarpApplicationChoice;
 use App\Domain\Application\Repository\LarpApplicationRepository;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Larp\Service\SubmissionStatsService;
+use App\Domain\Core\Service\SubmissionStatsService;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
 use PHPUnit\Framework\TestCase;
@@ -40,11 +40,10 @@ class SubmissionStatsServiceTest extends TestCase
         $factionsArray = $larp->getFactions()->toArray();
 
         $preloader = $this->createMock(EntityPreloader::class);
-        $preloader->expects($this->exactly(3))
+        $preloader->expects($this->exactly(2))
             ->method('preload')
             ->withConsecutive(
                 [$this->identicalTo([$application]), 'choices'],
-                [$this->identicalTo([$application]), 'choices.character'],
                 [$this->identicalTo($factionsArray), 'members'],
             );
 

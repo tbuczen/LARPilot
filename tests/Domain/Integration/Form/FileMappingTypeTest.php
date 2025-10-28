@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Form;
+namespace App\Tests\Domain\Integration\Form;
 
 use App\Domain\Integrations\Entity\Enum\ResourceType;
 use App\Domain\Integrations\Form\Integrations\FileMappingType;

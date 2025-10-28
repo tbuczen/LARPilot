@@ -18,6 +18,7 @@ use App\Domain\StoryObject\Form\Filter\ThreadFilterType;
 use App\Domain\StoryObject\Form\ThreadType;
 use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\ThreadRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -50,6 +51,7 @@ class ThreadController extends BaseController
     public function modify(
         LarpManager                                           $larpManager,
         IntegrationManager                                    $integrationManager,
+        StoryObjectMentionService                             $mentionService,
         Request                                               $request,
         Larp                                                  $larp,
         ThreadRepository                                      $threadRepository,
@@ -88,19 +90,27 @@ class ThreadController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_thread_list', ['larp' => $larp->getId()]);
         }
 
+        // Get mentions only for existing threads (not new ones)
+        $mentions = [];
+        if ($thread->getId() !== null) {
+            $mentions = $mentionService->findMentions($thread);
+        }
+
         return $this->render('backoffice/larp/thread/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
             'thread' => $thread,
+            'mentions' => $mentions,
         ]);
     }
 
     #[Route('{thread}/tree', name: 'tree', methods: ['GET', 'POST'])]
     public function tree(
-        Request         $request,
-        Larp            $larp,
-        Thread          $thread,
-        ThreadRepository $threadRepository,
+        Request                   $request,
+        Larp                      $larp,
+        Thread                    $thread,
+        ThreadRepository          $threadRepository,
+        StoryObjectMentionService $mentionService,
     ): Response {
         if ($request->isMethod('POST')) {
             $treeData = $request->request->get('decisionTree', '[]');
@@ -109,9 +119,27 @@ class ThreadController extends BaseController
             $this->addFlash('success', $this->translator->trans('success_save'));
         }
 
+        $mentions = $mentionService->findMentions($thread);
+
         return $this->render('backoffice/larp/thread/tree.html.twig', [
             'larp' => $larp,
             'thread' => $thread,
+            'mentions' => $mentions,
+        ]);
+    }
+
+    #[Route('{thread}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Thread                    $thread,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($thread);
+
+        return $this->render('backoffice/larp/thread/mentions.html.twig', [
+            'larp' => $larp,
+            'thread' => $thread,
+            'mentions' => $mentions,
         ]);
     }
 

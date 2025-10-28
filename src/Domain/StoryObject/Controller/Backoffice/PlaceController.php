@@ -10,6 +10,7 @@ use App\Domain\StoryObject\Entity\Place;
 use App\Domain\StoryObject\Form\Filter\PlaceFilterType;
 use App\Domain\StoryObject\Form\PlaceType;
 use App\Domain\StoryObject\Repository\PlaceRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -40,6 +41,7 @@ class PlaceController extends BaseController
     public function modify(
         LarpManager $larpManager,
         IntegrationManager $integrationManager,
+        StoryObjectMentionService $mentionService,
         Request $request,
         Larp $larp,
         PlaceRepository $placeRepository,
@@ -62,10 +64,32 @@ class PlaceController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
         }
 
+        // Get mentions only for existing places (not new ones)
+        $mentions = [];
+        if ($place->getId() !== null) {
+            $mentions = $mentionService->findMentions($place);
+        }
+
         return $this->render('backoffice/larp/place/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
             'place' => $place,
+            'mentions' => $mentions,
+        ]);
+    }
+
+    #[Route('{place}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Place                     $place,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($place);
+
+        return $this->render('backoffice/larp/place/mentions.html.twig', [
+            'larp' => $larp,
+            'place' => $place,
+            'mentions' => $mentions,
         ]);
     }
 

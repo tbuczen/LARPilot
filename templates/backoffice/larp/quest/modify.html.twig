@@ -1,18 +1,23 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+
 {% block larp_content %}
-    <div>
+    {% if quest is defined and quest.id %}
+        {% include 'includes/story_object_header.html.twig' with {
+            storyObject: quest,
+            storyObjectType: 'larp.quest.title',
+            mentionsCount: mentions|length
+        } %}
+
+        {{ tabs_macro.tabs('details', quest, 'quest', larp, mentions|length, true) }}
+    {% endif %}
+
+    <div class="tab-pane border border-top-0 p-3">
         {{ form_start(form) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>
-    {% if quest is defined %}
-        <a href="{{ path('backoffice_larp_story_quest_tree', { larp: larp.id, quest: quest.id }) }}"
-           class="btn btn-secondary mt-3">
-            Decision Tree
-        </a>
-    {% endif %}
 {% endblock %}
 
 {% block larp_title %}{{ (quest is defined and quest.id ? 'larp.quest.modify' : 'larp.quest.create')|trans }} - {{ larp.title }}{% endblock %}
-

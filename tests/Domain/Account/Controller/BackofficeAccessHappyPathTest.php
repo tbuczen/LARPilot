@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller\Backoffice;
+namespace App\Tests\Domain\Account\Controller;
 
 use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
@@ -143,7 +143,7 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
     private function provideSuperAdmin(Larp $larp): User
     {
         $repo = $this->em->getRepository(User::class);
-        $user = $repo->findOneBy(['email' => 'superadmin+test@example.com']);
+        $user = $repo->findOneBy(['contactEmail' => 'superadmin+test@example.com']);
 
         if ($user instanceof User) {
             return $user;
@@ -151,6 +151,7 @@ final class BackofficeAccessHappyPathTest extends WebTestCase
 
         $user = new User();
         // Set fields as per your User entity
+        $user->setUsername('superadmin_test');
         $user->setContactEmail('superadmin+test@example.com');
 
         $roles = $user->getRoles();

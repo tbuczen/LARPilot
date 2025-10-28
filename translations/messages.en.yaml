@@ -206,6 +206,7 @@ larp:
     delete_only_larpilot: "Delete only in LARPilot"
     tree: 'Decision Tree'
     tree_editor: 'Quest Decision Tree Editor'
+    add: 'Add Quest'
   relations: 'Story Relations'
   events: 'Events'
   integrations: 'Integrations'
@@ -334,6 +335,7 @@ larp:
     view: 'Thread Details'
     tree: 'Decision Tree'
     tree_editor: 'Thread Decision Tree Editor'
+    add: 'Add Thread'
   reference:
     list: 'External References'
     add: 'Add External Reference'
@@ -377,6 +379,7 @@ larp:
     view: 'Event Details'
     delete_only_larpilot: "Delete only in LARPilot"
   version_history: 'Version History'
+  decision_tree: 'Decision Tree'
   tasks: 'Tasks'
   map:
     singular: 'Map'
@@ -744,3 +747,33 @@ email:
 
 no_saved_filters: 'No saved filters'
 
+
+# Story Object Mentions
+story_object:
+  mentions:
+    title: 'Mentions'
+    source: 'Mentioned In'
+    type: 'Type'
+    context: 'Context'
+    count: 'mentions'
+    empty: 'This story object is not mentioned anywhere yet.'
+  mention:
+    type:
+      relation: 'Relation'
+      faction_member: 'Faction Member'
+      involved_in_quest: 'Involved in Quest'
+      involved_in_thread: 'Involved in Thread'
+      character_continuation: 'Character Continuation'
+      character_previous: 'Previous Character'
+      involved_in_event: 'Involved in Event'
+      character_member: 'Character Member'
+      character_quest: 'Character Quest'
+      faction_quest: 'Faction Quest'
+      thread_quest: 'Thread Quest'
+      character_thread: 'Character Thread'
+      faction_thread: 'Faction Thread'
+      quest_thread: 'Quest Thread'
+      event_thread: 'Event Thread'
+      thread_event: 'Thread Event'
+      character_item: 'Character Item'
+      event_place: 'Event Place'

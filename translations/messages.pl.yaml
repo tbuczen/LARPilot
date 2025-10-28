@@ -377,6 +377,7 @@ larp:
     view: 'Szczegóły wydarzenia'
     delete_only_larpilot: "Usuń tylko w LARPilot"
   version_history: 'Historia wersji'
+  decision_tree: 'Drzewo decyzyjne'
   tasks: 'Zadania'
   map:
     singular: 'Mapa'

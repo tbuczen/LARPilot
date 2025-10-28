@@ -1,0 +1,41 @@
+{# templates/includes/story_object_tabs.html.twig #}
+{# Tab macro for story object with route-based navigation #}
+
+{% macro tabs(currentTab, storyObject, storyObjectType, larp, mentionsCount, includeDecisionTree) %}
+    {% set includeDecisionTree = includeDecisionTree|default(false) %}
+
+    {% set baseRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_modify' %}
+    {% set mentionsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_mentions' %}
+    {% set treeRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_tree' %}
+
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+        {# Details Tab #}
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {{ currentTab == 'details' ? 'active' : '' }}"
+               href="{{ path(baseRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
+                <i class="bi bi-pencil-square me-2"></i>{{ 'details'|trans }}
+            </a>
+        </li>
+
+        {# Mentions Tab #}
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {{ currentTab == 'mentions' ? 'active' : '' }}"
+               href="{{ path(mentionsRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
+                <i class="bi bi-link-45deg me-2"></i>{{ 'story_object.mentions.title'|trans }}
+                {% if mentionsCount > 0 %}
+                    <span class="badge bg-secondary ms-1">{{ mentionsCount }}</span>
+                {% endif %}
+            </a>
+        </li>
+
+        {# Decision Tree Tab (only for Quest and Thread) #}
+        {% if includeDecisionTree %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {{ currentTab == 'tree' ? 'active' : '' }}"
+                   href="{{ path(treeRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
+                    <i class="bi bi-diagram-3 me-2"></i>{{ 'larp.decision_tree'|trans }}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+{% endmacro %}

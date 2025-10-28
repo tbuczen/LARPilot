@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Domain\StoryObject\Service;
 
-use App\Domain\Larp\Service\StoryObjectRelationExplorer;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\Thread;
 use App\Domain\StoryObject\Service\GraphEdgeBuilder;
 use App\Domain\StoryObject\Service\GraphNodeBuilder;
+use App\Domain\StoryObject\Service\StoryObjectRelationExplorer;
 use PHPUnit\Framework\TestCase;
 
 class StoryGraphFactionFilterTest extends TestCase
@@ -33,7 +33,10 @@ class StoryGraphFactionFilterTest extends TestCase
 
         // Use actual instances since classes are readonly and can't be mocked
         $nodeBuilder = new GraphNodeBuilder();
-        $edgeBuilder = new GraphEdgeBuilder();
+        // GraphEdgeBuilder needs dependencies - ImplicitRelationBuilder is readonly, create real instance
+        $relationRepository = $this->createMock(\App\Domain\StoryObject\Repository\RelationRepository::class);
+        $implicitRelationBuilder = new \App\Domain\StoryObject\Service\ImplicitRelationBuilder();
+        $edgeBuilder = new GraphEdgeBuilder($relationRepository, $implicitRelationBuilder);
 
         $explorer = new StoryObjectRelationExplorer($nodeBuilder, $edgeBuilder);
         $graph = $explorer->getGraphFromResults([

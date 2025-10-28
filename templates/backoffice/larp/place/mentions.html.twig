@@ -1,0 +1,22 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+
+{% block larp_content %}
+    {% include 'includes/story_object_header.html.twig' with {
+        storyObject: place,
+        storyObjectType: 'larp.place.singular',
+        mentionsCount: mentions|length
+    } %}
+
+    {{ tabs_macro.tabs('mentions', place, 'place', larp, mentions|length, false) }}
+
+    {% include 'includes/story_object_mentions.html.twig' with {
+        storyObject: place,
+        mentions: mentions,
+        larp: larp,
+        noCard: true
+    } %}
+{% endblock %}
+
+{% block title %}{{ larp.title }} - {{ place.getTitle() }} - {{ 'story_object.mentions.title'|trans }}{% endblock %}

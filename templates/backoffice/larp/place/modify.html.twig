@@ -1,11 +1,34 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+
 {% block larp_content %}
-    <div>
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
-    </div>
+    {# Header showing story object type and title (only for existing objects) #}
+    {% if place is defined and place.id %}
+        {% include 'includes/story_object_header.html.twig' with {
+            storyObject: place,
+            storyObjectType: 'larp.place.singular',
+            mentionsCount: mentions|length
+        } %}
+    {% endif %}
+
+    {% set detailsContent %}
+        <div class="tab-pane border border-top-0 p-3">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
+    {% endset %}
+
+    {% if place is defined and place.id %}
+        {# Tabs navigation #}
+        {{ tabs_macro.tabs('details', place, 'place', larp, mentions|length, false) }}
+
+        {{ detailsContent|raw }}
+    {% else %}
+        {{ detailsContent|raw }}
+    {% endif %}
+
 {% endblock %}
 
 {% block larp_title %}{{ (place is defined and place.id ? 'larp.place.modify' : 'larp.place.create')|trans }} - {{ larp.title }}{% endblock %}

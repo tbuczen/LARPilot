@@ -11,6 +11,7 @@ use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Form\FactionType;
 use App\Domain\StoryObject\Form\Filter\FactionFilterType;
 use App\Domain\StoryObject\Repository\FactionRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -44,6 +45,7 @@ class FactionController extends BaseController
     public function modify(
         LarpManager             $larpManager,
         IntegrationManager      $integrationManager,
+        StoryObjectMentionService $mentionService,
         Request                 $request,
         Larp                    $larp,
         FactionRepository $factionRepository,
@@ -81,10 +83,32 @@ class FactionController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_faction_list', ['larp' => $larp->getId()]);
         }
 
+        // Get mentions only for existing factions (not new ones)
+        $mentions = [];
+        if ($faction->getId() !== null) {
+            $mentions = $mentionService->findMentions($faction);
+        }
+
         return $this->render('backoffice/larp/factions/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
             'faction' => $faction,
+            'mentions' => $mentions,
+        ]);
+    }
+
+    #[Route('{faction}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Faction                   $faction,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($faction);
+
+        return $this->render('backoffice/larp/factions/mentions.html.twig', [
+            'larp' => $larp,
+            'faction' => $faction,
+            'mentions' => $mentions,
         ]);
     }
 

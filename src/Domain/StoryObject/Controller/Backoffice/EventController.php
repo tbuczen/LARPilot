@@ -17,6 +17,7 @@ use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Form\EventType;
 use App\Domain\StoryObject\Form\Filter\EventFilterType;
 use App\Domain\StoryObject\Repository\EventRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -50,6 +51,7 @@ class EventController extends BaseController
     public function modify(
         LarpManager        $larpManager,
         IntegrationManager $integrationManager,
+        StoryObjectMentionService $mentionService,
         Request            $request,
         Larp               $larp,
         EventRepository    $eventRepository,
@@ -74,9 +76,32 @@ class EventController extends BaseController
             return $this->redirectToRoute('backoffice_larp_story_event_list', ['larp' => $larp->getId()]);
         }
 
+        // Get mentions only for existing events (not new ones)
+        $mentions = [];
+        if ($event->getId() !== null) {
+            $mentions = $mentionService->findMentions($event);
+        }
+
         return $this->render('backoffice/larp/event/modify.html.twig', [
             'form' => $form->createView(),
             'larp' => $larp,
+            'event' => $event,
+            'mentions' => $mentions,
+        ]);
+    }
+
+    #[Route('{event}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Event                     $event,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($event);
+
+        return $this->render('backoffice/larp/event/mentions.html.twig', [
+            'larp' => $larp,
+            'event' => $event,
+            'mentions' => $mentions,
         ]);
     }
 
