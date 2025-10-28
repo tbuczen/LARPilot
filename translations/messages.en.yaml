@@ -509,6 +509,7 @@ account:
   larp:
     list: Your LARPs
   settings: "Settings"
+  my_larps: 'My LARPs'
   connected_accounts: "Connected Accounts list"
   no_connected_accounts: "You have not linked any social accounts yet."
   link_another_social: "Link Another Social Account"
@@ -536,6 +537,14 @@ success_save: "Successfully saved changes"
 success_delete: "Successfully removed"
 confirmation: "Are you sure you want to proceed? This action cannot be undone."
 votes: "Votes"
+
+public:
+  participant:
+    my_larps:
+      title: 'My LARPs & Characters'
+      empty: 'You have not been assigned any characters yet.'
+      view_public_page: 'View public page'
+      no_characters: 'No characters have been assigned to you yet.'
 
 character_type:
   player: "Player"

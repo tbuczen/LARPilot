@@ -6,12 +6,14 @@ use App\Domain\Application\Repository\LarpApplicationRepository;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Form\Filter\LarpPublicFilterType;
 use App\Domain\Core\Repository\LarpInvitationRepository;
+use App\Domain\Core\Repository\LarpParticipantRepository;
 use App\Domain\Core\Repository\LarpRepository;
 use App\Domain\Core\Service\LarpManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/', name: 'public_larp_')]
 class LarpController extends BaseController
@@ -34,6 +36,23 @@ class LarpController extends BaseController
         return $this->render('public/larp/list.html.twig', [
             'larps' => $pagination,
             'filterForm' => $filterForm->createView(),
+        ]);
+    }
+
+    #[Route('/my/larps', name: 'my_larps', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function myLarps(LarpParticipantRepository $participantRepository): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof UserInterface) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $participants = $participantRepository->findForUserWithCharacters($user);
+
+        return $this->render('public/larp/my_larps.html.twig', [
+            'participants' => $participants,
         ]);
     }
 

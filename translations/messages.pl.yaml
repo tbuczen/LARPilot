@@ -509,6 +509,7 @@ account:
   larp:
     list: Twoje LARPy
   settings: "Ustawienia"
+  my_larps: 'Moje LARPy'
   connected_accounts: "Lista połączonych kont"
   no_connected_accounts: "Nie połączyłeś jeszcze żadnych kont społecznościowych."
   link_another_social: "Połącz inne konto społecznościowe"
@@ -536,6 +537,14 @@ success_save: "Pomyślnie zapisano zmiany"
 success_delete: "Pomyślnie usunięto"
 confirmation: "Czy na pewno chcesz kontynuować? Tej akcji nie można cofnąć."
 votes: "Głosy"
+
+public:
+  participant:
+    my_larps:
+      title: 'Moje LARPy i postacie'
+      empty: 'Nie masz jeszcze przypisanych żadnych postaci.'
+      view_public_page: 'Zobacz stronę publiczną'
+      no_characters: 'Brak przypisanych postaci.'
 
 character_type:
   player: "Gracz"
