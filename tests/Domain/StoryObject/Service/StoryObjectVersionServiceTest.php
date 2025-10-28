@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Domain\StoryObject\Service;
 
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\StoryObjectLogEntry;

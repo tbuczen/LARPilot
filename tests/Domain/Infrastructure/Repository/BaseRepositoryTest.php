@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Domain\Infrastructure\Repository;
 
+use App\Domain\Core\Repository\BaseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +15,7 @@ class BaseRepositoryTest extends TestCase
         $em->expects($this->once())->method('persist')->with($entity);
         $em->expects($this->once())->method('flush');
 
-        $repository = new class($em) extends \App\Domain\Core\Repository\BaseRepository {
+        $repository = new class($em) extends BaseRepository {
             public function __construct(private readonly EntityManagerInterface $em)
             {
             }
@@ -34,7 +35,7 @@ class BaseRepositoryTest extends TestCase
         $em->expects($this->once())->method('remove')->with($entity);
         $em->expects($this->once())->method('flush');
 
-        $repository = new class($em) extends \App\Domain\Core\Repository\BaseRepository {
+        $repository = new class($em) extends BaseRepository {
             public function __construct(private readonly EntityManagerInterface $em)
             {
             }

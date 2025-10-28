@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Domain\StoryMarketplace\Repository;
 
 use App\Domain\StoryMarketplace\Entity\StoryRecruitment;
 use Doctrine\ORM\EntityManagerInterface;

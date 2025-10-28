@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Domain\Incidents\Controller;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Location;
@@ -32,7 +32,7 @@ class LarpIncidentsTemplateTest extends KernelTestCase
         $incident->setCaseId('123');
         $incident->setStatus(LarpIncidentStatus::NEW);
 
-        $html = $twig->render('backoffice/larp/list.html.twig', [
+        $html = $twig->render('backoffice/larp/incident/list.html.twig', [
             'larp' => $larp,
             'incidents' => [$incident],
         ]);
