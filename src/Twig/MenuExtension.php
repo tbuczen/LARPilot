@@ -40,6 +40,10 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
                         'url' => $this->router->generate('account_settings'),
                     ],
                     [
+                        'label' => $this->translator->trans('account.my_larps'),
+                        'url' => $this->router->generate('public_larp_my_larps'),
+                    ],
+                    [
                         'label' => $this->translator->trans('account.connected_accounts'),
                         'url' => $this->router->generate('account_social_accounts'),
                     ],

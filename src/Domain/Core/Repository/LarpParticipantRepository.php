@@ -2,6 +2,7 @@
 
 namespace App\Domain\Core\Repository;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\LarpParticipant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,5 +20,23 @@ class LarpParticipantRepository extends BaseRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, LarpParticipant::class);
+    }
+
+    /**
+     * @return LarpParticipant[]
+     */
+    public function findForUserWithCharacters(User $user): array
+    {
+        return $this->createQueryBuilder('participant')
+            ->addSelect('larp', 'characters')
+            ->join('participant.larp', 'larp')
+            ->leftJoin('participant.larpCharacters', 'characters')
+            ->where('participant.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('larp.startDate', 'DESC')
+            ->addOrderBy('larp.title', 'ASC')
+            ->addOrderBy('characters.title', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }
