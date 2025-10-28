@@ -81,6 +81,21 @@ class ItemController extends BaseController
         ]);
     }
 
+    #[Route('{item}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Item                      $item,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($item);
+
+        return $this->render('backoffice/larp/item/mentions.html.twig', [
+            'larp' => $larp,
+            'item' => $item,
+            'mentions' => $mentions,
+        ]);
+    }
+
     #[Route('{item}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager $larpManager,

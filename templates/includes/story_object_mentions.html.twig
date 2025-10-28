@@ -1,68 +1,98 @@
 {# templates/includes/story_object_mentions.html.twig #}
-{# Displays a collapsible card showing where a StoryObject is mentioned across other story objects #}
+{# Displays mentions - works in tab view (noCard=true) or as collapsible card #}
 
-{% if mentions is defined and mentions is not empty %}
-    <div class="card mb-3 shadow-sm">
-        <div
-                class="card-header d-flex justify-content-between align-items-center"
-                data-bs-toggle="collapse"
-                data-bs-target="#mentionsCollapse"
-                role="button"
-                aria-expanded="false"
-                aria-controls="mentionsCollapse"
-        >
-            <span class="fw-bold">
-                {{ 'story_object.mentions.title'|trans }}
-                <span class="badge bg-secondary">{{ mentions|length }}</span>
-            </span>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="20" height="20"
-                 class="bi bi-chevron-down transition toggleIcon"
-                 viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-            </svg>
-        </div>
-
-        <div id="mentionsCollapse" class="collapse">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover">
-                        <thead>
+{% if storyObject is defined and storyObject.id and mentions is defined %}
+<div class="tab-pane border border-top-0">
+    {% if noCard is defined and noCard %}
+        {# Simple table view for tab content #}
+        {% if mentions is not empty %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>{{ 'story_object.mentions.source'|trans }}</th>
+                        <th>{{ 'story_object.mentions.type'|trans }}</th>
+                        <th>{{ 'story_object.mentions.context'|trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for mention in mentions %}
                         <tr>
-                            <th>{{ 'story_object.mentions.source'|trans }}</th>
-                            <th>{{ 'story_object.mentions.type'|trans }}</th>
-                            <th>{{ 'story_object.mentions.context'|trans }}</th>
+                            <td>
+                                {% set sourceType = mention.sourceObject.targetType.value|lower %}
+                                {% set routeName = 'backoffice_larp_story_' ~ sourceType ~ '_modify' %}
+                                <a href="{{ path(routeName, {
+                                    larp: larp.id,
+                                    (sourceType): mention.sourceObject.id
+                                }) }}" class="text-decoration-none">
+                                    <span class="badge bg-info me-2">{{ sourceType|trans }}</span>
+                                    {{ mention.sourceObject.title }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">
+                                    {{ mention.mentionType|trans }}
+                                </span>
+                            </td>
+                            <td class="text-muted">
+                                {{ mention.context }}
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        {% for mention in mentions %}
-                            <tr>
-                                <td>
-                                    {% set sourceType = mention.sourceObject.targetType.value|lower %}
-                                    {% set routeName = 'backoffice_larp_story_' ~ sourceType ~ '_modify' %}
-                                    <a href="{{ path(routeName, {
-                                        larp: larp.id,
-                                        (sourceType): mention.sourceObject.id
-                                    }) }}">
-                                        <span class="badge bg-info me-1">{{ sourceType|trans }}</span>
-                                        {{ mention.sourceObject.title }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary">
-                                        {{ mention.mentionType|trans }}
-                                    </span>
-                                </td>
-                                <td class="text-muted small">
-                                    {{ mention.context }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                {{ 'story_object.mentions.empty'|trans }}
+            </div>
+        {% endif %}
+    {% else %}
+        {# Collapsible card view for non-tab layouts #}
+        <div class="card mb-3 shadow-sm">
+
+                    {% if mentions is not empty %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>{{ 'story_object.mentions.source'|trans }}</th>
+                                    <th>{{ 'story_object.mentions.type'|trans }}</th>
+                                    <th>{{ 'story_object.mentions.context'|trans }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for mention in mentions %}
+                                    <tr>
+                                        <td>
+                                            {% set sourceType = mention.sourceObject.targetType.value|lower %}
+                                            {% set routeName = 'backoffice_larp_story_' ~ sourceType ~ '_modify' %}
+                                            <a href="{{ path(routeName, {
+                                                larp: larp.id,
+                                                (sourceType): mention.sourceObject.id
+                                            }) }}" class="text-decoration-none">
+                                                <span class="badge bg-info me-2">{{ sourceType|trans }}</span>
+                                                {{ mention.sourceObject.title }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">
+                                                {{ mention.mentionType|trans }}
+                                            </span>
+                                        </td>
+                                        <td class="text-muted">
+                                            {{ mention.context }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center mb-0">{{ 'story_object.mentions.empty'|trans }}</p>
+                    {% endif %}
         </div>
-    </div>
+    {% endif %}
+</div>
 {% endif %}

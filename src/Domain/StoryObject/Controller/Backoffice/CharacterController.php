@@ -94,6 +94,21 @@ class CharacterController extends BaseController
         ]);
     }
 
+    #[Route('{character}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Character                 $character,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($character);
+
+        return $this->render('backoffice/larp/characters/mentions.html.twig', [
+            'larp' => $larp,
+            'character' => $character,
+            'mentions' => $mentions,
+        ]);
+    }
+
     #[Route('{character}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,

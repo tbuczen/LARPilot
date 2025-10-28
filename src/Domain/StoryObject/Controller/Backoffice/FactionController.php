@@ -97,6 +97,21 @@ class FactionController extends BaseController
         ]);
     }
 
+    #[Route('{faction}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Faction                   $faction,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($faction);
+
+        return $this->render('backoffice/larp/factions/mentions.html.twig', [
+            'larp' => $larp,
+            'faction' => $faction,
+            'mentions' => $mentions,
+        ]);
+    }
+
     #[Route('{faction}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,

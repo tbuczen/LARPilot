@@ -100,10 +100,11 @@ class QuestController extends BaseController
 
     #[Route('{quest}/tree', name: 'tree', methods: ['GET', 'POST'])]
     public function tree(
-        Request         $request,
-        Larp            $larp,
-        Quest           $quest,
-        QuestRepository $questRepository,
+        Request                   $request,
+        Larp                      $larp,
+        Quest                     $quest,
+        QuestRepository           $questRepository,
+        StoryObjectMentionService $mentionService,
     ): Response {
         if ($request->isMethod('POST')) {
             $treeData = $request->request->get('decisionTree', '[]');
@@ -112,9 +113,27 @@ class QuestController extends BaseController
             $this->addFlash('success', $this->translator->trans('success_save'));
         }
 
+        $mentions = $mentionService->findMentions($quest);
+
         return $this->render('backoffice/larp/quest/tree.html.twig', [
             'larp' => $larp,
             'quest' => $quest,
+            'mentions' => $mentions,
+        ]);
+    }
+
+    #[Route('{quest}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Quest                     $quest,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($quest);
+
+        return $this->render('backoffice/larp/quest/mentions.html.twig', [
+            'larp' => $larp,
+            'quest' => $quest,
+            'mentions' => $mentions,
         ]);
     }
 

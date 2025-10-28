@@ -3,7 +3,9 @@
 {% block larp_title %}{{ (recruitment is defined and recruitment.id ? 'larp.recruitment.modify' : 'larp.recruitment.create')|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
+<div class="tab-pane border border-top-0 p-3">
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}
+</div>
 {% endblock %}

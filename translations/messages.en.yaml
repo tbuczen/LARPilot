@@ -206,6 +206,7 @@ larp:
     delete_only_larpilot: "Delete only in LARPilot"
     tree: 'Decision Tree'
     tree_editor: 'Quest Decision Tree Editor'
+    add: 'Add Quest'
   relations: 'Story Relations'
   events: 'Events'
   integrations: 'Integrations'
@@ -334,6 +335,7 @@ larp:
     view: 'Thread Details'
     tree: 'Decision Tree'
     tree_editor: 'Thread Decision Tree Editor'
+    add: 'Add Thread'
   reference:
     list: 'External References'
     add: 'Add External Reference'
@@ -377,6 +379,7 @@ larp:
     view: 'Event Details'
     delete_only_larpilot: "Delete only in LARPilot"
   version_history: 'Version History'
+  decision_tree: 'Decision Tree'
   tasks: 'Tasks'
   map:
     singular: 'Map'
@@ -752,6 +755,8 @@ story_object:
     source: 'Mentioned In'
     type: 'Type'
     context: 'Context'
+    count: 'mentions'
+    empty: 'This story object is not mentioned anywhere yet.'
   mention:
     type:
       relation: 'Relation'

@@ -106,10 +106,11 @@ class ThreadController extends BaseController
 
     #[Route('{thread}/tree', name: 'tree', methods: ['GET', 'POST'])]
     public function tree(
-        Request         $request,
-        Larp            $larp,
-        Thread          $thread,
-        ThreadRepository $threadRepository,
+        Request                   $request,
+        Larp                      $larp,
+        Thread                    $thread,
+        ThreadRepository          $threadRepository,
+        StoryObjectMentionService $mentionService,
     ): Response {
         if ($request->isMethod('POST')) {
             $treeData = $request->request->get('decisionTree', '[]');
@@ -118,9 +119,27 @@ class ThreadController extends BaseController
             $this->addFlash('success', $this->translator->trans('success_save'));
         }
 
+        $mentions = $mentionService->findMentions($thread);
+
         return $this->render('backoffice/larp/thread/tree.html.twig', [
             'larp' => $larp,
             'thread' => $thread,
+            'mentions' => $mentions,
+        ]);
+    }
+
+    #[Route('{thread}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Thread                    $thread,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($thread);
+
+        return $this->render('backoffice/larp/thread/mentions.html.twig', [
+            'larp' => $larp,
+            'thread' => $thread,
+            'mentions' => $mentions,
         ]);
     }
 

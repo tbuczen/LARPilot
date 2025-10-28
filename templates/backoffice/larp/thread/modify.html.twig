@@ -1,22 +1,23 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+
 {% block larp_content %}
-    <div>
+    {% if thread is defined and thread.id %}
+        {% include 'includes/story_object_header.html.twig' with {
+            storyObject: thread,
+            storyObjectType: 'larp.thread.singular',
+            mentionsCount: mentions|length
+        } %}
+
+        {{ tabs_macro.tabs('details', thread, 'thread', larp, mentions|length, true) }}
+    {% endif %}
+
+    <div class="tab-pane border border-top-0">
         {{ form_start(form) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>
-    {% if thread is defined %}
-        <a href="{{ path('backoffice_larp_story_thread_tree', { larp: larp.id, thread: thread.id }) }}"
-           class="btn btn-secondary mt-3">
-            Decision Tree
-        </a>
-    {% endif %}
-
-    {# Mentions #}
-    {% include 'includes/story_object_mentions.html.twig' %}
-
 {% endblock %}
 
 {% block larp_title %}{{ (thread is defined and thread.id ? 'larp.thread.modify' : 'larp.thread.create')|trans }} - {{ larp.title }}{% endblock %}
-

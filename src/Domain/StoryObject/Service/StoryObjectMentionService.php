@@ -155,9 +155,13 @@ class StoryObjectMentionService
         }
 
         // Mentioned in Event.involvedCharacters
-        $events = $this->entityManager->getRepository(Event::class)->findBy([
-            'involvedCharacters' => $character,
-        ]);
+        $events = $this->entityManager->getRepository(Event::class)
+            ->createQueryBuilder('e')
+            ->join('e.involvedCharacters', 'ic')
+            ->where('ic = :character')
+            ->setParameter('character', $character)
+            ->getQuery()
+            ->getResult();
         foreach ($events as $event) {
             $mentions[] = new MentionDTO(
                 sourceObject: $event,
@@ -208,9 +212,13 @@ class StoryObjectMentionService
         }
 
         // Mentioned in Event.involvedFactions
-        $events = $this->entityManager->getRepository(Event::class)->findBy([
-            'involvedFactions' => $faction,
-        ]);
+        $events = $this->entityManager->getRepository(Event::class)
+            ->createQueryBuilder('e')
+            ->join('e.involvedFactions', 'if')
+            ->where('if = :faction')
+            ->setParameter('faction', $faction)
+            ->getQuery()
+            ->getResult();
         foreach ($events as $event) {
             $mentions[] = new MentionDTO(
                 sourceObject: $event,

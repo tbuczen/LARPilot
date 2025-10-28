@@ -78,6 +78,21 @@ class PlaceController extends BaseController
         ]);
     }
 
+    #[Route('{place}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Place                     $place,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($place);
+
+        return $this->render('backoffice/larp/place/mentions.html.twig', [
+            'larp' => $larp,
+            'place' => $place,
+            'mentions' => $mentions,
+        ]);
+    }
+
     #[Route('{place}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager $larpManager,

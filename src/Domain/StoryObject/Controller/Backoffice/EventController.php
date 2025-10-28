@@ -90,6 +90,21 @@ class EventController extends BaseController
         ]);
     }
 
+    #[Route('{event}/mentions', name: 'mentions', methods: ['GET'])]
+    public function mentions(
+        Larp                      $larp,
+        Event                     $event,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        $mentions = $mentionService->findMentions($event);
+
+        return $this->render('backoffice/larp/event/mentions.html.twig', [
+            'larp' => $larp,
+            'event' => $event,
+            'mentions' => $mentions,
+        ]);
+    }
+
     #[Route('{event}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,
