@@ -48,16 +48,14 @@ class IntegrationsSettingsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/integration/connect/{provider}', name: 'connect_integration')]
+    #[Route('/{larp}/integration/connect/{provider}', name: 'connect_integration')]
     public function connectIntegration(
-        string                  $id,
+        Larp                  $larp,
         LarpIntegrationProvider $provider,
-        LarpRepository          $larpRepository,
         IntegrationManager      $integrationManager,
         SessionInterface        $session,
     ): Response {
-        $session->set('current_larp_id', $id);
-        $larp = $larpRepository->find($id);
+        $session->set('current_larp_id', $larp->getId());
         $integrationService = $integrationManager->getService($provider);
 
         return $integrationService->connect($larp);
@@ -92,9 +90,9 @@ class IntegrationsSettingsController extends AbstractController
         return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larpId]);
     }
 
-    #[Route('/{id}/integration/{integrationId}/filePermissions', name: 'integration_file_permissions', methods: ['POST'])]
+    #[Route('/{larp}/integration/{integrationId}/filePermissions', name: 'integration_file_permissions', methods: ['POST'])]
     public function applyFilePermissions(
-        string                       $id,
+        Larp                       $larp,
         string                       $integrationId,
         Request                      $request,
         ApplyFilesPermissionsHandler $handler
@@ -103,7 +101,7 @@ class IntegrationsSettingsController extends AbstractController
         $files = json_decode($selectedFilesJson, true) ?? [];
         $command = new ApplyFilesPermissionsCommand($integrationId, $files);
         $handler->handle($command);
-        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $id]);
+        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
     }
 
 

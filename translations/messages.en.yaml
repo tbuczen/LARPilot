@@ -197,6 +197,12 @@ larp:
     delete_title: "Delete character \"%name%\"?"
     delete_only_larpilot: "Delete only in LARPilot"
     delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
+    export:
+      title: 'Export character data to Google Docs'
+      button: 'Export to Google Docs'
+      description: 'Generate a Google Doc with complete character information based on configured template'
+      not_configured: "To export character sheets, you need to configure a Character Sheet Template and Character Document Directory in Integration Settings."
+      configure: "Configure Integration Settings"
   quest:
     singular: 'Quest'
     name: 'Quest'
@@ -583,6 +589,7 @@ event_planner:
     linked_entities: 'Linked Entities'
     linked_entities_help: 'Optional links to Characters, Items, or Participants'
     empty_list: 'No resources found. Create your first resource to get started.'
+    save_first: 'Please save the event first before adding resource bookings.'
   event:
     list: 'Scheduled Events'
     create: 'Create Event'
@@ -621,6 +628,7 @@ event_planner:
     tip_click: 'Click event to view details'
     tip_week_view: 'Default view shows LARP week'
     tip_conflicts: 'Events with conflicts shown in red'
+
 
 kanban:
   status:
@@ -804,3 +812,4 @@ lore:
     character: 'Character-specific (visible to specific characters)'
   view_timeline: 'View Lore Timeline'
   backoffice_timeline: 'Timeline View'
+

@@ -16,7 +16,7 @@
 
                 {% if current == false %}
                     <p>{{ 'not_connected'|trans }}</p>
-                    <a href="{{ path('backoffice_larp_connect_integration', { id: larp.id, provider: provider.value }) }}"
+                    <a href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: provider.value }) }}"
                        class="btn btn-primary">
                         {{ 'connect'|trans }}
                     </a>

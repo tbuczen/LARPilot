@@ -40,6 +40,10 @@ mapping:
     end_column: "End Column"
     starting_row: "Starting Row"
   document:
+    header_type:
+    starting_paragraph:
+  directory:
+    group_by_faction: "Group by Faction"
 larp:
   create: "Create new DRAFT Core"
   name: "Name"
@@ -50,6 +54,15 @@ larp:
   integrations: "Integrations"
   invitations: "Invitations"
   story: "Story"
+  character:
+    export:
+      title: "Export Character Sheet"
+      description: "Generate a Google Doc with complete character information based on configured template"
+      button: "Export to Google Docs"
+      created: "Character sheet created successfully! View it here: %url%"
+      updated: "Character sheet updated successfully! View it here: %url%"
+      error: "Failed to export character sheet: %message%"
+
 save_filter_name: "Filter name"
 quest:
   name: "Unique Quest Name"
