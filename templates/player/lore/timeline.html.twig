@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'lore.timeline'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'lore.title'|trans }} - {{ larp.title }}</h2>
+                <a href="{{ path('public_larp_detail', {larp: larp.id}) }}" class="btn btn-secondary">
+                    {{ 'common.back'|trans }}
+                </a>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+
+            {% if events is not empty %}
+                <div class="timeline p-3"
+                     data-controller="timeline"
+                     data-timeline-events-value="{{ events|json_encode|e('html_attr') }}"
+                     data-timeline-larp-id-value="{{ larp.id }}">
+
+                    {# Timeline will be rendered by Stimulus controller #}
+                    <div id="timeline-container"></div>
+
+                    {# Fallback: List view if JS fails #}
+                    <noscript>
+                        <div class="list-group">
+                            {% for event in events %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">
+                                            {{ event.title }}
+                                            <span class="badge bg-{{ event.category.value == 'historical' ? 'secondary' : (event.category.value == 'current' ? 'primary' : 'info') }}">
+                                                {{ ('event.category.' ~ event.category.value)|trans }}
+                                            </span>
+                                        </h5>
+                                        <small>
+                                            {% if event.storyTime is not null %}
+                                                {{ event.storyTime }} {{ event.storyTimeUnit ? event.storyTimeUnit.value : '' }}
+                                            {% elseif event.startTime %}
+                                                {{ event.startTime|date('Y-m-d H:i') }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    {% if event.description %}
+                                        <p class="mb-1">{{ event.description|sanitize_html }}</p>
+                                    {% endif %}
+                                    <small class="text-muted">
+                                        {% if event.isPublic %}
+                                            <i class="bi bi-globe"></i> {{ 'lore.visibility.public'|trans }}
+                                        {% elseif event.involvedFactions|length > 0 %}
+                                            <i class="bi bi-people"></i> {{ 'lore.visibility.faction'|trans }}
+                                        {% else %}
+                                            <i class="bi bi-person"></i> {{ 'lore.visibility.character'|trans }}
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </noscript>
+                </div>
+            {% else %}
+                <div class="p-3">
+                    <p class="text-muted">{{ 'lore.no_events'|trans }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

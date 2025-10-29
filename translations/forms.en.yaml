@@ -91,9 +91,14 @@ tag:
   name: "Tag Name"
   description: "Tag Description"
   target: "Target"
+event.category: "Event Category"
 event:
   name: "Event Name"
   description: "Event Description"
+  category:
+    historical: "Historical/Lore Event"
+    current: "Current Event"
+    future: "Future/Planned Event"
   place: "Place"
   choose_place: "Choose a place..."
   factions: "Factions involved in event"

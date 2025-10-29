@@ -1,0 +1,107 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_title %}{{ 'lore.backoffice_timeline'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ 'lore.backoffice_timeline'|trans }}</h2>
+                <div class="d-flex gap-2">
+                    <a href="{{ path('backoffice_larp_story_event_list', {larp: larp.id}) }}" class="btn btn-secondary">
+                        <i class="bi bi-list"></i> {{ 'common.list_view'|trans }}
+                    </a>
+                    <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id}) }}" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> {{ 'common.create'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+
+            {% if events is not empty %}
+                <div class="timeline p-3"
+                     data-controller="timeline"
+                     data-timeline-events-value="{{ events|json_encode|e('html_attr') }}"
+                     data-timeline-larp-id-value="{{ larp.id }}"
+                     data-timeline-is-admin-value="true">
+
+                    {# Timeline will be rendered by Stimulus controller #}
+                    <div id="timeline-container"></div>
+
+                    {# Fallback: List view if JS fails #}
+                    <noscript>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'common.title'|trans }}</th>
+                                        <th>{{ 'event.category'|trans }}</th>
+                                        <th>{{ 'common.time'|trans }}</th>
+                                        <th>{{ 'common.visibility'|trans }}</th>
+                                        <th>{{ 'common.actions'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in events %}
+                                        <tr>
+                                            <td>
+                                                <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id, event: event.id}) }}">
+                                                    {{ event.title }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ event.category.value == 'historical' ? 'secondary' : (event.category.value == 'current' ? 'primary' : 'info') }}">
+                                                    {{ ('event.category.' ~ event.category.value)|trans }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {% if event.storyTime is not null %}
+                                                    {{ event.storyTime }} {{ event.storyTimeUnit ? event.storyTimeUnit.value : '' }}
+                                                {% elseif event.startTime %}
+                                                    {{ event.startTime|date('Y-m-d H:i') }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if event.isPublic %}
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-globe"></i> {{ 'lore.visibility.public'|trans }}
+                                                    </span>
+                                                {% elseif event.involvedFactions|length > 0 %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="bi bi-people"></i> {{ event.involvedFactions|length }} {{ 'common.factions'|trans }}
+                                                    </span>
+                                                {% endif %}
+                                                {% if event.involvedCharacters|length > 0 %}
+                                                    <span class="badge bg-info">
+                                                        <i class="bi bi-person"></i> {{ event.involvedCharacters|length }} {{ 'common.characters'|trans }}
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id, event: event.id}) }}"
+                                                   class="btn btn-sm btn-primary">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </noscript>
+                </div>
+            {% else %}
+                <div class="p-3">
+                    <p class="text-muted">{{ 'lore.no_events'|trans }}</p>
+                    <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id}) }}" class="btn btn-primary">
+                        {{ 'common.create_first'|trans }}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

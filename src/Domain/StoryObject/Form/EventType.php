@@ -6,6 +6,7 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Repository\TagRepository;
 use App\Domain\StoryObject\Entity\Character;
+use App\Domain\StoryObject\Entity\Enum\EventCategory;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\Place;
@@ -16,6 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -32,6 +34,11 @@ class EventType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'event.name',
+            ])
+            ->add('category', EnumType::class, [
+                'class' => EventCategory::class,
+                'label' => 'event.category',
+                'choice_label' => fn (EventCategory $category) => 'event.category.' . $category->value,
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'event.description',
