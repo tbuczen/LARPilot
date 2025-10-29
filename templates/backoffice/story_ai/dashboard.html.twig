@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'story_ai.dashboard.title'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mt-4 mb-4">{{ 'story_ai.dashboard.title'|trans }}</h1>
+
+            {# TODO Phase 1: Add AI provider status #}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                {{ 'story_ai.dashboard.coming_soon'|trans }}
+            </div>
+
+            {# Feature cards #}
+            <div class="row g-3 mb-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-lightbulb"></i>
+                                {{ 'story_ai.features.thread_suggestions'|trans }}
+                            </h5>
+                            <p class="card-text">{{ 'story_ai.features.thread_suggestions_desc'|trans }}</p>
+                            <a href="{{ path('backoffice_larp_ai_thread_suggestions', {larp: larp.id}) }}"
+                               class="btn btn-primary">
+                                {{ 'story_ai.start'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-search"></i>
+                                {{ 'story_ai.features.gap_analysis'|trans }}
+                            </h5>
+                            <p class="card-text">{{ 'story_ai.features.gap_analysis_desc'|trans }}</p>
+                            <a href="{{ path('backoffice_larp_ai_gap_analysis', {larp: larp.id}) }}"
+                               class="btn btn-primary disabled">
+                                {{ 'story_ai.start'|trans }}
+                            </a>
+                            <small class="d-block text-muted mt-2">{{ 'story_ai.coming_soon'|trans }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-clock-history"></i>
+                                {{ 'story_ai.features.history'|trans }}
+                            </h5>
+                            <p class="card-text">{{ 'story_ai.features.history_desc'|trans }}</p>
+                            <a href="{{ path('backoffice_larp_ai_history', {larp: larp.id}) }}"
+                               class="btn btn-primary">
+                                {{ 'story_ai.view'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Recent requests #}
+            {% if recent_requests is not empty %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ 'story_ai.recent_requests'|trans }}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>{{ 'common.date'|trans }}</th>
+                                        <th>{{ 'story_ai.feature_type'|trans }}</th>
+                                        <th>{{ 'story_ai.provider'|trans }}</th>
+                                        <th>{{ 'story_ai.status'|trans }}</th>
+                                        <th>{{ 'story_ai.tokens'|trans }}</th>
+                                        <th>{{ 'story_ai.response_time'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in recent_requests %}
+                                        <tr>
+                                            <td>{{ request.createdAt|date('Y-m-d H:i') }}</td>
+                                            <td>
+                                                <span class="badge bg-secondary">
+                                                    {{ ('story_ai.feature.' ~ request.featureType)|trans }}
+                                                </span>
+                                            </td>
+                                            <td>{{ request.provider|upper }}</td>
+                                            <td>
+                                                {% if request.isSuccessful %}
+                                                    <span class="badge bg-success">{{ 'common.success'|trans }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">{{ 'common.error'|trans }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ request.tokensUsed ?? '-' }}</td>
+                                            <td>{{ request.responseTimeMs ? (request.responseTimeMs ~ 'ms') : '-' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{# TODO Phase 1: Add JavaScript for real-time updates #}
+{# TODO Phase 5: Add cost tracking display #}
