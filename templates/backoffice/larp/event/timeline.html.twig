@@ -9,10 +9,10 @@
                 <h2 class="mb-0">{{ 'lore.backoffice_timeline'|trans }}</h2>
                 <div class="d-flex gap-2">
                     <a href="{{ path('backoffice_larp_story_event_list', {larp: larp.id}) }}" class="btn btn-secondary">
-                        <i class="bi bi-list"></i> {{ 'common.list_view'|trans }}
+                        <i class="bi bi-list"></i> {{ 'list_view'|trans }}
                     </a>
                     <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id}) }}" class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> {{ 'common.create'|trans }}
+                        <i class="bi bi-plus-circle"></i> {{ 'create'|trans }}
                     </a>
                 </div>
             </div>
@@ -36,11 +36,11 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>{{ 'common.title'|trans }}</th>
+                                        <th>{{ 'title'|trans }}</th>
                                         <th>{{ 'event.category'|trans }}</th>
-                                        <th>{{ 'common.time'|trans }}</th>
-                                        <th>{{ 'common.visibility'|trans }}</th>
-                                        <th>{{ 'common.actions'|trans }}</th>
+                                        <th>{{ 'time'|trans }}</th>
+                                        <th>{{ 'visibility'|trans }}</th>
+                                        <th>{{ 'actions'|trans }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -52,8 +52,8 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <span class="badge bg-{{ event.category.value == 'historical' ? 'secondary' : (event.category.value == 'current' ? 'primary' : 'info') }}">
-                                                    {{ ('event.category.' ~ event.category.value)|trans }}
+                                                <span class="badge bg-{{ event.category == 'historical' ? 'secondary' : (event.category == 'current' ? 'primary' : 'info') }}">
+                                                    {{ ('event.category.' ~ event.category)|trans }}
                                                 </span>
                                             </td>
                                             <td>
@@ -72,12 +72,12 @@
                                                     </span>
                                                 {% elseif event.involvedFactions|length > 0 %}
                                                     <span class="badge bg-warning">
-                                                        <i class="bi bi-people"></i> {{ event.involvedFactions|length }} {{ 'common.factions'|trans }}
+                                                        <i class="bi bi-people"></i> {{ event.involvedFactions|length }} {{ 'factions'|trans }}
                                                     </span>
                                                 {% endif %}
                                                 {% if event.involvedCharacters|length > 0 %}
                                                     <span class="badge bg-info">
-                                                        <i class="bi bi-person"></i> {{ event.involvedCharacters|length }} {{ 'common.characters'|trans }}
+                                                        <i class="bi bi-person"></i> {{ event.involvedCharacters|length }} {{ 'characters'|trans }}
                                                     </span>
                                                 {% endif %}
                                             </td>
@@ -98,7 +98,7 @@
                 <div class="p-3">
                     <p class="text-muted">{{ 'lore.no_events'|trans }}</p>
                     <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id}) }}" class="btn btn-primary">
-                        {{ 'common.create_first'|trans }}
+                        {{ 'create_first'|trans }}
                     </a>
                 </div>
             {% endif %}

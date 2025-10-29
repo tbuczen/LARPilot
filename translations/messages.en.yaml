@@ -11,6 +11,7 @@ larps: LARPs
 incident: Incident
 incidents: Incidents
 tags: Tags
+list_view: 'List View'
 menu:
   toggle: 'Menu'
 create: 'Create'

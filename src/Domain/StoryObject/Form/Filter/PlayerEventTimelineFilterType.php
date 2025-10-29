@@ -42,7 +42,7 @@ class PlayerEventTimelineFilterType extends AbstractType
                 'class' => EventCategory::class,
                 'label' => 'lore.filter_by_category',
                 'required' => false,
-                'placeholder' => 'common.all',
+                'placeholder' => 'all',
                 'choice_label' => fn (EventCategory $category) => 'event.category.' . $category->value,
                 'data_extraction_method' => 'default',
             ])
@@ -54,7 +54,7 @@ class PlayerEventTimelineFilterType extends AbstractType
                 'choice_label' => 'title',
                 'label' => 'lore.filter_by_character',
                 'required' => false,
-                'placeholder' => 'common.all',
+                'placeholder' => 'all',
                 'choices' => $characters->toArray(),
                 'data_extraction_method' => 'default',
             ]);
@@ -66,7 +66,7 @@ class PlayerEventTimelineFilterType extends AbstractType
                 'choice_label' => 'title',
                 'label' => 'lore.filter_by_faction',
                 'required' => false,
-                'placeholder' => 'common.all',
+                'placeholder' => 'all',
                 'choices' => array_values($factions),
                 'data_extraction_method' => 'default',
             ]);

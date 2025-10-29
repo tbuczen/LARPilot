@@ -1,16 +1,20 @@
 import { Controller } from '@hotwired/stimulus';
+import { Timeline } from 'vis-timeline';
 
 /**
- * Timeline controller for displaying lore events
+ * Interactive timeline controller using vis-timeline
  *
- * This controller creates a visual timeline of events for a LARP
- * Events can be filtered by category, character, or faction
+ * Features:
+ * - Scrollable, zoomable timeline
+ * - Click to create events
+ * - Drag to reposition events
+ * - Visual categorization (Historical/Current/Future)
  *
  * Usage:
  * <div data-controller="timeline"
  *      data-timeline-events-value="[...]"
  *      data-timeline-larp-id-value="123"
- *      data-timeline-is-admin-value="false">
+ *      data-timeline-is-admin-value="true">
  * </div>
  */
 export default class extends Controller {
@@ -20,201 +24,406 @@ export default class extends Controller {
         isAdmin: { type: Boolean, default: false }
     }
 
+    timeline = null;
+    items = null;
+
     connect() {
         this.renderTimeline();
     }
 
+    disconnect() {
+        if (this.timeline) {
+            this.timeline.destroy();
+        }
+    }
+
     eventsValueChanged() {
-        this.renderTimeline();
+        if (this.timeline) {
+            this.updateTimelineItems();
+        }
     }
 
     renderTimeline() {
         const container = this.element.querySelector('#timeline-container');
         if (!container) return;
 
-        // Clear existing content
-        container.innerHTML = '';
+        // Prepare items for vis-timeline
+        this.items = this.prepareItems(this.eventsValue || []);
 
-        if (!this.eventsValue || this.eventsValue.length === 0) {
-            container.innerHTML = '<p class="text-muted">No events to display</p>';
-            return;
-        }
+        // Configure timeline options
+        const options = {
+            height: '600px',
+            min: new Date(1900, 0, 1), // Allow historical dates
+            max: new Date(2100, 11, 31), // Allow future dates
+            zoomMin: 1000 * 60 * 60 * 24 * 7, // Min zoom: 1 week
+            zoomMax: 1000 * 60 * 60 * 24 * 365 * 100, // Max zoom: 100 years
+            editable: {
+                add: this.isAdminValue, // Allow creating by clicking
+                updateTime: this.isAdminValue, // Allow dragging in time
+                updateGroup: false,
+                remove: false
+            },
+            onAdd: this.onAddItem.bind(this),
+            onMove: this.onMoveItem.bind(this),
+            snap: null, // Smooth dragging
+            stack: true, // Stack items to avoid overlap
+            orientation: 'top',
+            showCurrentTime: true,
+            tooltip: {
+                followMouse: true,
+                overflowMethod: 'cap'
+            },
+            format: {
+                minorLabels: {
+                    millisecond: 'SSS',
+                    second: 's',
+                    minute: 'HH:mm',
+                    hour: 'HH:mm',
+                    weekday: 'ddd D',
+                    day: 'D',
+                    week: 'w',
+                    month: 'MMM',
+                    year: 'YYYY'
+                },
+                majorLabels: {
+                    millisecond: 'HH:mm:ss',
+                    second: 'D MMMM HH:mm',
+                    minute: 'ddd D MMMM',
+                    hour: 'ddd D MMMM',
+                    weekday: 'MMMM YYYY',
+                    day: 'MMMM YYYY',
+                    week: 'MMMM YYYY',
+                    month: 'YYYY',
+                    year: ''
+                }
+            }
+        };
 
-        // Group events by category
-        const eventsByCategory = this.groupEventsByCategory(this.eventsValue);
+        // Create timeline
+        this.timeline = new Timeline(container, this.items, options);
 
-        // Create timeline structure
-        const timeline = document.createElement('div');
-        timeline.className = 'lore-timeline';
-
-        // Render events in chronological order
-        const allEvents = this.sortEvents(this.eventsValue);
-        allEvents.forEach((event, index) => {
-            const eventElement = this.createEventElement(event, index);
-            timeline.appendChild(eventElement);
+        // Handle item double-click for navigation
+        this.timeline.on('doubleClick', (properties) => {
+            if (properties.item) {
+                this.navigateToEvent(properties.item);
+            }
         });
 
-        container.appendChild(timeline);
+        // Auto-fit timeline
+        if (this.items.length > 0) {
+            setTimeout(() => {
+                this.timeline.fit();
+            }, 100);
+        }
     }
 
-    groupEventsByCategory(events) {
-        return events.reduce((groups, event) => {
-            const category = event.category || 'current';
-            if (!groups[category]) {
-                groups[category] = [];
-            }
-            groups[category].push(event);
-            return groups;
-        }, {});
-    }
+    prepareItems(events) {
+        const items = [];
 
-    sortEvents(events) {
-        return [...events].sort((a, b) => {
-            // Sort by storyTime first (if available)
-            if (a.storyTime !== null && b.storyTime !== null) {
-                return a.storyTime - b.storyTime;
+        events.forEach((event) => {
+            let start;
+
+            // Determine start time
+            if (event.startTime) {
+                start = new Date(event.startTime);
+            } else if (event.storyTime !== null && event.storyTime !== undefined) {
+                // Convert story time to a date (use a base year like 2000)
+                start = this.storyTimeToDate(event.storyTime, event.storyTimeUnit);
+            } else {
+                // Default to now for events without time
+                start = new Date();
             }
-            // Then by startTime
-            if (a.startTime && b.startTime) {
-                return new Date(a.startTime) - new Date(b.startTime);
+
+            // Determine end time if available
+            let end = null;
+            if (event.endTime) {
+                end = new Date(event.endTime);
             }
-            // Events without time go last
-            if (a.storyTime === null && b.storyTime !== null) return 1;
-            if (a.storyTime !== null && b.storyTime === null) return -1;
-            return 0;
+
+            // Prepare item
+            const item = {
+                id: event.id,
+                content: this.createItemContent(event),
+                start: start,
+                type: end ? 'range' : 'box',
+                className: `timeline-event-${event.category || 'current'}`,
+                title: this.createTooltip(event)
+            };
+
+            if (end) {
+                item.end = end;
+            }
+
+            items.push(item);
         });
+
+        return items;
     }
 
-    createEventElement(event, index) {
-        const eventDiv = document.createElement('div');
-        eventDiv.className = `timeline-event timeline-event-${event.category}`;
-        eventDiv.dataset.eventId = event.id;
+    createItemContent(event) {
+        const categoryBadge = {
+            'historical': '<span class="badge bg-secondary">Historical</span>',
+            'current': '<span class="badge bg-primary">Current</span>',
+            'future': '<span class="badge bg-info">Future</span>'
+        }[event.category || 'current'];
 
-        // Timeline connector
-        const connector = document.createElement('div');
-        connector.className = 'timeline-connector';
+        const visibility = event.isPublic
+            ? '<i class="bi bi-globe text-success"></i>'
+            : '<i class="bi bi-lock text-warning"></i>';
 
-        const dot = document.createElement('div');
-        dot.className = `timeline-dot bg-${this.getCategoryColor(event.category)}`;
-        connector.appendChild(dot);
+        return `
+            <div class="timeline-item-content">
+                ${visibility} <strong>${event.title}</strong> ${categoryBadge}
+            </div>
+        `;
+    }
 
-        if (index < this.eventsValue.length - 1) {
-            const line = document.createElement('div');
-            line.className = 'timeline-line';
-            connector.appendChild(line);
-        }
+    createTooltip(event) {
+        let tooltip = `<strong>${event.title}</strong><br>`;
+        tooltip += `Category: ${event.category || 'current'}<br>`;
 
-        // Event content
-        const content = document.createElement('div');
-        content.className = 'timeline-content card mb-3';
-
-        const cardBody = document.createElement('div');
-        cardBody.className = 'card-body';
-
-        // Header with title and category badge
-        const header = document.createElement('div');
-        header.className = 'd-flex justify-content-between align-items-start mb-2';
-
-        const title = document.createElement('h5');
-        title.className = 'card-title mb-0';
-        if (this.isAdminValue) {
-            const link = document.createElement('a');
-            link.href = `/backoffice/larp/${this.larpIdValue}/story/event/${event.id}`;
-            link.textContent = event.title;
-            title.appendChild(link);
-        } else {
-            title.textContent = event.title;
-        }
-
-        const categoryBadge = document.createElement('span');
-        categoryBadge.className = `badge bg-${this.getCategoryColor(event.category)}`;
-        categoryBadge.textContent = this.getCategoryLabel(event.category);
-
-        header.appendChild(title);
-        header.appendChild(categoryBadge);
-
-        // Time information
-        const timeInfo = document.createElement('div');
-        timeInfo.className = 'text-muted mb-2';
-        timeInfo.innerHTML = `<small>${this.formatEventTime(event)}</small>`;
-
-        // Description
-        let description = null;
         if (event.description) {
-            description = document.createElement('div');
-            description.className = 'card-text mb-2';
-            description.innerHTML = event.description;
+            const desc = event.description.replace(/<[^>]*>/g, '').substring(0, 100);
+            tooltip += `${desc}${event.description.length > 100 ? '...' : ''}<br>`;
         }
 
-        // Visibility info
-        const visibility = document.createElement('div');
-        visibility.className = 'text-muted';
-        visibility.innerHTML = `<small>${this.getVisibilityIcon(event)} ${this.getVisibilityLabel(event)}</small>`;
-
-        // Assemble card
-        cardBody.appendChild(header);
-        cardBody.appendChild(timeInfo);
-        if (description) {
-            cardBody.appendChild(description);
-        }
-        cardBody.appendChild(visibility);
-
-        content.appendChild(cardBody);
-
-        // Assemble event
-        eventDiv.appendChild(connector);
-        eventDiv.appendChild(content);
-
-        return eventDiv;
-    }
-
-    getCategoryColor(category) {
-        const colors = {
-            'historical': 'secondary',
-            'current': 'primary',
-            'future': 'info'
-        };
-        return colors[category] || 'secondary';
-    }
-
-    getCategoryLabel(category) {
-        const labels = {
-            'historical': 'Historical',
-            'current': 'Current',
-            'future': 'Future'
-        };
-        return labels[category] || category;
-    }
-
-    formatEventTime(event) {
-        if (event.storyTime !== null) {
-            const unit = event.storyTimeUnit || '';
-            return `${event.storyTime} ${unit}`;
-        } else if (event.startTime) {
-            const date = new Date(event.startTime);
-            return date.toLocaleString();
-        }
-        return 'Time not specified';
-    }
-
-    getVisibilityIcon(event) {
         if (event.isPublic) {
-            return '<i class="bi bi-globe"></i>';
-        } else if (event.involvedFactions && event.involvedFactions.length > 0) {
-            return '<i class="bi bi-people"></i>';
+            tooltip += 'Visibility: Public<br>';
         } else {
-            return '<i class="bi bi-person"></i>';
+            if (event.involvedFactions && event.involvedFactions.length > 0) {
+                tooltip += `Factions: ${event.involvedFactions.length}<br>`;
+            }
+            if (event.involvedCharacters && event.involvedCharacters.length > 0) {
+                tooltip += `Characters: ${event.involvedCharacters.length}<br>`;
+            }
+        }
+
+        return tooltip;
+    }
+
+    storyTimeToDate(storyTime, unit = 'year') {
+        // Convert story time to a date representation
+        // Base year: 2000 represents time 0 in the story
+        const baseYear = 2000;
+        let date = new Date(baseYear, 0, 1);
+
+        switch (unit) {
+            case 'era':
+                date.setFullYear(baseYear + (storyTime * 100));
+                break;
+            case 'year':
+                date.setFullYear(baseYear + storyTime);
+                break;
+            case 'month':
+                date.setMonth(storyTime);
+                break;
+            case 'week':
+                date.setDate(date.getDate() + (storyTime * 7));
+                break;
+            case 'day':
+                date.setDate(date.getDate() + storyTime);
+                break;
+            case 'hour':
+                date.setHours(date.getHours() + storyTime);
+                break;
+            default:
+                date.setFullYear(baseYear + storyTime);
+        }
+
+        return date;
+    }
+
+    updateTimelineItems() {
+        if (!this.timeline) return;
+
+        const newItems = this.prepareItems(this.eventsValue || []);
+        this.items = newItems;
+        this.timeline.setItems(newItems);
+    }
+
+    async onAddItem(item, callback) {
+        // Show modal for event creation
+        const modal = await this.showCreateModal(item.start);
+
+        if (modal) {
+            // Create event via API
+            const newEvent = await this.createEventAPI(modal);
+            if (newEvent) {
+                // Add to timeline with visual feedback
+                const newItem = {
+                    id: newEvent.id,
+                    content: this.createItemContent(newEvent),
+                    start: new Date(newEvent.startTime || item.start),
+                    type: 'box',
+                    className: `timeline-event-${newEvent.category}`,
+                    title: this.createTooltip(newEvent)
+                };
+
+                callback(newItem);
+
+                // Focus on the newly created item
+                setTimeout(() => {
+                    this.timeline.setSelection(newEvent.id);
+                    this.timeline.focus(newEvent.id, {
+                        animation: {
+                            duration: 500,
+                            easingFunction: 'easeInOutQuad'
+                        }
+                    });
+                }, 100);
+            } else {
+                callback(null); // Cancel creation
+            }
+        } else {
+            callback(null); // User cancelled
         }
     }
 
-    getVisibilityLabel(event) {
-        if (event.isPublic) {
-            return 'Public';
-        } else if (event.involvedFactions && event.involvedFactions.length > 0) {
-            return `Visible to ${event.involvedFactions.length} faction(s)`;
-        } else if (event.involvedCharacters && event.involvedCharacters.length > 0) {
-            return `Visible to ${event.involvedCharacters.length} character(s)`;
+    async onMoveItem(item, callback) {
+        // Update event time via API
+        try {
+            const data = {
+                startTime: item.start.toISOString()
+            };
+
+            // Include end time if it exists (for range events)
+            if (item.end) {
+                data.endTime = item.end.toISOString();
+            }
+
+            const response = await fetch(
+                `/backoffice/larp/${this.larpIdValue}/story/event/${item.id}/api/update-time`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to update event time');
+            }
+
+            const result = await response.json();
+
+            // Accept the move with updated data from server
+            callback({
+                ...item,
+                start: new Date(result.event.startTime),
+                end: result.event.endTime ? new Date(result.event.endTime) : null
+            });
+        } catch (error) {
+            console.error('Error updating event time:', error);
+            alert('Failed to update event time. Please try again.');
+            callback(null); // Cancel the move on error
         }
-        return 'Visibility not specified';
+    }
+
+    async showCreateModal(clickedDate) {
+        return new Promise((resolve) => {
+            // Create modal
+            const modalHtml = `
+                <div class="modal fade" id="createEventModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Create New Event</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="createEventForm">
+                                    <div class="mb-3">
+                                        <label for="eventTitle" class="form-label">Title *</label>
+                                        <input type="text" class="form-control" id="eventTitle" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="eventCategory" class="form-label">Category</label>
+                                        <select class="form-select" id="eventCategory">
+                                            <option value="historical">Historical/Lore Event</option>
+                                            <option value="current" selected>Current Event</option>
+                                            <option value="future">Future/Planned Event</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="eventDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Time: ${clickedDate.toLocaleString()}</label>
+                                        <input type="hidden" id="eventStartTime" value="${clickedDate.toISOString()}">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" id="saveEventBtn">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Append to body
+            const div = document.createElement('div');
+            div.innerHTML = modalHtml;
+            document.body.appendChild(div);
+
+            const modalElement = document.getElementById('createEventModal');
+            const modal = new bootstrap.Modal(modalElement);
+
+            // Handle save
+            document.getElementById('saveEventBtn').addEventListener('click', () => {
+                const title = document.getElementById('eventTitle').value;
+                const category = document.getElementById('eventCategory').value;
+                const description = document.getElementById('eventDescription').value;
+                const startTime = document.getElementById('eventStartTime').value;
+
+                if (title) {
+                    modal.hide();
+                    resolve({ title, category, description, startTime });
+                }
+            });
+
+            // Handle cancel
+            modalElement.addEventListener('hidden.bs.modal', () => {
+                if (!modalElement.classList.contains('event-created')) {
+                    resolve(null);
+                }
+                modalElement.remove();
+            });
+
+            modal.show();
+        });
+    }
+
+    async createEventAPI(data) {
+        try {
+            const response = await fetch(`/backoffice/larp/${this.larpIdValue}/story/event/api/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create event');
+            }
+
+            const result = await response.json();
+            return result.event;
+        } catch (error) {
+            console.error('Error creating event:', error);
+            alert('Failed to create event. Please try again.');
+            return null;
+        }
+    }
+
+    navigateToEvent(eventId) {
+        if (this.isAdminValue) {
+            window.location.href = `/backoffice/larp/${this.larpIdValue}/story/event/${eventId}`;
+        }
     }
 }

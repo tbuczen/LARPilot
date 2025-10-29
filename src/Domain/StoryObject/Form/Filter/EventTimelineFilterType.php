@@ -29,12 +29,12 @@ class EventTimelineFilterType extends AbstractType
                 'class' => EventCategory::class,
                 'label' => 'event.category',
                 'required' => false,
-                'placeholder' => 'common.all',
+                'placeholder' => 'all',
                 'choice_label' => fn (EventCategory $category) => 'event.category.' . $category->value,
                 'data_extraction_method' => 'default',
             ])
             ->add('title', Filters\TextFilterType::class, [
-                'label' => 'common.title',
+                'label' => 'title',
                 'required' => false,
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])

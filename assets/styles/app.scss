@@ -5,8 +5,9 @@
 @import "./components/wysiwyg";
 @import "./components/kanban";
 @import "./components/feedback";
-@import "./timeline";
+@import "./components/timeline";
 @import "./vendors/quill.snow";
+@import "./vendors/vis-timeline-graph2d.min";
 
 header {
     padding: 0.25rem;
