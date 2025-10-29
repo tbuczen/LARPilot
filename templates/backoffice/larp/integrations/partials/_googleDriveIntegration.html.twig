@@ -44,7 +44,7 @@
         </button>
         <div data-google-file-picker-target="selectedFiles" class="mt-3"></div>
         <form
-                action="{{ path('backoffice_larp_integration_file_permissions', { id: larp.id, integrationId: integration.id }) }}"
+                action="{{ path('backoffice_larp_integration_file_permissions', { larp: larp.id, integrationId: integration.id }) }}"
                 method="post"
         >
             <input
@@ -61,7 +61,7 @@
                 {{ 'save'|trans }}
             </button>
             <a href="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id}) }}" class="btn btn-secondary">
-                {{ 'mapping.title'|trans }}
+                {{ 'larp.mapping.title'|trans }}
             </a>
 
         </form>

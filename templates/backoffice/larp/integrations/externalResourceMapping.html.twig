@@ -1,9 +1,9 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
-{% block larp_title %}{{ 'mapping.title'|trans }} - {{ larp.title }}{% endblock %}
+{% block larp_title %}{{ 'larp.mapping.title'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
-        <h3>{{ 'mapping.heading'|trans }}</h3>
+        <h3>{{ 'larp.mapping.heading'|trans }}</h3>
         {% if files is not empty %}
             <div class="list-group">
                 {% include 'backoffice/larp/partials/_sharedFileList.html.twig' with {
@@ -14,6 +14,6 @@
                 } %}
             </div>
         {% else %}
-            <p>{{ 'integrations.file_select.no_files'|trans }}</p>
+            <p>{{ 'integration.file_select.no_files'|trans }}</p>
         {% endif %}
 {% endblock %}

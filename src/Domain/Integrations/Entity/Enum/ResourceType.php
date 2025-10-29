@@ -17,6 +17,7 @@ enum ResourceType: string
     case CHARACTER_LIST = 'character_list';
     case CHARACTER_DOC = 'character_doc';
     case CHARACTER_DOC_DIRECTORY = 'character_doc_directory';
+    case CHARACTER_DOC_TEMPLATE = 'character_doc_template';
     case EVENT_LIST = 'event_list';
     case EVENT_DOC = 'event_doc';
 
@@ -29,7 +30,7 @@ enum ResourceType: string
             self::CHARACTER_LIST => CharacterListColumnMappingType::class,
             self::EVENT_LIST => EventListColumnMappingType::class,
             self::CHARACTER_DOC_DIRECTORY => CharacterDocDirectoryMappingType::class,
-            self::CHARACTER_DOC => CharacterDocMappingType::class,
+            self::CHARACTER_DOC_TEMPLATE, self::CHARACTER_DOC => CharacterDocMappingType::class,
             self::EVENT_DOC => EventDocMappingType::class,
         };
     }
@@ -41,7 +42,7 @@ enum ResourceType: string
     {
         return match ($this) {
             self::CHARACTER_LIST, self::EVENT_LIST => SpreadsheetMetaFormType::class,
-            self::CHARACTER_DOC, self::EVENT_DOC => DocumentMetaFormType::class,
+            self::CHARACTER_DOC, self::CHARACTER_DOC_TEMPLATE, self::EVENT_DOC => DocumentMetaFormType::class,
             default => null,
             // etc.
         };
@@ -50,7 +51,7 @@ enum ResourceType: string
     public function matchesTargetType(TargetType $targetType): bool
     {
         return match ($this) {
-            self::CHARACTER_LIST, self::CHARACTER_DOC => $targetType === TargetType::Character,
+            self::CHARACTER_LIST, self::CHARACTER_DOC, self::CHARACTER_DOC_TEMPLATE, self::CHARACTER_DOC_DIRECTORY => $targetType === TargetType::Character,
             self::EVENT_LIST, self::EVENT_DOC => $targetType === TargetType::Faction,
             default => false,
         };
@@ -69,6 +70,7 @@ enum ResourceType: string
     {
         return in_array($this, [
             self::CHARACTER_DOC,
+            self::CHARACTER_DOC_TEMPLATE,
             self::EVENT_DOC,
             // future: EVENT_DOC etc.
         ], true);

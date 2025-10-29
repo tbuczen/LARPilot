@@ -46,7 +46,7 @@ services:
     App\Domain\Integrations\Service\Sharing\DriveSharingServiceProvider:
         arguments:
             $services:
-                integration_google_drive: 'App\Domain\Integrations\Service\Sharing\GoogleDriveSharingService'
+                integration_google_drive: '@App\Domain\Integrations\Service\Sharing\GoogleDriveSharingService'
 
     App\Domain\Integrations\Service\IntegrationServiceProvider:
         arguments:

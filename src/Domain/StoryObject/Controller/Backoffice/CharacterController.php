@@ -55,6 +55,7 @@ class CharacterController extends BaseController
         Request                 $request,
         Larp                    $larp,
         CharacterRepository $characterRepository,
+        \App\Domain\Integrations\Service\CharacterSheetExportService $exportService,
         ?Character          $character = null,
     ): Response {
         $new = false;
@@ -86,11 +87,16 @@ class CharacterController extends BaseController
             $mentions = $mentionService->findMentions($character);
         }
 
+        // Check if export is configured (only for existing characters)
+        $canExportSheet = !$new && $exportService->isExportConfigured($larp);
+
         return $this->render('backoffice/larp/characters/modify.html.twig', [
             'character' => $character,
             'form' => $form->createView(),
             'larp' => $larp,
             'mentions' => $mentions,
+            'canExportSheet' => $canExportSheet,
+            'isNewCharacter' => $new,
         ]);
     }
 

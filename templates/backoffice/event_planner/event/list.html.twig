@@ -2,13 +2,6 @@
 
 {% block larp_title %}{{ 'event_planner.event.list'|trans }} - {{ larp.title }}{% endblock %}
 
-{% block breadcrumb %}
-    {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_dashboard', { larp: larp.id }) }}">{{ larp.title }}</a></li>
-    <li class="breadcrumb-item">{{ 'event_planner.title'|trans }}</li>
-    <li class="breadcrumb-item active">{{ 'event_planner.event.list'|trans }}</li>
-{% endblock %}
-
 {% block larp_content %}
     <div class="card mt-4">
         <div class="card-header">

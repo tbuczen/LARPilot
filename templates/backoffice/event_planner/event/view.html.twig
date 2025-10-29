@@ -2,14 +2,6 @@
 
 {% block larp_title %}{{ event.title }} - {{ larp.title }}{% endblock %}
 
-{% block breadcrumb %}
-    {{ parent() }}
-    <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_view', { larp: larp.id }) }}">{{ larp.title }}</a></li>
-    <li class="breadcrumb-item">{{ 'event_planner.title'|trans }}</li>
-    <li class="breadcrumb-item"><a href="{{ path('backoffice_event_planner_event_list', { larp: larp.id }) }}">{{ 'event_planner.event.list'|trans }}</a></li>
-    <li class="breadcrumb-item active">{{ event.title }}</li>
-{% endblock %}
-
 {% block larp_content %}
     {% if conflicts is not empty %}
         <div class="alert alert-warning">
@@ -69,9 +61,19 @@
                             <dd class="col-sm-8">{{ event.location.name }}</dd>
                         {% endif %}
 
-                        {% if event.storyObjectReference %}
+                        {% if event.quest or event.thread or event.event %}
                             <dt class="col-sm-4">{{ 'event_planner.event.story_link'|trans }}</dt>
-                            <dd class="col-sm-8">{{ event.storyObjectReference }}</dd>
+                            <dd class="col-sm-8">
+                                {% if event.quest %}
+                                    <div>Quest: <a href="{{ path('backoffice_larp_story_quest_modify', { larp: larp.id, quest: event.quest.id }) }}">{{ event.quest.title }}</a></div>
+                                {% endif %}
+                                {% if event.thread %}
+                                    <div>Thread: <a href="{{ path('backoffice_larp_story_thread_modify', { larp: larp.id, thread: event.thread.id }) }}">{{ event.thread.title }}</a></div>
+                                {% endif %}
+                                {% if event.event %}
+                                    <div>Event: <a href="{{ path('backoffice_larp_story_event_modify', { larp: larp.id, event: event.event.id }) }}">{{ event.event.title }}</a></div>
+                                {% endif %}
+                            </dd>
                         {% endif %}
                     </dl>
 
