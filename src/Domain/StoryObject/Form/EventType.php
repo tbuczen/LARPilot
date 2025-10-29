@@ -16,6 +16,7 @@ use App\Domain\StoryObject\Repository\PlaceRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -91,6 +92,11 @@ class EventType extends AbstractType
                 'query_builder' => fn (CharacterRepository $repo): QueryBuilder => $repo->createQueryBuilder('f')
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
+            ])
+            ->add('knownPublicly', CheckboxType::class, [
+                'label' => 'event.known_publicly',
+                'required' => false,
+                'help' => 'event.known_publicly_help',
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,

@@ -5,6 +5,7 @@ namespace App\Domain\Core\Controller\Player;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\LarpParticipantRepository;
+use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Form\Filter\PlayerEventTimelineFilterType;
 use App\Domain\StoryObject\Repository\EventRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,10 +73,34 @@ class LoreController extends BaseController
 
         $events = $qb->getQuery()->getResult();
 
+        // Normalize events for JSON serialization
+        $normalizedEvents = array_map(function (Event $event) {
+            return [
+                'id' => $event->getId()->toRfc4122(),
+                'title' => $event->getTitle(),
+                'description' => $event->getDescription(),
+                'category' => $event->getCategory()->value,
+                'storyTime' => $event->getStoryTime(),
+                'storyTimeUnit' => $event->getStoryTimeUnit()?->value,
+                'startTime' => $event->getStartTime()?->format('c'),
+                'endTime' => $event->getEndTime()?->format('c'),
+                'isPublic' => $event->isPublic(),
+                'knownPublicly' => $event->isKnownPublicly(),
+                'involvedFactions' => $event->getInvolvedFactions()->map(fn ($f) => [
+                    'id' => $f->getId()->toRfc4122(),
+                    'title' => $f->getTitle(),
+                ])->toArray(),
+                'involvedCharacters' => $event->getInvolvedCharacters()->map(fn ($c) => [
+                    'id' => $c->getId()->toRfc4122(),
+                    'title' => $c->getTitle(),
+                ])->toArray(),
+            ];
+        }, $events);
+
         return $this->render('player/lore/timeline.html.twig', [
             'larp' => $larp,
             'participant' => $participant,
-            'events' => $events,
+            'events' => $normalizedEvents,
             'filterForm' => $filterForm->createView(),
         ]);
     }

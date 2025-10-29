@@ -3,6 +3,8 @@ common:
 submit: "Submit"
 choose: "Choose..."
 character_lbl: 'Character'
+title: 'Title'
+all: 'All'
 character:
   name: "Unique Character Name"
   in_game_name: "In-Game Name"
@@ -107,6 +109,8 @@ event:
   start_time: 'Start Time'
   end_time: 'End Time'
   choose_faction: 'Choose a faction...'
+  known_publicly: 'Known Publicly'
+  known_publicly_help: 'Check this if the event is publicly known even though specific factions/characters were involved (e.g., "village was attacked", "someone was executed")'
 kanban:
   title: "Task title"
   description: "Task description"

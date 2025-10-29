@@ -57,7 +57,7 @@ class CharacterType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
-                'placeholder' => 'common.choose',
+                'placeholder' => 'choose',
                 'tom_select_options' => [
                     'create' => true,
                     'persist' => false,

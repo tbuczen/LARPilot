@@ -32,10 +32,6 @@ return [
         'path' => './assets/styles/app.scss',
         'type' => 'css',
     ],
-    './styles/fullcalendar.css' => [
-        'path' => './assets/styles/fullcalendar.css',
-        'type' => 'css',
-    ],
     './controllers/integrations/folder_browser_controller.js' => [
         'path' => './assets/controllers/integrations/folder_browser_controller.js',
     ],
@@ -194,5 +190,14 @@ return [
     ],
     'html2canvas' => [
         'version' => '1.4.1',
+    ],
+    'vis-timeline' => [
+        'version' => '8.3.1',
+    ],
+    'moment' => [
+        'version' => '2.30.1',
+    ],
+    'vis-data/peer/esm/vis-data.js' => [
+        'version' => '8.0.3',
     ],
 ];

@@ -64,6 +64,9 @@ class Event extends StoryObject
     #[ORM\Column(length: 20, nullable: false, enumType: EventCategory::class)]
     private EventCategory $category = EventCategory::Current;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $knownPublicly = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -237,25 +240,38 @@ class Event extends StoryObject
         $this->category = $category;
     }
 
+    public function isKnownPublicly(): bool
+    {
+        return $this->knownPublicly;
+    }
+
+    public function setKnownPublicly(bool $knownPublicly): void
+    {
+        $this->knownPublicly = $knownPublicly;
+    }
+
     /**
      * Check if this event is public (visible to everyone).
-     * An event is public if it has no specific involved characters or factions.
+     * An event is public if:
+     * - It's marked as knownPublicly, OR
+     * - It has no specific involved characters or factions
      */
     public function isPublic(): bool
     {
-        return $this->involvedCharacters->isEmpty() && $this->involvedFactions->isEmpty();
+        return $this->knownPublicly || ($this->involvedCharacters->isEmpty() && $this->involvedFactions->isEmpty());
     }
 
     /**
      * Check if this event is visible to a specific character.
      * An event is visible to a character if:
+     * - It's marked as knownPublicly, OR
      * - It's public (no involved characters/factions), OR
      * - The character is in the involvedCharacters list, OR
      * - The character belongs to one of the involvedFactions
      */
     public function isVisibleToCharacter(Character $character): bool
     {
-        if ($this->isPublic()) {
+        if ($this->knownPublicly || $this->isPublic()) {
             return true;
         }
 
@@ -274,10 +290,14 @@ class Event extends StoryObject
 
     /**
      * Check if this event is visible to members of a specific faction.
+     * An event is visible to faction members if:
+     * - It's marked as knownPublicly, OR
+     * - It's public (no involved characters/factions), OR
+     * - The faction is in the involvedFactions list
      */
     public function isVisibleToFaction(Faction $faction): bool
     {
-        if ($this->isPublic()) {
+        if ($this->knownPublicly || $this->isPublic()) {
             return true;
         }
 

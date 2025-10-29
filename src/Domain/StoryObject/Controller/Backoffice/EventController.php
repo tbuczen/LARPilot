@@ -13,6 +13,7 @@ use App\Domain\StoryMarketplace\Form\RecruitmentProposalType;
 use App\Domain\StoryMarketplace\Form\StoryRecruitmentType;
 use App\Domain\StoryMarketplace\Repository\RecruitmentProposalRepository;
 use App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository;
+use App\Domain\StoryObject\Entity\Enum\EventCategory;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Form\EventType;
 use App\Domain\StoryObject\Form\Filter\EventFilterType;
@@ -67,11 +68,140 @@ class EventController extends BaseController
 
         $events = $qb->getQuery()->getResult();
 
+        // Normalize events for JSON serialization
+        $normalizedEvents = array_map(function (Event $event) {
+            return [
+                'id' => $event->getId()->toRfc4122(),
+                'title' => $event->getTitle(),
+                'description' => $event->getDescription(),
+                'category' => $event->getCategory()->value,
+                'storyTime' => $event->getStoryTime(),
+                'storyTimeUnit' => $event->getStoryTimeUnit()?->value,
+                'startTime' => $event->getStartTime()?->format('c'),
+                'endTime' => $event->getEndTime()?->format('c'),
+                'isPublic' => $event->isPublic(),
+                'knownPublicly' => $event->isKnownPublicly(),
+                'involvedFactions' => $event->getInvolvedFactions()->map(fn ($f) => [
+                    'id' => $f->getId()->toRfc4122(),
+                    'title' => $f->getTitle(),
+                ])->toArray(),
+                'involvedCharacters' => $event->getInvolvedCharacters()->map(fn ($c) => [
+                    'id' => $c->getId()->toRfc4122(),
+                    'title' => $c->getTitle(),
+                ])->toArray(),
+            ];
+        }, $events);
+
         return $this->render('backoffice/larp/event/timeline.html.twig', [
             'larp' => $larp,
-            'events' => $events,
+            'events' => $normalizedEvents,
             'filterForm' => $filterForm->createView(),
         ]);
+    }
+
+    #[Route('api/create', name: 'api_create', methods: ['POST'])]
+    public function apiCreate(
+        Request $request,
+        Larp $larp,
+        EventRepository $eventRepository
+    ): Response {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data || !isset($data['title'])) {
+            return $this->json(['error' => 'Title is required'], 400);
+        }
+
+        $event = new Event();
+        $event->setLarp($larp);
+        $event->setTitle($data['title']);
+
+        // Set category if provided
+        if (isset($data['category'])) {
+            try {
+                $category = EventCategory::from($data['category']);
+                $event->setCategory($category);
+            } catch (\ValueError $e) {
+                // Invalid category, use default
+            }
+        }
+
+        // Set description if provided
+        if (isset($data['description'])) {
+            $event->setDescription($data['description']);
+        }
+
+        // Set story time if provided
+        if (isset($data['storyTime'])) {
+            $event->setStoryTime((int)$data['storyTime']);
+        }
+
+        // Set start time if provided
+        if (isset($data['startTime'])) {
+            try {
+                $startTime = new \DateTime($data['startTime']);
+                $event->setStartTime($startTime);
+            } catch (\Exception $e) {
+                // Invalid date format
+            }
+        }
+
+        $eventRepository->save($event);
+
+        return $this->json([
+            'success' => true,
+            'event' => [
+                'id' => $event->getId()->toRfc4122(),
+                'title' => $event->getTitle(),
+                'description' => $event->getDescription(),
+                'category' => $event->getCategory()->value,
+                'storyTime' => $event->getStoryTime(),
+                'storyTimeUnit' => $event->getStoryTimeUnit()?->value,
+                'startTime' => $event->getStartTime()?->format('c'),
+                'endTime' => $event->getEndTime()?->format('c'),
+                'isPublic' => $event->isPublic(),
+                'knownPublicly' => $event->isKnownPublicly(),
+                'involvedFactions' => [],
+                'involvedCharacters' => [],
+            ],
+        ]);
+    }
+
+    #[Route('{event}/api/update-time', name: 'api_update_time', methods: ['POST'])]
+    public function apiUpdateTime(
+        Request $request,
+        Larp $larp,
+        Event $event,
+        EventRepository $eventRepository
+    ): Response {
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data || !isset($data['startTime'])) {
+            return $this->json(['error' => 'Start time is required'], 400);
+        }
+
+        try {
+            $startTime = new \DateTime($data['startTime']);
+            $event->setStartTime($startTime);
+
+            // Update end time if provided
+            if (isset($data['endTime'])) {
+                $endTime = new \DateTime($data['endTime']);
+                $event->setEndTime($endTime);
+            }
+
+            $eventRepository->save($event);
+
+            return $this->json([
+                'success' => true,
+                'event' => [
+                    'id' => $event->getId()->toRfc4122(),
+                    'startTime' => $event->getStartTime()?->format('c'),
+                    'endTime' => $event->getEndTime()?->format('c'),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Invalid date format'], 400);
+        }
     }
 
     #[Route('{event}', name: 'modify', defaults: ['event' => null], methods: ['GET', 'POST'])]

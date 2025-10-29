@@ -10,6 +10,7 @@ import DecisionTreeController from "./controllers/decision_tree_controller.js";
 import WysiwygController from "./controllers/wysiwyg_controller.js";
 import KanbanController from "./controllers/kanban_controller.js";
 import SortableCharacterChoicesController from "./controllers/sortable_character_choices_controller.js";
+import TimelineController from "./controllers/timeline_controller.js";
 
 const app = startStimulusApp();
 app.register('live', LiveController);
@@ -22,3 +23,4 @@ app.register("decision-tree", DecisionTreeController);
 app.register("wysiwyg", WysiwygController);
 app.register("kanban", KanbanController);
 app.register("sortable-character-choices", SortableCharacterChoicesController);
+app.register("timeline", TimelineController);
