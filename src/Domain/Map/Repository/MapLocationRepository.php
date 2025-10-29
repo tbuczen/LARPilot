@@ -2,37 +2,19 @@
 
 namespace App\Domain\Map\Repository;
 
+use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Map\Entity\GameMap;
 use App\Domain\Map\Entity\MapLocation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\Map\Entity\MapLocation>
+ * @extends BaseRepository<MapLocation>
  */
-class MapLocationRepository extends ServiceEntityRepository
+class MapLocationRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MapLocation::class);
-    }
-
-    public function save(MapLocation $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(MapLocation $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
     }
 
     /**

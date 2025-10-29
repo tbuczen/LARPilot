@@ -4,11 +4,10 @@ namespace App\Domain\Application\Repository;
 
 use App\Domain\Application\Entity\LarpApplicationVote;
 use App\Domain\Core\Repository\BaseRepository;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\Application\Entity\LarpApplicationVote>
+ * @extends BaseRepository<LarpApplicationVote>
  *
  * @method null|LarpApplicationVote find($id, $lockMode = null, $lockVersion = null)
  * @method null|LarpApplicationVote findOneBy(array $criteria, array $orderBy = null)

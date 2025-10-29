@@ -4,11 +4,10 @@ namespace App\Domain\Kanban\Repository;
 
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Kanban\Entity\KanbanTask;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<KanbanTask>
+ * @extends BaseRepository<KanbanTask>
  */
 class KanbanTaskRepository extends BaseRepository
 {

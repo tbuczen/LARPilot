@@ -3,13 +3,12 @@
 namespace App\Domain\Core\Repository;
 
 use App\Domain\Core\Entity\SavedFormFilter;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @extends ServiceEntityRepository<SavedFormFilter>
+ * @extends BaseRepository<SavedFormFilter>
  *
  * @method null|SavedFormFilter find($id, $lockMode = null, $lockVersion = null)
  * @method null|SavedFormFilter findOneBy(array $criteria, array $orderBy = null)

@@ -3,37 +3,19 @@
 namespace App\Domain\EventPlanning\Repository;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\EventPlanning\Entity\ScheduledEvent;
 use App\Domain\EventPlanning\Entity\ScheduledEventConflict;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ScheduledEventConflict>
+ * @extends BaseRepository<ScheduledEventConflict>
  */
-class ScheduledEventConflictRepository extends ServiceEntityRepository
+class ScheduledEventConflictRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ScheduledEventConflict::class);
-    }
-
-    public function save(ScheduledEventConflict $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(ScheduledEventConflict $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
     }
 
     /**

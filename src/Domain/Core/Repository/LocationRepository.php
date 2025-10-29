@@ -3,12 +3,11 @@
 namespace App\Domain\Core\Repository;
 
 use App\Domain\Core\Entity\Location;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @extends ServiceEntityRepository<Location>
+ * @extends BaseRepository<Location>
  */
 class LocationRepository extends BaseRepository
 {

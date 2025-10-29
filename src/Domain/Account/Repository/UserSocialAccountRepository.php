@@ -5,11 +5,10 @@ namespace App\Domain\Account\Repository;
 use App\Domain\Account\Entity\User;
 use App\Domain\Account\Entity\UserSocialAccount;
 use App\Domain\Core\Repository\BaseRepository;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<UserSocialAccount>
+ * @extends BaseRepository<UserSocialAccount>
  *
  * @method null|UserSocialAccount find($id, $lockMode = null, $lockVersion = null)
  * @method null|UserSocialAccount findOneBy(array $criteria, array $orderBy = null)

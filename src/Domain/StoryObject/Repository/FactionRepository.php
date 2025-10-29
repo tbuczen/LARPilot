@@ -3,22 +3,22 @@
 namespace App\Domain\StoryObject\Repository;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\StoryObject\Entity\Faction;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @extends ServiceEntityRepository<Faction>
+ * @extends BaseRepository<Faction>
  *
  * @method null|Faction find($id, $lockMode = null, $lockVersion = null)
- * @method null|\App\Domain\StoryObject\Entity\Faction findOneBy(array $criteria, array $orderBy = null)
- * @method \App\Domain\StoryObject\Entity\Faction[]    findAll()
- * @method \App\Domain\StoryObject\Entity\Faction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method null|Faction findOneBy(array $criteria, array $orderBy = null)
+ * @method Faction[]    findAll()
+ * @method Faction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FactionRepository extends \App\Domain\Core\Repository\BaseRepository
+class FactionRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -6,16 +6,15 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\StoryObject\Entity\Thread;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\StoryObject\Entity\Thread>
+ * @extends BaseRepository<Thread>
  *
- * @method null|\App\Domain\StoryObject\Entity\Thread find($id, $lockMode = null, $lockVersion = null)
- * @method null|\App\Domain\StoryObject\Entity\Thread findOneBy(array $criteria, array $orderBy = null)
- * @method \App\Domain\StoryObject\Entity\Thread[]    findAll()
+ * @method null|Thread find($id, $lockMode = null, $lockVersion = null)
+ * @method null|Thread findOneBy(array $criteria, array $orderBy = null)
+ * @method Thread[]    findAll()
  * @method Thread[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ThreadRepository extends BaseRepository

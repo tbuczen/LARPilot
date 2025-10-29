@@ -4,6 +4,9 @@ namespace App\Domain\Core\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
+/**
+ * @template T of object
+ */
 abstract class BaseRepository extends ServiceEntityRepository
 {
     public function save(object $entity, bool $flush = true): object
