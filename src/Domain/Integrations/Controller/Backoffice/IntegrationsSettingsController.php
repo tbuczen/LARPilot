@@ -3,7 +3,6 @@
 namespace App\Domain\Integrations\Controller\Backoffice;
 
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Core\Repository\LarpRepository;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Entity\SharedFile;

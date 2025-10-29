@@ -4,7 +4,6 @@ namespace App\Domain\Core\Entity\Trait;
 
 use App\Domain\Account\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 trait CreatorAwareTrait
 {
@@ -17,7 +16,7 @@ trait CreatorAwareTrait
         return $this->createdBy;
     }
 
-    public function setCreatedBy(User|UserInterface $user): self
+    public function setCreatedBy(User $user): self
     {
         $this->createdBy = $user;
         return $this;

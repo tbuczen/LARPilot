@@ -3,11 +3,10 @@
 namespace App\Domain\Core\Repository;
 
 use App\Domain\Core\Entity\LarpInvitation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<LarpInvitation>
+ * @extends BaseRepository<LarpInvitation>
  *
  * @method null|LarpInvitation find($id, $lockMode = null, $lockVersion = null)
  * @method null|LarpInvitation findOneBy(array $criteria, array $orderBy = null)

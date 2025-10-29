@@ -2,38 +2,20 @@
 
 namespace App\Domain\EventPlanning\Repository;
 
+use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\EventPlanning\Entity\PlanningResource;
 use App\Domain\EventPlanning\Entity\ResourceBooking;
 use App\Domain\EventPlanning\Entity\ScheduledEvent;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ResourceBooking>
+ * @extends BaseRepository<ResourceBooking>
  */
-class ResourceBookingRepository extends ServiceEntityRepository
+class ResourceBookingRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ResourceBooking::class);
-    }
-
-    public function save(ResourceBooking $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(ResourceBooking $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
     }
 
     /**

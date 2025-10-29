@@ -5,12 +5,11 @@ namespace App\Domain\Application\Repository;
 use App\Domain\Application\Entity\LarpApplicationChoice;
 use App\Domain\Application\Entity\LarpApplicationVote;
 use App\Domain\Core\Repository\BaseRepository;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\Application\Entity\LarpApplicationChoice>
+ * @extends BaseRepository<LarpApplicationChoice>
  *
  * @method null|LarpApplicationChoice find($id, $lockMode = null, $lockVersion = null)
  * @method null|LarpApplicationChoice findOneBy(array $criteria, array $orderBy = null)

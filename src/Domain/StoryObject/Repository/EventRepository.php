@@ -8,17 +8,16 @@ use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Event;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\StoryObject\Entity\Event>
+ * @extends BaseRepository<Event>
  *
  * @method null|Event find($id, $lockMode = null, $lockVersion = null)
  * @method null|Event findOneBy(array $criteria, array $orderBy = null)
- * @method \App\Domain\StoryObject\Entity\Event[]    findAll()
- * @method \App\Domain\StoryObject\Entity\Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Event[]    findAll()
+ * @method Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class EventRepository extends BaseRepository
 {

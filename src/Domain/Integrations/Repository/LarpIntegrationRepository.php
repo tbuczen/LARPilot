@@ -6,11 +6,10 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\Integrations\Entity\LarpIntegration>
+ * @extends BaseRepository<LarpIntegration>
  *
  * @method null|LarpIntegration find($id, $lockMode = null, $lockVersion = null)
  * @method null|LarpIntegration findOneBy(array $criteria, array $orderBy = null)

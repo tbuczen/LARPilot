@@ -11,13 +11,12 @@ use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\Relation;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Entity\Thread;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @extends ServiceEntityRepository<StoryObject>
+ * @extends BaseRepository<StoryObject>
  *
  * @method null|StoryObject find($id, $lockMode = null, $lockVersion = null)
  * @method null|StoryObject findOneBy(array $criteria, array $orderBy = null)

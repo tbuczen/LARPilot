@@ -74,23 +74,16 @@ readonly class CharacterSheetExportService
 
         // Check if document already exists
         $existingDocumentId = $this->findExistingDocument($driveService, $targetFolderId, $documentName);
+        $existed = false;
 
         if ($existingDocumentId) {
-            // Update existing document
-            $this->updateDocumentContent($docsService, $existingDocumentId, $template, $character);
-            $documentUrl = "https://docs.google.com/document/d/{$existingDocumentId}/edit";
-
-            // Create or update external reference
-            $this->createOrUpdateExternalReference($character, $existingDocumentId, $documentUrl, $integration->getProvider());
-
-            return [
-                'documentId' => $existingDocumentId,
-                'documentUrl' => $documentUrl,
-                'existed' => true,
-            ];
+            // Delete existing document to recreate from updated template
+            // This ensures template structure changes are reflected
+            $driveService->files->delete($existingDocumentId);
+            $existed = true;
         }
 
-        // Create new document from template
+        // Create new document from template (always from latest template)
         $newDocumentId = $this->createDocumentFromTemplate(
             $docsService,
             $driveService,
@@ -108,7 +101,7 @@ readonly class CharacterSheetExportService
         return [
             'documentId' => $newDocumentId,
             'documentUrl' => $documentUrl,
-            'existed' => false,
+            'existed' => $existed,
         ];
     }
 
@@ -266,7 +259,7 @@ readonly class CharacterSheetExportService
     private function buildReplacementMap(Character $character): array
     {
         $replacements = [
-            '<character.name>' => $character->getTitle() ?? '',
+            '<character.title>' => $character->getTitle() ?? '',
             '<character.inGameName>' => $character->getInGameName() ?? '',
             '<character.description>' => $this->stripHtml($character->getDescription()),
             '<character.gender>' => $character->getGender() ?? '',

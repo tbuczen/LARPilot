@@ -6,15 +6,14 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\Core\Entity\Larp>
+ * @extends BaseRepository<Larp>
  */
-class LarpRepository extends ServiceEntityRepository
+class LarpRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -127,15 +126,6 @@ class LarpRepository extends ServiceEntityRepository
         if (!empty($filters['maxDuration'])) {
             $qb->andWhere('DATEDIFF(l.endDate, l.startDate) + 1 <= :maxDuration')
                ->setParameter('maxDuration', $filters['maxDuration']);
-        }
-    }
-
-    public function save(Larp $larp, bool $flush = true): void
-    {
-        $this->getEntityManager()->persist($larp);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
         }
     }
 }

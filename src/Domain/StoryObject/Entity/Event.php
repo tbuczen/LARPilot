@@ -102,7 +102,7 @@ class Event extends StoryObject
     public function removeInvolvedCharacter(Character $character): self
     {
         if ($this->involvedCharacters->contains($character)) {
-            $this->involvedCharacters->remove($character);
+            $this->involvedCharacters->removeElement($character);
         }
         return $this;
     }
@@ -128,7 +128,7 @@ class Event extends StoryObject
     public function removeInvolvedFaction(Faction $involvedFaction): self
     {
         if ($this->involvedFactions->contains($involvedFaction)) {
-            $this->involvedFactions->remove($involvedFaction);
+            $this->involvedFactions->removeElement($involvedFaction);
         }
         return $this;
     }

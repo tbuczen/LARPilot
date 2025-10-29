@@ -2,19 +2,19 @@
 
 namespace App\Domain\StoryObject\Repository;
 
+use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\StoryObject\Entity\Relation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Relation>
+ * @extends BaseRepository<Relation>
  *
  * @method null|Relation find($id, $lockMode = null, $lockVersion = null)
  * @method null|Relation findOneBy(array $criteria, array $orderBy = null)
  * @method Relation[]    findAll()
  * @method Relation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class RelationRepository extends \App\Domain\Core\Repository\BaseRepository
+class RelationRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

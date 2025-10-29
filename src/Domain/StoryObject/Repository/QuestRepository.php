@@ -3,6 +3,7 @@
 namespace App\Domain\StoryObject\Repository;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\StoryObject\Entity\Quest;
 use Doctrine\ORM\QueryBuilder;

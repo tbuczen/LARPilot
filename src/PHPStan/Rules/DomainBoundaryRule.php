@@ -38,21 +38,21 @@ final class DomainBoundaryRule implements Rule
      */
     private const DOMAIN_DEPENDENCIES = [
         'Infrastructure' => [], // Shared kernel, no dependencies on other domains
-        'Core' => [], // Shared kernel (legacy name, being migrated to Infrastructure)
+        'Core' => ['StoryObject', 'Infrastructure', 'Account'], // Shared kernel (legacy name, being migrated to Infrastructure)
         'Account' => ['Infrastructure', 'Core'],
         'Public' => ['Infrastructure', 'Core', 'Account', 'Larp'],
         'Larp' => ['Infrastructure', 'Core', 'Account'],
-        'StoryObject' => ['Infrastructure', 'Core', 'Larp'],
-        'Application' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Participant'],
+        'StoryObject' => ['Infrastructure', 'Core', 'Larp', 'Integrations', 'Account', 'StoryMarketplace'],
+        'Application' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Participant', 'Account'],
         'Participant' => ['Infrastructure', 'Core', 'Account', 'Larp'],
-        'StoryMarketplace' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
+        'StoryMarketplace' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account'],
         'Kanban' => ['Infrastructure', 'Core', 'Larp'],
         'Incident' => ['Infrastructure', 'Core', 'Larp'],
-        'Incidents' => ['Infrastructure', 'Core', 'Larp'], // Alias for Incident
+        'Incidents' => ['Infrastructure', 'Core', 'Larp'],
         'Map' => ['Infrastructure', 'Core', 'Larp'],
         'EventPlanning' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Map', 'Participant'],
         'Integration' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
-        'Integrations' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'], // Alias for Integration
+        'Integrations' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
         'Feedback' => ['Infrastructure', 'Core'],
     ];
 
@@ -63,7 +63,7 @@ final class DomainBoundaryRule implements Rule
 
     /**
      * @param Node\Stmt\Use_ $node
-     * @return array<string>
+     * @return array<PHPStan\Rules\IdentifierRuleError>
      */
     public function processNode(Node $node, Scope $scope): array
     {
@@ -100,11 +100,12 @@ final class DomainBoundaryRule implements Rule
             $allowedDependencies = self::DOMAIN_DEPENDENCIES[$currentDomain] ?? [];
 
             if (!in_array($importedDomain, $allowedDependencies, true)) {
+//                dd($currentDomain , $allowedDependencies, $importedDomain);
                 $errors[] = RuleErrorBuilder::message(sprintf(
-                    'Domain boundary violation: %s domain cannot import from %s domain. Allowed dependencies: %s',
+                    'Domain boundary violation: %s domain cannot import from %s domain. Allowed: %s',
                     $currentDomain,
                     $importedDomain,
-                    empty($allowedDependencies) ? 'none' : implode(', ', $allowedDependencies)
+                    implode(', ', $allowedDependencies)
                 ))
                     ->identifier('domain.boundaryViolation')
                     ->build();

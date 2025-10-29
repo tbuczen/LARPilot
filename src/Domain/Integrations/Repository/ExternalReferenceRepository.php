@@ -5,13 +5,12 @@ namespace App\Domain\Integrations\Repository;
 use App\Domain\Core\Entity\TargetableInterface;
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Integrations\Entity\ExternalReference;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\Integrations\Entity\ExternalReference>
+ * @extends BaseRepository<ExternalReference>
  *
  * @method null|ExternalReference find($id, $lockMode = null, $lockVersion = null)
  * @method null|ExternalReference findOneBy(array $criteria, array $orderBy = null)

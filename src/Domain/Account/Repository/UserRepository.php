@@ -4,11 +4,10 @@ namespace App\Domain\Account\Repository;
 
 use App\Domain\Account\Entity\User;
 use App\Domain\Core\Repository\BaseRepository;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @extends BaseRepository<User>
  *
  * @method null|User find($id, $lockMode = null, $lockVersion = null)
  * @method null|User findOneBy(array $criteria, array $orderBy = null)

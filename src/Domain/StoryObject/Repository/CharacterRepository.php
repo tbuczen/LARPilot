@@ -8,12 +8,11 @@ use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Core\Repository\ListableRepositoryInterface;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\StoryObject;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Character>
+ * @extends BaseRepository<Character>
  *
  * @method null|Character find($id, $lockMode = null, $lockVersion = null)
  * @method null|Character findOneBy(array $criteria, array $orderBy = null)

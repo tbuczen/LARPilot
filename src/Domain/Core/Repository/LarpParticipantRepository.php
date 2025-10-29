@@ -4,11 +4,10 @@ namespace App\Domain\Core\Repository;
 
 use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\LarpParticipant;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<\App\Domain\Core\Controller\Backoffice\\App\Domain\Core\Entity\LarpParticipant>
+ * @extends BaseRepository<LarpParticipant>
  *
  * @method null|LarpParticipant find($id, $lockMode = null, $lockVersion = null)
  * @method null|LarpParticipant findOneBy(array $criteria, array $orderBy = null)

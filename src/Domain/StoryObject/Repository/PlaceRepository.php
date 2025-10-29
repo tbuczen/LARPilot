@@ -4,11 +4,10 @@ namespace App\Domain\StoryObject\Repository;
 
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\StoryObject\Entity\Place;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Place>
+ * @extends BaseRepository<Place>
  *
  * @method null|Place find($id, $lockMode = null, $lockVersion = null)
  * @method null|Place findOneBy(array $criteria, array $orderBy = null)
