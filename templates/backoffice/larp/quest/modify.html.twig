@@ -6,7 +6,7 @@
     {% if quest is defined and quest.id %}
         {% include 'includes/story_object_header.html.twig' with {
             storyObject: quest,
-            storyObjectType: 'larp.quest.title',
+            storyObjectType: 'larp.quest.singular',
             mentionsCount: mentions|length
         } %}
 

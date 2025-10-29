@@ -197,7 +197,7 @@ larp:
     delete_only_larpilot: "Delete only in LARPilot"
     delete_larpilot_and_integrations: "Delete in LARPilot and all connected integrations"
   quest:
-    title: 'Quest'
+    singular: 'Quest'
     name: 'Quest'
     list: 'Quests'
     create: 'Create Quest'
@@ -786,3 +786,20 @@ story_object:
       thread_event: 'Thread Event'
       character_item: 'Character Item'
       event_place: 'Event Place'
+
+lore:
+  title: 'Lore Timeline'
+  timeline: 'Timeline'
+  all_events: 'All Events'
+  public_events: 'Public Events'
+  my_events: 'My Events'
+  filter_by_character: 'Filter by Character'
+  filter_by_faction: 'Filter by Faction'
+  filter_by_category: 'Filter by Category'
+  no_events: 'No events to display'
+  visibility:
+    public: 'Public (visible to everyone)'
+    faction: 'Faction-specific (visible to faction members)'
+    character: 'Character-specific (visible to specific characters)'
+  view_timeline: 'View Lore Timeline'
+  backoffice_timeline: 'Timeline View'

@@ -4,6 +4,7 @@ namespace App\Domain\StoryObject\Entity;
 
 use App\Domain\Core\Entity\LarpParticipant;
 use App\Domain\Core\Entity\Tag;
+use App\Domain\StoryObject\Entity\Enum\EventCategory;
 use App\Domain\StoryObject\Entity\Enum\StoryTimeUnit;
 use App\Domain\StoryObject\Entity\Enum\TargetType;
 use App\Domain\StoryObject\Repository\EventRepository;
@@ -58,6 +59,10 @@ class Event extends StoryObject
     #[Gedmo\Versioned]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endTime = null;
+
+    #[Gedmo\Versioned]
+    #[ORM\Column(length: 20, nullable: false, enumType: EventCategory::class)]
+    private EventCategory $category = EventCategory::Current;
 
     public function __construct()
     {
@@ -221,6 +226,63 @@ class Event extends StoryObject
         return $this;
     }
 
+
+    public function getCategory(): EventCategory
+    {
+        return $this->category;
+    }
+
+    public function setCategory(EventCategory $category): void
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * Check if this event is public (visible to everyone).
+     * An event is public if it has no specific involved characters or factions.
+     */
+    public function isPublic(): bool
+    {
+        return $this->involvedCharacters->isEmpty() && $this->involvedFactions->isEmpty();
+    }
+
+    /**
+     * Check if this event is visible to a specific character.
+     * An event is visible to a character if:
+     * - It's public (no involved characters/factions), OR
+     * - The character is in the involvedCharacters list, OR
+     * - The character belongs to one of the involvedFactions
+     */
+    public function isVisibleToCharacter(Character $character): bool
+    {
+        if ($this->isPublic()) {
+            return true;
+        }
+
+        if ($this->involvedCharacters->contains($character)) {
+            return true;
+        }
+
+        foreach ($this->involvedFactions as $faction) {
+            if ($character->getFactions()->contains($faction)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if this event is visible to members of a specific faction.
+     */
+    public function isVisibleToFaction(Faction $faction): bool
+    {
+        if ($this->isPublic()) {
+            return true;
+        }
+
+        return $this->involvedFactions->contains($faction);
+    }
 
     public static function getTargetType(): TargetType
     {

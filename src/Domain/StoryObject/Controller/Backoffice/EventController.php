@@ -16,6 +16,7 @@ use App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Form\EventType;
 use App\Domain\StoryObject\Form\Filter\EventFilterType;
+use App\Domain\StoryObject\Form\Filter\EventTimelineFilterType;
 use App\Domain\StoryObject\Repository\EventRepository;
 use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +45,32 @@ class EventController extends BaseController
             'filterForm' => $filterForm->createView(),
             'events' => $qb->getQuery()->getResult(),
             'larp' => $larp,
+        ]);
+    }
+
+    #[Route('timeline', name: 'timeline', methods: ['GET'])]
+    public function timeline(Request $request, Larp $larp, EventRepository $repository): Response
+    {
+        $filterForm = $this->createForm(EventTimelineFilterType::class, null, ['larp' => $larp]);
+        $filterForm->handleRequest($request);
+
+        $qb = $repository->createQueryBuilder('e')
+            ->where('e.larp = :larp')
+            ->setParameter('larp', $larp);
+
+        // Apply filter conditions
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+
+        // Order by story time, then start time
+        $qb->orderBy('e.storyTime', 'ASC')
+            ->addOrderBy('e.startTime', 'ASC');
+
+        $events = $qb->getQuery()->getResult();
+
+        return $this->render('backoffice/larp/event/timeline.html.twig', [
+            'larp' => $larp,
+            'events' => $events,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 

@@ -1,0 +1,86 @@
+/**
+ * Lore Timeline Styles
+ *
+ * Visual timeline for displaying LARP events chronologically
+ */
+
+.lore-timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-event {
+    position: relative;
+    display: flex;
+    margin-bottom: 20px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.timeline-connector {
+    position: relative;
+    flex-shrink: 0;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timeline-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px currentColor;
+    z-index: 2;
+}
+
+.timeline-line {
+    flex: 1;
+    width: 2px;
+    background: #dee2e6;
+    margin-top: 4px;
+}
+
+.timeline-content {
+    flex: 1;
+    margin-left: 20px;
+    margin-top: -8px;
+}
+
+// Category-specific styles
+.timeline-event-historical {
+    .timeline-dot {
+        box-shadow: 0 0 0 2px #6c757d;
+    }
+}
+
+.timeline-event-current {
+    .timeline-dot {
+        box-shadow: 0 0 0 2px #0d6efd;
+    }
+}
+
+.timeline-event-future {
+    .timeline-dot {
+        box-shadow: 0 0 0 2px #0dcaf0;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .timeline-connector {
+        width: 30px;
+    }
+
+    .timeline-content {
+        margin-left: 15px;
+    }
+
+    .timeline-dot {
+        width: 12px;
+        height: 12px;
+    }
+}
