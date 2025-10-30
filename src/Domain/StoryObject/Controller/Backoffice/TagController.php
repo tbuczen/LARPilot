@@ -8,6 +8,14 @@ use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Form\Filter\TagFilterType;
 use App\Domain\Core\Form\TagType;
 use App\Domain\Core\Repository\TagRepository;
+use App\Domain\Core\UseCase\ImportTags\ImportTagsCommand;
+use App\Domain\Core\UseCase\ImportTags\ImportTagsHandler;
+use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
+use App\Domain\Integrations\Entity\Enum\ResourceType;
+use App\Domain\Integrations\Entity\ObjectFieldMapping;
+use App\Domain\Integrations\Entity\SharedFile;
+use App\Domain\Integrations\Repository\ObjectFieldMappingRepository;
+use App\Domain\Integrations\Service\IntegrationManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -57,6 +65,80 @@ class TagController extends BaseController
             'larp' => $larp,
             'tag' => $tag,
         ]);
+    }
+
+    #[Route('import', name: 'import', methods: ['GET'])]
+    public function import(Larp $larp): Response
+    {
+        return $this->render('backoffice/larp/tag/import.html.twig', [
+            'larp' => $larp,
+        ]);
+    }
+
+    #[Route('import/file-select/{provider}', name: 'import_file_select', methods: ['GET'])]
+    public function importFileSelect(
+        Larp $larp,
+        LarpIntegrationProvider $provider,
+        ObjectFieldMappingRepository $mappingRepository
+    ): Response {
+        $files = $larp->getIntegrationByProvider($provider)?->getSharedFiles();
+        $mappings = $mappingRepository->findBy(['larp' => $larp, 'fileType' => ResourceType::TAG_LIST]);
+
+        return $this->render('backoffice/larp/tag/fileSelect.html.twig', [
+            'larp' => $larp,
+            'files' => $files,
+            'mappings' => $mappings,
+        ]);
+    }
+
+    #[Route('import/{provider}/{sharedFile}/{mapping}', name: 'import_from_mapping', methods: ['GET', 'POST'])]
+    public function importFromSelectedMapping(
+        Larp $larp,
+        LarpIntegrationProvider $provider,
+        SharedFile $sharedFile,
+        ObjectFieldMapping $mapping,
+        IntegrationManager $integrationManager,
+        ImportTagsHandler $handler
+    ): Response {
+        $integrationService = $integrationManager->getService($provider);
+
+        $rows = $integrationService->fetchSpreadsheetRows($sharedFile, $mapping);
+        $additionalData = [
+            'sheetId' => $integrationService->fetchSpreadsheetSheetIdByName($sharedFile, $mapping),
+        ];
+        $command = new ImportTagsCommand(
+            $larp->getId()->toRfc4122(),
+            $rows,
+            $mapping->getMappingConfiguration(),
+            $mapping->getMetaConfiguration(),
+            $sharedFile->getId()->toRfc4122(),
+            additionalFileData: $additionalData
+        );
+        $result = $handler->handle($command);
+
+        if (!empty($result['skipped'])) {
+            $this->addFlash('warning', $this->translator->trans('import.tags.skipped', [
+                'count' => count($result['skipped']),
+                'tags' => implode(', ', $result['skipped'])
+            ]));
+        }
+
+        $this->addFlash('success', $this->translator->trans('import.tags.success'));
+
+        return $this->redirectToRoute('backoffice_larp_story_tag_list', [
+            'larp' => $larp->getId()->toRfc4122(),
+        ]);
+    }
+
+    #[Route('import/{provider}', name: 'import_integration', methods: ['GET', 'POST'])]
+    public function importFromIntegration(Larp $larp, LarpIntegrationProvider $provider): Response
+    {
+        return match ($provider) {
+            default => $this->redirectToRoute('backoffice_larp_story_tag_import_file_select', [
+                'larp' => $larp->getId()->toRfc4122(),
+                'provider' => $provider->value
+            ]),
+        };
     }
 
     #[Route('{tag}/delete', name: 'delete', methods: ['GET', 'POST'])]

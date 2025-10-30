@@ -1,0 +1,117 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+
+{% block larp_content %}
+    {% include 'includes/story_object_header.html.twig' with {
+        storyObject: character,
+        storyObjectType: 'character',
+        mentionsCount: mentionsCount|default(0)
+    } %}
+
+    {{ tabs_macro.tabs('applicants', character, 'character', larp, mentionsCount|default(0), false, choices|length) }}
+
+    <div class="tab-pane border border-top-0 p-3">
+        {% if choices|length > 0 %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people"></i> {{ 'larp.character.applicants.list'|trans }}
+                        <span class="badge bg-primary ms-2">{{ choices|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>{{ 'larp.character.applicants.priority'|trans }}</th>
+                                    <th>{{ 'larp.character.applicants.applicant'|trans }}</th>
+                                    <th>{{ 'larp.character.applicants.justification'|trans }}</th>
+                                    <th>{{ 'larp.character.applicants.visual'|trans }}</th>
+                                    <th>{{ 'larp.character.applicants.status'|trans }}</th>
+                                    <th>{{ 'larp.character.applicants.votes'|trans }}</th>
+                                    <th>{{ 'actions'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for choice in choices %}
+                                    {% set application = choice.application %}
+                                    {% set user = application.user %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-primary" style="font-size: 1rem;">
+                                                #{{ choice.priority }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <strong>{{ user.username ?? application.contactEmail }}</strong>
+                                                <br>
+                                                <small class="text-muted">{{ 'larp.character.applicants.applied'|trans }}: {{ application.createdAt|date('Y-m-d H:i') }}</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if choice.justification %}
+                                                <div class="text-truncate" style="max-width: 250px;" title="{{ choice.justification }}">
+                                                    {{ choice.justification }}
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if choice.visual %}
+                                                <div class="text-truncate" style="max-width: 250px;" title="{{ choice.visual }}">
+                                                    {{ choice.visual }}
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% set statusClass = 'secondary' %}
+                                            {% if application.status.value == 'new' %}
+                                                {% set statusClass = 'primary' %}
+                                            {% elseif application.status.value == 'consider' %}
+                                                {% set statusClass = 'info' %}
+                                            {% elseif application.status.value == 'offered' %}
+                                                {% set statusClass = 'warning' %}
+                                            {% elseif application.status.value == 'confirmed' %}
+                                                {% set statusClass = 'success' %}
+                                            {% elseif application.status.value == 'accepted' %}
+                                                {% set statusClass = 'success' %}
+                                            {% elseif application.status.value == 'declined' %}
+                                                {% set statusClass = 'danger' %}
+                                            {% elseif application.status.value == 'rejected' %}
+                                                {% set statusClass = 'danger' %}
+                                            {% endif %}
+                                            <span class="badge bg-{{ statusClass }}">{{ application.status.value|upper }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge {% if choice.votes > 0 %}bg-success{% elseif choice.votes < 0 %}bg-danger{% else %}bg-secondary{% endif %}">
+                                                {{ choice.votes > 0 ? '+' : '' }}{{ choice.votes }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('backoffice_larp_applications_view', {larp: larp.id, application: application.id}) }}"
+                                               class="btn btn-sm btn-primary">
+                                                <i class="bi bi-eye"></i> {{ 'larp.character.applicants.view_application'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> {{ 'larp.character.applicants.no_applicants'|trans }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block title %}{{ larp.title }} - {{ character.getTitle() }} - {{ 'larp.character.applicants.title'|trans }}{% endblock %}

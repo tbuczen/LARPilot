@@ -1,0 +1,38 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_title %}{{ 'tag.import.title'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card">
+        <div class="card-header">
+            <h1>{{ 'tag.import.heading'|trans }}</h1>
+        </div>
+        <div class="card-body">
+            <p class="mb-4">{{ 'tag.import.description'|trans }}</p>
+
+            <div class="list-group">
+                {% for integration in larp.integrations %}
+                    <a href="{{ path('backoffice_larp_story_tag_import_integration', {
+                        larp: larp.id,
+                        provider: integration.provider.value
+                    }) }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ integration.provider.value|capitalize }}</strong>
+                                <div class="text-muted small">{{ 'integration.owner'|trans }}: {{ integration.owner }}</div>
+                            </div>
+                            <i class="bi bi-chevron-right"></i>
+                        </div>
+                    </a>
+                {% else %}
+                    <div class="alert alert-info">
+                        {{ 'tag.import.no_integrations'|trans }}
+                        <a href="{{ path('backoffice_larp_integrations_settings', { larp: larp.id }) }}">
+                            {{ 'integration.configure'|trans }}
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

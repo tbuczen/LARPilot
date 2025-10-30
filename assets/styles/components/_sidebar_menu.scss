@@ -1,13 +1,13 @@
 // Variables for sidebar styling
-$sidebar-width-mobile: 280px;
-$sidebar-width-tablet: 320px;
-$sidebar-width-desktop: 350px;
-$sidebar-bg: #fff;
-$sidebar-border-color: #ddd;
-$sidebar-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-$sidebar-shadow-open: -5px 0 15px rgba(0, 0, 0, 0.15);
-$sidebar-transition: right 0.3s ease;
-$overlay-bg: rgba(0, 0, 0, 0.5);
+$sidebar-width-mobile: 300px;
+$sidebar-width-tablet: 340px;
+$sidebar-width-desktop: 360px;
+$sidebar-bg: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+$sidebar-border-color: #e0e0e0;
+$sidebar-shadow: -4px 0 20px rgba(0, 0, 0, 0.08);
+$sidebar-shadow-open: -8px 0 30px rgba(0, 0, 0, 0.12);
+$sidebar-transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$overlay-bg: rgba(0, 0, 0, 0.6);
 $overlay-transition: opacity 0.3s ease, visibility 0.3s ease;
 
 // Breakpoints
@@ -16,19 +16,50 @@ $tablet-min: 769px;
 $tablet-max: 1024px;
 $desktop-min: 769px;
 
-// Sidebar button
+// Sidebar toggle button - Modern hamburger style
 #sidebarMenuButton {
     position: fixed;
-    top: 1.75rem;
+    top: 1rem;
     right: 1rem;
     z-index: 1100;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+        font-size: 24px;
+        color: white;
+        transition: transform 0.2s ease;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+
+        i {
+            transform: scale(1.1);
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
 
     // Hide button when sidebar is open
     &.hidden {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
+        transform: scale(0.8);
     }
 }
 
@@ -41,59 +72,85 @@ $desktop-min: 769px;
 .sidebar-menu {
     position: fixed;
     top: 0;
-    right: -$sidebar-width-mobile; // Hidden by default
+    right: 0;
     width: $sidebar-width-mobile;
     height: 100%;
     background: $sidebar-bg;
     border-left: 1px solid $sidebar-border-color;
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1050;
+    transform: translateX(100%);
     transition: $sidebar-transition;
     box-shadow: $sidebar-shadow;
 
+    // Custom scrollbar
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(102, 126, 234, 0.3);
+        border-radius: 4px;
+
+        &:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+    }
+
     &.open {
-        right: 0; // Show sidebar
+        transform: translateX(0);
         z-index: 1060; // Higher than button when open
     }
 }
 
 // Sidebar header
 .sidebar-header {
-    padding: 1rem;
-    border-bottom: 1px solid $sidebar-border-color;
+    padding: 1.5rem 1.25rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-title {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #333;
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
 }
 
 .sidebar-close {
-    border: none;
-    background: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-    transition: color 0.2s ease;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
 
     &:hover {
-        color: #333;
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
     }
 
     &:focus {
-        outline: 2px solid #007bff;
+        outline: 2px solid white;
         outline-offset: 2px;
     }
 }
 
 // Sidebar body
 .sidebar-body {
-    padding: 1rem;
+    padding: 1.25rem;
 }
 
 // Sidebar overlay
@@ -119,11 +176,16 @@ $desktop-min: 769px;
 @media (max-width: $mobile-max) {
     .sidebar-menu {
         width: $sidebar-width-mobile;
-        right: -$sidebar-width-mobile;
     }
-    
+
     .sidebar-overlay.active {
         display: block;
+    }
+
+    #sidebarMenuButton {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
     }
 }
 
@@ -131,7 +193,6 @@ $desktop-min: 769px;
 @media (min-width: $tablet-min) and (max-width: $tablet-max) {
     .sidebar-menu {
         width: $sidebar-width-tablet;
-        right: -$sidebar-width-tablet;
     }
 }
 
@@ -140,43 +201,111 @@ $desktop-min: 769px;
     .sidebar-overlay {
         display: none; // No overlay needed on desktop
     }
-    
+
     .sidebar-menu {
         width: $sidebar-width-desktop;
-        right: -$sidebar-width-desktop;
-        
+
         &.open {
             box-shadow: $sidebar-shadow-open;
         }
     }
+
+    #sidebarMenuButton {
+        top: 1.25rem;
+        right: 1.25rem;
+    }
 }
 
-// Additional styling for menu items (optional)
+// Enhanced menu items styling
 .sidebar-body {
     .nav-link {
-        color: #333;
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.25rem;
-        border-radius: 0.375rem;
-        transition: background-color 0.2s ease, color 0.2s ease;
+        color: #2d3748;
+        padding: 0.875rem 1rem;
+        margin-bottom: 0.375rem;
+        border-radius: 10px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        // Subtle background effect
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: scaleY(0);
+            transition: transform 0.25s ease;
+        }
 
         &:hover {
-            background-color: #f8f9fa;
-            color: #007bff;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            color: #667eea;
+            transform: translateX(4px);
+            padding-left: 1.125rem;
+
+            &::before {
+                transform: scaleY(1);
+            }
         }
 
         &.active {
-            background-color: #007bff;
-            color: #fff;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            color: #667eea;
             font-weight: 600;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+
+            &::before {
+                transform: scaleY(1);
+            }
+        }
+
+        // Icon styling (if icons are added to menu items)
+        i {
+            font-size: 1.125rem;
+            min-width: 1.25rem;
+        }
+
+        // Caret icon for collapsible items
+        .bi-caret-down-fill {
+            margin-left: auto;
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        &[aria-expanded="true"] .bi-caret-down-fill {
+            transform: rotate(180deg);
         }
     }
 
     .nav {
         flex-direction: column;
-        
+        gap: 0.25rem;
+
         .nav-item {
             width: 100%;
+        }
+    }
+
+    // Nested menu styling
+    .collapse {
+        .nav {
+            margin-top: 0.375rem;
+            padding-left: 1rem;
+            border-left: 2px solid rgba(102, 126, 234, 0.1);
+            margin-left: 0.5rem;
+        }
+
+        .nav-link {
+            font-size: 0.875rem;
+            padding: 0.625rem 0.875rem;
         }
     }
 }
@@ -184,35 +313,7 @@ $desktop-min: 769px;
 // Accessibility improvements
 .sidebar-menu {
     &:focus-within {
-        outline: 2px solid #007bff;
+        outline: 2px solid #667eea;
         outline-offset: -2px;
     }
-}
-
-// Animation for smooth opening/closing
-@keyframes slideIn {
-    from {
-        right: -100%;
-    }
-    to {
-        right: 0;
-    }
-}
-
-@keyframes slideOut {
-    from {
-        right: 0;
-    }
-    to {
-        right: -100%;
-    }
-}
-
-// Optional: Add animation classes if you want more control
-.sidebar-menu.animating-in {
-    animation: slideIn $sidebar-transition;
-}
-
-.sidebar-menu.animating-out {
-    animation: slideOut $sidebar-transition;
 }

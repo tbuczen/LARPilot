@@ -36,13 +36,21 @@ class LocationController extends BaseController
         LocationRepository $repository,
     ): Response {
         $location = $repository->findOneBy(['slug' => $slug]);
-        
+
         if (!$location) {
             throw $this->createNotFoundException('Location not found');
         }
-        
+
+        // Get LARPs at this location (sorted by start date, most recent first)
+        $larps = $location->getLarps()
+            ->filter(fn ($larp) => $larp->getStatus()->isVisibleForEveryone())
+            ->toArray();
+
+        usort($larps, fn ($a, $b) => $b->getStartDate() <=> $a->getStartDate());
+
         return $this->render('public/location/details.html.twig', [
             'location' => $location,
+            'larps' => $larps,
         ]);
     }
 }

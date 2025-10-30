@@ -31,7 +31,17 @@
                             <li class="mb-2">
                                 <i class="bi bi-geo-alt text-muted me-2"></i>
                                 <strong>{{ 'location'|trans }}:</strong><br>
-                                <span class="ms-3">{{ larp.location }}</span>
+                                <span class="ms-3">
+                                    {% if larp.location and larp.location.slug %}
+                                        <a href="{{ path('public_location_details', {slug: larp.location.slug}) }}"
+                                           class="text-decoration-none">
+                                            {{ larp.location }}
+                                            <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                                        </a>
+                                    {% else %}
+                                        {{ larp.location }}
+                                    {% endif %}
+                                </span>
                             </li>
                             <li class="mb-2">
                                 <i class="bi bi-calendar-event text-muted me-2"></i>

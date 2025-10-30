@@ -29,7 +29,7 @@ class FindOrCreateEntityExtension extends AbstractTypeExtension
             $larp = $form->getRoot()->getConfig()->getOptions()['larp'] ?? null;
             $class = $options['class'] ?? null;
 
-            if ($larp && $class instanceof TargetableInterface) {
+            if ($larp && is_a($class, TargetableInterface::class, true)) {
                 $targetType = $class::getTargetType();
 
                 $existing = $view->vars['attr']['data-controller'] ?? '';

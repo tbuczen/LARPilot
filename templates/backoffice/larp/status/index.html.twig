@@ -157,6 +157,116 @@
                 </div>
             </div>
         </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">{{ 'larp.status.requirements'|trans }}</h6>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="requirementsAccordion">
+                    {# To Publish Requirements #}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button {{ currentStatus.value in ['DRAFT', 'WIP'] ? '' : 'collapsed' }}"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#publishRequirements">
+                                <i class="fas fa-upload me-2"></i> Publish Requirements
+                            </button>
+                        </h2>
+                        <div id="publishRequirements"
+                             class="accordion-collapse collapse {{ currentStatus.value in ['DRAFT', 'WIP'] ? 'show' : '' }}"
+                             data-bs-parent="#requirementsAccordion">
+                            <div class="accordion-body">
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2">
+                                        <i class="fas {{ larp.location ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        Location
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas {{ larp.description ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        Description
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas {{ larp.startDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        Start Date
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas {{ larp.endDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        End Date
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Open for Inquiries Requirements #}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#inquiriesRequirements">
+                                <i class="fas fa-users me-2"></i> Open for Inquiries Requirements
+                            </button>
+                        </h2>
+                        <div id="inquiriesRequirements"
+                             class="accordion-collapse collapse"
+                             data-bs-parent="#requirementsAccordion">
+                            <div class="accordion-body">
+                                <p class="text-muted small mb-2">All publish requirements plus:</p>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2">
+                                        <i class="fas {{ larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        At least one character
+                                        {% if larp.characters|length > 0 %}
+                                            <span class="badge bg-secondary ms-1">{{ larp.characters|length }}</span>
+                                        {% endif %}
+                                    </li>
+                                    <li class="mb-2">
+                                        {% set charactersWithoutDesc = larp.characters|filter(c => not c.description) %}
+                                        <i class="fas {{ charactersWithoutDesc|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        All characters have descriptions
+                                        {% if charactersWithoutDesc|length > 0 %}
+                                            <span class="badge bg-warning ms-1">{{ charactersWithoutDesc|length }} missing</span>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Confirm Event Requirements #}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#confirmRequirements">
+                                <i class="fas fa-check-double me-2"></i> Confirm Event Requirements
+                            </button>
+                        </h2>
+                        <div id="confirmRequirements"
+                             class="accordion-collapse collapse"
+                             data-bs-parent="#requirementsAccordion">
+                            <div class="accordion-body">
+                                <p class="text-muted small mb-2">All inquiry requirements plus:</p>
+                                <ul class="list-unstyled mb-0">
+                                    <li class="mb-2">
+                                        {% set unassignedChars = larp.characters|filter(c => c.larpParticipant is null) %}
+                                        <i class="fas {{ unassignedChars|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        All characters assigned to participants
+                                        {% if unassignedChars|length > 0 %}
+                                            <span class="badge bg-warning ms-1">{{ unassignedChars|length }} unassigned</span>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

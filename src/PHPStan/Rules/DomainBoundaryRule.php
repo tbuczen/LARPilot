@@ -100,7 +100,7 @@ final class DomainBoundaryRule implements Rule
             $allowedDependencies = self::DOMAIN_DEPENDENCIES[$currentDomain] ?? [];
 
             if (!in_array($importedDomain, $allowedDependencies, true)) {
-//                dd($currentDomain , $allowedDependencies, $importedDomain);
+                //                dd($currentDomain , $allowedDependencies, $importedDomain);
                 $errors[] = RuleErrorBuilder::message(sprintf(
                     'Domain boundary violation: %s domain cannot import from %s domain. Allowed: %s',
                     $currentDomain,
