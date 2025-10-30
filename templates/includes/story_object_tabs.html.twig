@@ -1,12 +1,14 @@
 {# templates/includes/story_object_tabs.html.twig #}
 {# Tab macro for story object with route-based navigation #}
 
-{% macro tabs(currentTab, storyObject, storyObjectType, larp, mentionsCount, includeDecisionTree) %}
+{% macro tabs(currentTab, storyObject, storyObjectType, larp, mentionsCount, includeDecisionTree, applicantsCount) %}
     {% set includeDecisionTree = includeDecisionTree|default(false) %}
+    {% set applicantsCount = applicantsCount|default(0) %}
 
     {% set baseRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_modify' %}
     {% set mentionsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_mentions' %}
     {% set treeRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_tree' %}
+    {% set applicantsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_applicants' %}
 
     <ul class="nav nav-tabs nav-fill" role="tablist">
         {# Details Tab #}
@@ -34,6 +36,19 @@
                 <a class="nav-link {{ currentTab == 'tree' ? 'active' : '' }}"
                    href="{{ path(treeRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
                     <i class="bi bi-diagram-3 me-2"></i>{{ 'larp.decision_tree'|trans }}
+                </a>
+            </li>
+        {% endif %}
+
+        {# Applicants Tab (only for Character) #}
+        {% if storyObjectType == 'character' %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {{ currentTab == 'applicants' ? 'active' : '' }}"
+                   href="{{ path(applicantsRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
+                    <i class="bi bi-people me-2"></i>{{ 'larp.character.applicants.title'|trans }}
+                    {% if applicantsCount > 0 %}
+                        <span class="badge bg-primary ms-1">{{ applicantsCount }}</span>
+                    {% endif %}
                 </a>
             </li>
         {% endif %}

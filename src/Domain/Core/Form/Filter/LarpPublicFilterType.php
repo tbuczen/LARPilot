@@ -6,7 +6,10 @@ use App\Domain\Core\Entity\Enum\LarpCharacterSystem;
 use App\Domain\Core\Entity\Enum\LarpSetting;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Enum\LarpType;
+use App\Domain\Core\Entity\Location;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
+use Spiriit\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,16 +24,18 @@ class LarpPublicFilterType extends AbstractType
         //PRO: there should be option to localise a larp in range of given address
         //duration should be a range from available larps min and max durations
         $builder
-            ->add('status', Filters\ChoiceFilterType::class, [
-                'choices' => [
-                    'Published' => LarpStageStatus::PUBLISHED,
-                    'Open for Inquiries' => LarpStageStatus::INQUIRIES,
-                    'Confirmed' => LarpStageStatus::CONFIRMED,
-                    'Completed' => LarpStageStatus::COMPLETED,
-                ],
+            ->add('status', Filters\EnumFilterType::class, [
+                'class' => LarpStageStatus::class,
                 'required' => false,
+                'multiple' => false,
                 'placeholder' => 'All Statuses',
-                'attr' => ['class' => 'form-select']
+                'attr' => ['class' => 'form-select'],
+                'choices' => [
+                    LarpStageStatus::PUBLISHED,
+                    LarpStageStatus::INQUIRIES,
+                    LarpStageStatus::CONFIRMED,
+                    LarpStageStatus::COMPLETED,
+                ],
             ])
             ->add('setting', Filters\EnumFilterType::class, [
                 'class' => LarpSetting::class,
@@ -54,12 +59,13 @@ class LarpPublicFilterType extends AbstractType
                 'choice_label' => fn (LarpCharacterSystem $enum): string => $enum->getLabel(),
                 'placeholder' => 'choose',
             ])
-            ->add('location', Filters\TextFilterType::class, [
+            ->add('location', EntityType::class, [
+                'class' => Location::class,
+                'choice_label' => 'title',
+                'placeholder' => 'choose',
                 'required' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Search by location...'
-                ]
+                'autocomplete' => true,
+                'attr' => ['class' => 'form-select']
             ])
             ->add('startDate', Filters\DateFilterType::class, [
                 'required' => false,
@@ -77,7 +83,17 @@ class LarpPublicFilterType extends AbstractType
                     'class' => 'form-control',
                     'min' => 1,
                     'placeholder' => 'Min days'
-                ]
+                ],
+                'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
+                    if (empty($values['value'])) {
+                        return null;
+                    }
+                    $qb = $filterQuery->getQueryBuilder();
+                    // Duration in days = difference between endDate and startDate
+                    $qb->andWhere('DATE_DIFF(c.endDate, c.startDate) >= :minDuration')
+                        ->setParameter('minDuration', (int) $values['value']);
+                    return null;
+                },
             ])
             ->add('maxDuration', Filters\NumberFilterType::class, [
                 'required' => false,
@@ -85,7 +101,17 @@ class LarpPublicFilterType extends AbstractType
                     'class' => 'form-control',
                     'min' => 1,
                     'placeholder' => 'Max days'
-                ]
+                ],
+                'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
+                    if (empty($values['value'])) {
+                        return null;
+                    }
+                    $qb = $filterQuery->getQueryBuilder();
+                    // Duration in days = difference between endDate and startDate
+                    $qb->andWhere('DATE_DIFF(c.endDate, c.startDate) <= :maxDuration')
+                        ->setParameter('maxDuration', (int) $values['value']);
+                    return null;
+                },
             ]);
     }
 

@@ -43,7 +43,7 @@ class LarpRepository extends BaseRepository
                 ->where('lp.larp = c')
                 ->andWhere('lp.user = :currentUser');
 
-            $qb->where(
+            $qb->andWhere(
                 $qb->expr()->orX(
                     $upcoming,
                     $qb->expr()->exists($subQb->getDQL())
@@ -51,8 +51,7 @@ class LarpRepository extends BaseRepository
             );
             $qb->setParameter('currentUser', $user);
         } else {
-            // If no user is logged in, only visible upcoming larps are shown.
-            $qb->where($upcoming);
+            $qb->andWhere($upcoming);
         }
 
         $qb->setParameter('visibleStatuses', $visibleStatuses)

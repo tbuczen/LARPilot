@@ -8,12 +8,18 @@ next: Next
 previous: Previous
 welcome: Welcome
 larps: LARPs
-incident: Incident
+incident:
+  singular: Incident
+  plural: Incidents
+  create: Create Incident
+  list: Incidents
+  report: Report Incident
 incidents: Incidents
 tags: Tags
 list_view: 'List View'
 menu:
   toggle: 'Menu'
+  navigation: 'Navigation'
 create: 'Create'
 name: 'Name'
 description: 'Description'
@@ -58,7 +64,6 @@ new: 'New'
 faction: 'Faction'
 manage_filters: 'Manage Filters'
 dashboard: 'Dashboard'
-location: 'Location'
 not_set: 'Not Set'
 days: 'days'
 day: 'day'
@@ -139,6 +144,9 @@ larp:
   submit_application: 'Submit Application'
   application_form_description: 'Use this form to apply for the most interesting roles, please select tags that are interesting for You to play and the tags that You would like to omit in Your gameplay (triggers)'
   application_deadline: 'Deadline of application stage'
+  community_links: 'Community Links'
+  join_discord: 'Join Discord Server'
+  facebook_event: 'Facebook Event'
   application:
     priority: 'Priority'
     justification: 'Justification'
@@ -203,6 +211,18 @@ larp:
       description: 'Generate a Google Doc with complete character information based on configured template'
       not_configured: "To export character sheets, you need to configure a Character Sheet Template and Character Document Directory in Integration Settings."
       configure: "Configure Integration Settings"
+    applicants:
+      title: 'Applicants'
+      list: 'Applicants for this character'
+      no_applicants: 'No applicants for this character yet'
+      priority: 'Priority'
+      applicant: 'Applicant'
+      justification: 'Player Justification'
+      visual: 'Visual Description'
+      status: 'Application Status'
+      votes: 'Votes'
+      applied: 'Applied'
+      view_application: 'View Application'
   quest:
     singular: 'Quest'
     name: 'Quest'
@@ -370,6 +390,16 @@ larp:
     create: 'Create Tag'
     modify: 'Edit Tag'
     view: 'Tag Details'
+    import:
+      title: 'Import Tags'
+      heading: 'Import Tags from External Sources'
+      description: 'Select an integration to import tags from a spreadsheet.'
+      no_integrations: 'No integrations configured.'
+      success: 'Tags imported successfully.'
+    file_select:
+      title: 'Select Tag Import File'
+      heading: 'Select a Spreadsheet for Tag Import'
+      no_files: 'No files available for import.'
   participant:
     singular: 'Participant'
     plural: 'Participants'
@@ -448,6 +478,7 @@ larp:
     visibility: "Visibility Settings"
     visible_everyone: "Visible to Everyone"
     visible_organizers: "Visible to Organizers"
+    requirements: "Status Requirements"
     manage: "Manage Status"
     draft: "Draft"
     wip: "Work in Progress"
@@ -503,6 +534,26 @@ marketplace:
   player_preferences: "Player Preferences"
   match_score: "Match Score"
 
+#Translations specific for public location pages
+location:
+  singular: 'Location'
+  details: 'Location Details'
+  about: 'About This Location'
+  contact: 'Contact Information'
+  facilities: 'Facilities'
+  facilities_info: 'Facilities & Information'
+  accessibility: 'Accessibility'
+  parking: 'Parking Information'
+  public_transport: 'Public Transport'
+  capacity: 'Capacity'
+  people: 'people'
+  max_capacity: 'Max Capacity'
+  larps_hosted: 'LARPs Hosted'
+  larp_history: 'Event History'
+  quick_stats: 'Quick Stats'
+  get_directions: 'Get Directions'
+  visit_website: 'Visit Website'
+
 #Translations specific for Core Organizers backoffice
 backoffice_title: Admin Panel
 backoffice:
@@ -529,6 +580,8 @@ account:
 integration:
   singular: 'Integration'
   plural: 'Integrations'
+  owner: 'Owner'
+  configure: 'Configure Integrations'
   file_select:
     title: "Select File"
     heading: "Select a File for Import"
@@ -538,6 +591,11 @@ integration:
     existing_mappings: 'Existing mappings'
     use_mapping: 'Import using this mapping'
     no_folders: 'No resources'
+
+import:
+  tags:
+    skipped: '{count} tags were skipped (already have descriptions): {tags}'
+    success: 'Tags imported successfully'
 
 login_page:
   info: "If you are already registered and want to connect accounts, please sign in first and link them in your account settings."

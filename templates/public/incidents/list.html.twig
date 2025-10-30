@@ -1,5 +1,21 @@
 {% extends 'public/base.html.twig' %}
 
+{% block title %}{{ 'incident.list'|trans }}{% endblock %}
+
 {% block body %}
-    <h1>Create Incident</h1>
+    {% include 'includes/page_header.html.twig' with {
+        title: 'incident.list'|trans,
+        subtitle: 'View reported incidents',
+        icon: 'bi bi-list-ul',
+        actions: '<a href="' ~ path('incident_create') ~ '" class="btn btn-light"><i class="bi bi-plus-circle me-1"></i>Create Incident</a>'
+    } %}
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                {# Incident list will go here #}
+                <p class="text-muted">No incidents reported yet.</p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

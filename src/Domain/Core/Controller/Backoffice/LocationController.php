@@ -50,8 +50,10 @@ class LocationController extends AbstractController
         LocationRepository $locationRepository,
         ?Location          $location = null
     ): Response {
+        $isNew = false;
         if (!$location instanceof Location) {
             $location = new Location();
+            $isNew = true;
         }
 
         // Check if user has organizer role or is super admin
@@ -59,7 +61,9 @@ class LocationController extends AbstractController
             throw $this->createAccessDeniedException('You need ROLE_SUPER_ADMIN to create global locations.');
         }
 
-        $form = $this->createForm(LocationType::class, $location);
+        $form = $this->createForm(LocationType::class, $location, [
+            'show_captcha' => $isNew, // Show CAPTCHA only for new locations
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

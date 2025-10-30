@@ -3,6 +3,8 @@
 namespace App\Domain\Core\Form;
 
 use App\Domain\Core\Entity\Location;
+use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -109,12 +111,23 @@ class LocationType extends AbstractType
                 'attr' => ['class' => 'form-control']
             ])
         ;
+
+        // Add reCAPTCHA for global location creation to prevent spam
+        if ($options['show_captcha']) {
+            $builder->add('recaptcha', EWZRecaptchaType::class, [
+                'mapped' => false,
+                'constraints' => [
+                    new RecaptchaTrue()
+                ],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Location::class,
+            'show_captcha' => false, // Only show CAPTCHA for global location creation
         ]);
     }
 }

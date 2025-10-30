@@ -181,7 +181,7 @@
 
     {% if character.id %}
         {# Tabs navigation #}
-        {{ tabs_macro.tabs('details', character, 'character', larp, mentions|length, false) }}
+        {{ tabs_macro.tabs('details', character, 'character', larp, mentions|length, false, applicantsCount|default(0)) }}
 
         {{ detailsContent|raw }}
     {% else %}

@@ -1,0 +1,48 @@
+{#
+    Reusable page header component for public pages
+
+    Parameters:
+    - title: Page title (required)
+    - subtitle: Optional subtitle text
+    - icon: Optional Bootstrap icon class (e.g., 'bi-geo-alt')
+    - breadcrumbs: Optional array of breadcrumb items [{ label: 'Text', url: 'path' }, ...]
+    - actions: Optional content block for header actions (buttons, etc.)
+#}
+<div class="bg-primary text-white py-4 mb-4">
+    <div class="container">
+        {% if breadcrumbs is defined and breadcrumbs %}
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-2">
+                    {% for item in breadcrumbs %}
+                        <li class="breadcrumb-item {% if loop.last %}active text-white{% endif %}">
+                            {% if not loop.last and item.url is defined %}
+                                <a href="{{ item.url }}" class="text-white-50 text-decoration-none">{{ item.label }}</a>
+                            {% else %}
+                                {{ item.label }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </nav>
+        {% endif %}
+
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="mb-0 {% if subtitle is defined %}mb-2{% endif %}">
+                    {% if icon is defined %}
+                        <i class="{{ icon }} me-2"></i>
+                    {% endif %}
+                    {{ title }}
+                </h1>
+                {% if subtitle is defined %}
+                    <p class="lead mb-0 mt-2">{{ subtitle }}</p>
+                {% endif %}
+            </div>
+            {% if actions is defined %}
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    {{ actions|raw }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

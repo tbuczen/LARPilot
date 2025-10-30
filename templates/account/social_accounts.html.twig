@@ -1,12 +1,19 @@
-{% extends 'base.html.twig' %}
+{% extends 'public/base.html.twig' %}
 
 {% import 'macros/confirm_macro.html.twig' as confirm %}
 
 {% block title %}{{ 'account.connected_accounts' | trans }}{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>{{ 'account.connected_accounts' | trans }}</h1>
+    {% include 'includes/page_header.html.twig' with {
+        title: 'account.connected_accounts'|trans,
+        subtitle: 'Link and manage your social media accounts',
+        icon: 'bi bi-link-45deg'
+    } %}
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
 
         {% if socialAccounts|length > 0 %}
             <ul class="list-group">
@@ -30,5 +37,7 @@
         <a href="{{ path('sso_connect') }}" class="btn btn-primary mt-3">
             {{ 'account.link_another_social' | trans }}
         </a>
+            </div>
+        </div>
     </div>
 {% endblock %}

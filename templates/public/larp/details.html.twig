@@ -5,19 +5,121 @@
 {% endblock %}
 
 {% block body %}
+    {% set manageButton %}
+        {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
+            <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}" class="btn btn-light">
+                <i class="bi bi-gear me-1"></i>{{ 'manage'|trans }}
+            </a>
+        {% endif %}
+    {% endset %}
+
+    {# Header Image #}
+    {% if larp.headerImagePath %}
+        <div class="w-100" style="max-height: 400px; overflow: hidden;">
+            <img src="{{ larp.headerImagePath }}" alt="{{ larp.title }}" class="w-100" style="object-fit: cover; max-height: 400px;">
+        </div>
+    {% endif %}
+
+    {% include 'includes/page_header.html.twig' with {
+        title: larp.title,
+        subtitle: larp.startDate|date('F j, Y') ~ ' - ' ~ larp.endDate|date('F j, Y') ~ ' • ' ~ larp.location,
+        icon: 'bi bi-calendar-event',
+        breadcrumbs: [
+            { label: 'LARPs', url: path('public_larp_list') },
+            { label: larp.title }
+        ],
+        actions: manageButton
+    } %}
+
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                {% include 'public/larp/_info_header.html.twig' with {
-                    'larp': larp,
-                    'showManageButton': true
-                } %}
+                {# LARP Info Card #}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="text-muted mb-2">{{ 'description'|trans }}</h6>
+                                <p class="mb-3">{{ larp.description|raw }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body p-3">
+                                        <h6 class="card-title text-primary mb-3">{{ 'details'|trans }}</h6>
+                                        <ul class="list-unstyled mb-0 small">
+                                            <li class="mb-2">
+                                                <i class="bi bi-geo-alt text-muted me-2"></i>
+                                                <strong>{{ 'location'|trans }}:</strong><br>
+                                                <span class="ms-3">
+                                                    {% if larp.location and larp.location.slug %}
+                                                        <a href="{{ path('public_location_details', {slug: larp.location.slug}) }}"
+                                                           class="text-decoration-none">
+                                                            {{ larp.location }}
+                                                            <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        {{ larp.location }}
+                                                    {% endif %}
+                                                </span>
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="bi bi-calendar-event text-muted me-2"></i>
+                                                <strong>{{ 'start_date'|trans }}:</strong><br>
+                                                <span class="ms-3">{{ larp.startDate|date('Y-m-d H:i') }}</span>
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="bi bi-calendar-event text-muted me-2"></i>
+                                                <strong>{{ 'end_date'|trans }}:</strong><br>
+                                                <span class="ms-3">{{ larp.endDate|date('Y-m-d H:i') }}</span>
+                                            </li>
+                                            <li>
+                                                <i class="bi bi-info-circle text-muted me-2"></i>
+                                                <strong>{{ 'status'|trans }}:</strong><br>
+                                                <span class="ms-3">
+                                                    {% if larp.status.value == 'INQUIRIES' %}
+                                                        <span class="badge bg-success">{{ larp.status.value }}</span>
+                                                    {% elseif larp.status.value == 'PUBLISHED' %}
+                                                        <span class="badge bg-info">{{ larp.status.value }}</span>
+                                                    {% elseif larp.status.value == 'CONFIRMED' %}
+                                                        <span class="badge bg-primary">{{ larp.status.value }}</span>
+                                                    {% elseif larp.status.value == 'COMPLETED' %}
+                                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning">{{ larp.status.value }}</span>
+                                                    {% endif %}
+                                                </span>
+                                            </li>
+                                        </ul>
+
+                                        {# Discord and Facebook Links #}
+                                        {% if larp.discordServerUrl or larp.facebookEventUrl %}
+                                            <hr class="my-3">
+                                            <h6 class="card-title text-primary mb-3">{{ 'larp.community_links'|trans }}</h6>
+                                            <div class="d-grid gap-2">
+                                                {% if larp.discordServerUrl %}
+                                                    <a href="{{ larp.discordServerUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-discord me-2"></i>{{ 'larp.join_discord'|trans }}
+                                                    </a>
+                                                {% endif %}
+                                                {% if larp.facebookEventUrl %}
+                                                    <a href="{{ larp.facebookEventUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-facebook me-2"></i>{{ 'larp.facebook_event'|trans }}
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 {% if larp.status.value == 'INQUIRIES' %}
                     <div class="card shadow-sm mt-4">
                         <div class="card-header bg-success text-white">
                             <h3 class="card-title mb-0">
-                                <i class="bi bi-user-plus me-2"></i>{{ 'public.larp.character_application'|trans }}
+                                <i class="bi bi-user-plus me-2"></i>{{ 'larp.character_application'|trans }}
                             </h3>
                         </div>
                         <div class="card-body">
@@ -25,8 +127,8 @@
                                 <div class="text-center">
                                     <div class="mb-4">
                                         <i class="bi bi-box-arrow-in-right fa-3x text-primary mb-3"></i>
-                                        <h5 class="text-muted">{{ 'public.larp.login_required_to_apply'|trans }}</h5>
-                                        <p class="text-muted">{{ 'public.larp.login_required_description'|trans }}</p>
+                                        <h5 class="text-muted">{{ 'larp.login_required_to_apply'|trans }}</h5>
+                                        <p class="text-muted">{{ 'larp.login_required_description'|trans }}</p>
                                     </div>
                                     <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary btn-lg">
                                         <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'login'|trans }}
@@ -36,25 +138,25 @@
                                 <div class="text-center">
                                     <div class="mb-4">
                                         <i class="bi bi-check-circle fa-3x text-success mb-3"></i>
-                                        <h5 class="text-success">{{ 'public.larp.already_participant'|trans }}</h5>
+                                        <h5 class="text-success">{{ 'larp.already_participant'|trans }}</h5>
                                     </div>
                                 </div>
                             {% elseif userHasApplication %}
                                 <div class="text-center">
                                     <div class="mb-4">
                                         <i class="bi bi-hourglass-split fa-3x text-warning mb-3"></i>
-                                        <h5 class="text-warning">{{ 'public.larp.application_already_submitted'|trans }}</h5>
+                                        <h5 class="text-warning">{{ 'larp.application_already_submitted'|trans }}</h5>
                                     </div>
                                 </div>
                             {% else %}
                                 <div class="text-center">
                                     <div class="mb-4">
                                         <i class="bi bi-person-plus fa-3x text-success mb-3"></i>
-                                        <h5 class="text-success">{{ 'public.larp.application_open'|trans }}</h5>
-                                        <p class="text-muted">{{ 'public.larp.application_open_description'|trans }}</p>
+                                        <h5 class="text-success">{{ 'larp.application_open'|trans }}</h5>
+                                        <p class="text-muted">{{ 'larp.application_open_description'|trans }}</p>
                                     </div>
                                     <a href="{{ path('public_larp_application_create', {'larp': larp.id}) }}" class="btn btn-success btn-lg">
-                                        <i class="bi bi-send me-2"></i>{{ 'public.larp.apply_for_character'|trans }}
+                                        <i class="bi bi-send me-2"></i>{{ 'larp.apply_for_character'|trans }}
                                     </a>
                                 </div>
                             {% endif %}

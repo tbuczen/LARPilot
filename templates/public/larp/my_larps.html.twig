@@ -5,11 +5,15 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container py-5">
+    {% include 'includes/page_header.html.twig' with {
+        title: 'public.participant.my_larps.title'|trans,
+        subtitle: 'View and manage your LARP participations',
+        icon: 'bi bi-people-fill'
+    } %}
+
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h1 class="mb-4">{{ 'public.participant.my_larps.title'|trans }}</h1>
-
                 {% if participants is empty %}
                     <div class="alert alert-info text-center">
                         <i class="bi bi-info-circle me-2"></i>{{ 'public.participant.my_larps.empty'|trans }}
@@ -17,9 +21,15 @@
                 {% else %}
                     {% for participant in participants %}
                         <div class="card shadow-sm mb-4">
-                            <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                                <div>
-                                    <h2 class="h5 mb-1">{{ participant.larp.title }}</h2>
+                            <div class="card-header bg-light d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                                <div class="flex-grow-1">
+                                    <h2 class="h5 mb-1">
+                                        <a href="{{ path('public_larp_details', {'slug': participant.larp.slug}) }}"
+                                           class="text-decoration-none text-dark">
+                                            {{ participant.larp.title }}
+                                            <i class="bi bi-box-arrow-up-right ms-1 small text-muted"></i>
+                                        </a>
+                                    </h2>
                                     <div class="text-muted small">
                                         <i class="bi bi-calendar3 me-1"></i>
                                         {% if participant.larp.startDate %}
@@ -31,38 +41,70 @@
                                             <span class="mx-1">&bull;</span>
                                             {{ participant.larp.endDate|date('F j, Y') }}
                                         {% endif %}
+                                        {% if participant.larp.location %}
+                                            <span class="mx-1">&bull;</span>
+                                            <i class="bi bi-geo-alt me-1"></i>{{ participant.larp.location }}
+                                        {% endif %}
                                     </div>
                                 </div>
-                                <a href="{{ path('public_larp_details', {'slug': participant.larp.slug}) }}"
-                                   class="btn btn-outline-primary btn-sm mt-3 mt-md-0">
-                                    <i class="bi bi-eye me-1"></i>{{ 'public.participant.my_larps.view_public_page'|trans }}
-                                </a>
+                                {% if participant.isOrganizer %}
+                                    <a href="{{ path('backoffice_larp_dashboard', {'larp': participant.larp.id}) }}"
+                                       class="btn btn-primary btn-sm mt-3 mt-md-0">
+                                        <i class="bi bi-gear me-1"></i>{{ 'manage'|trans }}
+                                    </a>
+                                {% endif %}
                             </div>
                             <div class="card-body">
-                                {% if participant.larpCharacters is empty %}
-                                    <div class="alert alert-secondary mb-0">
-                                        <i class="bi bi-hourglass-split me-2"></i>{{ 'public.participant.my_larps.no_characters'|trans }}
+                                {# Show roles for non-player participants #}
+                                {% if not participant.isPlayer %}
+                                    <div class="mb-3">
+                                        <h6 class="text-muted mb-2">
+                                            <i class="bi bi-award me-2"></i>Your Roles:
+                                        </h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            {% for role in participant.roles %}
+                                                <span class="badge bg-primary">
+                                                    {{ role.name|replace({'_': ' '})|title }}
+                                                </span>
+                                            {% endfor %}
+                                        </div>
                                     </div>
-                                {% else %}
-                                    <div class="list-group list-group-flush">
-                                        {% for character in participant.larpCharacters %}
-                                            <div class="list-group-item px-0">
-                                                <h3 class="h5 mb-1">
-                                                    <i class="bi bi-person-fill me-2 text-primary"></i>{{ character.title }}
-                                                </h3>
-                                                {% if character.inGameName %}
-                                                    <p class="mb-1 text-muted">
-                                                        <i class="bi bi-person-badge me-2"></i>{{ character.inGameName }}
-                                                    </p>
-                                                {% endif %}
-                                                {% if character.description %}
-                                                    <div class="text-muted small">
-                                                        {{ character.description|sanitize_html }}
+                                {% endif %}
+
+                                {# Show characters for player participants #}
+                                {% if participant.isPlayer %}
+                                    {% if participant.larpCharacters is empty %}
+                                        <div class="alert alert-secondary mb-0">
+                                            <i class="bi bi-hourglass-split me-2"></i>{{ 'public.participant.my_larps.no_characters'|trans }}
+                                        </div>
+                                    {% else %}
+                                        <h6 class="text-muted mb-3">
+                                            <i class="bi bi-person-badge me-2"></i>Your Characters:
+                                        </h6>
+                                        <div class="list-group list-group-flush">
+                                            {% for character in participant.larpCharacters %}
+                                                <div class="list-group-item px-0">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div class="flex-grow-1">
+                                                            <h3 class="h5 mb-1">
+                                                                <i class="bi bi-person-fill me-2 text-primary"></i>{{ character.title }}
+                                                            </h3>
+                                                            {% if character.inGameName %}
+                                                                <p class="mb-1 text-muted small">
+                                                                    <i class="bi bi-person-badge me-2"></i>{{ character.inGameName }}
+                                                                </p>
+                                                            {% endif %}
+                                                            {% if character.description %}
+                                                                <div class="text-muted small mt-2">
+                                                                    {{ character.description|sanitize_html|striptags|u.truncate(200, '...') }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
-                                                {% endif %}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>

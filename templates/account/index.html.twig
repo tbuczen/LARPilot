@@ -1,11 +1,18 @@
-{% extends 'base.html.twig' %}
+{% extends 'public/base.html.twig' %}
 
 {% block title %}{{ 'account.settings' | trans }}{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>{{ 'account.settings' | trans }}</h1>
-        {{ form_start(form) }}
+    {% include 'includes/page_header.html.twig' with {
+        title: 'account.settings'|trans,
+        subtitle: 'Manage your account preferences',
+        icon: 'bi bi-person-gear'
+    } %}
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                {{ form_start(form) }}
         <div class="mb-3">
             {{ form_row(form.username) }}
         </div>
@@ -16,5 +23,7 @@
             {{ form_row(form.preferredLocale) }}
         </div>
         {{ form_end(form) }}
+            </div>
+        </div>
     </div>
 {% endblock %}

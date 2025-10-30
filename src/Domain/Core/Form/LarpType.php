@@ -9,11 +9,15 @@ use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Url;
 
 class LarpType extends AbstractType
 {
@@ -44,6 +48,44 @@ class LarpType extends AbstractType
             ->add('endDate', DateTimeType::class, [
                 'label' => 'larp.end_date',
                 'widget' => 'single_text',
+            ])
+            ->add('discordServerUrl', UrlType::class, [
+                'label' => 'larp.discord_server_url',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'https://discord.gg/...',
+                ],
+                'constraints' => [
+                    new Url(),
+                ],
+            ])
+            ->add('facebookEventUrl', UrlType::class, [
+                'label' => 'larp.facebook_event_url',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'https://facebook.com/events/...',
+                ],
+                'constraints' => [
+                    new Url(),
+                ],
+            ])
+            ->add('headerImageFile', FileType::class, [
+                'label' => 'larp.header_image',
+                'required' => false,
+                'mapped' => false,
+                'help' => 'larp.header_image_help',
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'larp.header_image_invalid',
+                    ]),
+                ],
             ])
             ->add('recaptcha', EWZRecaptchaType::class, [
                 'mapped' => false,

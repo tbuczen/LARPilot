@@ -11,6 +11,7 @@ use App\Domain\StoryObject\Entity\StoryObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface;
@@ -62,7 +63,7 @@ class BaseController extends AbstractController
         return $qb;
     }
 
-    protected function getPagination(QueryBuilder $qb, Request $request): \Knp\Component\Pager\Pagination\PaginationInterface
+    protected function getPagination(QueryBuilder $qb, Request $request): PaginationInterface
     {
         return $this->paginator->paginate(
             $qb,

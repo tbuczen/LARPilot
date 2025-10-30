@@ -240,9 +240,9 @@ Forms are organized by domain under `src/Domain/{DomainName}/Form/`:
 - `Filter/`: Filter forms for list views
 - `DataTransformer/`: Domain-specific data transformers
 
-**Shared form utilities** (Infrastructure domain):
-- `src/Domain/Infrastructure/Form/Extension/`: Form extensions (e.g., `FindOrCreateEntityExtension`)
-- `src/Domain/Infrastructure/Form/DataTransformer/`: Shared transformers (JSON, Money)
+**Shared form utilities** (Core domain):
+- `src/Domain/Core/Form/Extension/`: Form extensions (e.g., `FindOrCreateEntityExtension`)
+- `src/Domain/Core/Form/DataTransformer/`: Shared transformers (JSON, Money)
 
 **Legacy organization** (being refactored):
 - `src/Form/`: Original form location

@@ -67,6 +67,15 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\Column(nullable: true, enumType: LarpCharacterSystem::class)]
     private ?LarpCharacterSystem $characterSystem = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $discordServerUrl = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $facebookEventUrl = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $headerImage = null;
+
     /** @var Collection<Character> */
     #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'larp')]
     private Collection $characters;
@@ -382,6 +391,47 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     public function setMarking(string $marking): void
     {
         $this->status = LarpStageStatus::from($marking);
+    }
+
+    public function getDiscordServerUrl(): ?string
+    {
+        return $this->discordServerUrl;
+    }
+
+    public function setDiscordServerUrl(?string $discordServerUrl): static
+    {
+        $this->discordServerUrl = $discordServerUrl;
+        return $this;
+    }
+
+    public function getFacebookEventUrl(): ?string
+    {
+        return $this->facebookEventUrl;
+    }
+
+    public function setFacebookEventUrl(?string $facebookEventUrl): static
+    {
+        $this->facebookEventUrl = $facebookEventUrl;
+        return $this;
+    }
+
+    public function getHeaderImage(): ?string
+    {
+        return $this->headerImage;
+    }
+
+    public function setHeaderImage(?string $headerImage): static
+    {
+        $this->headerImage = $headerImage;
+        return $this;
+    }
+
+    public function getHeaderImagePath(): ?string
+    {
+        if (!$this->headerImage) {
+            return null;
+        }
+        return '/uploads/larps/' . $this->headerImage;
     }
 
     public function __toString(): string

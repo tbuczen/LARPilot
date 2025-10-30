@@ -56,6 +56,7 @@ class CharacterController extends BaseController
         Larp                    $larp,
         CharacterRepository $characterRepository,
         \App\Domain\Integrations\Service\CharacterSheetExportService $exportService,
+        \App\Domain\Application\Repository\LarpApplicationChoiceRepository $choiceRepository,
         ?Character          $character = null,
     ): Response {
         $new = false;
@@ -83,8 +84,20 @@ class CharacterController extends BaseController
 
         // Get mentions only for existing characters (not new ones)
         $mentions = [];
+        $applicantsCount = 0;
         if ($character->getId() !== null) {
             $mentions = $mentionService->findMentions($character);
+
+            // Get applicants count for this character
+            $applicantsCount = $choiceRepository->createQueryBuilder('c')
+                ->select('COUNT(c.id)')
+                ->join('c.application', 'a')
+                ->where('c.character = :character')
+                ->andWhere('a.larp = :larp')
+                ->setParameter('character', $character)
+                ->setParameter('larp', $larp)
+                ->getQuery()
+                ->getSingleScalarResult();
         }
 
         // Check if export is configured (only for existing characters)
@@ -97,6 +110,7 @@ class CharacterController extends BaseController
             'mentions' => $mentions,
             'canExportSheet' => $canExportSheet,
             'isNewCharacter' => $new,
+            'applicantsCount' => $applicantsCount,
         ]);
     }
 
@@ -105,13 +119,58 @@ class CharacterController extends BaseController
         Larp                      $larp,
         Character                 $character,
         StoryObjectMentionService $mentionService,
+        \App\Domain\Application\Repository\LarpApplicationChoiceRepository $choiceRepository,
     ): Response {
         $mentions = $mentionService->findMentions($character);
+
+        // Get applicants count for this character
+        $applicantsCount = $choiceRepository->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->join('c.application', 'a')
+            ->where('c.character = :character')
+            ->andWhere('a.larp = :larp')
+            ->setParameter('character', $character)
+            ->setParameter('larp', $larp)
+            ->getQuery()
+            ->getSingleScalarResult();
 
         return $this->render('backoffice/larp/characters/mentions.html.twig', [
             'larp' => $larp,
             'character' => $character,
             'mentions' => $mentions,
+            'applicantsCount' => $applicantsCount,
+        ]);
+    }
+
+    #[Route('{character}/applicants', name: 'applicants', methods: ['GET'])]
+    public function applicants(
+        Larp                      $larp,
+        Character                 $character,
+        \App\Domain\Application\Repository\LarpApplicationChoiceRepository $choiceRepository,
+        StoryObjectMentionService $mentionService,
+    ): Response {
+        // Get all application choices for this character
+        $qb = $choiceRepository->createQueryBuilder('c')
+            ->join('c.application', 'a')
+            ->join('a.user', 'u')
+            ->addSelect('a', 'u')
+            ->where('c.character = :character')
+            ->andWhere('a.larp = :larp')
+            ->setParameter('character', $character)
+            ->setParameter('larp', $larp)
+            ->orderBy('c.priority', 'ASC')
+            ->addOrderBy('a.createdAt', 'DESC');
+
+        $choices = $qb->getQuery()->getResult();
+
+        // Get mentions count for this character
+        $mentions = $mentionService->findMentions($character);
+
+        return $this->render('backoffice/larp/characters/applicants.html.twig', [
+            'larp' => $larp,
+            'character' => $character,
+            'choices' => $choices,
+            'mentionsCount' => count($mentions),
         ]);
     }
 

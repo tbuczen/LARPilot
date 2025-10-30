@@ -3,11 +3,15 @@
 {% block title %}{{ 'larp.list'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+{% include 'includes/page_header.html.twig' with {
+    title: 'larp.list'|trans,
+    subtitle: 'Discover upcoming LARP events',
+    icon: 'bi bi-calendar-event'
+} %}
+
+<div class="container">
     <div class="row">
         <div class="col-12">
-            <h1 class="mb-4">{{ 'larp.list'|trans }}</h1>
-
             {% if filterForm is defined %}
                 {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
             {% endif %}
@@ -17,7 +21,12 @@
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">{{ larp.title }}</h5>
+                                <h5 class="card-title">
+                                    <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="text-decoration-none text-dark">
+                                        {{ larp.title }}
+                                        <i class="bi bi-box-arrow-up-right ms-1 small text-muted"></i>
+                                    </a>
+                                </h5>
                                 <p class="card-text">{{ larp.description|truncate_words(15) }}</p>
 
                                 <div class="mb-2">
@@ -70,15 +79,18 @@
                                 <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-primary">
                                     {{ 'show_details'|trans }}
                                 </a>
-{#                                {% if larp.location %}#}
-{#                                    <a href="{{ path('public_location_details', {'slug': larp.location.slug}) }}" class="btn btn-outline-secondary btn-sm">#}
-{#                                        <i class="bi bi-geo-alt"></i> Location#}
-{#                                    </a>#}
-{#                                {% endif %}#}
-                                {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
-                                    <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}" class="btn btn-secondary">
-                                        <i class="bi bi-gear me-1"></i>{{ 'manage'|trans }}
-                                    </a>
+                                {% if app.user %}
+                                    {% set isOrganizer = false %}
+                                    {% for participant in larp.participants %}
+                                        {% if participant.user.id == app.user.id and participant.isOrganizer %}
+                                            {% set isOrganizer = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if isOrganizer %}
+                                        <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}" class="btn btn-secondary">
+                                            <i class="bi bi-gear me-1"></i>{{ 'manage'|trans }}
+                                        </a>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>
