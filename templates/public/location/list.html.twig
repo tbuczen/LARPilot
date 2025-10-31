@@ -1,0 +1,90 @@
+{% extends 'public/base.html.twig' %}
+
+{% block title %}{{ 'location.list'|trans }}{% endblock %}
+
+{% block body %}
+{% include 'includes/page_header.html.twig' with {
+    title: 'location.list'|trans,
+    subtitle: 'Discover LARP venues and locations',
+    icon: 'bi bi-geo-alt'
+} %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                {% for location in locations %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            {% if location.images|length > 0 %}
+                                <img src="{{ location.images[0] }}" class="card-img-top" alt="{{ location.title }}" style="max-height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ path('public_location_details', {'slug': location.slug}) }}" class="text-decoration-none text-dark">
+                                        {{ location.title }}
+                                        <i class="bi bi-box-arrow-up-right ms-1 small text-muted"></i>
+                                    </a>
+                                </h5>
+
+                                {% if location.description %}
+                                    <p class="card-text">{{ location.description|striptags|truncate(150) }}</p>
+                                {% endif %}
+
+                                {% if location.city or location.country %}
+                                    <div class="mb-2">
+                                        <i class="bi bi-geo-alt text-primary"></i>
+                                        <strong>{{ 'location.location'|trans }}:</strong>
+                                        {% if location.city %}{{ location.city }}{% endif %}{% if location.city and location.country %}, {% endif %}{% if location.country %}{{ location.country }}{% endif %}
+                                    </div>
+                                {% endif %}
+
+                                {% if location.capacity %}
+                                    <div class="mb-2">
+                                        <i class="bi bi-people text-primary"></i>
+                                        <strong>{{ 'location.capacity'|trans }}:</strong> {{ location.capacity }} {{ 'location.people'|trans }}
+                                    </div>
+                                {% endif %}
+
+                                {% if location.website %}
+                                    <div class="mb-2">
+                                        <i class="bi bi-globe text-primary"></i>
+                                        <a href="{{ location.website }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                                            {{ 'location.website'|trans }}
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+                                {% set larpCount = location.larps|filter(l => l.status.isVisibleForEveryone())|length %}
+                                {% if larpCount > 0 %}
+                                    <div class="mb-2">
+                                        <i class="bi bi-calendar-event text-primary"></i>
+                                        <strong>{{ larpCount }}</strong> {{ larpCount == 1 ? 'LARP event' : 'LARP events' }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ path('public_location_details', {'slug': location.slug}) }}" class="btn btn-primary">
+                                    {{ 'show_details'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            {{ 'location.no_locations_found'|trans }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if locations.haveToPaginate %}
+                <div class="d-flex justify-content-center mt-4">
+                    {{ pagerfanta(locations) }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

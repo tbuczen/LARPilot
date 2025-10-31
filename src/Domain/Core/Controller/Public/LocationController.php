@@ -3,8 +3,6 @@
 namespace App\Domain\Core\Controller\Public;
 
 use App\Domain\Core\Controller\BaseController;
-use App\Domain\Core\Form\Filter\LarpPublicFilterType;
-use App\Domain\Core\Repository\LarpRepository;
 use App\Domain\Core\Repository\LocationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,20 +11,36 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/', name: 'public_location_')]
 class LocationController extends BaseController
 {
-    #[Route('/', name: 'list', methods: ['GET'])]
-    public function list(Request $request, LarpRepository $larpRepository): Response
+    #[Route('/locations', name: 'list', methods: ['GET'])]
+    public function list(Request $request, LocationRepository $locationRepository): Response
     {
-        $filterForm = $this->createForm(LarpPublicFilterType::class);
-        $filterForm->handleRequest($request);
+        $qb = $locationRepository->createQueryBuilder('l')
+            ->where('l.isPublic = :isPublic')
+            ->andWhere('l.isActive = :isActive')
+            ->setParameter('isPublic', true)
+            ->setParameter('isActive', true)
+            ->orderBy('l.title', 'ASC');
 
-        $qb = $this->getListQueryBuilder($larpRepository, $filterForm, $request);
-        //        $qb = $larpRepository->findAllUpcomingPublished($this->getUser());
+        $sortBy = $request->query->get('sortBy', 'title');
+        $sortOrder = $request->query->get('sortOrder', 'ASC');
+
+        switch ($sortBy) {
+            case 'city':
+                $qb->orderBy('l.city', $sortOrder);
+                break;
+            case 'country':
+                $qb->orderBy('l.country', $sortOrder);
+                break;
+            case 'title':
+            default:
+                $qb->orderBy('l.title', $sortOrder);
+                break;
+        }
 
         $pagination = $this->getPagination($qb, $request);
 
-        return $this->render('public/larp/list.html.twig', [
-            'larps' => $pagination,
-            'filterForm' => $filterForm->createView(),
+        return $this->render('public/location/list.html.twig', [
+            'locations' => $pagination,
         ]);
     }
 

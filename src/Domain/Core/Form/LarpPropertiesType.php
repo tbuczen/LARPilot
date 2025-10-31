@@ -11,17 +11,27 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Url;
 
 class LarpPropertiesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('title', TextType::class, [
+                'label' => 'LARP Name',
+                'required' => true,
+                'attr' => ['class' => 'form-control']
+            ])
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Start Date',
                 'widget' => 'single_text',
@@ -75,6 +85,47 @@ class LarpPropertiesType extends AbstractType
                     'class' => 'form-control',
                     'rows' => 4,
                     'data-controller' => 'wysiwyg',
+                ],
+            ])
+            ->add('discordServerUrl', UrlType::class, [
+                'label' => 'Discord Server URL',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'https://discord.gg/...',
+                ],
+                'constraints' => [
+                    new Url(),
+                ],
+            ])
+            ->add('facebookEventUrl', UrlType::class, [
+                'label' => 'Facebook Event URL',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'https://facebook.com/events/...',
+                ],
+                'constraints' => [
+                    new Url(),
+                ],
+            ])
+            ->add('headerImageFile', FileType::class, [
+                'label' => 'Header Image',
+                'required' => false,
+                'mapped' => false,
+                'help' => 'Upload a background image for your LARP (like a Facebook event cover). Max 5MB. Accepted formats: JPG, PNG, GIF, WebP.',
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image file (JPG, PNG, GIF, or WebP)',
+                    ]),
                 ],
             ])
             ->add('submit', SubmitType::class, [

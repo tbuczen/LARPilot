@@ -7,10 +7,13 @@ use App\Domain\Core\Form\LarpPropertiesType;
 use App\Domain\Core\Service\Workflow\LarpWorkflowService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/backoffice/larp/{larp}/status', name: 'backoffice_larp_status_')]
 class StatusController extends AbstractController
@@ -18,6 +21,7 @@ class StatusController extends AbstractController
     public function __construct(
         private readonly LarpWorkflowService $workflowService,
         private readonly EntityManagerInterface $entityManager,
+        private readonly SluggerInterface $slugger,
     ) {
     }
 
@@ -50,6 +54,25 @@ class StatusController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle header image file upload
+            /** @var UploadedFile|null $headerImageFile */
+            $headerImageFile = $form->get('headerImageFile')->getData();
+            if ($headerImageFile) {
+                $originalFilename = pathinfo($headerImageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $headerImageFile->guessExtension();
+
+                try {
+                    $headerImageFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads/larps',
+                        $newFilename
+                    );
+                    $larp->setHeaderImage($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Could not upload header image: ' . $e->getMessage());
+                }
+            }
+
             $this->entityManager->flush();
             $this->addFlash('success', 'LARP properties updated successfully.');
         } else {
