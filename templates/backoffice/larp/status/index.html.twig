@@ -76,6 +76,8 @@
             <div class="card-body">
                 {{ form_start(propertiesForm, {'action': path('backoffice_larp_status_update_properties', {'larp': larp.id})}) }}
 
+                {{ form_row(propertiesForm.title) }}
+
                 <div class="row">
                     <div class="col-md-6">
                         {{ form_row(propertiesForm.startDate) }}
@@ -106,6 +108,23 @@
                 </div>
 
                 {{ form_row(propertiesForm.description) }}
+
+                <hr class="my-4">
+                <h6 class="mb-3">Social & Visual Settings</h6>
+
+                {{ form_row(propertiesForm.headerImageFile) }}
+
+                {% if larp.headerImage %}
+                    <div class="mb-3">
+                        <label class="form-label">Current Header Image</label>
+                        <div>
+                            <img src="{{ larp.headerImagePath }}" alt="LARP Header" class="img-fluid" style="max-height: 200px;">
+                        </div>
+                    </div>
+                {% endif %}
+
+                {{ form_row(propertiesForm.discordServerUrl) }}
+                {{ form_row(propertiesForm.facebookEventUrl) }}
 
                 {{ form_row(propertiesForm.submit) }}
 
