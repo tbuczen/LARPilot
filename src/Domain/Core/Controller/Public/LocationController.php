@@ -3,6 +3,7 @@
 namespace App\Domain\Core\Controller\Public;
 
 use App\Domain\Core\Controller\BaseController;
+use App\Domain\Core\Form\Filter\LocationPublicFilterType;
 use App\Domain\Core\Repository\LocationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,72 @@ class LocationController extends BaseController
     #[Route('/locations', name: 'list', methods: ['GET'])]
     public function list(Request $request, LocationRepository $locationRepository): Response
     {
+        // Get distinct cities and countries for filter dropdowns
+        $cities = $locationRepository->createQueryBuilder('l')
+            ->select('DISTINCT l.city')
+            ->where('l.isPublic = :isPublic')
+            ->andWhere('l.isActive = :isActive')
+            ->andWhere('l.city IS NOT NULL')
+            ->setParameter('isPublic', true)
+            ->setParameter('isActive', true)
+            ->orderBy('l.city', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $countries = $locationRepository->createQueryBuilder('l')
+            ->select('DISTINCT l.country')
+            ->where('l.isPublic = :isPublic')
+            ->andWhere('l.isActive = :isActive')
+            ->andWhere('l.country IS NOT NULL')
+            ->setParameter('isPublic', true)
+            ->setParameter('isActive', true)
+            ->orderBy('l.country', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        // Transform to choice array format
+        $cityChoices = array_combine(
+            array_column($cities, 'city'),
+            array_column($cities, 'city')
+        );
+        $countryChoices = array_combine(
+            array_column($countries, 'country'),
+            array_column($countries, 'country')
+        );
+
+        // Create and handle filter form
+        $filterForm = $this->createForm(LocationPublicFilterType::class, null, [
+            'cities' => $cityChoices,
+            'countries' => $countryChoices,
+        ]);
+        $filterForm->handleRequest($request);
+
+        // Build query
         $qb = $locationRepository->createQueryBuilder('l')
             ->where('l.isPublic = :isPublic')
             ->andWhere('l.isActive = :isActive')
             ->setParameter('isPublic', true)
-            ->setParameter('isActive', true)
-            ->orderBy('l.title', 'ASC');
+            ->setParameter('isActive', true);
 
+        // Apply filters
+        $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
+
+        // Apply manual filters
+        $filterData = $filterForm->getData();
+        if (!empty($filterData['city'])) {
+            $qb->andWhere('l.city = :city')
+                ->setParameter('city', $filterData['city']);
+        }
+        if (!empty($filterData['country'])) {
+            $qb->andWhere('l.country = :country')
+                ->setParameter('country', $filterData['country']);
+        }
+        if (!empty($filterData['search'])) {
+            $qb->andWhere('LOWER(l.title) LIKE :search OR LOWER(l.description) LIKE :search')
+                ->setParameter('search', '%' . strtolower($filterData['search']) . '%');
+        }
+
+        // Apply sorting
         $sortBy = $request->query->get('sortBy', 'title');
         $sortOrder = $request->query->get('sortOrder', 'ASC');
 
@@ -37,10 +97,16 @@ class LocationController extends BaseController
                 break;
         }
 
+        // Get all filtered locations for map (not paginated)
+        $allLocations = (clone $qb)->getQuery()->getResult();
+
+        // Get paginated results
         $pagination = $this->getPagination($qb, $request);
 
         return $this->render('public/location/list.html.twig', [
             'locations' => $pagination,
+            'allLocations' => $allLocations,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 

@@ -12,6 +12,20 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
+            {# Filter Form #}
+            {% if filterForm is defined %}
+                {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+            {% endif %}
+
+            {# Google Map #}
+            {% if allLocations|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-body p-0">
+                        <div id="locationsMap" style="height: 500px; width: 100%; border-radius: 0.375rem;"></div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="row">
                 {% for location in locations %}
                     <div class="col-md-6 col-lg-4 mb-4">
@@ -28,13 +42,13 @@
                                 </h5>
 
                                 {% if location.description %}
-                                    <p class="card-text">{{ location.description|striptags|truncate(150) }}</p>
+                                    <p class="card-text">{{ location.description|striptags|truncate_words(150) }}</p>
                                 {% endif %}
 
                                 {% if location.city or location.country %}
                                     <div class="mb-2">
                                         <i class="bi bi-geo-alt text-primary"></i>
-                                        <strong>{{ 'location.location'|trans }}:</strong>
+                                        <strong>{{ 'location.singular'|trans }}:</strong>
                                         {% if location.city %}{{ location.city }}{% endif %}{% if location.city and location.country %}, {% endif %}{% if location.country %}{{ location.country }}{% endif %}
                                     </div>
                                 {% endif %}
@@ -79,12 +93,126 @@
                 {% endfor %}
             </div>
 
-            {% if locations.haveToPaginate %}
-                <div class="d-flex justify-content-center mt-4">
-                    {{ pagerfanta(locations) }}
-                </div>
-            {% endif %}
+            {% include 'includes/pagination.html.twig' with { pagination: locations } %}
+
         </div>
     </div>
 </div>
+
+{# Google Maps Script #}
+{% if allLocations|length > 0 %}
+    <script>
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.googleapis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+            key: "{{ google_maps_api_key }}",
+            v: "weekly"
+        });
+
+        async function initLocationsMap() {
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+            // Prepare locations data
+            const locations = [
+                {% for location in allLocations %}
+                    {% if location.coordinates %}
+                        {
+                            position: { lat: {{ location.coordinates.lat }}, lng: {{ location.coordinates.lng }} },
+                            title: "{{ location.title|escape('js') }}",
+                            city: "{{ location.city|escape('js') }}",
+                            country: "{{ location.country|escape('js') }}",
+                            slug: "{{ location.slug }}",
+                            capacity: {{ location.capacity ?? 'null' }}
+                        }{{ not loop.last ? ',' : '' }}
+                    {% endif %}
+                {% endfor %}
+            ];
+
+            if (locations.length === 0) {
+                return;
+            }
+
+            // Calculate center and bounds
+            const bounds = new google.maps.LatLngBounds();
+            locations.forEach(loc => bounds.extend(loc.position));
+
+            const map = new Map(document.getElementById('locationsMap'), {
+                zoom: 6,
+                center: bounds.getCenter(),
+                mapId: 'LOCATIONS_MAP_ID',
+                mapTypeControl: true,
+                streetViewControl: false,
+                fullscreenControl: true,
+            });
+
+            // Fit map to show all markers
+            map.fitBounds(bounds);
+
+            // Create markers for each location
+            const infoWindow = new google.maps.InfoWindow();
+
+            locations.forEach((location, index) => {
+                // Create custom marker element
+                const markerElement = document.createElement('div');
+                markerElement.innerHTML = `
+                    <div style="background-color: #dc3545; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.3); cursor: pointer;">
+                        <div style="width: 15px; height: 15px; background-color: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg);"></div>
+                    </div>
+                `;
+
+                const marker = new AdvancedMarkerElement({
+                    map: map,
+                    position: location.position,
+                    content: markerElement,
+                    title: location.title,
+                });
+
+                // Create info window content
+                let infoContent = `
+                    <div style="padding: 10px; max-width: 250px;">
+                        <h6 class="mb-2">
+                            <a href="{{ path('public_location_details', {'slug': 'SLUG_PLACEHOLDER'}) }}" class="text-decoration-none">
+                                ${location.title}
+                            </a>
+                        </h6>
+                `.replace('SLUG_PLACEHOLDER', location.slug);
+
+                if (location.city || location.country) {
+                    infoContent += `<p class="mb-1 small text-muted">`;
+                    if (location.city) infoContent += location.city;
+                    if (location.city && location.country) infoContent += ', ';
+                    if (location.country) infoContent += location.country;
+                    infoContent += `</p>`;
+                }
+
+                if (location.capacity) {
+                    infoContent += `<p class="mb-0 small"><strong>Capacity:</strong> ${location.capacity} people</p>`;
+                }
+
+                infoContent += `
+                        <div class="mt-2">
+                            <a href="{{ path('public_location_details', {'slug': 'SLUG_PLACEHOLDER'}) }}" class="btn btn-sm btn-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                `.replace('SLUG_PLACEHOLDER', location.slug);
+
+                marker.addListener('click', () => {
+                    infoWindow.setContent(infoContent);
+                    infoWindow.open({
+                        anchor: marker,
+                        map: map,
+                    });
+                });
+            });
+        }
+
+        // Initialize map when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLocationsMap);
+        } else {
+            initLocationsMap();
+        }
+    </script>
+{% endif %}
 {% endblock %}

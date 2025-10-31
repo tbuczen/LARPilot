@@ -1,0 +1,104 @@
+{# templates/components/FeedbackModal.html.twig #}
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackModalLabel">
+                    <i class="bi bi-chat-left-text me-2"></i>
+                    {{ 'feedback.modal.title'|trans }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+            </div>
+            <div class="modal-body">
+                <form id="feedbackForm">
+                    <!-- Feedback Type -->
+                    <div class="mb-3">
+                        <label for="feedbackType" class="form-label">{{ 'feedback.type.label'|trans }}</label>
+                        <select class="form-select" id="feedbackType" required>
+                            <option value="">{{ 'feedback.type.select'|trans }}</option>
+                            <option value="bug_report">🐛 {{ 'feedback.type.bug_report'|trans }}</option>
+                            <option value="feature_request">💡 {{ 'feedback.type.feature_request'|trans }}</option>
+                            <option value="question">❓ {{ 'feedback.type.question'|trans }}</option>
+                            <option value="general">💬 {{ 'feedback.type.general'|trans }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="mb-3">
+                        <label for="feedbackSubject" class="form-label">{{ 'feedback.subject.label'|trans }}</label>
+                        <input type="text" class="form-control" id="feedbackSubject"
+                               placeholder="{{ 'feedback.subject.placeholder'|trans }}" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="feedbackDescription" class="form-label">{{ 'feedback.description.label'|trans }}</label>
+                        <textarea class="form-control" id="feedbackDescription" rows="5"
+                                  placeholder="{{ 'feedback.description.placeholder'|trans }}" required></textarea>
+                    </div>
+
+                    <!-- Screenshot Section -->
+                    <div class="mb-3">
+                        <label class="form-label">{{ 'feedback.screenshot.label'|trans }}</label>
+                        <div class="d-flex gap-2 mb-2">
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="captureScreenshot">
+                                <i class="bi bi-camera"></i> {{ 'feedback.screenshot.capture'|trans }}
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm d-none" id="removeScreenshot">
+                                <i class="bi bi-trash"></i> {{ 'feedback.screenshot.remove'|trans }}
+                            </button>
+                        </div>
+                        <div id="screenshotPreview" class="border rounded p-2 d-none">
+                            <img id="screenshotImage" class="img-fluid" alt="{{ 'feedback.screenshot.preview'|trans }}">
+                        </div>
+                        <input type="hidden" id="screenshotData">
+                    </div>
+
+                    <!-- Context Info (collapsed by default) -->
+                    <div class="accordion mb-3" id="contextAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#contextCollapse">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    {{ 'feedback.context.title'|trans }}
+                                </button>
+                            </h2>
+                            <div id="contextCollapse" class="accordion-collapse collapse"
+                                 data-bs-parent="#contextAccordion">
+                                <div class="accordion-body">
+                                    <small class="text-muted" id="contextInfo">
+                                        <!-- Context will be populated here -->
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- reCAPTCHA -->
+                    <div class="mb-3">
+                        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="feedbackError" class="alert alert-danger d-none" role="alert"></div>
+
+                    <!-- Success Message -->
+                    <div id="feedbackSuccess" class="alert alert-success d-none" role="alert"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                <button type="button" class="btn btn-primary" id="submitFeedback">
+                    <span id="submitButtonText">
+                        <i class="bi bi-send"></i> {{ 'feedback.submit'|trans }}
+                    </span>
+                    <span id="submitButtonSpinner" class="d-none">
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        {{ 'feedback.submitting'|trans }}
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

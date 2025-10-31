@@ -53,10 +53,13 @@
          data-feedback-user-id-value="{{ app.user ? app.user.id : '' }}">
         <button type="button" class="feedback-float-button btn btn-primary"
                 data-action="click->feedback#open"
-                title="Send Feedback">
+                title="{{ 'feedback.modal.title'|trans }}">
             <i class="bi bi-chat-left-text"></i>
         </button>
     </div>
+
+    {# Feedback Modal Component #}
+    {% include 'components/FeedbackModal.html.twig' with { recaptcha_site_key: recaptcha_site_key } %}
 
     {% block body %}{% endblock %}
 

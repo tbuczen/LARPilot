@@ -5,9 +5,9 @@ parameters:
     google_app_id: '%env(GOOGLE_APP_ID)%'
     oauth_google_client_id: '%env(OAUTH_GOOGLE_CLIENT_ID)%'
     maps_directory: '%kernel.project_dir%/public/uploads/maps'
-    freescout.api_url: '%env(default::FREESCOUT_API_URL)%'
-    freescout.api_token: '%env(default::FREESCOUT_API_TOKEN)%'
-    freescout.mailbox_id: '%env(int:default::FREESCOUT_MAILBOX_ID)%'
+    github.token: '%env(GITHUB_TOKEN)%'
+    github.repo: '%env(GITHUB_REPO)%'
+    github.discussion_category_id: '%env(GITHUB_DISCUSSION_CATEGORY_ID)%'
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -18,9 +18,10 @@ services:
             $googleClientSecret: '%env(OAUTH_GOOGLE_CLIENT_SECRET)%'
             $googleServiceEmail: '%env(GOOGLE_SERVICE_EMAIL)%'
             $serviceAccountJsonPath: '%env(resolve:GOOGLE_SERVICE_ACCOUNT_JSON)%'
-            $freescoutApiUrl: '%freescout.api_url%'
-            $freescoutApiToken: '%freescout.api_token%'
-            $freescoutMailboxId: '%freescout.mailbox_id%'
+            $githubToken: '%github.token%'
+            $githubRepo: '%github.repo%'
+            $githubDiscussionCategoryId: '%github.discussion_category_id%'
+            $recaptchaSecretKey: '%env(GOOGLE_RECAPTCHA_SECRET)%'
 
     _instanceof:
         App\Domain\Integrations\Service\IntegrationServiceInterface:

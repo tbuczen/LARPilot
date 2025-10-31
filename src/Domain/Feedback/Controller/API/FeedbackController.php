@@ -2,8 +2,9 @@
 
 namespace App\Domain\Feedback\Controller\API;
 
-use App\Domain\Feedback\Service\FeedbackService;
+use App\Domain\Feedback\Service\GitHubFeedbackService;
 use Psr\Log\LoggerInterface;
+use ReCaptcha\ReCaptcha;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,15 +17,16 @@ use Symfony\Component\Routing\Attribute\Route;
 class FeedbackController extends AbstractController
 {
     public function __construct(
-        private readonly FeedbackService $feedbackService,
+        private readonly GitHubFeedbackService $githubFeedbackService,
         private readonly LoggerInterface $logger,
+        private readonly string $recaptchaSecretKey,
     ) {
     }
 
     /**
      * Submit feedback from the widget
      *
-     * Accepts feedback data including screenshots and context, then forwards to FreeScout
+     * Accepts feedback data including screenshots and context, then creates GitHub Issue or Discussion
      *
      * @param Request $request The HTTP request containing feedback data
      * @return JsonResponse Success/error response
@@ -44,7 +46,7 @@ class FeedbackController extends AbstractController
             }
 
             // Validate required fields
-            $requiredFields = ['type', 'subject', 'message'];
+            $requiredFields = ['type', 'subject', 'message', 'recaptchaToken'];
             foreach ($requiredFields as $field) {
                 if (empty($data[$field])) {
                     return new JsonResponse([
@@ -52,6 +54,21 @@ class FeedbackController extends AbstractController
                         'message' => "Missing required field: {$field}",
                     ], Response::HTTP_BAD_REQUEST);
                 }
+            }
+
+            // Verify reCAPTCHA
+            $recaptcha = new ReCaptcha($this->recaptchaSecretKey);
+            $recaptchaResponse = $recaptcha->verify($data['recaptchaToken'], $request->getClientIp());
+
+            if (!$recaptchaResponse->isSuccess()) {
+                $this->logger->warning('reCAPTCHA verification failed', [
+                    'errors' => $recaptchaResponse->getErrorCodes(),
+                ]);
+
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'reCAPTCHA verification failed. Please try again.',
+                ], Response::HTTP_BAD_REQUEST);
             }
 
             // Extract feedback data
@@ -63,19 +80,22 @@ class FeedbackController extends AbstractController
                 'context' => $data['context'] ?? [],
             ];
 
-            // Submit to FreeScout via service
-            $ticketId = $this->feedbackService->submitFeedback($feedbackData);
+            // Submit to GitHub via service
+            $result = $this->githubFeedbackService->submitFeedback($feedbackData);
 
-            $this->logger->info('Feedback submitted successfully', [
-                'ticketId' => $ticketId,
-                'type' => $feedbackData['type'],
+            $this->logger->info('Feedback submitted to GitHub successfully', [
+                'type' => $result['type'],
+                'id' => $result['id'],
+                'url' => $result['url'],
                 'userEmail' => $feedbackData['context']['userEmail'] ?? 'anonymous',
             ]);
 
             return new JsonResponse([
                 'success' => true,
-                'ticketId' => $ticketId,
-                'message' => 'Feedback submitted successfully',
+                'id' => $result['id'],
+                'url' => $result['url'],
+                'type' => $result['type'],
+                'message' => 'Feedback submitted successfully to GitHub',
             ], Response::HTTP_CREATED);
         } catch (\InvalidArgumentException $e) {
             $this->logger->warning('Invalid feedback submission', [
@@ -87,7 +107,7 @@ class FeedbackController extends AbstractController
                 'message' => $e->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $e) {
-            $this->logger->error('Failed to submit feedback', [
+            $this->logger->error('Failed to submit feedback to GitHub', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

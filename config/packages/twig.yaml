@@ -5,6 +5,7 @@ twig:
         google_maps_api_key: '%google_maps_api_key%'
         google_app_id: '%google_app_id%'
         oauth_google_client_id: '%oauth_google_client_id%'
+        recaptcha_site_key: '%google_recaptcha_site_key%'
     paths:
         '%kernel.project_dir%/templates': ~
 

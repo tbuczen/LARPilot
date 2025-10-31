@@ -5,17 +5,22 @@ import html2canvas from 'html2canvas';
  * Feedback Widget Controller
  *
  * Provides a floating feedback button that allows users to:
- * - Submit bug reports, feature requests, questions, or general feedback
- * - Take screenshots with annotations
+ * - Submit bug reports and feature requests to GitHub Issues
+ * - Submit questions and general feedback to GitHub Discussions
+ * - Take screenshots
  * - Automatically capture context (URL, user info, browser details, LARP context)
  *
- * Usage:
+ * Usage in base template:
  * <div data-controller="feedback"
- *      data-feedback-api-url-value="/api/feedback"
- *      data-feedback-user-email-value="{{ app.user ? app.user.email : '' }}"
- *      data-feedback-user-name-value="{{ app.user ? app.user.displayName : '' }}"
+ *      data-feedback-api-url-value="{{ path('api_feedback_submit') }}"
+ *      data-feedback-user-email-value="{{ app.user ? app.user.contactEmail : '' }}"
+ *      data-feedback-user-name-value="{{ app.user ? app.user.username : '' }}"
  *      data-feedback-user-id-value="{{ app.user ? app.user.id : '' }}">
+ *   <button data-action="click->feedback#open">Feedback</button>
  * </div>
+ *
+ * With Twig component modal:
+ * {% include 'components/FeedbackModal.html.twig' with { recaptcha_site_key: recaptcha_site_key } %}
  */
 export default class extends Controller {
     static values = {
@@ -26,128 +31,19 @@ export default class extends Controller {
     }
 
     connect() {
-        this.createModal();
+        this.modalElement = document.getElementById('feedbackModal');
+        if (!this.modalElement) {
+            console.error('Feedback modal not found. Make sure FeedbackModal.html.twig is included.');
+            return;
+        }
+        this.attachEventListeners();
+        this.populateContextInfo();
     }
 
     disconnect() {
-        if (this.modalElement) {
-            this.modalElement.remove();
-        }
+        // Modal is managed by Twig, no need to remove
     }
 
-    createModal() {
-        // Create modal HTML
-        const modalHTML = `
-            <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="feedbackModalLabel">
-                                <i class="bi bi-chat-left-text me-2"></i>
-                                Send Feedback
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="feedbackForm">
-                                <!-- Feedback Type -->
-                                <div class="mb-3">
-                                    <label for="feedbackType" class="form-label">Feedback Type</label>
-                                    <select class="form-select" id="feedbackType" required>
-                                        <option value="">Select type...</option>
-                                        <option value="bug_report">🐛 Bug Report</option>
-                                        <option value="feature_request">💡 Feature Request</option>
-                                        <option value="question">❓ Question</option>
-                                        <option value="general">💬 General Feedback</option>
-                                    </select>
-                                </div>
-
-                                <!-- Subject -->
-                                <div class="mb-3">
-                                    <label for="feedbackSubject" class="form-label">Subject</label>
-                                    <input type="text" class="form-control" id="feedbackSubject"
-                                           placeholder="Brief description of your feedback" required>
-                                </div>
-
-                                <!-- Description -->
-                                <div class="mb-3">
-                                    <label for="feedbackDescription" class="form-label">Description</label>
-                                    <textarea class="form-control" id="feedbackDescription" rows="5"
-                                              placeholder="Provide detailed information..." required></textarea>
-                                </div>
-
-                                <!-- Screenshot Section -->
-                                <div class="mb-3">
-                                    <label class="form-label">Screenshot (optional)</label>
-                                    <div class="d-flex gap-2 mb-2">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" id="captureScreenshot">
-                                            <i class="bi bi-camera"></i> Capture Screenshot
-                                        </button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm d-none" id="removeScreenshot">
-                                            <i class="bi bi-trash"></i> Remove Screenshot
-                                        </button>
-                                    </div>
-                                    <div id="screenshotPreview" class="border rounded p-2 d-none">
-                                        <img id="screenshotImage" class="img-fluid" alt="Screenshot preview">
-                                    </div>
-                                    <input type="hidden" id="screenshotData">
-                                </div>
-
-                                <!-- Context Info (collapsed by default) -->
-                                <div class="accordion mb-3" id="contextAccordion">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#contextCollapse">
-                                                <i class="bi bi-info-circle me-2"></i>
-                                                Automatically Captured Context
-                                            </button>
-                                        </h2>
-                                        <div id="contextCollapse" class="accordion-collapse collapse"
-                                             data-bs-parent="#contextAccordion">
-                                            <div class="accordion-body">
-                                                <small class="text-muted" id="contextInfo">
-                                                    <!-- Context will be populated here -->
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Error Message -->
-                                <div id="feedbackError" class="alert alert-danger d-none" role="alert"></div>
-
-                                <!-- Success Message -->
-                                <div id="feedbackSuccess" class="alert alert-success d-none" role="alert"></div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary" id="submitFeedback">
-                                <span id="submitButtonText">
-                                    <i class="bi bi-send"></i> Submit Feedback
-                                </span>
-                                <span id="submitButtonSpinner" class="d-none">
-                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                    Submitting...
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Insert modal into DOM
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        this.modalElement = document.getElementById('feedbackModal');
-
-        // Attach event listeners
-        this.attachEventListeners();
-
-        // Populate context info
-        this.populateContextInfo();
-    }
 
     attachEventListeners() {
         // Screenshot capture
@@ -300,7 +196,13 @@ export default class extends Controller {
         this.hideMessages();
 
         try {
-            // Submit feedback
+            // Get reCAPTCHA token
+            const recaptchaToken = grecaptcha.getResponse();
+            if (!recaptchaToken) {
+                throw new Error('Please complete the reCAPTCHA verification');
+            }
+
+            // Submit feedback to backend
             const response = await fetch(this.apiUrlValue, {
                 method: 'POST',
                 headers: {
@@ -312,19 +214,30 @@ export default class extends Controller {
                     message,
                     screenshot,
                     context,
+                    recaptchaToken,
                 }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                this.showSuccess('Thank you! Your feedback has been submitted successfully.');
+                // Show success message with GitHub link
+                const issueType = data.type === 'issue' ? 'issue' : 'discussion';
+                this.showSuccess(
+                    `Thank you! Your feedback has been submitted to GitHub as ${issueType} #${data.id}. ` +
+                    `<a href="${data.url}" target="_blank" class="alert-link">View on GitHub</a>`
+                );
 
-                // Close modal after 2 seconds
+                // If screenshot was captured, offer to download it
+                if (screenshot) {
+                    this.offerScreenshotDownload(screenshot);
+                }
+
+                // Close modal after 5 seconds
                 setTimeout(() => {
                     const modal = bootstrap.Modal.getInstance(this.modalElement);
                     modal.hide();
-                }, 2000);
+                }, 5000);
             } else {
                 throw new Error(data.message || 'Failed to submit feedback');
             }
@@ -332,9 +245,30 @@ export default class extends Controller {
         } catch (error) {
             console.error('Feedback submission error:', error);
             this.showError(error.message || 'Failed to submit feedback. Please try again.');
+
+            // Reset reCAPTCHA
+            if (typeof grecaptcha !== 'undefined') {
+                grecaptcha.reset();
+            }
         } finally {
             this.setSubmitButtonLoading(false);
         }
+    }
+
+    offerScreenshotDownload(screenshotData) {
+        // Create a download link for the screenshot
+        const downloadLink = document.createElement('a');
+        downloadLink.href = screenshotData;
+        downloadLink.download = `feedback_screenshot_${Date.now()}.png`;
+        downloadLink.className = 'btn btn-sm btn-outline-primary ms-2';
+        downloadLink.innerHTML = '<i class="bi bi-download"></i> Download Screenshot';
+        downloadLink.target = '_blank';
+
+        const successElement = document.getElementById('feedbackSuccess');
+        successElement.appendChild(document.createElement('br'));
+        successElement.appendChild(document.createTextNode('You can also '));
+        successElement.appendChild(downloadLink);
+        successElement.appendChild(document.createTextNode(' to attach it manually to the GitHub issue.'));
     }
 
     setSubmitButtonLoading(loading) {

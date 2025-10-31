@@ -536,7 +536,9 @@ marketplace:
 
 #Translations specific for public location pages
 location:
+  list: 'Locations'
   singular: 'Location'
+  website: 'Website url'
   details: 'Location Details'
   about: 'About This Location'
   contact: 'Contact Information'
@@ -870,4 +872,43 @@ lore:
     character: 'Character-specific (visible to specific characters)'
   view_timeline: 'View Lore Timeline'
   backoffice_timeline: 'Timeline View'
+
+feedback:
+  modal:
+    title: 'Send Feedback'
+  type:
+    label: 'Feedback Type'
+    select: 'Select type...'
+    bug_report: 'Bug Report'
+    feature_request: 'Feature Request'
+    question: 'Question'
+    general: 'General Feedback'
+  subject:
+    label: 'Subject'
+    placeholder: 'Brief description of your feedback'
+  description:
+    label: 'Description'
+    placeholder: 'Provide detailed information...'
+  screenshot:
+    label: 'Screenshot (optional)'
+    capture: 'Capture Screenshot'
+    remove: 'Remove Screenshot'
+    preview: 'Screenshot preview'
+    captured: 'Screenshot Captured'
+    failed: 'Failed to capture screenshot. You can still submit feedback without it.'
+  context:
+    title: 'Automatically Captured Context'
+    page: 'Page'
+    route: 'Route'
+    browser: 'Browser'
+    viewport: 'Viewport'
+    screen: 'Screen'
+    larp: 'LARP'
+    user: 'User'
+    timestamp: 'Timestamp'
+  submit: 'Submit Feedback'
+  submitting: 'Submitting...'
+  success: 'Thank you! Your feedback has been submitted to GitHub successfully.'
+  error: 'Failed to submit feedback. Please try again.'
+  github_redirect: 'Opening GitHub to complete submission...'
 
