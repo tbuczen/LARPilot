@@ -76,6 +76,7 @@ class LocationController extends AbstractController
         return $this->render('backoffice/location/modify.html.twig', [
             'location' => $location,
             'form' => $form,
+            'googleMapsApiKey' => $this->getParameter('google_maps_api_key'),
         ]);
     }
 
@@ -119,6 +120,7 @@ class LocationController extends AbstractController
         return $this->render('backoffice/location/modify.html.twig', [
             'location' => $location,
             'form' => $form,
+            'googleMapsApiKey' => $this->getParameter('google_maps_api_key'),
         ]);
     }
 

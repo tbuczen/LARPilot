@@ -179,6 +179,7 @@ LARP entities use Symfony Workflow for status management (`larp_stage_status` st
   - `wysiwyg_controller.js`: Quill editor with mentions
   - `custom-autocomplete_controller.js`: TomSelect with AJAX entity creation
   - `story_graph_controller.js`: Cytoscape graph visualization
+  - `google-places-autocomplete_controller.js`: Google Places address autocomplete
 
 **Key Frontend Libraries**:
 - Bootstrap 5.3 for UI
@@ -217,6 +218,41 @@ The system supports creating entities on-the-fly in autocomplete fields via the 
    ```
 
 The `AutocompleteController` handles AJAX creation requests. See `docs/tom-select_ajax.md` for full details.
+
+### Google Places Autocomplete
+
+The Location form integrates **Google Places Autocomplete API** for smart address completion:
+
+**Features**:
+- Auto-completes addresses as you type
+- Automatically populates: country, city, postal code, latitude, longitude
+- Works on Location creation/edit forms (`templates/backoffice/location/modify.html.twig`)
+
+**Implementation**:
+- **Controller**: `assets/controllers/google-places-autocomplete_controller.js`
+- **Loader utility**: `assets/utils/googlePlacesLoader.js`
+- **API Key**: Configured via `GOOGLE_MAPS_API_KEY` environment variable
+
+**Setup Requirements**:
+1. Enable **Places API** in Google Cloud Console
+2. Ensure your API key has Places API permission
+3. Set `GOOGLE_MAPS_API_KEY` in `.env.local`
+
+**Usage in Templates**:
+```twig
+<div data-controller="google-places-autocomplete"
+     data-google-places-autocomplete-api-key-value="{{ googleMapsApiKey }}"
+     data-google-places-autocomplete-address-field-value="#{{ form.address.vars.id }}"
+     data-google-places-autocomplete-city-field-value="#{{ form.city.vars.id }}"
+     data-google-places-autocomplete-country-field-value="#{{ form.country.vars.id }}"
+     data-google-places-autocomplete-postal-code-field-value="#{{ form.postalCode.vars.id }}"
+     data-google-places-autocomplete-latitude-field-value="#{{ form.latitude.vars.id }}"
+     data-google-places-autocomplete-longitude-field-value="#{{ form.longitude.vars.id }}">
+    <!-- Form fields here -->
+</div>
+```
+
+**Free Tier**: 25,000 autocomplete requests/month
 
 ### Services
 

@@ -59,11 +59,17 @@ return [
     './controllers/sortable_character_choices_controller.js' => [
         'path' => './assets/controllers/sortable_character_choices_controller.js',
     ],
+    './controllers/google-places-autocomplete_controller.js' => [
+        'path' => './assets/controllers/google-places-autocomplete_controller.js',
+    ],
     './utils/factionGroupLayout.js' => [
         'path' => './assets/utils/factionGroupLayout.js',
     ],
     './utils/googleApiLoader.js' => [
         'path' => './assets/utils/googleApiLoader.js',
+    ],
+    './utils/googlePlacesLoader.js' => [
+        'path' => './assets/utils/googlePlacesLoader.js',
     ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',

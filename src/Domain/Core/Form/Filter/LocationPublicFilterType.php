@@ -20,7 +20,7 @@ class LocationPublicFilterType extends AbstractType
                     'class' => 'form-control',
                     'placeholder' => 'Search by name...',
                 ],
-                'condition_pattern' => Filters\TextFilterType::PATTERN_CONTAINS,
+//                'condition_pattern' => Filters\TextFilterType::PATTERN_CONTAINS,
             ])
             ->add('city', ChoiceType::class, [
                 'required' => false,
