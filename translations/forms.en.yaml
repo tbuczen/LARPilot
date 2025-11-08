@@ -308,6 +308,36 @@ kanban_task:
     done: 'Done'
     cancelled: 'Cancelled'
 
+comment:
+  content: "Comment"
+  content_placeholder: "Write your comment or discussion point..."
+  is_resolved: "Mark as resolved"
+  discussions: "Discussions"
+  add_new: "Add Comment"
+  create: "New Comment"
+  edit: "Edit Comment"
+  reply: "Reply to Comment"
+  post: "Post Comment"
+  view_all: "View All Discussions"
+  view_all_count: "View all %count% comments"
+  no_comments_yet: "No comments yet. Start a discussion!"
+  start_discussion: "Start Discussion"
+  total_comments: "Total Comments"
+  unresolved_comments: "Unresolved"
+  unresolved: "unresolved"
+  resolved: "Resolved"
+  mark_resolved: "Mark as Resolved"
+  mark_unresolved: "Mark as Unresolved"
+  marked_as_resolved: "Comment marked as resolved"
+  marked_as_unresolved: "Comment marked as unresolved"
+  created_successfully: "Comment posted successfully"
+  reply_created_successfully: "Reply posted successfully"
+  updated_successfully: "Comment updated successfully"
+  deleted_successfully: "Comment deleted successfully"
+  confirm_delete: "Are you sure you want to delete this comment?"
+  replying_to: "Replying to:"
+  edited: "edited"
+
 enum:
   location_type:
     indoor: "Indoor"

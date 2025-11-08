@@ -141,6 +141,55 @@
                 </div>
             </div>
 
+            {# Comments & Discussions - POC #}
+            <div class="card mb-3 shadow-sm">
+                <div
+                        class="card-header d-flex justify-content-between align-items-center"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#commentsCollapse"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="commentsCollapse"
+                >
+                <span class="fw-bold">
+                    <i class="bi bi-chat-dots"></i> {{ 'comment.discussions'|trans }}
+                </span>
+                    <div class="d-flex align-items-center">
+                        <a href="{{ path('backoffice_larp_story_comment_list', {
+                            larp: larp.id,
+                            storyObject: character.id
+                        }) }}" class="btn btn-sm btn-outline-primary me-2" onclick="event.stopPropagation();">
+                            {{ 'comment.view_all'|trans }}
+                        </a>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="20" height="20"
+                             class="bi bi-chevron-down transition toggleIcon"
+                             viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div id="commentsCollapse" class="collapse">
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>POC Feature:</strong> Comments and discussions for story objects.
+                            Click "{{ 'comment.view_all'|trans }}" to manage discussions for this character.
+                        </div>
+                        <div class="text-center">
+                            <a href="{{ path('backoffice_larp_story_comment_create', {
+                                larp: larp.id,
+                                storyObject: character.id
+                            }) }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> {{ 'comment.add_new'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {# Version History #}
             <div class="card mb-3 shadow-sm">
                 <div

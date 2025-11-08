@@ -1,0 +1,71 @@
+{# templates/backoffice/larp/story/comment/_tab.html.twig #}
+{# This partial can be included in StoryObject view pages to show comments tab #}
+
+{% set commentCount = commentRepository.countByStoryObject(storyObject) %}
+{% set unresolvedCount = commentRepository.countUnresolvedByStoryObject(storyObject) %}
+{% set recentComments = commentRepository.findTopLevelByStoryObject(storyObject)|slice(0, 5) %}
+
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="mb-0">
+                <i class="bi bi-chat-dots"></i> {{ 'comment.discussions'|trans }}
+                {% if commentCount > 0 %}
+                    <span class="badge bg-primary ms-2">{{ commentCount }}</span>
+                {% endif %}
+                {% if unresolvedCount > 0 %}
+                    <span class="badge bg-warning ms-1">{{ unresolvedCount }} {{ 'comment.unresolved'|trans }}</span>
+                {% endif %}
+            </h5>
+        </div>
+        <div>
+            <a href="{{ path('backoffice_larp_story_comment_list', {
+                larp: larp.id,
+                storyObject: storyObject.id
+            }) }}" class="btn btn-sm btn-outline-primary me-2">
+                {{ 'comment.view_all'|trans }}
+            </a>
+            <a href="{{ path('backoffice_larp_story_comment_create', {
+                larp: larp.id,
+                storyObject: storyObject.id
+            }) }}" class="btn btn-sm btn-primary">
+                <i class="bi bi-plus-circle"></i> {{ 'comment.add_new'|trans }}
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if recentComments is empty %}
+            <div class="text-center py-4">
+                <i class="bi bi-chat-text fs-1 text-muted"></i>
+                <p class="text-muted mt-2 mb-0">{{ 'comment.no_comments_yet'|trans }}</p>
+            </div>
+        {% else %}
+            <div class="list-group list-group-flush">
+                {% for comment in recentComments %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex w-100 justify-content-between align-items-start mb-1">
+                            <h6 class="mb-1">
+                                <strong>{{ comment.author.name }}</strong>
+                                {% if comment.isResolved %}
+                                    <span class="badge bg-success ms-2">{{ 'comment.resolved'|trans }}</span>
+                                {% endif %}
+                            </h6>
+                            <small class="text-muted">{{ comment.createdAt|date('Y-m-d H:i') }}</small>
+                        </div>
+                        <p class="mb-1 text-muted">{{ comment.content|truncate(150)|nl2br }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if commentCount > 5 %}
+                <div class="text-center mt-3">
+                    <a href="{{ path('backoffice_larp_story_comment_list', {
+                        larp: larp.id,
+                        storyObject: storyObject.id
+                    }) }}" class="btn btn-sm btn-link">
+                        {{ 'comment.view_all_count'|trans({'%count%': commentCount}) }}
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
