@@ -4,11 +4,20 @@
 {% block title %}{{ 'comment.discussions'|trans }} - {{ storyObject.title }}{% endblock %}
 
 {% block larp_content %}
-    <div class="container-fluid">
+    <div class="container-fluid"
+         data-controller="realtime-chat"
+         data-realtime-chat-api-url-value="{{ path('backoffice_larp_story_comment_api', {larp: larp.id, storyObject: storyObject.id}) }}"
+         data-realtime-chat-post-url-value="{{ path('backoffice_larp_story_comment_post', {larp: larp.id, storyObject: storyObject.id}) }}"
+         data-realtime-chat-poll-interval-value="3000"
+         data-realtime-chat-story-object-id-value="{{ storyObject.id }}">
         {# Header #}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h3 mb-1">{{ 'comment.discussions'|trans }}</h1>
+                <h1 class="h3 mb-1">
+                    <i class="bi bi-chat-dots text-primary"></i>
+                    {{ 'comment.discussions'|trans }}
+                    <span class="badge bg-success"><i class="bi bi-broadcast"></i> {{ 'comment.live'|trans }}</span>
+                </h1>
                 <p class="text-muted mb-0">
                     {{ storyObject.targetType.value|trans }} -
                     <a href="{{ path('backoffice_larp_story_' ~ storyObject.targetType.value|lower ~ '_modify', {
@@ -21,8 +30,8 @@
                 <a href="{{ path('backoffice_larp_story_comment_create', {
                     larp: larp.id,
                     storyObject: storyObject.id
-                }) }}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> {{ 'comment.add_new'|trans }}
+                }) }}" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-plus-circle"></i> {{ 'comment.add_detailed'|trans }}
                 </a>
             </div>
         </div>
@@ -38,7 +47,7 @@
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <h6 class="mb-0 text-muted">{{ 'comment.total_comments'|trans }}</h6>
-                                <h3 class="mb-0">{{ commentCount }}</h3>
+                                <h3 class="mb-0" data-realtime-chat-target="countBadge">{{ commentCount }}</h3>
                             </div>
                         </div>
                     </div>
@@ -53,7 +62,7 @@
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <h6 class="mb-0 text-muted">{{ 'comment.unresolved_comments'|trans }}</h6>
-                                <h3 class="mb-0">{{ unresolvedCount }}</h3>
+                                <h3 class="mb-0" data-realtime-chat-target="unresolvedBadge">{{ unresolvedCount }}</h3>
                             </div>
                         </div>
                     </div>
@@ -63,23 +72,18 @@
 
         {# Comments List #}
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="max-height: 600px; overflow-y: auto;" data-realtime-chat-target="commentsList">
                 {% if commentThreads is empty %}
                     <div class="text-center py-5">
                         <i class="bi bi-chat-text fs-1 text-muted"></i>
                         <p class="text-muted mt-3">{{ 'comment.no_comments_yet'|trans }}</p>
-                        <a href="{{ path('backoffice_larp_story_comment_create', {
-                            larp: larp.id,
-                            storyObject: storyObject.id
-                        }) }}" class="btn btn-outline-primary">
-                            {{ 'comment.start_discussion'|trans }}
-                        </a>
+                        <p class="text-muted">{{ 'comment.type_below_to_start'|trans }}</p>
                     </div>
                 {% else %}
                     {% for thread in commentThreads %}
                         {# Top-level comment #}
                         {% set comment = thread.comment %}
-                        <div class="comment-thread mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}">
+                        <div class="comment-thread mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}" data-comment-id="{{ comment.id }}">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">
                                     <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
@@ -168,9 +172,9 @@
 
                                     {# Replies #}
                                     {% if thread.replies is not empty %}
-                                        <div class="ms-4 mt-3">
+                                        <div class="ms-4 mt-3 replies-container">
                                             {% for reply in thread.replies %}
-                                                <div class="d-flex mb-3">
+                                                <div class="d-flex mb-3" data-comment-id="{{ reply.id }}">
                                                     <div class="flex-shrink-0">
                                                         <div class="avatar-circle bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
                                                              style="width: 32px; height: 32px; font-size: 0.875rem;">
@@ -234,6 +238,72 @@
                     {% endfor %}
                 {% endif %}
             </div>
+
+            {# Quick Chat Form #}
+            <div class="card-footer bg-light">
+                <form data-realtime-chat-target="chatForm" data-action="submit->realtime-chat#sendMessage">
+                    <div class="input-group">
+                        <textarea
+                            class="form-control"
+                            rows="2"
+                            placeholder="{{ 'comment.type_message'|trans }}"
+                            data-realtime-chat-target="messageInput"
+                            data-action="keydown->realtime-chat#handleKeyDown input->realtime-chat#handleTyping"
+                            style="resize: none;"></textarea>
+                        <button
+                            class="btn btn-primary"
+                            type="submit"
+                            data-realtime-chat-target="sendButton">
+                            <i class="bi bi-send"></i> {{ 'comment.send'|trans }}
+                        </button>
+                    </div>
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i> {{ 'comment.press_enter_to_send'|trans }}
+                    </small>
+                </form>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Animation for new comments */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .new-comment-animation {
+            animation: slideIn 0.5s ease-out;
+            background-color: #fff3cd !important;
+            transition: background-color 2s ease-out;
+        }
+
+        /* Live indicator pulse */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .badge .bi-broadcast {
+            animation: pulse 2s infinite;
+        }
+
+        /* Smooth scroll for comments list */
+        [data-realtime-chat-target="commentsList"] {
+            scroll-behavior: smooth;
+        }
+    </style>
 {% endblock %}

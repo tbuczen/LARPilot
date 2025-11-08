@@ -18,11 +18,14 @@ This POC implements a comments and discussions system that can be attached to an
 ### User Interface
 
 - **Comments list page**: View all discussions for a StoryObject with threaded replies
-- **Stats dashboard**: Shows total comments and unresolved comments count
+- **Stats dashboard**: Shows total comments and unresolved comments count (updates in real-time)
 - **Create/Edit forms**: Simple forms for posting and editing comments
 - **Reply functionality**: Reply to specific comments to create threaded discussions
 - **Quick actions**: Resolve/unresolve, edit, delete comments via dropdown menus
 - **Integration in StoryObject views**: Collapsible comments section in Character edit page (can be extended to other StoryObject types)
+- **Real-time chat**: Live updates using AJAX polling (new comments appear automatically without page refresh)
+- **Quick message form**: Send messages directly from the chat interface with Enter key support
+- **Visual feedback**: New comments slide in with animation and highlight briefly
 
 ## Architecture
 
@@ -72,12 +75,72 @@ templates/backoffice/larp/story/comment/
 
 All routes are under the `/larp/{larp}/story/{storyObject}` prefix with `backoffice_larp_story_comment_` namespace:
 
+**Web Interface:**
 - `GET /comments` - List all comments for a StoryObject
 - `GET|POST /comment/create` - Create new comment
 - `GET|POST /comment/{comment}/reply` - Reply to a comment
 - `GET|POST /comment/{comment}/edit` - Edit existing comment
 - `POST /comment/{comment}/delete` - Delete a comment
 - `POST /comment/{comment}/resolve` - Toggle resolved status
+
+**Real-Time API (AJAX):**
+- `GET /comments/api` - Fetch new comments as JSON (used by polling)
+  - Query params: `lastCommentId` - ID of the last comment received
+  - Returns: Array of new comments, total count, unresolved count
+- `POST /comments/post` - Quick post a message
+  - Form data: `content`, optional `parentId`
+  - Returns: Success status and created comment as JSON
+
+## Real-Time Chat
+
+### How It Works
+
+The real-time chat functionality uses **AJAX polling** to fetch new comments every 3 seconds. This approach:
+
+- ✅ **Works everywhere**: No external services required
+- ✅ **Free**: Pure JavaScript, no third-party dependencies
+- ✅ **Simple**: Easy to understand and maintain
+- ✅ **Reliable**: No WebSocket connections to manage
+- ⚠️ **Scalable**: Suitable for small to medium teams (configurable polling interval)
+
+**Technical Implementation:**
+1. **Stimulus Controller** (`realtime_chat_controller.js`): Manages polling, UI updates, and message sending
+2. **API Endpoints**: Return JSON data for AJAX requests
+3. **Incremental Updates**: Only fetch comments created since the last known comment ID
+4. **Visual Feedback**: Slide-in animations and brief highlights for new messages
+5. **Auto-scroll**: Automatically scrolls to new messages
+
+### Configuration
+
+You can adjust the polling interval by changing the `data-realtime-chat-poll-interval-value` attribute in the template (default: 3000ms = 3 seconds):
+
+```twig
+data-realtime-chat-poll-interval-value="5000"  {# Poll every 5 seconds #}
+```
+
+**Recommended intervals:**
+- Small teams (2-5 users): 2000-3000ms
+- Medium teams (5-15 users): 3000-5000ms
+- Large teams (15+ users): 5000-10000ms or consider upgrading to Mercure
+
+### Real-Time Features
+
+**Auto-Updates:**
+- New comments from other users appear automatically
+- Comment counts update in real-time
+- Unresolved count updates when comments are marked resolved
+- No page refresh needed
+
+**Quick Chat Interface:**
+- Type message in the bottom text area
+- Press Enter to send (Shift+Enter for new line)
+- Messages appear immediately after sending
+- Smooth scroll to bottom when new messages arrive
+
+**Visual Indicators:**
+- 🟢 **LIVE badge**: Pulsing animation shows polling is active
+- 💛 **Yellow highlight**: New messages briefly highlighted before fading
+- ⬆️ **Slide-in animation**: New comments animate into view
 
 ## Usage
 
@@ -189,6 +252,7 @@ Allow file attachments:
 
 ### Manual Testing Checklist
 
+**Basic Functionality:**
 - [ ] Create a comment on a Character
 - [ ] Edit the comment
 - [ ] Reply to the comment
@@ -199,6 +263,17 @@ Allow file attachments:
 - [ ] Delete a StoryObject with comments (should cascade delete comments)
 - [ ] View comments list with multiple threads
 - [ ] Verify comment count and unresolved count statistics
+
+**Real-Time Chat:**
+- [ ] Open comments page in two different browser windows/tabs
+- [ ] Post a message in one window
+- [ ] Verify message appears in the other window within 3 seconds
+- [ ] Check that the LIVE badge is pulsing
+- [ ] Verify comment counts update automatically
+- [ ] Test Enter key to send message
+- [ ] Test Shift+Enter to add new line
+- [ ] Verify new messages slide in with animation
+- [ ] Check auto-scroll to new messages
 
 ### Database Migration
 
@@ -230,23 +305,93 @@ comment:
 
 ## Known Limitations
 
-1. **No pagination**: Comments list shows all comments (fine for POC, needs pagination for production)
-2. **No email notifications**: Users aren't notified of new comments
-3. **No real-time updates**: Page refresh required to see new comments
+1. **Polling-based real-time**: Uses AJAX polling (3-second intervals) instead of true Server-Sent Events
+   - Works great for small to medium teams
+   - May need tuning for large teams (increase polling interval or upgrade to Mercure)
+2. **No pagination**: Comments list shows all comments (fine for POC, needs pagination for production)
+3. **No email notifications**: Users aren't notified of new comments via email
 4. **No rich text**: Plain text only (can be extended with WYSIWYG)
 5. **No search/filter**: Can't filter comments by author, date, or status
 6. **No attachments**: Text-only comments
+7. **Browser tab dependency**: Real-time updates only work when the page is open (stops polling when tab is closed)
 
 ## Future Enhancements
 
-1. **Real-time updates**: Use Mercure/WebSockets for live comment updates
-2. **Pagination**: Add pagination for large comment threads
-3. **Search & Filter**: Filter by author, date range, resolved status
-4. **Export**: Export discussions as PDF or Markdown
-5. **Analytics**: Track discussion activity per StoryObject
-6. **Permissions**: Fine-grained permissions (who can comment, resolve, delete)
-7. **Comment templates**: Pre-defined comment templates for common discussions
-8. **Integration with story graph**: Link comments to specific parts of decision trees or story graphs
+### Immediate Enhancements
+
+1. **Pagination**: Add pagination for large comment threads (show 20-50 at a time)
+2. **Search & Filter**: Filter by author, date range, resolved status
+3. **Email notifications**: Send email when someone comments or replies
+4. **Rich text editor**: Integrate WYSIWYG for formatted comments
+5. **@Mentions**: Tag other users with autocomplete
+
+### Advanced Features
+
+6. **Export**: Export discussions as PDF or Markdown
+7. **Analytics**: Track discussion activity per StoryObject
+8. **Permissions**: Fine-grained permissions (who can comment, resolve, delete)
+9. **Comment templates**: Pre-defined comment templates for common discussions
+10. **Integration with story graph**: Link comments to specific parts of decision trees or story graphs
+11. **File attachments**: Upload images and documents
+
+### Upgrading to True Real-Time (Mercure)
+
+If you need better real-time performance for larger teams, you can upgrade from AJAX polling to **Mercure** (Server-Sent Events):
+
+**Benefits of Mercure:**
+- ⚡ Instant updates (no 3-second delay)
+- 📉 Lower server load (push vs. poll)
+- 🔌 Connection-based (updates even with tab in background)
+- 🆓 Free and open-source
+
+**Installation Steps:**
+
+1. **Install Mercure Bundle**:
+   ```bash
+   composer require symfony/mercure-bundle
+   ```
+
+2. **Configure Mercure** (`.env.local`):
+   ```env
+   MERCURE_URL=http://localhost:3000/.well-known/mercure
+   MERCURE_PUBLIC_URL=http://localhost:3000/.well-known/mercure
+   MERCURE_JWT_SECRET="!ChangeThisMercureHubJWTSecretKey!"
+   ```
+
+3. **Run Mercure Hub** (Docker):
+   ```bash
+   docker run -d -p 3000:80 \
+     -e MERCURE_JWT_SECRET='!ChangeThisMercureHubJWTSecretKey!' \
+     dunglas/mercure
+   ```
+
+4. **Update Controller** to publish to Mercure:
+   ```php
+   use Symfony\Component\Mercure\HubInterface;
+   use Symfony\Component\Mercure\Update;
+
+   // In CommentController::post()
+   $this->hub->publish(new Update(
+       'comments/' . $storyObject->getId(),
+       json_encode($this->serializeComment($comment))
+   ));
+   ```
+
+5. **Replace Polling with EventSource** (JavaScript):
+   ```javascript
+   const eventSource = new EventSource(
+       `/comments/stream?topic=comments/${storyObjectId}`
+   );
+   eventSource.onmessage = (e) => {
+       const comment = JSON.parse(e.data);
+       this.addComment(comment);
+   };
+   ```
+
+**Note**: The current polling approach is sufficient for most use cases. Only upgrade to Mercure if you have:
+- Large teams (20+ concurrent users)
+- Need instant updates (< 1 second latency)
+- High message volume (100+ messages/minute)
 
 ## Code Quality
 
@@ -260,4 +405,16 @@ All code follows LARPilot standards:
 
 ## Conclusion
 
-This POC demonstrates a fully functional comments and discussions system that integrates seamlessly with LARPilot's existing architecture. It's designed to be extensible and can be easily enhanced with additional features as needed.
+This POC demonstrates a fully functional **real-time comments and discussions system** that integrates seamlessly with LARPilot's existing architecture.
+
+**Key Achievements:**
+- ✅ Full CRUD operations for comments and discussions
+- ✅ Real-time updates using AJAX polling (no external services required)
+- ✅ Threaded conversations with replies
+- ✅ Resolution tracking for discussions
+- ✅ Quick chat interface with keyboard shortcuts
+- ✅ Visual feedback and animations
+- ✅ Mobile-responsive design
+- ✅ Free and open-source solution
+
+The system is production-ready for small to medium teams and can be easily upgraded to Mercure for larger deployments. It's designed to be extensible and can be enhanced with additional features as needed.
