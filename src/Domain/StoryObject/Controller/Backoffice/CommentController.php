@@ -10,6 +10,7 @@ use App\Domain\StoryObject\Entity\Comment;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Form\Type\CommentType;
 use App\Domain\StoryObject\Repository\CommentRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -185,5 +186,100 @@ class CommentController extends BaseController
             'larp' => $larp->getId(),
             'storyObject' => $storyObject->getId(),
         ]);
+    }
+
+    /**
+     * API endpoint to fetch comments as JSON for real-time updates
+     */
+    #[Route('/comments/api', name: 'api', methods: ['GET'])]
+    public function api(
+        Request $request,
+        Larp $larp,
+        StoryObject $storyObject,
+        CommentRepository $commentRepository,
+    ): JsonResponse {
+        $since = $request->query->get('since');
+        $lastCommentId = $request->query->getInt('lastCommentId', 0);
+
+        // Get all comments for this story object
+        $allComments = $commentRepository->findByStoryObject($storyObject);
+
+        // Filter comments created after the last known comment
+        $newComments = [];
+        foreach ($allComments as $comment) {
+            if ($comment->getId() > $lastCommentId) {
+                $newComments[] = $comment;
+            }
+        }
+
+        // Build response with comment data
+        $data = [
+            'comments' => [],
+            'count' => $commentRepository->countByStoryObject($storyObject),
+            'unresolvedCount' => $commentRepository->countUnresolvedByStoryObject($storyObject),
+            'lastCommentId' => $allComments ? max(array_map(fn($c) => $c->getId(), $allComments)) : 0,
+        ];
+
+        foreach ($newComments as $comment) {
+            $data['comments'][] = $this->serializeComment($comment);
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * API endpoint to post a quick message (for real-time chat)
+     */
+    #[Route('/comments/post', name: 'post', methods: ['POST'])]
+    public function post(
+        Request $request,
+        Larp $larp,
+        StoryObject $storyObject,
+        CommentRepository $commentRepository,
+    ): JsonResponse {
+        $content = $request->request->get('content');
+        $parentId = $request->request->getInt('parentId', 0);
+
+        if (empty($content)) {
+            return new JsonResponse(['error' => 'Content is required'], 400);
+        }
+
+        $comment = new Comment();
+        $comment->setStoryObject($storyObject);
+        $comment->setAuthor($this->getUser());
+        $comment->setContent($content);
+
+        if ($parentId > 0) {
+            $parent = $commentRepository->find($parentId);
+            if ($parent) {
+                $comment->setParent($parent);
+            }
+        }
+
+        $commentRepository->save($comment, true);
+
+        return new JsonResponse([
+            'success' => true,
+            'comment' => $this->serializeComment($comment),
+        ]);
+    }
+
+    /**
+     * Serialize comment to array for JSON response
+     */
+    private function serializeComment(Comment $comment): array
+    {
+        return [
+            'id' => $comment->getId(),
+            'content' => $comment->getContent(),
+            'authorName' => $comment->getAuthor()->getName(),
+            'authorInitial' => strtoupper(substr($comment->getAuthor()->getName(), 0, 1)),
+            'createdAt' => $comment->getCreatedAt()->format('Y-m-d H:i'),
+            'updatedAt' => $comment->getUpdatedAt()->format('Y-m-d H:i'),
+            'isEdited' => $comment->getUpdatedAt() > $comment->getCreatedAt(),
+            'isResolved' => $comment->isResolved(),
+            'parentId' => $comment->getParent()?->getId(),
+            'isTopLevel' => $comment->isTopLevel(),
+        ];
     }
 }
