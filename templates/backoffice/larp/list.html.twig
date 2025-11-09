@@ -5,6 +5,30 @@
 {% block larp_content %}
         <h1 class="mb-4">{{ 'larp.list'|trans }}</h1>
 
+        {# Plan limit information #}
+        <div class="alert {% if canCreateMore %}alert-info{% else %}alert-warning{% endif %} mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>{{ 'larp.plan.your_plan'|trans }}:</strong>
+                    {% if maxLarpsAllowed is null %}
+                        {{ 'larp.plan.unlimited_larps'|trans }}
+                    {% else %}
+                        {{ 'larp.plan.larp_limit'|trans({'%current%': organizerLarpCount, '%max%': maxLarpsAllowed}) }}
+                    {% endif %}
+                </div>
+                {% if not canCreateMore %}
+                    <div>
+                        <strong class="text-danger">{{ 'larp.plan.limit_reached'|trans }}</strong>
+                        {# Placeholder for upgrade button - will be implemented in Phase 4 #}
+                        <button class="btn btn-sm btn-warning ms-2" disabled>
+                            <i class="bi bi-star me-1"></i>{{ 'larp.plan.upgrade'|trans }}
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
         {% if larps|length > 0 %}
             <div class="list-group">
                 {% for larp in larps %}

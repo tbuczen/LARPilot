@@ -17,8 +17,16 @@ class LarpListController extends AbstractController
         $user = $this->getUser();
 
         $larps = $larpRepository->findAllWhereParticipating($user);
+        $organizerLarpCount = $user->getOrganizerLarpCount();
+        $maxLarpsAllowed = $user->getMaxLarpsAllowed();
+        $remainingSlots = $user->getRemainingLarpSlots($organizerLarpCount);
+
         return $this->render('backoffice/larp/list.html.twig', [
             'larps' => $larps,
+            'organizerLarpCount' => $organizerLarpCount,
+            'maxLarpsAllowed' => $maxLarpsAllowed,
+            'remainingSlots' => $remainingSlots,
+            'canCreateMore' => $user->canCreateMoreLarps($organizerLarpCount),
         ]);
     }
 }

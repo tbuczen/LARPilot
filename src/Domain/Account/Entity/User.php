@@ -45,6 +45,10 @@ class User implements UserInterface
     #[ORM\Column(enumType: UserStatus::class)]
     private UserStatus $status = UserStatus::PENDING;
 
+    #[ORM\ManyToOne(targetEntity: Plan::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Plan $plan = null;
+
     /** @var Collection<LarpParticipant>  */
     #[ORM\OneToMany(targetEntity: LarpParticipant::class, mappedBy: 'user')]
     private Collection $larpParticipants;
@@ -167,5 +171,87 @@ class User implements UserInterface
     public function isBanned(): bool
     {
         return $this->status === UserStatus::BANNED;
+    }
+
+    public function getPlan(): ?Plan
+    {
+        return $this->plan;
+    }
+
+    public function setPlan(?Plan $plan): self
+    {
+        $this->plan = $plan;
+        return $this;
+    }
+
+    /**
+     * Check if user can create more LARPs based on their plan.
+     */
+    public function canCreateMoreLarps(int $currentLarpCount): bool
+    {
+        // If no plan assigned, use free tier default (1 LARP)
+        if ($this->plan === null) {
+            return $currentLarpCount < 1;
+        }
+
+        // Check plan limit
+        $maxLarps = $this->plan->getMaxLarps();
+
+        // NULL = unlimited
+        if ($maxLarps === null) {
+            return true;
+        }
+
+        return $currentLarpCount < $maxLarps;
+    }
+
+    /**
+     * Get remaining LARP slots based on current plan.
+     */
+    public function getRemainingLarpSlots(int $currentLarpCount): ?int
+    {
+        // If no plan, use free tier default
+        if ($this->plan === null) {
+            return max(0, 1 - $currentLarpCount);
+        }
+
+        $maxLarps = $this->plan->getMaxLarps();
+
+        // NULL = unlimited
+        if ($maxLarps === null) {
+            return null;
+        }
+
+        return max(0, $maxLarps - $currentLarpCount);
+    }
+
+    /**
+     * Get the max LARPs allowed for this user's plan.
+     */
+    public function getMaxLarpsAllowed(): ?int
+    {
+        if ($this->plan === null) {
+            return 1; // Free tier default
+        }
+
+        return $this->plan->getMaxLarps();
+    }
+
+    /**
+     * @return Collection<LarpParticipant>
+     */
+    public function getLarpParticipants(): Collection
+    {
+        return $this->larpParticipants;
+    }
+
+    /**
+     * Get count of LARPs where user is an organizer.
+     */
+    public function getOrganizerLarpCount(): int
+    {
+        return $this->larpParticipants->filter(
+            fn(LarpParticipant $participant) => $participant->isOrganizer()
+        )->count();
     }
 }
