@@ -586,6 +586,13 @@ account:
   link_another_social: "Link Another Social Account"
   unlink: "Unlink"
   confirm_unlink: "Are you sure you want to unlink this social account? This cannot be undone."
+  pending_approval:
+    title: 'Account Pending Approval'
+    message: 'Thank you for registering! Your account is currently awaiting approval from our administrators.'
+    info: 'You will receive access to the backoffice features once your account has been approved. This usually takes 24-48 hours.'
+    status: 'Current Status'
+    meanwhile: 'In the meantime, you can browse public LARPs and explore the community.'
+    browse_public: 'Browse Public LARPs'
 
 integration:
   singular: 'Integration'
@@ -965,3 +972,31 @@ comment:
   unresolve: "Unresolve"
   show_resolved: "Show Resolved"
   hide_resolved: "Hide Resolved"
+
+super_admin:
+  users:
+    list: 'User Management'
+    username: 'Username'
+    email: 'Email'
+    status: 'Status'
+    registered: 'Registered'
+    edit: 'Edit User'
+    user_details: 'User Details'
+    current_status: 'Current Status'
+    change_status: 'Change User Status'
+    status_help: 'Select the new status for this user account'
+    status_effects: 'Status Effects'
+    status_pending_desc: 'User cannot access backoffice features, only public pages'
+    status_approved_desc: 'User has full access to backoffice features'
+    status_suspended_desc: 'User access is temporarily suspended'
+    status_banned_desc: 'User is permanently banned from the platform'
+    approve: 'Approve'
+    suspend: 'Suspend'
+    ban: 'Ban'
+    approve_user: 'Approve User'
+    suspend_user: 'Suspend User'
+    ban_user: 'Ban User'
+    confirm_ban: 'Are you sure you want to ban this user? This is a serious action.'
+    quick_actions: 'Quick Actions'
+    filter_by_status: 'Filter by Status'
+    all_statuses: 'All Statuses'

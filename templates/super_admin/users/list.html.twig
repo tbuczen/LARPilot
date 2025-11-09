@@ -1,0 +1,129 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}{{ 'super_admin.users.list'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">
+                        <i class="bi bi-people-fill me-2"></i>
+                        {{ 'super_admin.users.list'|trans }}
+                    </h2>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                {# Status Filter #}
+                <div class="p-3 border-bottom bg-light">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="status" class="form-label">{{ 'super_admin.users.filter_by_status'|trans }}</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">{{ 'super_admin.users.all_statuses'|trans }}</option>
+                                {% for status in statuses %}
+                                    <option value="{{ status.value }}"
+                                        {% if app.request.query.get('status') == status.value %}selected{% endif %}>
+                                        {{ status.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-funnel me-1"></i>{{ 'common.filter'|trans }}
+                            </button>
+                            <a href="{{ path('super_admin_users_list') }}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle me-1"></i>{{ 'common.clear'|trans }}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                {# Users Table #}
+                {% if users is not empty %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    {% include 'includes/sort_th.html.twig' with {
+                                        field: 'username',
+                                        label: 'super_admin.users.username'|trans
+                                    } %}
+                                    {% include 'includes/sort_th.html.twig' with {
+                                        field: 'email',
+                                        label: 'super_admin.users.email'|trans
+                                    } %}
+                                    {% include 'includes/sort_th.html.twig' with {
+                                        field: 'status',
+                                        label: 'super_admin.users.status'|trans
+                                    } %}
+                                    {% include 'includes/sort_th.html.twig' with {
+                                        field: 'createdAt',
+                                        label: 'super_admin.users.registered'|trans
+                                    } %}
+                                    <th>{{ 'common.actions'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ user.username }}</strong>
+                                        </td>
+                                        <td>{{ user.contactEmail }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ user.status.badgeClass }}">
+                                                {{ user.status.label }}
+                                            </span>
+                                        </td>
+                                        <td>{{ user.createdAt|date('Y-m-d H:i') }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ path('super_admin_users_edit', { id: user.id }) }}"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil"></i> {{ 'common.edit'|trans }}
+                                                </a>
+
+                                                {% if user.status.value == 'pending' %}
+                                                    <form method="post"
+                                                          action="{{ path('super_admin_users_approve', { id: user.id }) }}"
+                                                          class="d-inline">
+                                                        <button type="submit" class="btn btn-sm btn-success">
+                                                            <i class="bi bi-check-circle"></i> {{ 'super_admin.users.approve'|trans }}
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+
+                                                {% if user.status.value == 'approved' %}
+                                                    <form method="post"
+                                                          action="{{ path('super_admin_users_suspend', { id: user.id }) }}"
+                                                          class="d-inline">
+                                                        <button type="submit" class="btn btn-sm btn-warning">
+                                                            <i class="bi bi-pause-circle"></i> {{ 'super_admin.users.suspend'|trans }}
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {# Pagination #}
+                    <div class="p-3">
+                        {{ knp_pagination_render(users) }}
+                    </div>
+                {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                        <p class="mt-2">{{ 'common.empty_list'|trans }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

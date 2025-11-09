@@ -1,0 +1,124 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}{{ 'super_admin.users.edit'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="mb-0">
+                            <i class="bi bi-person-gear me-2"></i>
+                            {{ 'super_admin.users.edit'|trans }}
+                        </h2>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h5>{{ 'super_admin.users.user_details'|trans }}</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th style="width: 150px;">{{ 'super_admin.users.username'|trans }}:</th>
+                                    <td>{{ user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ 'super_admin.users.email'|trans }}:</th>
+                                    <td>{{ user.contactEmail }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ 'super_admin.users.registered'|trans }}:</th>
+                                    <td>{{ user.createdAt|date('Y-m-d H:i:s') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ 'super_admin.users.current_status'|trans }}:</th>
+                                    <td>
+                                        <span class="badge bg-{{ user.status.badgeClass }}">
+                                            {{ user.status.label }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <hr>
+
+                        <form method="post">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">
+                                    <strong>{{ 'super_admin.users.change_status'|trans }}</strong>
+                                </label>
+                                <select name="status" id="status" class="form-select" required>
+                                    {% for status in statuses %}
+                                        <option value="{{ status.value }}"
+                                            {% if user.status.value == status.value %}selected{% endif %}>
+                                            {{ status.label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">
+                                    {{ 'super_admin.users.status_help'|trans }}
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>{{ 'super_admin.users.status_effects'|trans }}:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li><strong>{{ 'Pending'|trans }}:</strong> {{ 'super_admin.users.status_pending_desc'|trans }}</li>
+                                    <li><strong>{{ 'Approved'|trans }}:</strong> {{ 'super_admin.users.status_approved_desc'|trans }}</li>
+                                    <li><strong>{{ 'Suspended'|trans }}:</strong> {{ 'super_admin.users.status_suspended_desc'|trans }}</li>
+                                    <li><strong>{{ 'Banned'|trans }}:</strong> {{ 'super_admin.users.status_banned_desc'|trans }}</li>
+                                </ul>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('super_admin_users_list') }}" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i>{{ 'common.back'|trans }}
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i>{{ 'common.save'|trans }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {# Quick Actions Card #}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ 'super_admin.users.quick_actions'|trans }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            {% if user.status.value == 'pending' %}
+                                <form method="post" action="{{ path('super_admin_users_approve', { id: user.id }) }}">
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="bi bi-check-circle me-1"></i>{{ 'super_admin.users.approve_user'|trans }}
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% if user.status.value == 'approved' %}
+                                <form method="post" action="{{ path('super_admin_users_suspend', { id: user.id }) }}">
+                                    <button type="submit" class="btn btn-warning w-100">
+                                        <i class="bi bi-pause-circle me-1"></i>{{ 'super_admin.users.suspend_user'|trans }}
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% if user.status.value != 'banned' %}
+                                <form method="post" action="{{ path('super_admin_users_ban', { id: user.id }) }}"
+                                      onsubmit="return confirm('{{ 'super_admin.users.confirm_ban'|trans }}')">
+                                    <button type="submit" class="btn btn-danger w-100">
+                                        <i class="bi bi-slash-circle me-1"></i>{{ 'super_admin.users.ban_user'|trans }}
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

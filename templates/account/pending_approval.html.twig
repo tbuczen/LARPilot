@@ -1,0 +1,48 @@
+{% extends 'backoffice/base.html.twig' %}
+
+{% block title %}{{ 'account.pending_approval.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4">
+                            <i class="bi bi-hourglass-split text-warning" style="font-size: 4rem;"></i>
+                        </div>
+
+                        <h2 class="card-title mb-3">{{ 'account.pending_approval.title'|trans }}</h2>
+
+                        <p class="card-text text-muted mb-4">
+                            {{ 'account.pending_approval.message'|trans }}
+                        </p>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            {{ 'account.pending_approval.info'|trans }}
+                        </div>
+
+                        <div class="mt-4">
+                            <p class="mb-2">
+                                <strong>{{ 'account.pending_approval.status'|trans }}:</strong>
+                                <span class="badge bg-{{ app.user.status.badgeClass }} ms-2">
+                                    {{ app.user.status.label }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <p class="text-muted small mb-0">
+                            {{ 'account.pending_approval.meanwhile'|trans }}
+                        </p>
+                        <a href="{{ path('public_larp_index') }}" class="btn btn-outline-primary mt-3">
+                            <i class="bi bi-arrow-left me-2"></i>{{ 'account.pending_approval.browse_public'|trans }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
