@@ -3,7 +3,9 @@
 namespace App\Domain\SuperAdmin\Controller;
 
 use App\Domain\Account\Entity\Enum\UserStatus;
+use App\Domain\Account\Entity\Plan;
 use App\Domain\Account\Entity\User;
+use App\Domain\Account\Repository\PlanRepository;
 use App\Domain\Account\Repository\UserRepository;
 use App\Domain\Core\Controller\BaseController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +20,7 @@ class UserManagementController extends BaseController
 {
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly PlanRepository $planRepository,
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
@@ -59,19 +62,43 @@ class UserManagementController extends BaseController
     public function edit(User $user, Request $request): Response
     {
         if ($request->isMethod('POST')) {
+            $updated = false;
+
+            // Handle status change
             $status = $request->request->get('status');
             if ($status && in_array($status, ['pending', 'approved', 'suspended', 'banned'])) {
                 $user->setStatus(UserStatus::from($status));
-                $this->entityManager->flush();
+                $updated = true;
+            }
 
-                $this->addFlash('success', 'User status updated successfully.');
+            // Handle plan change
+            $planId = $request->request->get('plan');
+            if ($planId) {
+                if ($planId === 'none') {
+                    $user->setPlan(null);
+                    $updated = true;
+                } else {
+                    $plan = $this->planRepository->find($planId);
+                    if ($plan) {
+                        $user->setPlan($plan);
+                        $updated = true;
+                    }
+                }
+            }
+
+            if ($updated) {
+                $this->entityManager->flush();
+                $this->addFlash('success', 'User settings updated successfully.');
                 return $this->redirectToRoute('super_admin_users_list');
             }
         }
 
+        $plans = $this->planRepository->findActivePlans();
+
         return $this->render('super_admin/users/edit.html.twig', [
             'user' => $user,
             'statuses' => UserStatus::cases(),
+            'plans' => $plans,
         ]);
     }
 

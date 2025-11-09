@@ -6,6 +6,7 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Form\LarpType;
+use App\Domain\Core\Security\Voter\LarpCreationVoter;
 use App\Domain\Core\Service\LarpManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -20,6 +21,25 @@ class LarpCreateController extends AbstractController
 {
     public function __invoke(Request $request, LarpManager $larpManager, SluggerInterface $slugger): Response
     {
+        // Check if user can create a LARP based on their plan limit
+        if (!$this->isGranted(LarpCreationVoter::CREATE)) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $currentCount = $user->getOrganizerLarpCount();
+            $maxAllowed = $user->getMaxLarpsAllowed();
+
+            $this->addFlash(
+                'error',
+                sprintf(
+                    'You have reached your LARP creation limit (%d/%d). Please upgrade your plan to create more LARPs.',
+                    $currentCount,
+                    $maxAllowed ?? 0
+                )
+            );
+
+            return $this->redirectToRoute('backoffice_larp_list');
+        }
+
         $larp = new Larp();
         $form = $this->createForm(LarpType::class, $larp);
         $form->handleRequest($request);

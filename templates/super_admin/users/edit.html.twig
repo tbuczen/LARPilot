@@ -61,6 +61,31 @@
                                 </div>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="plan" class="form-label">
+                                    <strong>{{ 'super_admin.users.change_plan'|trans }}</strong>
+                                </label>
+                                <select name="plan" id="plan" class="form-select">
+                                    <option value="none" {% if user.plan is null %}selected{% endif %}>
+                                        {{ 'super_admin.users.no_plan_free_tier'|trans }}
+                                    </option>
+                                    {% for plan in plans %}
+                                        <option value="{{ plan.id }}"
+                                            {% if user.plan and user.plan.id.toRfc4122() == plan.id.toRfc4122() %}selected{% endif %}>
+                                            {{ plan.name }}
+                                            {% if plan.maxLarps is not null %}
+                                                ({{ plan.maxLarps }} LARPs)
+                                            {% else %}
+                                                (Unlimited LARPs)
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">
+                                    {{ 'super_admin.users.plan_help'|trans }}
+                                </div>
+                            </div>
+
                             <div class="alert alert-info">
                                 <i class="bi bi-info-circle me-2"></i>
                                 <strong>{{ 'super_admin.users.status_effects'|trans }}:</strong>

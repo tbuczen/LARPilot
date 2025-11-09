@@ -136,6 +136,12 @@ larp:
   plural: 'LARPs'
   list: 'List of LARPs'
   no_larps: 'There are no published LARPs at the moment'
+  plan:
+    your_plan: 'Your Plan'
+    unlimited_larps: 'Unlimited LARPs'
+    larp_limit: 'You are organizing %current% of %max% allowed LARPs'
+    limit_reached: 'Limit Reached'
+    upgrade: 'Upgrade Plan'
   invitation:
     singular: 'Invitation'
     plural: 'Invitations'
@@ -985,6 +991,9 @@ super_admin:
     current_status: 'Current Status'
     change_status: 'Change User Status'
     status_help: 'Select the new status for this user account'
+    change_plan: 'Change User Plan'
+    plan_help: 'Select the subscription plan for this user'
+    no_plan_free_tier: 'No Plan (Free Tier - 1 LARP)'
     status_effects: 'Status Effects'
     status_pending_desc: 'User cannot access backoffice features, only public pages'
     status_approved_desc: 'User has full access to backoffice features'
