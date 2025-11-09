@@ -2,6 +2,7 @@
 
 namespace App\Domain\Account\Entity;
 
+use App\Domain\Account\Entity\Enum\UserStatus;
 use App\Domain\Account\Repository\UserRepository;
 use App\Domain\Application\Entity\LarpApplication;
 use App\Domain\Core\Entity\Enum\Locale;
@@ -40,6 +41,9 @@ class User implements UserInterface
      */
     #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\Column(enumType: UserStatus::class)]
+    private UserStatus $status = UserStatus::PENDING;
 
     /** @var Collection<LarpParticipant>  */
     #[ORM\OneToMany(targetEntity: LarpParticipant::class, mappedBy: 'user')]
@@ -132,5 +136,36 @@ class User implements UserInterface
     {
         $this->preferredLocale = $preferredLocale;
         return $this;
+    }
+
+    public function getStatus(): UserStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(UserStatus $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === UserStatus::APPROVED;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === UserStatus::PENDING;
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->status === UserStatus::SUSPENDED;
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->status === UserStatus::BANNED;
     }
 }
