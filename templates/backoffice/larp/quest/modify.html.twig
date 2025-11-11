@@ -1,5 +1,5 @@
 {% extends 'backoffice/larp/base.html.twig' %}
-
+{% import 'macros/ui_components.html.twig' as ui %}
 {% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
 
 {% block larp_content %}
@@ -16,6 +16,12 @@
     <div class="tab-pane border border-top-0 p-3">
         {{ form_start(form) }}
         {{ form_widget(form) }}
+
+        {{ ui.form_actions(
+            quest is defined and quest.id ? 'save' : 'create',
+            'bi-check-circle',
+            path('backoffice_larp_story_quest_list', { larp: larp.id })
+        ) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}

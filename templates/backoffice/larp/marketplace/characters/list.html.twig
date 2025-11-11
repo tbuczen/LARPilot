@@ -1,4 +1,5 @@
 {% extends 'backoffice/larp/marketplace/_base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'marketplace.characters_list'|trans }} - {{ larp.title }}{% endblock %}
 
@@ -6,9 +7,7 @@
 
 {% block marketplace_content %}
     {% if characters is not empty %}
-        <div class="alert alert-info m-3">
-            {{ 'marketplace.min_threads_info'|trans({'%count%': minThreadsPerCharacter}) }}
-        </div>
+        {{ ui.info_alert('marketplace.min_threads_info'|trans({'%count%': minThreadsPerCharacter})) }}
         <div class="table-responsive">
             <table class="table table-striped table-hover mb-0">
                 <thead class="table-light">
@@ -42,8 +41,8 @@
                             <td>
                                 <a href="{{ path('backoffice_larp_story_marketplace_characters_detail', {
                                     larp: larp.id, character: character.id
-                                }) }}" class="btn btn-sm btn-primary">
-                                    {{ 'marketplace.view_suggestions'|trans }}
+                                }) }}" class="btn btn-sm btn-success">
+                                    <i class="bi bi-lightbulb me-1"></i>{{ 'marketplace.view_suggestions'|trans }}
                                 </a>
                             </td>
                         </tr>
@@ -54,6 +53,6 @@
 
         {% include 'includes/pagination.html.twig' with { pagination: characters } %}
     {% else %}
-        <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
+        {{ ui.empty_state('empty_list', 'bi-person') }}
     {% endif %}
 {% endblock %}

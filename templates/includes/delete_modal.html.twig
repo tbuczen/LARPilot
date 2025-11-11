@@ -1,20 +1,59 @@
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+{#
+    Unified Delete Confirmation Modal
+
+    This modal is used across all backoffice templates for delete confirmations.
+    It uses a Stimulus controller to dynamically update content based on the trigger button.
+
+    Usage:
+    1. Include this template once in your page
+    2. Add delete button with data attributes:
+       <button type="button"
+               class="btn btn-sm btn-danger"
+               data-bs-toggle="modal"
+               data-bs-target="#deleteModal"
+               data-item-id="{{ item.id }}"
+               data-item-name="{{ item.title }}"
+               data-delete-url="{{ path('...', {item: item.id}) }}">
+           {{ 'common.delete'|trans }}
+       </button>
+
+    Or use the UI component macro:
+       {{ ui.delete_button(item.id, item.title, path('...')) }}
+#}
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true"
+     data-controller="delete-confirm">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                    {{ 'confirm_delete'|trans }}
+                    <span data-delete-confirm-target="title"></span>
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="{{ 'close'|trans }}"></button>
             </div>
             <div class="modal-body">
-                {{ 'confirmation'|trans }}
+                <p data-delete-confirm-target="message">
+                    {{ 'delete_confirmation'|trans }}
+                </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    {{ 'cancel'|trans }}
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-2"></i>{{ 'cancel'|trans }}
                 </button>
-                <form id="deleteForm" method="POST">
+                <form method="POST" data-delete-confirm-target="form">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
                     <button type="submit" class="btn btn-danger">
-                        {{ 'delete'|trans }}
+                        <i class="bi bi-trash me-2"></i>{{ 'delete'|trans }}
                     </button>
                 </form>
             </div>

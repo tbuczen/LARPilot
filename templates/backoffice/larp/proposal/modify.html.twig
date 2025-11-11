@@ -1,11 +1,18 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'macros/ui_components.html.twig' as ui %}
+
 {% block larp_title %}{{ (proposal is defined and proposal.id ? 'larp.proposal.modify' : 'larp.proposal.create')|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
 <div class="tab-pane border border-top-0 p-3">
     {{ form_start(form) }}
     {{ form_widget(form) }}
+    {{ ui.form_actions(
+        proposal is defined and proposal.id ? 'save' : 'create',
+        'bi-check-circle',
+        path('backoffice_larp_application_choice_list', { larp: larp.id })
+    ) }}
     {{ form_end(form) }}
 </div>
 {% endblock %}

@@ -1,19 +1,20 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ (location is defined and location.id ? 'backoffice.location.modify' : 'backoffice.location.create')|trans }}{% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1>Create New Location</h1>
-                    <a href="{{ path('backoffice_location_list') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to List
-                    </a>
-                </div>
+    <div class="container-xl mt-4">
+        {# Page header with back button #}
+        {% set actions %}
+            {{ ui.secondary_button('back', path('backoffice_location_list'), 'bi-arrow-left') }}
+        {% endset %}
+        {{ ui.page_header(
+            location is defined and location.id ? 'backoffice.location.modify' : 'backoffice.location.create',
+            actions
+        ) }}
 
-                <div class="card">
+        <div class="card mt-4">
                     <div class="card-body">
                         {{ form_start(form) }}
 
@@ -35,7 +36,7 @@
                             </div>
                         </div>
 
-                        <h5 class="mt-4">Address Information</h5>
+                        {{ ui.form_section('backoffice.location.section.address', null, 'bi-geo-alt') }}
                         <div data-controller="google-places-autocomplete"
                              data-google-places-autocomplete-api-key-value="{{ googleMapsApiKey }}"
                              data-google-places-autocomplete-address-field-value="#{{ form.address.vars.id }}"
@@ -48,7 +49,7 @@
                                 <div class="col-md-6">
                                     {{ form_row(form.address) }}
                                     <small class="form-text text-muted">
-                                        <i class="fas fa-info-circle"></i> Start typing an address to use autocomplete
+                                        <i class="bi bi-info-circle me-1"></i>Start typing an address to use autocomplete
                                     </small>
                                 </div>
                                 <div class="col-md-3">
@@ -72,7 +73,7 @@
                             </div>
                         </div>
 
-                        <h5 class="mt-4">Contact Information</h5>
+                        {{ ui.form_section('backoffice.location.section.contact', null, 'bi-envelope') }}
                         <div class="row">
                             <div class="col-md-6">
                                 {{ form_row(form.contactEmail) }}
@@ -82,7 +83,7 @@
                             </div>
                         </div>
 
-                        <h5 class="mt-4">Online Presence</h5>
+                        {{ ui.form_section('backoffice.location.section.online', null, 'bi-globe') }}
                         <div class="row">
                             <div class="col-md-6">
                                 {{ form_row(form.website) }}
@@ -101,7 +102,7 @@
                             </div>
                         </div>
 
-                        <h5 class="mt-4">Additional Information</h5>
+                        {{ ui.form_section('backoffice.location.section.additional', null, 'bi-info-square') }}
                         <div class="row">
                             <div class="col-md-6">
                                 {{ form_row(form.facilities) }}
@@ -126,15 +127,15 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end mt-4">
-                            <a href="{{ path('backoffice_location_list') }}" class="btn btn-secondary me-2">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Create Location</button>
-                        </div>
+                        {# Form actions with consistent styling #}
+                        {{ ui.form_actions(
+                            location is defined and location.id ? 'save' : 'create',
+                            'bi-check-circle',
+                            path('backoffice_location_list')
+                        ) }}
 
                         {{ form_end(form) }}
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 {% endblock %}

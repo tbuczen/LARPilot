@@ -1,5 +1,5 @@
 {% extends 'backoffice/larp/base.html.twig' %}
-
+{% import 'macros/ui_components.html.twig' as ui %}
 {% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
 
 {% block larp_content %}
@@ -20,6 +20,12 @@
             <div class="card-body">
                 {{ form_start(form) }}
                 {{ form_widget(form) }}
+
+                {{ ui.form_actions(
+                    faction is defined and faction.id ? 'save' : 'create',
+                    'bi-check-circle',
+                    path('backoffice_larp_story_faction_list', { larp: larp.id })
+                ) }}
                 {{ form_end(form) }}
             </div>
         </div>

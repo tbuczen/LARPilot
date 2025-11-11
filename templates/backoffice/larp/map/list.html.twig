@@ -1,19 +1,15 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'larp.map.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'larp.map.plural'|trans }}</h2>
-                <div class="d-flex gap-2">
-                    <a href="{{ path('backoffice_larp_map_modify', { larp: larp.id }) }}" class="btn btn-success">
-                        {{ 'create'|trans }}
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% set actions %}
+            {{ ui.primary_button('create', path('backoffice_larp_map_modify', { larp: larp.id }), 'bi-plus-circle') }}
+        {% endset %}
+        {{ ui.card_header('larp.map.plural', actions) }}
+
         <div class="card-body p-0">
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
 
@@ -46,14 +42,7 @@
                                    class="btn btn-sm btn-primary">
                                     {{ 'edit'|trans }}
                                 </a>
-                                <button type="button" class="btn btn-sm btn-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteMapModal"
-                                        data-item-id="{{ map.id }}"
-                                        data-item-name="{{ map.name }}"
-                                        data-delete-url="{{ path('backoffice_larp_map_delete', { larp: larp.id, map: map.id }) }}">
-                                    {{ 'delete'|trans }}
-                                </button>
+                                {{ ui.delete_button(map.id, map.name, path('backoffice_larp_map_delete', { larp: larp.id, map: map.id })) }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -61,48 +50,10 @@
                 </table>
             </div>
             {% else %}
-                <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
+                {{ ui.empty_state('empty_list', 'bi-map') }}
             {% endif %}
         </div>
     </div>
 
-    <div class="modal fade" id="deleteMapModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
-                </div>
-                <div class="modal-body">
-                    {{ 'confirmation'|trans }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'cancel'|trans }}
-                    </button>
-                    <form id="deleteForm" method="POST">
-                        <button type="submit" class="btn btn-danger">
-                            {{ 'delete'|trans }}
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const deleteModal = document.getElementById('deleteMapModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const itemId = button.getAttribute('data-item-id');
-            const itemName = button.getAttribute('data-item-name');
-            const deleteUrl = button.getAttribute('data-delete-url');
-
-            const modalTitle = deleteModal.querySelector('.modal-title');
-            modalTitle.textContent = `{{ 'delete'|trans }} "${itemName}"?`;
-
-            const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = deleteUrl;
-        });
-    </script>
+    {% include 'includes/delete_modal.html.twig' %}
 {% endblock %}

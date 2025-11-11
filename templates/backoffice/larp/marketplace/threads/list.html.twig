@@ -1,4 +1,5 @@
 {% extends 'backoffice/larp/marketplace/_base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'marketplace.threads_list'|trans }} - {{ larp.title }}{% endblock %}
 
@@ -51,8 +52,8 @@
                             <td>
                                 <a href="{{ path('backoffice_larp_story_thread_modify', {
                                     larp: larp.id, thread: thread.id
-                                }) }}" class="btn btn-sm btn-primary">
-                                    {{ 'edit'|trans }}
+                                }) }}" class="btn btn-sm btn-success">
+                                    <i class="bi bi-pencil me-1"></i>{{ 'edit'|trans }}
                                 </a>
                             </td>
                         </tr>
@@ -63,6 +64,6 @@
 
         {% include 'includes/pagination.html.twig' with { pagination: threads } %}
     {% else %}
-        <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
+        {{ ui.empty_state('empty_list', 'bi-bezier2') }}
     {% endif %}
 {% endblock %}

@@ -1,0 +1,331 @@
+{# UI Component Macros for LARPilot Backoffice #}
+{# Standardized components to ensure consistency across all templates #}
+
+{#
+    Empty State Display
+    Shows a consistent message when no data is available
+
+    Parameters:
+        - message: Translation key or text to display (default: 'empty_list')
+        - icon: Bootstrap icon class (optional, e.g., 'bi-inbox')
+        - additionalClasses: Additional CSS classes (optional)
+
+    Usage:
+        {{ ui.empty_state('larp.tag.no_tags') }}
+        {{ ui.empty_state('common.empty_list', 'bi-inbox') }}
+#}
+{% macro empty_state(message = 'empty_list', icon = null, additionalClasses = '') %}
+    <div class="text-center py-5 {{ additionalClasses }}">
+        {% if icon %}
+            <i class="bi {{ icon }} text-muted mb-3" style="font-size: 3rem;"></i>
+        {% endif %}
+        <p class="text-muted mb-0">{{ message|trans }}</p>
+    </div>
+{% endmacro %}
+
+{#
+    Primary Action Button
+    Standardized button for main actions (Create, Save, etc.)
+
+    Parameters:
+        - label: Button text or translation key
+        - url: Link URL (if null, renders as button instead of link)
+        - icon: Bootstrap icon class (optional, e.g., 'bi-plus-circle')
+        - type: Button type if not a link (default: 'button')
+        - additionalClasses: Additional CSS classes (optional)
+
+    Usage:
+        {{ ui.primary_button('create', path('...')) }}
+        {{ ui.primary_button('save', null, 'bi-check-circle', 'submit') }}
+#}
+{% macro primary_button(label, url = null, icon = null, type = 'button', additionalClasses = '') %}
+    {% if url %}
+        <a href="{{ url }}" class="btn btn-success {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+            {{ label|trans }}
+        </a>
+    {% else %}
+        <button type="{{ type }}" class="btn btn-success {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+            {{ label|trans }}
+        </button>
+    {% endif %}
+{% endmacro %}
+
+{#
+    Secondary Action Button
+    Standardized button for secondary actions (Cancel, Back, etc.)
+
+    Parameters:
+        - label: Button text or translation key
+        - url: Link URL (if null, renders as button instead of link)
+        - icon: Bootstrap icon class (optional)
+        - type: Button type if not a link (default: 'button')
+        - additionalClasses: Additional CSS classes (optional)
+
+    Usage:
+        {{ ui.secondary_button('cancel', path('...')) }}
+        {{ ui.secondary_button('back', path('...'), 'bi-arrow-left') }}
+#}
+{% macro secondary_button(label, url = null, icon = null, type = 'button', additionalClasses = '') %}
+    {% if url %}
+        <a href="{{ url }}" class="btn btn-secondary {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+            {{ label|trans }}
+        </a>
+    {% else %}
+        <button type="{{ type }}" class="btn btn-secondary {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+            {{ label|trans }}
+        </button>
+    {% endif %}
+{% endmacro %}
+
+{#
+    Delete Action Button
+    Standardized button for delete actions (triggers modal)
+
+    Parameters:
+        - itemId: Entity ID
+        - itemName: Entity name/title for confirmation
+        - deleteUrl: URL for delete action
+        - label: Button text (default: 'delete')
+        - size: Button size ('sm' for small, leave empty for normal)
+        - additionalClasses: Additional CSS classes (optional)
+
+    Usage:
+        {{ ui.delete_button(tag.id, tag.title, path('...')) }}
+        {{ ui.delete_button(tag.id, tag.title, path('...'), 'common.delete', 'sm') }}
+#}
+{% macro delete_button(itemId, itemName, deleteUrl, label = 'delete', size = 'sm', additionalClasses = '') %}
+    <button type="button"
+            class="btn {% if size %}btn-{{ size }}{% endif %} btn-danger {{ additionalClasses }}"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteModal"
+            data-item-id="{{ itemId }}"
+            data-item-name="{{ itemName }}"
+            data-delete-url="{{ deleteUrl }}">
+        {{ label|trans }}
+    </button>
+{% endmacro %}
+
+{#
+    Edit Action Button
+    Standardized button for edit actions
+
+    Parameters:
+        - url: Edit URL
+        - label: Button text (default: 'edit')
+        - size: Button size ('sm' for small, leave empty for normal)
+        - outline: Use outline variant (default: true)
+        - additionalClasses: Additional CSS classes (optional)
+
+    Usage:
+        {{ ui.edit_button(path('...')) }}
+        {{ ui.edit_button(path('...'), 'common.modify', 'sm', false) }}
+#}
+{% macro edit_button(url, label = 'edit', size = 'sm', outline = true, additionalClasses = '') %}
+    <a href="{{ url }}" class="btn {% if size %}btn-{{ size }}{% endif %} {% if outline %}btn-outline-primary{% else %}btn-primary{% endif %} {{ additionalClasses }}">
+        <i class="bi bi-pencil me-1"></i>{{ label|trans }}
+    </a>
+{% endmacro %}
+
+{#
+    Page Header with Title and Actions
+    Standardized page header with title and action buttons
+
+    Parameters:
+        - title: Page title or translation key
+        - actions: HTML content for action buttons (optional)
+        - breadcrumb: Breadcrumb HTML (optional)
+        - additionalClasses: Additional CSS classes (optional)
+
+    Usage:
+        {% set actions %}
+            {{ ui.primary_button('create', path('...')) }}
+        {% endset %}
+        {{ ui.page_header('larp.tag.list', actions) }}
+#}
+{% macro page_header(title, actions = null, breadcrumb = null, additionalClasses = '') %}
+    <div class="mb-4 {{ additionalClasses }}">
+        {% if breadcrumb %}
+            {{ breadcrumb|raw }}
+        {% endif %}
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="mb-0">{{ title|trans }}</h1>
+            {% if actions %}
+                <div class="d-flex gap-2">
+                    {{ actions|raw }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{#
+    Card Header with Title and Actions
+    Standardized card header for list views
+
+    Parameters:
+        - title: Card title or translation key
+        - actions: HTML content for action buttons (optional)
+        - additionalClasses: Additional CSS classes (optional)
+
+    Usage:
+        {% set actions %}
+            {{ ui.primary_button('create', path('...')) }}
+        {% endset %}
+        {{ ui.card_header('larp.tag.list', actions) }}
+#}
+{% macro card_header(title, actions = null, additionalClasses = '') %}
+    <div class="card-header {{ additionalClasses }}">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">{{ title|trans }}</h2>
+            {% if actions %}
+                <div class="d-flex gap-2">
+                    {{ actions|raw }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{#
+    Form Section Header
+    Standardized section header for forms
+
+    Parameters:
+        - title: Section title or translation key
+        - description: Optional description text
+        - icon: Bootstrap icon class (optional)
+        - useSeparator: Show HR separator below (default: true)
+
+    Usage:
+        {{ ui.form_section('larp.event.timing', 'larp.event.timing_desc', 'bi-clock') }}
+#}
+{% macro form_section(title, description = null, icon = null, useSeparator = true) %}
+    {% if useSeparator %}
+        <hr class="my-4">
+    {% endif %}
+    <div class="mb-3">
+        <h5 class="mb-2">
+            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+            {{ title|trans }}
+        </h5>
+        {% if description %}
+            <p class="text-muted small mb-0">{{ description|trans }}</p>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{#
+    Form Actions (Submit/Cancel buttons)
+    Standardized form action buttons with consistent layout
+
+    Parameters:
+        - submitLabel: Submit button text (default: 'save')
+        - submitIcon: Submit button icon (optional)
+        - cancelUrl: Cancel button URL (optional, if null, no cancel button)
+        - cancelLabel: Cancel button text (default: 'cancel')
+        - additionalButtons: HTML for additional buttons (optional)
+        - alignment: 'start', 'center', 'end' (default: 'end')
+
+    Usage:
+        {{ ui.form_actions('save', 'bi-check-circle', path('...')) }}
+        {{ ui.form_actions('create', null, path('...'), 'back') }}
+#}
+{% macro form_actions(submitLabel = 'save', submitIcon = null, cancelUrl = null, cancelLabel = 'cancel', additionalButtons = null, alignment = 'end') %}
+    <div class="d-flex justify-content-{{ alignment }} gap-2 mt-4">
+        {% if cancelUrl %}
+            {{ _self.secondary_button(cancelLabel, cancelUrl) }}
+        {% endif %}
+        {% if additionalButtons %}
+            {{ additionalButtons|raw }}
+        {% endif %}
+        {{ _self.primary_button(submitLabel, null, submitIcon, 'submit') }}
+    </div>
+{% endmacro %}
+
+{#
+    Info Alert
+    Standardized info alert box
+
+    Parameters:
+        - message: Alert message or translation key
+        - icon: Bootstrap icon class (optional, default: 'bi-info-circle')
+        - dismissible: Make alert dismissible (default: false)
+
+    Usage:
+        {{ ui.info_alert('larp.info.save_first') }}
+#}
+{% macro info_alert(message, icon = 'bi-info-circle', dismissible = false) %}
+    <div class="alert alert-info {% if dismissible %}alert-dismissible fade show{% endif %}" role="alert">
+        <i class="bi {{ icon }} me-2"></i>{{ message|trans }}
+        {% if dismissible %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{#
+    Warning Alert
+    Standardized warning alert box
+
+    Parameters:
+        - message: Alert message or translation key
+        - icon: Bootstrap icon class (optional, default: 'bi-exclamation-triangle')
+        - dismissible: Make alert dismissible (default: false)
+
+    Usage:
+        {{ ui.warning_alert('larp.warning.no_participants') }}
+#}
+{% macro warning_alert(message, icon = 'bi-exclamation-triangle', dismissible = false) %}
+    <div class="alert alert-warning {% if dismissible %}alert-dismissible fade show{% endif %}" role="alert">
+        <i class="bi {{ icon }} me-2"></i>{{ message|trans }}
+        {% if dismissible %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{#
+    Success Alert
+    Standardized success alert box
+
+    Parameters:
+        - message: Alert message or translation key
+        - icon: Bootstrap icon class (optional, default: 'bi-check-circle')
+        - dismissible: Make alert dismissible (default: true)
+
+    Usage:
+        {{ ui.success_alert('common.saved_successfully') }}
+#}
+{% macro success_alert(message, icon = 'bi-check-circle', dismissible = true) %}
+    <div class="alert alert-success {% if dismissible %}alert-dismissible fade show{% endif %}" role="alert">
+        <i class="bi {{ icon }} me-2"></i>{{ message|trans }}
+        {% if dismissible %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{#
+    Danger Alert
+    Standardized danger/error alert box
+
+    Parameters:
+        - message: Alert message or translation key
+        - icon: Bootstrap icon class (optional, default: 'bi-x-circle')
+        - dismissible: Make alert dismissible (default: true)
+
+    Usage:
+        {{ ui.danger_alert('common.error_occurred') }}
+#}
+{% macro danger_alert(message, icon = 'bi-x-circle', dismissible = true) %}
+    <div class="alert alert-danger {% if dismissible %}alert-dismissible fade show{% endif %}" role="alert">
+        <i class="bi {{ icon }} me-2"></i>{{ message|trans }}
+        {% if dismissible %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endif %}
+    </div>
+{% endmacro %}

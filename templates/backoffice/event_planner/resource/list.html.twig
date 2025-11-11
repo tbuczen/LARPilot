@@ -1,20 +1,14 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'event_planner.resource.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'event_planner.resource.list'|trans }}</h2>
-                <div class="d-flex gap-2">
-                    <a href="{{ path('backoffice_event_planner_resource_modify', { larp: larp.id }) }}"
-                       class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> {{ 'create'|trans }}
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% set actions %}
+            {{ ui.primary_button('create', path('backoffice_event_planner_resource_modify', { larp: larp.id }), 'bi-plus-circle') }}
+        {% endset %}
+        {{ ui.card_header('event_planner.resource.list', actions) }}
         <div class="card-body p-0">
             {# Filter form #}
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
@@ -77,16 +71,9 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-danger"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deleteModal"
-                                                data-item-id="{{ resource.id }}"
-                                                data-item-name="{{ resource.name }}"
-                                                data-delete-url="{{ path('backoffice_event_planner_resource_delete', {
-                                                    larp: larp.id, resource: resource.id
-                                                }) }}">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        {{ ui.delete_button(resource.id, resource.name, path('backoffice_event_planner_resource_delete', {
+                                            larp: larp.id, resource: resource.id
+                                        })) }}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -95,9 +82,7 @@
                 </div>
                 {% include 'includes/pagination.html.twig' with { pagination: resources } %}
             {% else %}
-                <div class="p-4">
-                    <p class="text-muted">{{ 'event_planner.resource.empty_list'|trans }}</p>
-                </div>
+                {{ ui.empty_state('event_planner.resource.empty_list', 'bi-box-seam') }}
             {% endif %}
         </div>
     </div>

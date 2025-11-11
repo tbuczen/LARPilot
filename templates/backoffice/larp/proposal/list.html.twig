@@ -1,22 +1,19 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'larp.proposal.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'proposal.list'|trans }}</h2>
-                {% if create_route is defined %}
-                <div class="d-flex gap-2">
-                    <a href="{{ path(create_route, { larp: larp.id, recruitment: recruitment.id }) }}"
-                       class="btn btn-success">
-                        {{ 'create'|trans }}
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-        </div>
+        {% if create_route is defined %}
+            {% set actions %}
+                {{ ui.primary_button('create', path(create_route, { larp: larp.id, recruitment: recruitment.id }), 'bi-plus-circle') }}
+            {% endset %}
+            {{ ui.card_header('proposal.list', actions) }}
+        {% else %}
+            {{ ui.card_header('proposal.list') }}
+        {% endif %}
+
         <div class="card-body p-0">
             {% if proposals is not empty %}
             <div class="table-responsive">
@@ -59,7 +56,7 @@
                 </table>
             </div>
             {% else %}
-                <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
+                {{ ui.empty_state('empty_list', 'bi-lightbulb') }}
             {% endif %}
         </div>
     </div>

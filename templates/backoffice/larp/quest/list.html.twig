@@ -1,4 +1,5 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'larp.quest.list'|trans }} - {{ larp.title }}{% endblock %}
 
@@ -27,16 +28,11 @@
     </div>
 
     <div class="card mt-4">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'larp.quest.list'|trans }}</h2>
-                <div class="d-flex gap-2">
-                    <a href="{{ path('backoffice_larp_story_quest_modify', { larp: larp.id }) }}" class="btn btn-success">
-                        {{ 'create'|trans }}
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% set actions %}
+            {{ ui.primary_button('create', path('backoffice_larp_story_quest_modify', { larp: larp.id }), 'bi-plus-circle') }}
+        {% endset %}
+        {{ ui.card_header('larp.quest.list', actions) }}
+
         <div class="card-body p-0">
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
 
@@ -63,17 +59,7 @@
                         </td>
                         <td>{{ quest.description|sanitize_html|default('-') }}</td>
                         <td>
-                                                        <button type="button"
-                                    class="btn btn-sm btn-danger"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#globalDeleteQuestModal"
-                                    data-delete-text=" {{ 'delete'|trans }}"
-                                    data-character-id="{{ quest.id }}"
-                                    data-character-name="{{ quest.title }}"
-                                    data-delete-url-base="{{ path('backoffice_larp_story_quest_delete', { larp: larp.id, quest: 'CHARACTER_ID' }) }}"
-                            >
-                                {{ 'delete'|trans }}
-                            </button>
+                            {{ ui.delete_button(quest.id, quest.title, path('backoffice_larp_story_quest_delete', { larp: larp.id, quest: quest.id })) }}
                         </td>
                     </tr>
                 {% endfor %}
@@ -81,56 +67,10 @@
             </table>
             </div>
             {% else %}
-                <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
+                {{ ui.empty_state('empty_list', 'bi-flag') }}
             {% endif %}
         </div>
     </div>
 
-    <div class="modal fade" id="globalDeleteQuestModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="globalDeleteQuestModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
-                </div>
-                <div class="modal-body">
-                    {{ 'confirmation'|trans() }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'cancel'|trans }}
-                    </button>
-                    <a href="#" id="deleteOnlyLarpilot" class="btn btn-danger">
-                        {{ 'larp.quest.delete_only_larpilot'|trans }}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        const deleteModal = document.getElementById('globalDeleteQuestModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const characterId = button.getAttribute('data-character-id');
-            const characterName = button.getAttribute('data-character-name');
-            const baseUrl = button.getAttribute('data-delete-url-base');
-            const deleteTxt = button.getAttribute('data-delete-text');
-
-            const modalTitle = deleteModal.querySelector('.modal-title');
-            modalTitle.textContent = `${deleteTxt} "${characterName}"?`;
-
-            const deleteOnlyLink = document.getElementById('deleteOnlyLarpilot');
-            const deleteWithIntegrationsLink = document.getElementById('deleteWithIntegrations');
-
-            deleteOnlyLink.href = baseUrl
-                .replace('CHARACTER_ID', characterId)
-                .replace('INTEGRATIONS_FLAG', 'false');
-
-            deleteWithIntegrationsLink.href = baseUrl
-                .replace('CHARACTER_ID', characterId)
-                .replace('INTEGRATIONS_FLAG', 'true');
-        });
-    </script>
+    {% include 'includes/delete_modal.html.twig' %}
 {% endblock %}

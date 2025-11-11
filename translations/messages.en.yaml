@@ -1,5 +1,6 @@
 actions: Actions
 save: Save Changes
+saved: Saved
 confirm: Confirm
 cancel: Cancel
 close: Close
@@ -8,6 +9,17 @@ next: Next
 previous: Previous
 welcome: Welcome
 larps: LARPs
+backoffice:
+  location:
+    list: 'Locations'
+    no_locations: 'No locations found'
+    create: 'Create Location'
+    modify: 'Edit Location'
+    section:
+      address: 'Address Information'
+      contact: 'Contact Information'
+      online: 'Online Presence'
+      additional: 'Additional Information'
 incident:
   singular: Incident
   plural: Incidents
@@ -38,6 +50,9 @@ connected: 'Connected'
 edit: 'Edit'
 show_details: 'Show Details'
 delete: 'Delete'
+confirm_delete: 'Confirm Deletion'
+delete_confirmation: 'Are you sure you want to delete this item? This action cannot be undone.'
+confirmation: 'Please confirm your action'
 login: 'Register / Sign In'
 copy_link: 'Copy Link'
 link_copied: 'Link copied !'
@@ -558,13 +573,6 @@ location:
 
 #Translations specific for Core Organizers backoffice
 backoffice_title: Admin Panel
-backoffice:
-  dashboard: 'Dashboard'
-  location:
-    list: 'Locations'
-    create: 'Create Location'
-    modify: 'Edit Location'
-    view: 'Location Details'
 
 #Account related translations for both player and organizers
 account:
@@ -605,7 +613,6 @@ login_page:
 
 success_save: "Successfully saved changes"
 success_delete: "Successfully removed"
-confirmation: "Are you sure you want to proceed? This action cannot be undone."
 votes: "Votes"
 
 public:

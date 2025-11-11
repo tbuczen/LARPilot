@@ -1,14 +1,12 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'incidents'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'incidents'|trans }}</h2>
-            </div>
-        </div>
+        {{ ui.card_header('incidents') }}
+
         <div class="card-body p-0">
             {% if filterForm is defined %}
                 {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
@@ -49,7 +47,7 @@
                 </table>
             </div>
             {% else %}
-                <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
+                {{ ui.empty_state('empty_list', 'bi-shield-exclamation') }}
             {% endif %}
         </div>
     </div>

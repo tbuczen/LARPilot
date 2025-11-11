@@ -1,19 +1,15 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'larp.participant.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">{{ 'larp.participant.list'|trans }}</h2>
-                <div class="d-flex gap-2">
-                    <a href="{{ path('backoffice_larp_participant_modify', { larp: larp.id }) }}" class="btn btn-success">
-                        {{ 'create'|trans }}
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% set actions %}
+            {{ ui.primary_button('create', path('backoffice_larp_participant_modify', { larp: larp.id }), 'bi-plus-circle') }}
+        {% endset %}
+        {{ ui.card_header('larp.participant.list', actions) }}
+
         <div class="card-body p-0">
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
 
@@ -43,15 +39,7 @@
                                     |join(', ')
                                 }}</td>
                             <td>
-                                <button type="button"
-                                        class="btn btn-sm btn-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#globalDeleteParticipantModal"
-                                        data-delete-text=" {{ 'delete'|trans }}"
-                                        data-id="{{ participant.id }}"
-                                        data-delete-url-base="{{ path('backoffice_larp_participant_delete', { larp: larp.id, participant: 'ID' }) }}">
-                                    {{ 'delete'|trans }}
-                                </button>
+                                {{ ui.delete_button(participant.id, participant.user.username, path('backoffice_larp_participant_delete', { larp: larp.id, participant: participant.id })) }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -60,55 +48,10 @@
             </div>
             {% include 'includes/pagination.html.twig' with { pagination: participants } %}
             {% else %}
-                <p class="text-muted p-3">{{ 'empty_list'|trans }}</p>
+                {{ ui.empty_state('empty_list', 'bi-people') }}
             {% endif %}
         </div>
     </div>
 
-    <div class="modal fade" id="globalDeleteParticipantModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="globalDeleteParticipantModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
-                </div>
-                <div class="modal-body">
-                    {{ 'confirmation'|trans() }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'cancel'|trans }}
-                    </button>
-                    <a href="#" id="deleteOnlyLarpilot" class="btn btn-danger">
-                        {{ 'larp.participant.delete_only_larpilot'|trans }}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        const deleteModal = document.getElementById('globalDeleteParticipantModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const id = button.getAttribute('data-id');
-            const baseUrl = button.getAttribute('data-delete-url-base');
-            const deleteTxt = button.getAttribute('data-delete-text');
-
-            const modalTitle = deleteModal.querySelector('.modal-title');
-            modalTitle.textContent = `${deleteTxt} ?`;
-
-            const deleteOnlyLink = document.getElementById('deleteOnlyLarpilot');
-            const deleteWithIntegrationsLink = document.getElementById('deleteWithIntegrations');
-
-            deleteOnlyLink.href = baseUrl
-                .replace('ID', id)
-                .replace('INTEGRATIONS_FLAG', 'false');
-
-            deleteWithIntegrationsLink.href = baseUrl
-                .replace('ID', id)
-                .replace('INTEGRATIONS_FLAG', 'true');
-        });
-    </script>
+    {% include 'includes/delete_modal.html.twig' %}
 {% endblock %}

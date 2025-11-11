@@ -1,6 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
 {% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_content %}
     {# Header showing story object type and title (only for existing objects) #}
@@ -16,6 +17,11 @@
         <div class="tab-pane border border-top-0 p-3">
             {{ form_start(form) }}
             {{ form_widget(form) }}
+            {{ ui.form_actions(
+                place is defined and place.id ? 'save' : 'create',
+                'bi-check-circle',
+                path('backoffice_larp_story_place_list', { larp: larp.id })
+            ) }}
             {{ form_end(form) }}
         </div>
     {% endset %}

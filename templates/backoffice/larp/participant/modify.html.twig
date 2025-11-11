@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'macros/ui_components.html.twig' as ui %}
+
 {% block larp_content %}
 
 <div class="card">
@@ -13,6 +15,11 @@
     <div class="card-body">
         {{ form_start(form) }}
         {{ form_widget(form) }}
+        {{ ui.form_actions(
+            participant is defined and participant.id ? 'save' : 'create',
+            'bi-check-circle',
+            path('backoffice_larp_participant_list', { larp: larp.id })
+        ) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}

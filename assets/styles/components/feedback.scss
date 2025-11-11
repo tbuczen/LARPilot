@@ -1,6 +1,17 @@
-// Feedback Widget Styles
+// ============================================
+// FEEDBACK WIDGET STYLES
+// Unified with Sidebar Menu Gradient Design
+// ============================================
 
-// Floating feedback button
+// Gradient Variables (matching sidebar menu)
+$feedback-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$feedback-gradient-hover: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+$feedback-shadow: rgba(102, 126, 234, 0.3);
+$feedback-shadow-hover: rgba(102, 126, 234, 0.4);
+$feedback-light-bg: rgba(102, 126, 234, 0.08);
+$feedback-light-bg-hover: rgba(102, 126, 234, 0.15);
+
+// Floating feedback button (matches sidebar menu button)
 .feedback-float-button {
     position: fixed;
     bottom: 24px;
@@ -8,26 +19,41 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: $feedback-gradient;
+    border: none;
+    box-shadow: 0 4px 12px $feedback-shadow;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    z-index: 1000;
-    transition: all 0.3s ease;
-    border: none;
+    color: white;
+    z-index: 1040;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+
+    i {
+        transition: transform 0.2s ease;
+    }
 
     &:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 16px $feedback-shadow-hover;
+        background: $feedback-gradient-hover;
+
+        i {
+            transform: scale(1.1);
+        }
     }
 
     &:active {
-        transform: scale(0.95);
+        transform: translateY(-1px) scale(1);
+        box-shadow: 0 2px 8px $feedback-shadow;
     }
 
-    // Ensure button is on top but below modals
-    z-index: 1040;
+    &:focus {
+        outline: 2px solid white;
+        outline-offset: 2px;
+    }
 
     // Responsive positioning
     @media (max-width: 767.98px) {
@@ -37,6 +63,144 @@
         height: 48px;
         font-size: 1.25rem;
     }
+
+    // Pulse animation to draw attention
+    animation: feedbackPulse 2s infinite;
+}
+
+@keyframes feedbackPulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px $feedback-shadow;
+    }
+    50% {
+        box-shadow: 0 4px 20px $feedback-shadow-hover;
+    }
+}
+
+// Modal customization for feedback
+#feedbackModal {
+    // Modal header with gradient (matching sidebar header)
+    .modal-header {
+        background: $feedback-gradient;
+        border-bottom: none;
+        padding: 1.5rem 1.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem 0.5rem 0 0;
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.375rem;
+            color: white;
+            letter-spacing: -0.02em;
+
+            i {
+                margin-right: 0.75rem;
+                font-size: 1.5rem;
+            }
+        }
+
+        .btn-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 1;
+            transition: all 0.2s ease;
+            filter: brightness(0) invert(1);
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+            &:focus {
+                outline: 2px solid white;
+                outline-offset: 2px;
+                box-shadow: none;
+            }
+        }
+    }
+
+    // Modal body
+    .modal-body {
+        padding: 1.5rem 1.25rem;
+    }
+
+    // Form elements
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #2d3748;
+    }
+
+    .form-select,
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        transition: all 0.2s ease;
+
+        &:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        }
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    // Modal footer with gradient buttons
+    .modal-footer {
+        border-top: 1px solid #dee2e6;
+        padding: 1rem 1.25rem;
+        background-color: #f8f9fa;
+
+        .btn-secondary {
+            border-radius: 8px;
+            transition: all 0.2s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+            }
+        }
+
+        .btn-primary {
+            background: $feedback-gradient;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px $feedback-shadow;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+
+            &:hover {
+                background: $feedback-gradient-hover;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px $feedback-shadow-hover;
+            }
+
+            &:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 8px $feedback-shadow;
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+            }
+
+            &:disabled {
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%);
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    // Button group spacing
+    .d-flex.gap-2 {
+        gap: 0.5rem !important;
+    }
 }
 
 // Screenshot preview styles
@@ -44,6 +208,7 @@
     max-height: 300px;
     overflow-y: auto;
     background-color: #f8f9fa;
+    border-radius: 8px;
 
     img {
         max-width: 100%;
@@ -58,15 +223,27 @@
         font-size: 0.875rem;
         padding: 0.75rem 1rem;
         background-color: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.2s ease;
 
         &:not(.collapsed) {
-            background-color: #e9ecef;
-            color: #212529;
+            background: $feedback-light-bg;
+            color: #667eea;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.15);
+
+            &::after {
+                filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(2384%) hue-rotate(226deg);
+            }
+        }
+
+        &:hover {
+            background: $feedback-light-bg-hover;
         }
 
         &:focus {
-            box-shadow: none;
-            border-color: rgba(0, 0, 0, 0.125);
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+            border-color: #667eea;
         }
     }
 
@@ -77,40 +254,21 @@
     }
 }
 
-// Modal customization for feedback
-#feedbackModal {
-    .modal-header {
-        background-color: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
+// Capture/Remove screenshot buttons
+#captureScreenshot,
+#removeScreenshot {
+    transition: all 0.2s ease;
 
-        .modal-title {
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-        }
+    &:hover {
+        transform: translateY(-2px);
     }
+}
 
-    .form-label {
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-
-    .form-select,
-    .form-control {
-        &:focus {
-            border-color: #86b7fe;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
-    }
-
-    textarea.form-control {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    // Button group spacing
-    .d-flex.gap-2 {
-        gap: 0.5rem !important;
+#captureScreenshot {
+    &:hover {
+        background: $feedback-light-bg;
+        border-color: #667eea;
+        color: #667eea;
     }
 }
 
@@ -118,6 +276,9 @@
 #feedbackError,
 #feedbackSuccess {
     animation: slideIn 0.3s ease-out;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes slideIn {
@@ -149,4 +310,25 @@
 
 .modal-backdrop {
     z-index: 1050;
+}
+
+// Responsive adjustments
+@media (max-width: 767.98px) {
+    #feedbackModal {
+        .modal-header {
+            padding: 1.25rem 1rem;
+
+            .modal-title {
+                font-size: 1.125rem;
+            }
+        }
+
+        .modal-body {
+            padding: 1.25rem 1rem;
+        }
+
+        .modal-footer {
+            padding: 0.875rem 1rem;
+        }
+    }
 }

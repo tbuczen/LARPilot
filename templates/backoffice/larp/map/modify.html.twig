@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'macros/ui_components.html.twig' as ui %}
+
 {% block larp_title %}{{ (map is defined and map.id ? 'larp.map.modify' : 'larp.map.create')|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
@@ -16,14 +18,11 @@
         <div class="card-body">
             {{ form_start(form) }}
             {{ form_widget(form) }}
-            <div class="d-flex gap-2 mt-3">
-                <button type="submit" class="btn btn-primary">
-                    {{ 'save'|trans }}
-                </button>
-                <a href="{{ path('backoffice_larp_map_list', { larp: larp.id }) }}" class="btn btn-secondary">
-                    {{ 'cancel'|trans }}
-                </a>
-            </div>
+            {{ ui.form_actions(
+                map is defined and map.id ? 'save' : 'create',
+                'bi-check-circle',
+                path('backoffice_larp_map_list', { larp: larp.id })
+            ) }}
             {{ form_end(form) }}
         </div>
     </div>

@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'macros/ui_components.html.twig' as ui %}
+
 {% block larp_title %}
     {% if isNew %}
         {{ 'event_planner.resource.create'|trans }} - {{ larp.title }}
@@ -60,15 +62,11 @@
                         {{ form_row(form.item) }}
                         {{ form_row(form.participant) }}
 
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle"></i> {{ 'save'|trans }}
-                            </button>
-                            <a href="{{ path('backoffice_event_planner_resource_list', { larp: larp.id }) }}"
-                               class="btn btn-secondary">
-                                {{ 'cancel'|trans }}
-                            </a>
-                        </div>
+                        {{ ui.form_actions(
+                            resource is defined and resource.id ? 'save' : 'create',
+                            'bi-check-circle',
+                            path('backoffice_event_planner_resource_list', { larp: larp.id })
+                        ) }}
                     {{ form_end(form) }}
                 </div>
             </div>
