@@ -21,10 +21,10 @@ final class Version20251108000000 extends AbstractMigration
     {
         // Create comment table
         $this->addSql('CREATE TABLE comment (
-            id SERIAL NOT NULL,
-            story_object_id INT NOT NULL,
-            author_id INT NOT NULL,
-            parent_id INT DEFAULT NULL,
+            id UUID NOT NULL,
+            story_object_id UUID NOT NULL,
+            author_id UUID NOT NULL,
+            parent_id UUID DEFAULT NULL,
             content TEXT NOT NULL,
             is_resolved BOOLEAN NOT NULL DEFAULT false,
             created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
