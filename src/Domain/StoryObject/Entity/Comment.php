@@ -8,6 +8,8 @@ use App\Domain\Account\Entity\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: 'App\Domain\StoryObject\Repository\CommentRepository')]
 #[ORM\Table(name: 'comment')]
@@ -16,9 +18,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Comment
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
     #[ORM\ManyToOne(targetEntity: StoryObject::class)]
     #[ORM\JoinColumn(name: 'story_object_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
@@ -49,7 +52,7 @@ class Comment
     #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeInterface $updatedAt = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

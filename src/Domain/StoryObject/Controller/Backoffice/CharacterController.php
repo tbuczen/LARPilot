@@ -2,6 +2,7 @@
 
 namespace App\Domain\StoryObject\Controller\Backoffice;
 
+use App\Domain\Application\Repository\LarpApplicationChoiceRepository;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
@@ -10,11 +11,13 @@ use App\Domain\Core\UseCase\ImportCharacters\ImportCharactersHandler;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Entity\SharedFile;
+use App\Domain\Integrations\Service\CharacterSheetExportService;
 use App\Domain\Integrations\Service\IntegrationManager;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Form\CharacterType;
 use App\Domain\StoryObject\Form\Filter\CharacterFilterType;
 use App\Domain\StoryObject\Repository\CharacterRepository;
+use App\Domain\StoryObject\Repository\CommentRepository;
 use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,8 +58,9 @@ class CharacterController extends BaseController
         Request                 $request,
         Larp                    $larp,
         CharacterRepository $characterRepository,
-        \App\Domain\Integrations\Service\CharacterSheetExportService $exportService,
-        \App\Domain\Application\Repository\LarpApplicationChoiceRepository $choiceRepository,
+        CharacterSheetExportService $exportService,
+        LarpApplicationChoiceRepository $choiceRepository,
+        CommentRepository $commentRepository,
         ?Character          $character = null,
     ): Response {
         $new = false;
@@ -85,19 +89,13 @@ class CharacterController extends BaseController
         // Get mentions only for existing characters (not new ones)
         $mentions = [];
         $applicantsCount = 0;
+        $commentsCount = 0;
+        $unresolvedCommentsCount = 0;
         if ($character->getId() !== null) {
             $mentions = $mentionService->findMentions($character);
-
-            // Get applicants count for this character
-            $applicantsCount = $choiceRepository->createQueryBuilder('c')
-                ->select('COUNT(c.id)')
-                ->join('c.application', 'a')
-                ->where('c.character = :character')
-                ->andWhere('a.larp = :larp')
-                ->setParameter('character', $character)
-                ->setParameter('larp', $larp)
-                ->getQuery()
-                ->getSingleScalarResult();
+            $applicantsCount = $choiceRepository->getApplicationsCountForCharacter($character);
+            $commentsCount = $commentRepository->countByStoryObject($character);
+            $unresolvedCommentsCount = $commentRepository->countUnresolvedByStoryObject($character);
         }
 
         // Check if export is configured (only for existing characters)
@@ -111,6 +109,8 @@ class CharacterController extends BaseController
             'canExportSheet' => $canExportSheet,
             'isNewCharacter' => $new,
             'applicantsCount' => $applicantsCount,
+            'commentsCount' => $commentsCount,
+            'unresolvedCommentsCount' => $unresolvedCommentsCount,
         ]);
     }
 
@@ -119,26 +119,21 @@ class CharacterController extends BaseController
         Larp                      $larp,
         Character                 $character,
         StoryObjectMentionService $mentionService,
-        \App\Domain\Application\Repository\LarpApplicationChoiceRepository $choiceRepository,
+        LarpApplicationChoiceRepository $choiceRepository,
+        CommentRepository $commentRepository,
     ): Response {
         $mentions = $mentionService->findMentions($character);
-
-        // Get applicants count for this character
-        $applicantsCount = $choiceRepository->createQueryBuilder('c')
-            ->select('COUNT(c.id)')
-            ->join('c.application', 'a')
-            ->where('c.character = :character')
-            ->andWhere('a.larp = :larp')
-            ->setParameter('character', $character)
-            ->setParameter('larp', $larp)
-            ->getQuery()
-            ->getSingleScalarResult();
+        $commentsCount = $commentRepository->countByStoryObject($character);
+        $unresolvedCommentsCount = $commentRepository->countUnresolvedByStoryObject($character);
+        $applicantsCount = $choiceRepository->getApplicationsCountForCharacter($character);
 
         return $this->render('backoffice/larp/characters/mentions.html.twig', [
             'larp' => $larp,
             'character' => $character,
             'mentions' => $mentions,
             'applicantsCount' => $applicantsCount,
+            'commentsCount' => $commentsCount,
+            'unresolvedCommentsCount' => $unresolvedCommentsCount,
         ]);
     }
 
@@ -146,8 +141,9 @@ class CharacterController extends BaseController
     public function applicants(
         Larp                      $larp,
         Character                 $character,
-        \App\Domain\Application\Repository\LarpApplicationChoiceRepository $choiceRepository,
+        LarpApplicationChoiceRepository $choiceRepository,
         StoryObjectMentionService $mentionService,
+        CommentRepository $commentRepository,
     ): Response {
         // Get all application choices for this character
         $qb = $choiceRepository->createQueryBuilder('c')
@@ -165,12 +161,67 @@ class CharacterController extends BaseController
 
         // Get mentions count for this character
         $mentions = $mentionService->findMentions($character);
+        $commentsCount = $commentRepository->countByStoryObject($character);
+        $unresolvedCommentsCount = $commentRepository->countUnresolvedByStoryObject($character);
 
         return $this->render('backoffice/larp/characters/applicants.html.twig', [
             'larp' => $larp,
             'character' => $character,
             'choices' => $choices,
             'mentionsCount' => count($mentions),
+            'commentsCount' => $commentsCount,
+            'unresolvedCommentsCount' => $unresolvedCommentsCount,
+        ]);
+    }
+
+    #[Route('{character}/discussions', name: 'discussions', methods: ['GET'])]
+    public function discussions(
+        Request                   $request,
+        Larp                      $larp,
+        Character                 $character,
+        CommentRepository $commentRepository,
+        StoryObjectMentionService $mentionService,
+        LarpApplicationChoiceRepository $choiceRepository,
+    ): Response {
+        $showResolved = $request->query->getBoolean('showResolved', false);
+        
+        // Fetch comments - filter by resolved status if needed
+        $qb = $commentRepository->createQueryBuilder('c')
+            ->where('c.storyObject = :storyObject')
+            ->andWhere('c.parent IS NULL')
+            ->setParameter('storyObject', $character)
+            ->orderBy('c.createdAt', 'DESC');
+        
+        if (!$showResolved) {
+            $qb->andWhere('c.isResolved = false');
+        }
+        
+        $comments = $qb->getQuery()->getResult();
+        $commentCount = $commentRepository->countByStoryObject($character);
+        $unresolvedCount = $commentRepository->countUnresolvedByStoryObject($character);
+
+        // Load replies for each top-level comment
+        $commentThreads = [];
+        foreach ($comments as $comment) {
+            $commentThreads[] = [
+                'comment' => $comment,
+                'replies' => $commentRepository->findReplies($comment),
+            ];
+        }
+
+        $mentions = $mentionService->findMentions($character);
+        $applicantsCount = $choiceRepository->getApplicationsCountForCharacter($character);
+
+        return $this->render('backoffice/larp/story/comment/discussions.html.twig', [
+            'larp' => $larp,
+            'storyObject' => $character,
+            'commentThreads' => $commentThreads,
+            'commentCount' => $commentCount,
+            'unresolvedCount' => $unresolvedCount,
+            'storyObjectType' => 'character',
+            'mentionsCount' => count($mentions),
+            'applicantsCount' => $applicantsCount,
+            'showResolved' => $showResolved,
         ]);
     }
 

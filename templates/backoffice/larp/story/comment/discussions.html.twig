@@ -1,0 +1,91 @@
+{# templates/backoffice/larp/story/comment/discussions.html.twig #}
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+
+{% block larp_content %}
+    {# Story object header #}
+    {% include 'includes/story_object_header.html.twig' with {
+        storyObject: storyObject,
+        storyObjectType: storyObjectType
+    } %}
+
+    {# Tabs navigation #}
+    {{ tabs_macro.tabs('discussions', storyObject, storyObjectType, larp, mentionsCount|default(0), false, applicantsCount|default(0), commentCount, unresolvedCount) }}
+
+    <div class="tab-pane border border-top-0 p-0" 
+         data-controller="comments"
+         data-comments-larp-value="{{ larp.id }}"
+         data-comments-story-object-value="{{ storyObject.id }}"
+         data-comments-story-object-type-value="{{ storyObjectType }}"
+         data-comments-poll-interval-value="5000"
+         data-comments-show-resolved-value="{{ showResolved ? 'true' : 'false' }}">
+        
+        {# Header with show/hide resolved toggle #}
+        <div class="bg-light border-bottom p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="mb-0">
+                        <i class="bi bi-chat-dots"></i> {{ 'comment.discussions'|trans }}
+                        {% if unresolvedCount > 0 %}
+                            <span class="badge bg-warning ms-2">{{ unresolvedCount }} {{ 'comment.unresolved'|trans }}</span>
+                        {% endif %}
+                    </h5>
+                </div>
+                <div>
+                    <a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({showResolved: showResolved ? '0' : '1'})) }}" 
+                       class="btn btn-sm {{ showResolved ? 'btn-outline-secondary' : 'btn-outline-primary' }}">
+                        <i class="bi bi-{{ showResolved ? 'eye-slash' : 'eye' }}"></i>
+                        {{ showResolved ? ('comment.hide_resolved'|trans) : ('comment.show_resolved'|trans) }}
+                        {% if showResolved and (commentCount - unresolvedCount) > 0 %}
+                            <span class="badge bg-secondary ms-1">{{ commentCount - unresolvedCount }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+            
+            {# Inline comment input #}
+            <form data-action="submit->comments#postComment" class="d-flex gap-2">
+                <div class="flex-grow-1">
+                    <textarea 
+                        data-comments-target="newCommentInput"
+                        class="form-control" 
+                        rows="2" 
+                        placeholder="{{ 'comment.add_new_placeholder'|trans }}"
+                        maxlength="5000"
+                    ></textarea>
+                    <small class="text-muted">{{ 'comment.max_5000_chars'|trans }}</small>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-send"></i> {{ 'comment.post'|trans }}
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-action="click->comments#clearInput">
+                        <i class="bi bi-x-circle"></i> {{ 'comment.clear'|trans }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {# Comments list #}
+        <div class="p-3" data-comments-target="commentsList">
+            {% if commentThreads is empty %}
+                <div class="text-center py-5 text-muted" data-comments-target="emptyState">
+                    <i class="bi bi-chat-text fs-1"></i>
+                    <p class="mt-2">{{ 'comment.no_comments_yet'|trans }}</p>
+                    <p class="small">{{ 'comment.start_discussion'|trans }}</p>
+                </div>
+            {% else %}
+                {% for thread in commentThreads %}
+                    {% include 'backoffice/larp/story/comment/_comment_thread.html.twig' with {
+                        comment: thread.comment,
+                        replies: thread.replies,
+                        larp: larp,
+                        storyObject: storyObject,
+                        storyObjectType: storyObjectType
+                    } %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

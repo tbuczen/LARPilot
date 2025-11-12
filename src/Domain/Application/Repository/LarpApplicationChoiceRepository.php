@@ -5,6 +5,7 @@ namespace App\Domain\Application\Repository;
 use App\Domain\Application\Entity\LarpApplicationChoice;
 use App\Domain\Application\Entity\LarpApplicationVote;
 use App\Domain\Core\Repository\BaseRepository;
+use App\Domain\StoryObject\Entity\Character;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -73,5 +74,18 @@ class LarpApplicationChoiceRepository extends BaseRepository
         }
 
         return $grouped;
+    }
+
+    public function getApplicationsCountForCharacter(Character $character): int
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->join('c.application', 'a')
+            ->where('c.character = :character')
+            ->setParameter('character', $character)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (int) $result;
     }
 }

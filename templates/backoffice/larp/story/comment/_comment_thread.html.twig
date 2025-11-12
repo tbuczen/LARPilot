@@ -1,0 +1,250 @@
+{# templates/backoffice/larp/story/comment/_comment_thread.html.twig #}
+{# Google Docs-like comment thread component #}
+
+<div class="comment-thread mb-4 {{ comment.isResolved ? 'comment-resolved' : '' }}" data-comment-id="{{ comment.id }}">
+    <div class="card shadow-sm">
+        {# Top-level comment #}
+        <div class="card-body p-3">
+            <div class="d-flex gap-3">
+                {# Avatar #}
+                <div class="flex-shrink-0">
+                    <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 40px; height: 40px; font-size: 1.1rem;">
+                        {{ comment.author.username|slice(0, 1)|upper }}
+                    </div>
+                </div>
+
+                {# Comment content #}
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <strong class="text-dark">{{ comment.author.username }}</strong>
+                            <small class="text-muted ms-2">
+                                <i class="bi bi-clock"></i> {{ comment.createdAt|date('M d, Y H:i') }}
+                                {% if comment.createdAt != comment.updatedAt %}
+                                    <span class="badge bg-light text-dark ms-1" title="{{ 'comment.edited'|trans }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </span>
+                                {% endif %}
+                            </small>
+                        </div>
+
+                        {# Status badge #}
+                        {% if comment.isResolved %}
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle"></i> {{ 'comment.resolved'|trans }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {# Comment text #}
+                    <div class="comment-content mb-2">
+                        {{ comment.content|nl2br }}
+                    </div>
+
+                    {# Action buttons #}
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="button" 
+                                class="btn btn-sm btn-link text-decoration-none p-0"
+                                data-action="click->comments#toggleReplyForm"
+                                data-comment-id="{{ comment.id }}">
+                            <i class="bi bi-reply"></i> {{ 'comment.reply'|trans }}
+                        </button>
+
+                        <button type="button" 
+                                class="btn btn-sm btn-link text-decoration-none p-0"
+                                data-action="click->comments#toggleResolve"
+                                data-comment-id="{{ comment.id }}"
+                                data-is-resolved="{{ comment.isResolved ? 'true' : 'false' }}">
+                            <i class="bi bi-{{ comment.isResolved ? 'arrow-counterclockwise' : 'check-circle' }}"></i>
+                            {{ comment.isResolved ? ('comment.unresolve'|trans) : ('comment.resolve'|trans) }}
+                        </button>
+
+                        {% if app.user.id == comment.author.id %}
+                            <a href="{{ path('backoffice_larp_story_comment_edit', {
+                                larp: larp.id,
+                                storyObject: storyObject.id,
+                                comment: comment.id
+                            }) }}" class="btn btn-sm btn-link text-decoration-none p-0">
+                                <i class="bi bi-pencil"></i> {{ 'comment.edit'|trans }}
+                            </a>
+
+                            <button type="button" 
+                                    class="btn btn-sm btn-link text-danger text-decoration-none p-0"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteCommentModal"
+                                    data-comment-id="{{ comment.id }}"
+                                    data-delete-url="{{ path('backoffice_larp_story_comment_delete', {
+                                        larp: larp.id,
+                                        storyObject: storyObject.id,
+                                        comment: comment.id
+                                    }) }}">
+                                <i class="bi bi-trash"></i> {{ 'comment.delete'|trans }}
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    {# Reply form (hidden by default) #}
+                    <div class="reply-form mt-3 d-none" data-reply-form-for="{{ comment.id }}">
+                        <form data-action="submit->comments#postReply" data-parent-id="{{ comment.id }}" class="d-flex gap-2">
+                            <div class="flex-shrink-0">
+                                <div class="avatar-circle bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width: 32px; height: 32px;">
+                                    {{ app.user.username|slice(0, 1)|upper }}
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <textarea 
+                                    class="form-control form-control-sm" 
+                                    rows="2" 
+                                    placeholder="{{ 'comment.write_reply'|trans }}"
+                                    required
+                                ></textarea>
+                                <div class="d-flex gap-2 mt-2">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        {{ 'comment.reply'|trans }}
+                                    </button>
+                                    <button type="button" 
+                                            class="btn btn-outline-secondary btn-sm"
+                                            data-action="click->comments#toggleReplyForm"
+                                            data-comment-id="{{ comment.id }}">
+                                        {{ 'cancel'|trans }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Replies #}
+        {% if replies is not empty %}
+            <div class="comment-replies border-top">
+                {% for reply in replies %}
+                    <div class="reply-item p-3 border-bottom" data-comment-id="{{ reply.id }}">
+                        <div class="d-flex gap-2">
+                            {# Avatar #}
+                            <div class="flex-shrink-0">
+                                <div class="avatar-circle bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width: 32px; height: 32px;">
+                                    {{ reply.author.username|slice(0, 1)|upper }}
+                                </div>
+                            </div>
+
+                            {# Reply content #}
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <strong class="text-dark">{{ reply.author.username }}</strong>
+                                        <small class="text-muted ms-2">
+                                            <i class="bi bi-clock"></i> {{ reply.createdAt|date('M d, Y H:i') }}
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="comment-content small">
+                                    {{ reply.content|nl2br }}
+                                </div>
+
+                                {# Reply actions #}
+                                {% if app.user.id == reply.author.id %}
+                                    <div class="d-flex gap-2 mt-1">
+                                        <a href="{{ path('backoffice_larp_story_comment_edit', {
+                                            larp: larp.id,
+                                            storyObject: storyObject.id,
+                                            comment: reply.id
+                                        }) }}" class="btn btn-sm btn-link text-decoration-none p-0">
+                                            <i class="bi bi-pencil"></i> {{ 'comment.edit'|trans }}
+                                        </a>
+
+                                        <button type="button" 
+                                                class="btn btn-sm btn-link text-danger text-decoration-none p-0"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteCommentModal"
+                                                data-comment-id="{{ reply.id }}"
+                                                data-delete-url="{{ path('backoffice_larp_story_comment_delete', {
+                                                    larp: larp.id,
+                                                    storyObject: storyObject.id,
+                                                    comment: reply.id
+                                                }) }}">
+                                            <i class="bi bi-trash"></i> {{ 'comment.delete'|trans }}
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{# Delete confirmation modal (reusable) #}
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ 'comment.delete_confirmation'|trans }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ 'comment.delete_warning'|trans }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                <form id="deleteCommentForm" method="post" style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_comment') }}">
+                    <button type="submit" class="btn btn-danger">{{ 'comment.delete'|trans }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.comment-thread {
+    transition: opacity 0.3s ease;
+}
+
+.comment-thread.comment-resolved {
+    opacity: 0.7;
+}
+
+.comment-thread.comment-resolved:hover {
+    opacity: 1;
+}
+
+.avatar-circle {
+    font-weight: 600;
+}
+
+.comment-content {
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.reply-item:last-child {
+    border-bottom: none !important;
+}
+
+.btn-link {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.btn-link:hover {
+    color: #495057;
+}
+</style>
+
+<script>
+// Handle delete modal
+document.getElementById('deleteCommentModal')?.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const deleteUrl = button.getAttribute('data-delete-url');
+    const form = document.getElementById('deleteCommentForm');
+    form.action = deleteUrl;
+});
+</script>
