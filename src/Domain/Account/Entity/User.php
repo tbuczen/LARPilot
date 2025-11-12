@@ -251,7 +251,7 @@ class User implements UserInterface
     public function getOrganizerLarpCount(): int
     {
         return $this->larpParticipants->filter(
-            fn(LarpParticipant $participant) => $participant->isOrganizer()
+            fn (LarpParticipant $participant) => $participant->isOrganizer()
         )->count();
     }
 }

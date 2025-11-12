@@ -3,32 +3,24 @@
 namespace App\Domain\SuperAdmin\Controller;
 
 use App\Domain\Account\Entity\Enum\UserStatus;
-use App\Domain\Account\Entity\Plan;
 use App\Domain\Account\Entity\User;
 use App\Domain\Account\Repository\PlanRepository;
 use App\Domain\Account\Repository\UserRepository;
 use App\Domain\Core\Controller\BaseController;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/** TODO:: Move logic to separate service */
 #[Route('/super-admin/users', name: 'super_admin_users_')]
 #[IsGranted('ROLE_SUPER_ADMIN')]
 class UserManagementController extends BaseController
 {
-    public function __construct(
-        private readonly UserRepository $userRepository,
-        private readonly PlanRepository $planRepository,
-        private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
-
     #[Route('', name: 'list')]
-    public function list(Request $request): Response
+    public function list(Request $request, UserRepository $userRepository): Response
     {
-        $qb = $this->userRepository->createQueryBuilder('u')
+        $qb = $userRepository->createQueryBuilder('u')
             ->orderBy('u.createdAt', 'DESC');
 
         // Handle sorting
@@ -39,13 +31,12 @@ class UserManagementController extends BaseController
             'username' => $qb->orderBy('u.username', $sortOrder),
             'email' => $qb->orderBy('u.contactEmail', $sortOrder),
             'status' => $qb->orderBy('u.status', $sortOrder),
-            'createdAt' => $qb->orderBy('u.createdAt', $sortOrder),
             default => $qb->orderBy('u.createdAt', $sortOrder),
         };
 
         // Handle status filtering
         $statusFilter = $request->query->get('status');
-        if ($statusFilter && in_array($statusFilter, ['pending', 'approved', 'suspended', 'banned'])) {
+        if (in_array($statusFilter, ['pending', 'approved', 'suspended', 'banned'])) {
             $qb->andWhere('u.status = :status')
                 ->setParameter('status', UserStatus::from($statusFilter));
         }
@@ -59,7 +50,7 @@ class UserManagementController extends BaseController
     }
 
     #[Route('/{id}/edit', name: 'edit')]
-    public function edit(User $user, Request $request): Response
+    public function edit(User $user, Request $request, PlanRepository $planRepository): Response
     {
         if ($request->isMethod('POST')) {
             $updated = false;
@@ -78,7 +69,7 @@ class UserManagementController extends BaseController
                     $user->setPlan(null);
                     $updated = true;
                 } else {
-                    $plan = $this->planRepository->find($planId);
+                    $plan = $planRepository->find($planId);
                     if ($plan) {
                         $user->setPlan($plan);
                         $updated = true;
@@ -93,7 +84,7 @@ class UserManagementController extends BaseController
             }
         }
 
-        $plans = $this->planRepository->findActivePlans();
+        $plans = $planRepository->findActivePlans();
 
         return $this->render('super_admin/users/edit.html.twig', [
             'user' => $user,

@@ -2,7 +2,6 @@
 
 namespace App\Domain\Account\EventSubscriber;
 
-use App\Domain\Account\Entity\Enum\UserStatus;
 use App\Domain\Account\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
