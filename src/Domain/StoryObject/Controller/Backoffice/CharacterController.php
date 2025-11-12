@@ -174,57 +174,6 @@ class CharacterController extends BaseController
         ]);
     }
 
-    #[Route('{character}/discussions', name: 'discussions', methods: ['GET'])]
-    public function discussions(
-        Request                   $request,
-        Larp                      $larp,
-        Character                 $character,
-        CommentRepository $commentRepository,
-        StoryObjectMentionService $mentionService,
-        LarpApplicationChoiceRepository $choiceRepository,
-    ): Response {
-        $showResolved = $request->query->getBoolean('showResolved', false);
-        
-        // Fetch comments - filter by resolved status if needed
-        $qb = $commentRepository->createQueryBuilder('c')
-            ->where('c.storyObject = :storyObject')
-            ->andWhere('c.parent IS NULL')
-            ->setParameter('storyObject', $character)
-            ->orderBy('c.createdAt', 'DESC');
-        
-        if (!$showResolved) {
-            $qb->andWhere('c.isResolved = false');
-        }
-        
-        $comments = $qb->getQuery()->getResult();
-        $commentCount = $commentRepository->countByStoryObject($character);
-        $unresolvedCount = $commentRepository->countUnresolvedByStoryObject($character);
-
-        // Load replies for each top-level comment
-        $commentThreads = [];
-        foreach ($comments as $comment) {
-            $commentThreads[] = [
-                'comment' => $comment,
-                'replies' => $commentRepository->findReplies($comment),
-            ];
-        }
-
-        $mentions = $mentionService->findMentions($character);
-        $applicantsCount = $choiceRepository->getApplicationsCountForCharacter($character);
-
-        return $this->render('backoffice/larp/story/comment/discussions.html.twig', [
-            'larp' => $larp,
-            'storyObject' => $character,
-            'commentThreads' => $commentThreads,
-            'commentCount' => $commentCount,
-            'unresolvedCount' => $unresolvedCount,
-            'storyObjectType' => 'character',
-            'mentionsCount' => count($mentions),
-            'applicantsCount' => $applicantsCount,
-            'showResolved' => $showResolved,
-        ]);
-    }
-
     #[Route('{character}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,

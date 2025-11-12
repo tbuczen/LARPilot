@@ -10,6 +10,7 @@ use App\Domain\StoryObject\Entity\Comment;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Form\Type\CommentType;
 use App\Domain\StoryObject\Repository\CommentRepository;
+use App\Domain\StoryObject\Service\StoryObjectMentionService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -35,7 +36,7 @@ class CommentController extends BaseController
 
             $this->addFlash('success', $this->translator->trans('comment.updated_successfully'));
 
-            return $this->redirectToRoute('backoffice_larp_story_comment_list', [
+            return $this->redirectToRoute('backoffice_larp_story_comment_discussions', [
                 'larp' => $larp->getId(),
                 'storyObject' => $storyObject->getId(),
             ]);
@@ -61,7 +62,7 @@ class CommentController extends BaseController
 
         $this->addFlash('success', $this->translator->trans('comment.deleted_successfully'));
 
-        return $this->redirectToRoute('backoffice_larp_story_comment_list', [
+        return $this->redirectToRoute('backoffice_larp_story_comment_discussions', [
             'larp' => $larp->getId(),
             'storyObject' => $storyObject->getId(),
         ]);
@@ -83,7 +84,7 @@ class CommentController extends BaseController
 
         $this->addFlash('success', $message);
 
-        return $this->redirectToRoute('backoffice_larp_story_comment_list', [
+        return $this->redirectToRoute('backoffice_larp_story_comment_discussions', [
             'larp' => $larp->getId(),
             'storyObject' => $storyObject->getId(),
         ]);

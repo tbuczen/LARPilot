@@ -4,7 +4,7 @@
 {% block larp_title %}{{ (tag is defined and tag.id ? 'larp.tag.modify' : 'larp.tag.create')|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
-    <div class="tab-pane border border-top-0 p-3">
+    <div class="tab-pane border p-3">
         {{ form_start(form) }}
             {{ form_widget(form) }}
 
