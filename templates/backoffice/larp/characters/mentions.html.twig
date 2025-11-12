@@ -9,7 +9,8 @@
         mentionsCount: mentions|length
     } %}
 
-    {{ tabs_macro.tabs('mentions', character, 'character', larp, mentions|length, false, applicantsCount|default(0)) }}
+    {{ tabs_macro.tabs('mentions', character, 'character', larp, mentions|length|default(0), false, applicantsCount|default(0), commentsCount|default(0), unresolvedCommentsCount|default(0)) }}
+
 
     {% include 'includes/story_object_mentions.html.twig' with {
         storyObject: character,

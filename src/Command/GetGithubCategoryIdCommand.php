@@ -74,7 +74,7 @@ GRAPHQL;
 
             if (isset($data['errors'])) {
                 $io->error('GraphQL Error:');
-                $io->listing(array_map(fn($e) => $e['message'], $data['errors']));
+                $io->listing(array_map(fn ($e) => $e['message'], $data['errors']));
 
                 if (str_contains(json_encode($data['errors']), 'discussions')) {
                     $io->warning([

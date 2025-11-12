@@ -65,9 +65,6 @@ class CommentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * Count comments for a story object
-     */
     public function countByStoryObject(StoryObject $storyObject): int
     {
         return (int) $this->createQueryBuilder('c')

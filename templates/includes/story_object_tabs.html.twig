@@ -1,14 +1,17 @@
 {# templates/includes/story_object_tabs.html.twig #}
 {# Tab macro for story object with route-based navigation #}
 
-{% macro tabs(currentTab, storyObject, storyObjectType, larp, mentionsCount, includeDecisionTree, applicantsCount) %}
+{% macro tabs(currentTab, storyObject, storyObjectType, larp, mentionsCount, includeDecisionTree, applicantsCount, commentsCount, unresolvedCommentsCount) %}
     {% set includeDecisionTree = includeDecisionTree|default(false) %}
     {% set applicantsCount = applicantsCount|default(0) %}
+    {% set commentsCount = commentsCount|default(0) %}
+    {% set unresolvedCommentsCount = unresolvedCommentsCount|default(0) %}
 
     {% set baseRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_modify' %}
     {% set mentionsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_mentions' %}
     {% set treeRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_tree' %}
     {% set applicantsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_applicants' %}
+    {% set discussionsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_discussions' %}
 
     <ul class="nav nav-tabs nav-fill" role="tablist">
         {# Details Tab #}
@@ -24,9 +27,7 @@
             <a class="nav-link {{ currentTab == 'mentions' ? 'active' : '' }}"
                href="{{ path(mentionsRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
                 <i class="bi bi-link-45deg me-2"></i>{{ 'story_object.mentions.title'|trans }}
-                {% if mentionsCount > 0 %}
-                    <span class="badge bg-secondary ms-1">{{ mentionsCount }}</span>
-                {% endif %}
+                <span class="badge bg-secondary ms-1">{{ mentionsCount }}</span>
             </a>
         </li>
 
@@ -46,11 +47,19 @@
                 <a class="nav-link {{ currentTab == 'applicants' ? 'active' : '' }}"
                    href="{{ path(applicantsRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
                     <i class="bi bi-people me-2"></i>{{ 'larp.character.applicants.title'|trans }}
-                    {% if applicantsCount > 0 %}
-                        <span class="badge bg-primary ms-1">{{ applicantsCount }}</span>
-                    {% endif %}
+                    <span class="badge bg-primary ms-1">{{ applicantsCount }}</span>
                 </a>
             </li>
         {% endif %}
+
+        {# Discussions Tab #}
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {{ currentTab == 'discussions' ? 'active' : '' }}"
+               href="{{ path(discussionsRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
+                <i class="bi bi-chat-dots me-2"></i>{{ 'comment.discussions'|trans }}
+                <span class="badge bg-warning ms-1">{{ unresolvedCommentsCount }}</span>
+                <span class="badge bg-secondary ms-1">{{ commentsCount }}</span>
+            </a>
+        </li>
     </ul>
 {% endmacro %}
