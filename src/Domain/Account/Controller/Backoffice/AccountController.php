@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Account\Controller;
+namespace App\Domain\Account\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Response;

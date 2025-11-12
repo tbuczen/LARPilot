@@ -3,7 +3,7 @@
 namespace App\Domain\StoryObject\Form;
 
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Larp\Form\DataTransformer\MoneyToFloatTransformer;
+use App\Domain\Core\Form\DataTransformer\MoneyToFloatTransformer;
 use App\Domain\StoryObject\Entity\Item;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

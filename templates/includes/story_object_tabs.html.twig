@@ -11,7 +11,6 @@
     {% set mentionsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_mentions' %}
     {% set treeRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_tree' %}
     {% set applicantsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_applicants' %}
-    {% set discussionsRoute = 'backoffice_larp_story_' ~ storyObjectType ~ '_discussions' %}
 
     <ul class="nav nav-tabs nav-fill" role="tablist">
         {# Details Tab #}
@@ -32,7 +31,7 @@
         </li>
 
         {# Decision Tree Tab (only for Quest and Thread) #}
-        {% if includeDecisionTree %}
+        {% if storyObjectType == 'quest' or storyObjectType == 'thread' %}
             <li class="nav-item" role="presentation">
                 <a class="nav-link {{ currentTab == 'tree' ? 'active' : '' }}"
                    href="{{ path(treeRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
@@ -55,7 +54,7 @@
         {# Discussions Tab #}
         <li class="nav-item" role="presentation">
             <a class="nav-link {{ currentTab == 'discussions' ? 'active' : '' }}"
-               href="{{ path(discussionsRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
+               href="{{ path('backoffice_larp_story_comment_discussions', {larp: larp.id, storyObject: storyObject.id}) }}">
                 <i class="bi bi-chat-dots me-2"></i>{{ 'comment.discussions'|trans }}
                 <span class="badge bg-warning ms-1">{{ unresolvedCommentsCount }}</span>
                 <span class="badge bg-secondary ms-1">{{ commentsCount }}</span>
