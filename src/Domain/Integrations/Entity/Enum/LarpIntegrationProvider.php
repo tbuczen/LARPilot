@@ -6,23 +6,23 @@ use App\Domain\Core\Entity\Enum\LabelableEnumInterface;
 
 enum LarpIntegrationProvider: string implements LabelableEnumInterface
 {
-    case Facebook = 'facebook';
+//    case Facebook = 'facebook';
     case Google = 'integration_google_drive';
-    case Discord = 'discord';
-    case Asana = 'asana';
-    case Trello = 'trello';
-    case Miro = 'miro';
+//    case Discord = 'discord';
+//    case Asana = 'asana';
+//    case Trello = 'trello';
+//    case Miro = 'miro';
 
 
     public function getLabel(): string
     {
         return match ($this) {
             self::Google => 'Google Drive',
-            self::Trello => 'Trello',
-            self::Miro => 'Miro',
-            self::Asana => 'Asana',
-            self::Facebook => 'Facebook',
-            self::Discord => 'Discord',
+//            self::Trello => 'Trello',
+//            self::Miro => 'Miro',
+//            self::Asana => 'Asana',
+//            self::Facebook => 'Facebook',
+//            self::Discord => 'Discord',
         };
     }
 
@@ -30,11 +30,11 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
     {
         return match ($this) {
             self::Google => 'larp.integration.googleDriveDescription',
-            self::Trello => 'larp.integration.trelloDescription',
-            self::Miro => 'larp.integration.miroDescription',
-            self::Asana => 'larp.integration.asanaDescription',
-            self::Facebook => 'larp.integration.facebookDescription',
-            self::Discord => 'larp.integration.discordDescription',
+//            self::Trello => 'larp.integration.trelloDescription',
+//            self::Miro => 'larp.integration.miroDescription',
+//            self::Asana => 'larp.integration.asanaDescription',
+//            self::Facebook => 'larp.integration.facebookDescription',
+//            self::Discord => 'larp.integration.discordDescription',
         };
     }
 

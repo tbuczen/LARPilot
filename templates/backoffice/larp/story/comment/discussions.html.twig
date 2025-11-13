@@ -15,7 +15,7 @@
     {# Tabs navigation #}
     {{ tabs_macro.tabs('discussions', storyObject, storyObjectType, larp, mentionsCount|default(0), false, applicantsCount|default(0), commentCount, unresolvedCount) }}
 
-    <div class="tab-pane border border-top-0 p-0" 
+    <div class="tab-pane border border-top-0 p-0 rounded-bottom"
          data-controller="comments"
          data-comments-larp-value="{{ larp.id }}"
          data-comments-story-object-value="{{ storyObject.id }}"

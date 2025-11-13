@@ -983,6 +983,16 @@ comment:
   show_resolved: "Show Resolved"
   hide_resolved: "Hide Resolved"
 
+relation:
+  family: "Family"
+  friend: "Friend"
+  faction_member: "Faction Member"
+  involved_in_quest: "Involved in Quest"
+  involved_in_thread: "Involved in Thread"
+  character_continuation: "Character Continuation"
+  character_previous: "Character Previous"
+  involved_in_event: "Involved in Event"
+
 super_admin:
   users:
     list: 'User Management'

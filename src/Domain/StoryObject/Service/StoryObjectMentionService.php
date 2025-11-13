@@ -61,7 +61,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $sourceObject,
                 mentionType: 'story_object.mention.type.relation',
-                context: $relationType ? sprintf('Relation: %s', $relationType) : 'Relation',
+                context: $relationType ? sprintf('relation.%s', $relationType->value) : 'relation',
                 fieldName: 'relation',
             );
         }
@@ -109,7 +109,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $faction,
                 mentionType: 'story_object.mention.type.faction_member',
-                context: 'Member of faction',
+                context: 'relation.faction_member',
                 fieldName: 'members',
             );
         }
@@ -119,7 +119,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $quest,
                 mentionType: 'story_object.mention.type.involved_in_quest',
-                context: 'Involved in quest',
+                context: 'relation.involved_in_quest',
                 fieldName: 'involvedCharacters',
             );
         }
@@ -129,7 +129,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $thread,
                 mentionType: 'story_object.mention.type.involved_in_thread',
-                context: 'Involved in thread',
+                context: 'relation.involved_in_thread',
                 fieldName: 'involvedCharacters',
             );
         }
@@ -139,7 +139,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $character->getContinuation(),
                 mentionType: 'story_object.mention.type.character_continuation',
-                context: 'Continued by character',
+                context: 'relation.character_continuation',
                 fieldName: 'previousCharacter',
             );
         }
@@ -149,7 +149,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $character,
                 mentionType: 'story_object.mention.type.character_previous',
-                context: 'Continues from character',
+                context: 'relation.character_previous',
                 fieldName: 'continuation',
             );
         }
@@ -166,7 +166,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $event,
                 mentionType: 'story_object.mention.type.involved_in_event',
-                context: 'Involved in event',
+                context: 'relation.involved_in_event',
                 fieldName: 'involvedCharacters',
             );
         }

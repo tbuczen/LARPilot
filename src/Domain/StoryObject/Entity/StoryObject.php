@@ -117,11 +117,13 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, \App
         $this->externalReferences = $externalReferences;
     }
 
+    /** @return Collection<Relation> */
     public function getRelationsFrom(): Collection
     {
         return $this->relationsFrom;
     }
 
+    /** @return Collection<Relation> */
     public function getRelationsTo(): Collection
     {
         return $this->relationsTo;

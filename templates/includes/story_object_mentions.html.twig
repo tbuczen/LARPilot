@@ -2,7 +2,7 @@
 {# Displays mentions - works in tab view (noCard=true) or as collapsible card #}
 
 {% if storyObject is defined and storyObject.id and mentions is defined %}
-<div class="tab-pane border border-top-0">
+<div class="tab-pane border border-top-0 rounded-bottom">
     {% if noCard is defined and noCard %}
         {# Simple table view for tab content #}
         {% if mentions is not empty %}
@@ -35,7 +35,7 @@
                                 </span>
                             </td>
                             <td class="text-muted">
-                                {{ mention.context }}
+                                {{ mention.context|trans }}
                             </td>
                         </tr>
                     {% endfor %}

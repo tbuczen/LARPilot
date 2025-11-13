@@ -33,13 +33,14 @@ class CharacterType extends AbstractType
             ])
             ->add('inGameName', TextType::class, [
                 'label' => 'character.in_game_name',
+                'required' => false,
             ])
             ->add('gender', ChoiceType::class, [
                 'label' => 'character.gender',
                 'choices' => Gender::cases(),
                 'choice_label' => fn (Gender $gender) => $gender->name,
                 'choice_value' => fn (?Gender $gender) => $gender?->value,
-                'required' => true,
+                'required' => false,
             ])
             ->add('preferredGender', ChoiceType::class, [
                 'label' => 'character.preferred_gender',

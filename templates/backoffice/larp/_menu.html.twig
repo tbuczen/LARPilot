@@ -38,7 +38,7 @@
 
                             {# Administration Dropdown (ROLE_ORGANIZER only) #}
                             {% if isOrganizer %}
-                                {% set isAdministrationRoute = currentRoute == 'backoffice_larp_dashboard' or 'larp_status' in currentRoute or 'larp_invitations' in currentRoute or 'larp_participant' in currentRoute %}
+                                {% set isAdministrationRoute = currentRoute == 'backoffice_larp_dashboard' or 'larp_status' in currentRoute or 'larp_invitations' in currentRoute or 'larp_participant' in currentRoute or 'larp_integration_settings' in currentRoute  %}
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle {% if isAdministrationRoute %}active{% endif %}"
                                        href="#" id="administrationDropdown" role="button" data-bs-toggle="dropdown"
@@ -67,6 +67,16 @@
                                                 <i class="bi bi-people"></i> {{ 'larp.participant.plural'|trans }}
                                             </a>
                                         </li>
+                                        {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
+                                            <li>
+{#                                                {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}#}
+                                                <a class="dropdown-item "
+                                                   href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
+                                                   title="{{ 'larp.integrations'|trans }}">
+                                                    <i class="bi bi-plugin"></i> {{ 'larp.integrations'|trans }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
                                     </ul>
                                 </li>
                             {% endif %}
@@ -78,16 +88,6 @@
                                     <i class="bi bi-kanban"></i> {{ 'larp.tasks'|trans }}
                                 </a>
                             </li>
-
-                            {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
-                                <li class="nav-item">
-                                    <a class="nav-link {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}"
-                                       href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
-                                       title="{{ 'larp.integrations'|trans }}">
-                                        <i class="bi bi-plugin"></i> {{ 'larp.integrations'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
 
                             {# Applications Dropdown #}
                             {% set isApplicationsRoute = 'larp_applications' in currentRoute %}
