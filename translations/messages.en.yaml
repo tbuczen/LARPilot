@@ -272,6 +272,7 @@ larp:
     trelloDescription: 'Connect your Trello account to allow LARPilot to synchronize work.'
     miroDescription: 'Connect your Miro account to allow LARPilot to synchronize board.'
   import_characters: "Import Characters"
+  import_tags: "Import Tags"
   import_options: "Import Options"
   import_file: "Import from CSV/XLSX file"
   import_google: "Import from Google Spreadsheet"

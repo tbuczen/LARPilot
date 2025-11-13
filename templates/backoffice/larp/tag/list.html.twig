@@ -4,8 +4,38 @@
 {% block larp_title %}{{ 'larp.tag.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
+    {# Import Options Modal #}
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">{{ 'larp.import_options'|trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    {% if integrations is defined and integrations|length > 0 %}
+                        {% for integration in integrations %}
+                            <a href="{{ path('backoffice_larp_story_tag_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}"
+                               class="btn btn-primary">
+                                {{ 'larp.import_google'|trans }}
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">{{ 'tag.import.no_integrations'|trans }}</p>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card mt-4">
         {% set actions %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+                {{ 'larp.import_tags'|trans }}
+            </button>
             {{ ui.primary_button('create', path('backoffice_larp_story_tag_modify', { larp: larp.id }), 'bi-plus-circle') }}
         {% endset %}
         {{ ui.card_header('larp.tag.list', actions) }}

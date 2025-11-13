@@ -8,6 +8,7 @@ use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Form\Filter\TagFilterType;
 use App\Domain\Core\Form\TagType;
 use App\Domain\Core\Repository\TagRepository;
+use App\Domain\Core\Service\LarpManager;
 use App\Domain\Core\UseCase\ImportTags\ImportTagsCommand;
 use App\Domain\Core\UseCase\ImportTags\ImportTagsHandler;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
@@ -24,7 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class TagController extends BaseController
 {
     #[Route('list', name: 'list', methods: ['GET', 'POST'])]
-    public function list(Request $request, Larp $larp, TagRepository $repository): Response
+    public function list(Request $request, Larp $larp, TagRepository $repository, LarpManager $larpManager): Response
     {
         $filterForm = $this->createForm(TagFilterType::class);
         $filterForm->handleRequest($request);
@@ -35,10 +36,13 @@ class TagController extends BaseController
         $qb->orderBy('t.' . $sort, $dir);
         $qb->andWhere('t.larp = :larp')->setParameter('larp', $larp);
 
+        $integrations = $larpManager->getIntegrationsForLarp($larp);
+
         return $this->render('backoffice/larp/tag/list.html.twig', [
             'filterForm' => $filterForm->createView(),
             'tags' => $qb->getQuery()->getResult(),
             'larp' => $larp,
+            'integrations' => $integrations,
         ]);
     }
 
