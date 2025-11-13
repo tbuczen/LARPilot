@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\StoryObject\Controller\Backoffice;
 
+use App\Domain\Application\Repository\LarpApplicationChoiceRepository;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
+use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Comment;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Form\Type\CommentType;
@@ -28,7 +30,7 @@ class CommentController extends BaseController
         Comment $comment,
         CommentRepository $commentRepository,
     ): Response {
-        $form = $this->createForm(CommentType::class, $comment);
+        $form = $this->createForm(CommentType::class, $comment, ['larp' => $larp]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -100,34 +102,18 @@ class CommentController extends BaseController
         StoryObject $storyObject,
         CommentRepository $commentRepository,
         StoryObjectMentionService $mentionService,
+        LarpApplicationChoiceRepository $choiceRepository
     ): Response {
         $showResolved = $request->query->getBoolean('showResolved', false);
-        
-        // Fetch comments - filter by resolved status if needed
-        $qb = $commentRepository->createQueryBuilder('c')
-            ->where('c.storyObject = :storyObject')
-            ->andWhere('c.parent IS NULL')
-            ->setParameter('storyObject', $storyObject)
-            ->orderBy('c.createdAt', 'DESC');
-        
-        if (!$showResolved) {
-            $qb->andWhere('c.isResolved = false');
-        }
-        
-        $comments = $qb->getQuery()->getResult();
+
+        $comments = $commentRepository->findTopLevelByStoryObjectWithFilter($storyObject, $showResolved);
         $commentCount = $commentRepository->countByStoryObject($storyObject);
         $unresolvedCount = $commentRepository->countUnresolvedByStoryObject($storyObject);
-
-        // Load replies for each top-level comment
-        $commentThreads = [];
-        foreach ($comments as $comment) {
-            $commentThreads[] = [
-                'comment' => $comment,
-                'replies' => $commentRepository->findReplies($comment),
-            ];
+        if ($storyObject instanceof Character) {
+            $applicantsCount = $choiceRepository->getApplicationsCountForCharacter($storyObject);
         }
 
-        // Get mentions count for navigation
+        $commentThreads = $this->buildCommentThreads($comments, $commentRepository);
         $mentions = $mentionService->findMentions($storyObject);
 
         return $this->render('backoffice/larp/story/comment/discussions.html.twig', [
@@ -138,8 +124,26 @@ class CommentController extends BaseController
             'unresolvedCount' => $unresolvedCount,
             'storyObjectType' => strtolower($storyObject->getTargetType()->value),
             'mentionsCount' => count($mentions),
-            'applicantsCount' => 0,
+            'applicantsCount' => $applicantsCount ?? 0,
             'showResolved' => $showResolved,
         ]);
+    }
+
+    /**
+     * Build comment threads by loading replies for each top-level comment
+     *
+     * @param Comment[] $comments
+     * @return array<int, array{comment: Comment, replies: Comment[]}>
+     */
+    private function buildCommentThreads(array $comments, CommentRepository $commentRepository): array
+    {
+        $threads = [];
+        foreach ($comments as $comment) {
+            $threads[] = [
+                'comment' => $comment,
+                'replies' => $commentRepository->findReplies($comment),
+            ];
+        }
+        return $threads;
     }
 }

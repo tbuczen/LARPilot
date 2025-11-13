@@ -1,0 +1,37 @@
+{# templates/includes/comment_form.html.twig #}
+{# Reusable comment form with WYSIWYG mention support #}
+{% set formId = formId|default('comment-form-' ~ random()) %}
+{% set larpId = larpId|default(larp.id) %}
+{% set placeholder = placeholder|default('comment.add_new_placeholder'|trans) %}
+{% set rows = rows|default(2) %}
+{% set showButtons = showButtons|default(true) %}
+{% set submitLabel = submitLabel|default('comment.post'|trans) %}
+{% set clearLabel = clearLabel|default('comment.clear'|trans) %}
+{% set submitIcon = submitIcon|default('bi-send') %}
+{% set submitClass = submitClass|default('btn-primary') %}
+
+<div class="comment-form-wrapper">
+    <textarea
+        id="{{ formId }}"
+        name="content"
+        class="form-control"
+        rows="{{ rows }}"
+        placeholder="{{ placeholder }}"
+        maxlength="5000"
+        data-controller="wysiwyg"
+        data-wysiwyg-larp-value="{{ larpId }}"
+        required
+    ></textarea>
+    <small class="text-muted">{{ 'comment.max_5000_chars'|trans }}</small>
+
+    {% if showButtons %}
+        <div class="d-flex gap-2 mt-2">
+            <button type="submit" class="btn {{ submitClass }} btn-sm">
+                <i class="bi {{ submitIcon }}"></i> {{ submitLabel }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="this.form.reset();">
+                <i class="bi bi-x-circle"></i> {{ clearLabel }}
+            </button>
+        </div>
+    {% endif %}
+</div>

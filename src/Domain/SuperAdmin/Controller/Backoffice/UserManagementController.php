@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\SuperAdmin\Controller;
+namespace App\Domain\SuperAdmin\Controller\Backoffice;
 
 use App\Domain\Account\Entity\Enum\UserStatus;
 use App\Domain\Account\Entity\User;

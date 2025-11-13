@@ -46,7 +46,7 @@ event_planning_backoffice:
 feedback_api:
   resource: '../src/Domain/Feedback/Controller/API/'
   type: attribute
-  prefix: /
+  prefix: /api
 
 # Incidents Domain
 incidents_public:
@@ -102,9 +102,15 @@ story_object_public:
 story_object_api:
   resource: '../src/Domain/StoryObject/Controller/API/'
   type: attribute
-  prefix: /
+  prefix: /api
 
 story_object_backoffice:
   resource: '../src/Domain/StoryObject/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
+#Super Admin
+super_admin_backoffice:
+  resource: '../src/Domain/SuperAdmin/Controller/Backoffice/'
   type: attribute
   prefix: /backoffice

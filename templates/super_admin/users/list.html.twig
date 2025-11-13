@@ -32,10 +32,10 @@
                         </div>
                         <div class="col-md-3 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2">
-                                <i class="bi bi-funnel me-1"></i>{{ 'common.filter'|trans }}
+                                <i class="bi bi-funnel me-1"></i>{{ 'filter'|trans }}
                             </button>
                             <a href="{{ path('super_admin_users_list') }}" class="btn btn-secondary">
-                                <i class="bi bi-x-circle me-1"></i>{{ 'common.clear'|trans }}
+                                <i class="bi bi-x-circle me-1"></i>{{ 'clear'|trans }}
                             </a>
                         </div>
                     </form>
@@ -60,10 +60,10 @@
                                         label: 'super_admin.users.status'|trans
                                     } %}
                                     {% include 'includes/sort_th.html.twig' with {
-                                        field: 'createdAt',
+                                        field: 'created_at',
                                         label: 'super_admin.users.registered'|trans
                                     } %}
-                                    <th>{{ 'common.actions'|trans }}</th>
+                                    <th>{{ 'actions'|trans }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +83,7 @@
                                             <div class="btn-group" role="group">
                                                 <a href="{{ path('super_admin_users_edit', { id: user.id }) }}"
                                                    class="btn btn-sm btn-outline-primary">
-                                                    <i class="bi bi-pencil"></i> {{ 'common.edit'|trans }}
+                                                    <i class="bi bi-pencil"></i> {{ 'edit'|trans }}
                                                 </a>
 
                                                 {% if user.status.value == 'pending' %}
@@ -120,7 +120,7 @@
                 {% else %}
                     <div class="p-4 text-center text-muted">
                         <i class="bi bi-inbox" style="font-size: 3rem;"></i>
-                        <p class="mt-2">{{ 'common.empty_list'|trans }}</p>
+                        <p class="mt-2">{{ 'empty_list'|trans }}</p>
                     </div>
                 {% endif %}
             </div>

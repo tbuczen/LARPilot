@@ -21,6 +21,8 @@ class CommentType extends AbstractType
                 'attr' => [
                     'rows' => 4,
                     'placeholder' => 'comment.content_placeholder',
+                    'data-controller' => 'wysiwyg',
+                    'data-wysiwyg-larp-value' => $options['larp']?->getId(),
                 ],
                 'required' => true,
             ])
@@ -36,6 +38,9 @@ class CommentType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Comment::class,
             'translation_domain' => 'forms',
+            'larp' => null,
         ]);
+
+        $resolver->setAllowedTypes('larp', ['null', 'App\Domain\Core\Entity\Larp']);
     }
 }

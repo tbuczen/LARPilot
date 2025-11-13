@@ -2,8 +2,14 @@
 {% set currentDir = app.request.query.get('dir', 'asc') %}
 {% set baseQuery = app.request.query.all %}
 
+{% if larp is defined %}
+    {% set href = path(app.request.attributes.get('_route'), baseQuery | merge({ sort: field, dir: currentSort == field and currentDir == 'asc' ? 'desc' : 'asc', larp: larp.id })) %}
+{% else %}
+    {% set href = path(app.request.attributes.get('_route'), baseQuery | merge({ sort: field, dir: currentSort == field and currentDir == 'asc' ? 'desc' : 'asc' })) %}
+{% endif %}
+
 <th scope="col">
-    <a href="{{ path(app.request.attributes.get('_route'), baseQuery | merge({ sort: field, dir: currentSort == field and currentDir == 'asc' ? 'desc' : 'asc', larp: larp.id })) }}"
+    <a href="{{ href }}"
        class="text-decoration-none"
        data-bs-toggle="tooltip"
        data-bs-placement="top"

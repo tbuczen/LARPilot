@@ -1,4 +1,4 @@
-import { Controller } from '@hotwired/stimulus';
+import {Controller} from '@hotwired/stimulus';
 import Quill from 'quill';
 import {Mention, MentionBlot} from "quill-mention";
 
@@ -96,7 +96,6 @@ export default class extends Controller {
             theme: 'snow',
             modules: {
                 toolbar: [
-                    ['font', 'size'],
                     ['bold', 'italic', 'underline'],
                     [{ list: 'ordered' }, { list: 'bullet' }],
                     ['link'],
@@ -134,11 +133,6 @@ export default class extends Controller {
                     },
                 }
             },
-            //.editorholder {
-            //   height: 500px;
-            //   display: flex;
-            //   flex-flow: column;
-            // }
         });
 
         if (this.textarea.value) {
@@ -218,7 +212,6 @@ export default class extends Controller {
     }
 
     _syncToTextarea() {
-        const html = this.editorEl.querySelector('.ql-editor')?.innerHTML ?? '';
-        this.textarea.value = html;
+        this.textarea.value = this.editorEl.querySelector('.ql-editor')?.innerHTML ?? '';
     }
 }
