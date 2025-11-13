@@ -2,6 +2,7 @@
 
 namespace App\Tests\Domain\Application\Controller;
 
+use App\Domain\Account\Entity\Enum\UserStatus;
 use App\Domain\Account\Entity\User;
 use App\Domain\Application\Entity\LarpApplication;
 use App\Domain\Application\Entity\LarpApplicationChoice;
@@ -74,6 +75,7 @@ class CharacterApplicationsControllerTest extends WebTestCase
         $user = new User();
         $user->setUsername($username);
         $user->setContactEmail($email);
+        $user->setStatus(UserStatus::APPROVED);
         $user->setRoles(['ROLE_USER']);
         $this->em->persist($user);
         return $user;
