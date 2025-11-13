@@ -36,6 +36,28 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find top-level comments for a story object with optional resolved status filter
+     *
+     * @return Comment[]
+     */
+    public function findTopLevelByStoryObjectWithFilter(
+        StoryObject $storyObject,
+        bool $includeResolved = true
+    ): array {
+        $qb = $this->createQueryBuilder('c')
+            ->where('c.storyObject = :storyObject')
+            ->andWhere('c.parent IS NULL')
+            ->setParameter('storyObject', $storyObject)
+            ->orderBy('c.createdAt', 'DESC');
+
+        if (!$includeResolved) {
+            $qb->andWhere('c.isResolved = false');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Find all comments for a story object (including nested), ordered by creation date
      *
      * @return Comment[]

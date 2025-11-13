@@ -87,6 +87,14 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
                     ],
                 ],
             ];
+
+            // Add Super Admin menu for users with ROLE_SUPER_ADMIN
+            if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                $this->menuItems[] = [
+                    'label' => $this->translator->trans('super_admin.users.list'),
+                    'url' => $this->router->generate('super_admin_users_list'),
+                ];
+            }
         } else {
             $this->menuItems[] = [
                 'label' => $this->translator->trans('login'),

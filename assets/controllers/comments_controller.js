@@ -77,7 +77,7 @@ export default class extends Controller {
      */
     async fetchNewComments() {
         try {
-            const url = `/larp/${this.larpValue}/story/${this.storyObjectValue}/api/comments`;
+            const url = `/api/larp/${this.larpValue}/story/${this.storyObjectValue}/comments`;
             const params = new URLSearchParams();
             
             if (this.lastCommentId) {
@@ -201,7 +201,7 @@ export default class extends Controller {
                                     ${resolvedBadge}
                                 </div>
                                 <div class="comment-content mb-2">
-                                    ${this.nl2br(comment.content)}
+                                    ${comment.content}
                                 </div>
                                 <div class="d-flex gap-2 flex-wrap">
                                     <button type="button" 
@@ -228,7 +228,12 @@ export default class extends Controller {
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <textarea class="form-control form-control-sm" rows="2" placeholder="Write a reply..." required></textarea>
+                                            <textarea class="form-control form-control-sm reply-wysiwyg"
+                                                      rows="2"
+                                                      placeholder="Write a reply..."
+                                                      data-controller="wysiwyg"
+                                                      data-wysiwyg-larp-value="${this.larpValue}"
+                                                      required></textarea>
                                             <div class="d-flex gap-2 mt-2">
                                                 <button type="submit" class="btn btn-primary btn-sm">Reply</button>
                                                 <button type="button" class="btn btn-outline-secondary btn-sm"
@@ -269,7 +274,7 @@ export default class extends Controller {
                             </div>
                         </div>
                         <div class="comment-content small">
-                            ${this.nl2br(comment.content)}
+                            ${comment.content}
                         </div>
                     </div>
                 </div>
@@ -287,7 +292,7 @@ export default class extends Controller {
         if (!content) return;
         
         try {
-            const url = `/larp/${this.larpValue}/story/${this.storyObjectValue}/api/comments`;
+            const url = `/api/larp/${this.larpValue}/story/${this.storyObjectValue}/comments`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -305,12 +310,12 @@ export default class extends Controller {
             const data = await response.json();
             
             if (data.success) {
-                // Clear input
-                this.newCommentInputTarget.value = '';
-                
+                // Clear input using the clearInput method (handles both textarea and Quill)
+                this.clearInput();
+
                 // Add comment to DOM
                 this.addNewComments([data.comment]);
-                
+
                 // Show success message
                 this.showToast('Comment posted successfully', 'success');
             }
@@ -335,7 +340,7 @@ export default class extends Controller {
         if (!content) return;
         
         try {
-            const url = `/larp/${this.larpValue}/story/${this.storyObjectValue}/api/comments`;
+            const url = `/api/larp/${this.larpValue}/story/${this.storyObjectValue}/comments`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -354,13 +359,22 @@ export default class extends Controller {
             const data = await response.json();
             
             if (data.success) {
-                // Clear input and hide form
+                // Clear input (both textarea and Quill editor if present)
                 textarea.value = '';
+                const quillContainer = textarea.parentNode.querySelector('.ql-container');
+                if (quillContainer) {
+                    const quillEditor = quillContainer.querySelector('.ql-editor');
+                    if (quillEditor) {
+                        quillEditor.innerHTML = '<p><br></p>';
+                    }
+                }
+
+                // Hide form
                 this.toggleReplyForm(event);
-                
+
                 // Add reply to DOM
                 this.addNewComments([data.comment]);
-                
+
                 // Show success message
                 this.showToast('Reply posted successfully', 'success');
             }
@@ -401,7 +415,7 @@ export default class extends Controller {
         const isResolved = button.dataset.isResolved === 'true';
         
         try {
-            const url = `/larp/${this.larpValue}/story/${this.storyObjectValue}/api/comments/${commentId}/resolve`;
+            const url = `/api/larp/${this.larpValue}/story/${this.storyObjectValue}/comments/${commentId}/resolve`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -457,11 +471,30 @@ export default class extends Controller {
     }
 
     /**
-     * Clear input field
+     * Clear input field (handles both regular textarea and Quill editor)
      */
     clearInput() {
+        // Check if the textarea has been enhanced with Quill
+        const quillContainer = this.newCommentInputTarget.parentNode.querySelector('.ql-container');
+        if (quillContainer) {
+            // Find the Quill editor instance
+            const quillEditor = quillContainer.querySelector('.ql-editor');
+            if (quillEditor) {
+                quillEditor.innerHTML = '<p><br></p>'; // Clear Quill content
+            }
+        }
+        // Also clear the textarea value (Quill syncs to it)
         this.newCommentInputTarget.value = '';
-        this.newCommentInputTarget.focus();
+
+        // Focus the editor
+        if (quillContainer) {
+            const quillEditor = quillContainer.querySelector('.ql-editor');
+            if (quillEditor) {
+                quillEditor.focus();
+            }
+        } else {
+            this.newCommentInputTarget.focus();
+        }
     }
 
     /**

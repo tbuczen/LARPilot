@@ -28,23 +28,46 @@
                     {# Collapsible navigation #}
                     <div class="collapse navbar-collapse" id="larpNavbar">
                         <ul class="navbar-nav">
-                            {# Dashboard #}
-                            <li class="nav-item">
-                                <a class="nav-link {% if currentRoute == 'backoffice_larp_dashboard' %}active{% endif %}"
-                                   href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}"
-                                   title="{{ 'dashboard'|trans }}">
-                                    <i class="bi bi-speedometer2"></i> {{ 'dashboard'|trans }}
-                                </a>
-                            </li>
+                            {# Check if user is LARP organizer (ROLE_ORGANIZER) #}
+                            {% set isOrganizer = false %}
+                            {% for participant in larp.participants %}
+                                {% if participant.user.id == app.user.id and participant.isAdmin %}
+                                    {% set isOrganizer = true %}
+                                {% endif %}
+                            {% endfor %}
 
-                            {# Management Links #}
-                            {% if is_granted('MANAGE_LARP_GENERAL_SETTINGS', larp) %}
-                                <li class="nav-item">
-                                    <a class="nav-link {% if 'larp_status' in currentRoute %}active{% endif %}"
-                                       href="{{ path('backoffice_larp_status_index', {larp: larp.id}) }}"
-                                       title="{{ 'larp.status.manage'|trans }}">
-                                        <i class="bi bi-gear"></i> {{ 'larp.status.manage'|trans }}
+                            {# Administration Dropdown (ROLE_ORGANIZER only) #}
+                            {% if isOrganizer %}
+                                {% set isAdministrationRoute = currentRoute == 'backoffice_larp_dashboard' or 'larp_status' in currentRoute or 'larp_invitations' in currentRoute or 'larp_participant' in currentRoute %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle {% if isAdministrationRoute %}active{% endif %}"
+                                       href="#" id="administrationDropdown" role="button" data-bs-toggle="dropdown"
+                                       aria-expanded="false" title="{{ 'larp.administration.title'|trans }}">
+                                        <i class="bi bi-shield-lock"></i> {{ 'larp.administration.title'|trans }}
                                     </a>
+                                    <ul class="dropdown-menu" aria-labelledby="administrationDropdown">
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}">
+                                                <i class="bi bi-speedometer2"></i> {{ 'dashboard'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('backoffice_larp_status_index', {'larp': larp.id}) }}">
+                                                <i class="bi bi-gear"></i> {{ 'larp.status.manage'|trans }}
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('backoffice_larp_invitations_list', {'larp': larp.id}) }}">
+                                                <i class="bi bi-envelope"></i> {{ 'larp.invitation.plural'|trans }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}">
+                                                <i class="bi bi-people"></i> {{ 'larp.participant.plural'|trans }}
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                             {% endif %}
 
@@ -55,16 +78,6 @@
                                     <i class="bi bi-kanban"></i> {{ 'larp.tasks'|trans }}
                                 </a>
                             </li>
-
-                            {% if is_granted('VIEW_BO_LARP_INVITATIONS', larp) %}
-                                <li class="nav-item">
-                                    <a class="nav-link {% if 'larp_invitations' in currentRoute %}active{% endif %}"
-                                       href="{{ path('backoffice_larp_invitations_list', {'larp': larp.id}) }}"
-                                       title="{{ 'larp.invitation.plural'|trans }}">
-                                        <i class="bi bi-envelope"></i> {{ 'larp.invitation.plural'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
 
                             {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
                                 <li class="nav-item">

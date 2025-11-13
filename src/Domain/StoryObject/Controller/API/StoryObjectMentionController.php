@@ -8,6 +8,7 @@ use App\Domain\StoryObject\Repository\StoryObjectRepository;
 use App\Domain\StoryObject\Security\Voter\LarpStoryVoter;
 use App\Domain\StoryObject\Service\StoryObjectRouter;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ class StoryObjectMentionController extends AbstractController
      * @param CacheItemPoolInterface $cache PSR-6 cache pool
      * @return JsonResponse
      *
-     * @throws AccessDeniedException If user doesn't have access to this LARP
+     * @throws AccessDeniedException|InvalidArgumentException If user doesn't have access to this LARP
      */
     #[Route('/larp/{larp}/story-object/mention-search', name: 'backoffice_story_object_mention_search', methods: ['GET'])]
     public function __invoke(

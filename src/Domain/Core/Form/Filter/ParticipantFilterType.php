@@ -6,6 +6,7 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Account\Repository\UserRepository;
 use App\Domain\Core\Entity\Enum\ParticipantRole;
 use App\Domain\Core\Entity\Larp;
+use Doctrine\ORM\QueryBuilder;
 use Spiriit\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -53,12 +54,11 @@ class ParticipantFilterType extends AbstractType
                 'autocomplete' => true,
                 'data_extraction_method' => 'default',
                 'tom_select_options' => [
-//                    'plugins' =>  ['dropdown_input']
                     'hideSelected' => false
                 ],
-                'query_builder' => fn (UserRepository $repo): \Doctrine\ORM\QueryBuilder => $repo->createQueryBuilder('u')
+                'query_builder' => fn (UserRepository $repo): QueryBuilder => $repo->createQueryBuilder('u')
                     ->innerJoin('u.larpParticipants', 'lp')
-                    ->select('lp')
+                    ->select('u','lp')
                     ->where('lp.larp = :larp')
                     ->setParameter('larp', $larp),
             ])

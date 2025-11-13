@@ -3,6 +3,8 @@
 
 {% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
 
+{% block title %}Discussion - {{ storyObject.getTitle() }}{% endblock %}
+
 {% block larp_content %}
     {# Story object header #}
     {% include 'includes/story_object_header.html.twig' with {
@@ -44,15 +46,17 @@
                 </div>
             </div>
             
-            {# Inline comment input #}
+            {# Inline comment input with WYSIWYG and mentions #}
             <form data-action="submit->comments#postComment" class="d-flex gap-2">
                 <div class="flex-grow-1">
-                    <textarea 
+                    <textarea
                         data-comments-target="newCommentInput"
-                        class="form-control" 
-                        rows="2" 
+                        class="form-control"
+                        rows="2"
                         placeholder="{{ 'comment.add_new_placeholder'|trans }}"
                         maxlength="5000"
+                        data-controller="wysiwyg"
+                        data-wysiwyg-larp-value="{{ larp.id }}"
                     ></textarea>
                     <small class="text-muted">{{ 'comment.max_5000_chars'|trans }}</small>
                 </div>
@@ -88,4 +92,18 @@
             {% endif %}
         </div>
     </div>
+
+    <style>
+        /* Compact WYSIWYG for main comment input */
+        [data-comments-target="newCommentInput"] + div .ql-container {
+            min-height: 80px;
+            max-height: 400px;
+        }
+
+        [data-comments-target="newCommentInput"] + div .ql-editor {
+            min-height: 80px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
 {% endblock %}

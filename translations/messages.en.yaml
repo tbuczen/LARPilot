@@ -421,6 +421,10 @@ larp:
       title: 'Select Tag Import File'
       heading: 'Select a Spreadsheet for Tag Import'
       no_files: 'No files available for import.'
+  management:
+    title: 'Management'
+  administration:
+    title: 'Administration'
   participant:
     singular: 'Participant'
     plural: 'Participants'
