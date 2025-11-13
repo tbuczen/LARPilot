@@ -21,10 +21,12 @@ final readonly class SaveFileMappingHandler
     {
         $larp = $this->larpRepository->find($command->larpId);
         $sharedFile = $this->sharedFileRepository->find($command->sharedFileId);
+        $fileType = ResourceType::tryFrom($command->mappingType);
 
         $existing = $this->mappingRepository->findOneBy([
             'larp' => $larp,
             'externalFile' => $sharedFile,
+            'fileType' => $fileType,
         ]);
 
         $mapping = $existing ?? new ObjectFieldMapping();
@@ -32,7 +34,7 @@ final readonly class SaveFileMappingHandler
         $mapping->setExternalFile($sharedFile);
         $mapping->setMappingConfiguration($command->fields);
         $mapping->setMetaConfiguration($command->meta);
-        $mapping->setFileType(ResourceType::tryFrom($command->mappingType));
+        $mapping->setFileType($fileType);
         $this->mappingRepository->save($mapping);
     }
 }

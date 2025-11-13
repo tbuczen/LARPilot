@@ -52,9 +52,9 @@ class FileMappingController extends BaseController
 
             $handler($command);
 
-            return $this->redirectToRoute('backoffice_larp_integration_file_mapping', [
+            return $this->redirectToRoute('backoffice_larp_external_resource_mapping', [
                 'larp' => $larp->getId()->toRfc4122(),
-                'provider' => $provider->value,
+                'integration' => $sharedFile->getIntegration()->getId()->toRfc4122(),
                 'sharedFile' => $sharedFile->getId()->toRfc4122(),
             ]);
         }
