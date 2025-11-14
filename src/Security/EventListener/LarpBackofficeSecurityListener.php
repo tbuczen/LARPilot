@@ -23,25 +23,25 @@ readonly class LarpBackofficeSecurityListener
     {
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
-        // Check if this is a LARP backoffice route
-        if ($route === 'backoffice_larp_list' || $route === 'backoffice_larp_create') {
-            return;
-        }
 
+        // Check if this is a LARP backoffice route
         if (!$route || !str_starts_with((string) $route, 'backoffice_larp_')) {
             return;
         }
 
-        // Check if the route has a larp parameter
-        $larpId = $request->attributes->get('larp');
-        $larp = $this->larpRepository->find($larpId);
-        if (!$larp instanceof Larp) {
-            return;
-        }
+        // For larp list route, skip the larp-specific check (but user status is still checked below)
+        if ($route !== 'backoffice_larp_list' && $route !== 'backoffice_larp_create') {
+            // Check if the route has a larp parameter
+            $larpId = $request->attributes->get('larp');
+            $larp = $this->larpRepository->find($larpId);
+            if (!$larp instanceof Larp) {
+                return;
+            }
 
-        // Apply the security check
-        if (!$this->authorizationChecker->isGranted(LarpDetailsVoter::VIEW, $larp)) {
-            throw new AccessDeniedHttpException('Access denied to LARP backoffice.');
+            // Apply the security check
+            if (!$this->authorizationChecker->isGranted(LarpDetailsVoter::VIEW, $larp)) {
+                throw new AccessDeniedHttpException('Access denied to LARP backoffice.');
+            }
         }
     }
 }

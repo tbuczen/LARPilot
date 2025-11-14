@@ -54,6 +54,7 @@ final class DomainBoundaryRule implements Rule
         'Integration' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
         'Integrations' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
         'Feedback' => ['Infrastructure', 'Core'],
+        'Gallery' => ['Infrastructure', 'Core', 'Larp', 'Account'],
     ];
 
     public function getNodeType(): string

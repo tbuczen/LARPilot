@@ -1,0 +1,105 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ gallery.title }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">{{ gallery.title }}</h5>
+            <div>
+                {% if is_granted('EDIT_GALLERY', gallery) %}
+                    <a href="{{ path('backoffice_larp_gallery_edit', { larp: larp.id, gallery: gallery.id }) }}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> {{ 'edit'|trans }}
+                    </a>
+                {% endif %}
+                <a href="{{ path('backoffice_larp_gallery_list', { larp: larp.id }) }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6>{{ 'gallery.photographer'|trans }}</h6>
+                    <p>{{ gallery.photographer.user.username }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6>{{ 'gallery.visibility'|trans }}</h6>
+                    <p>
+                        <span class="badge bg-{{ gallery.visibility.value == 'public' ? 'success' : (gallery.visibility.value == 'participants_only' ? 'primary' : 'warning') }}">
+                            {{ gallery.visibility.label|trans }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            {% if gallery.description %}
+                <div class="mb-4">
+                    <h6>{{ 'gallery.description'|trans }}</h6>
+                    <p>{{ gallery.description|nl2br }}</p>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                {% if gallery.externalAlbumUrl %}
+                    <div class="col-md-12 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6><i class="bi bi-images"></i> {{ 'gallery.external_album'|trans }}</h6>
+                                <a href="{{ gallery.externalAlbumUrl }}" target="_blank" class="btn btn-primary">
+                                    <i class="bi bi-box-arrow-up-right"></i> {{ 'gallery.view_album'|trans }}
+                                </a>
+                                <p class="text-muted mt-2 mb-0"><small>{{ gallery.externalAlbumUrl }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if gallery.zipDownloadUrl %}
+                    <div class="col-md-12 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6><i class="bi bi-download"></i> {{ 'gallery.zip_download'|trans }}</h6>
+                                <a href="{{ gallery.zipDownloadUrl }}" target="_blank" class="btn btn-secondary">
+                                    <i class="bi bi-box-arrow-up-right"></i> {{ 'gallery.download_zip'|trans }}
+                                </a>
+                                <p class="text-muted mt-2 mb-0"><small>{{ gallery.zipDownloadUrl }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if gallery.zipFile %}
+                    <div class="col-md-12 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6><i class="bi bi-file-earmark-zip"></i> {{ 'gallery.uploaded_zip'|trans }}</h6>
+                                <a href="{{ gallery.zipFilePath }}" download class="btn btn-info">
+                                    <i class="bi bi-download"></i> {{ 'gallery.download_zip'|trans }}
+                                </a>
+                                <p class="text-muted mt-2 mb-0"><small>{{ gallery.zipFile }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if not gallery.externalAlbumUrl and not gallery.zipDownloadUrl and not gallery.zipFile %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> {{ 'gallery.no_links'|trans }}
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <small class="text-muted">
+                    {{ 'common.created_at'|trans }}: {{ gallery.createdAt|date('Y-m-d H:i') }}
+                    {% if gallery.updatedAt %}
+                        | {{ 'common.updated_at'|trans }}: {{ gallery.updatedAt|date('Y-m-d H:i') }}
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+{% endblock %}

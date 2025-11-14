@@ -1,0 +1,37 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ (gallery ? 'gallery.edit' : 'gallery.create')|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card">
+        <div class="card-header">
+            {% if gallery %}
+                <h5 class="card-title mb-0">{{ 'gallery.edit'|trans }}: {{ gallery.title }}</h5>
+            {% else %}
+                <h5 class="card-title mb-0">{{ 'gallery.create'|trans }}</h5>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+
+            {% if gallery and gallery.zipFile %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    {{ 'gallery.current_zip_file'|trans }}: <strong>{{ gallery.zipFile }}</strong>
+                    <br>
+                    <small>{{ 'gallery.upload_new_replace'|trans }}</small>
+                </div>
+            {% endif %}
+
+            {{ ui.form_actions(
+                gallery ? 'save' : 'create',
+                'bi-check-circle',
+                path('backoffice_larp_gallery_list', { larp: larp.id })
+            ) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

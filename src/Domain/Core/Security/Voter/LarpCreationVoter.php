@@ -32,6 +32,11 @@ class LarpCreationVoter extends Voter
             return true;
         }
 
+        // Only approved users can create LARPs
+        if (!$user->isApproved()) {
+            return false;
+        }
+
         // Get the count of LARPs where user is an organizer
         $currentLarpCount = $user->getOrganizerLarpCount();
 

@@ -28,14 +28,16 @@ class LarpGeneralSettingsVoter extends Voter
             return false;
         }
 
+        // Only approved users can manage LARP settings
+        if (!$user->isApproved()) {
+            return false;
+        }
+
         // Check if user is an organizer for this specific LARP
         $participants = $subject->getParticipants();
         /** @var LarpParticipant|null $userOrganizer */
         $userOrganizer = $participants->filter(fn (LarpParticipant $participant): bool => $participant->getUser()->getId() === $user->getId() && $participant->isAdmin())->first();
         // If the user is not participating as an organizer for this LARP, deny access
-        // Additional check: only allow if user has specific organizer permissions
-        // You might want to add more granular permissions here based on your business logic
-        // For example, check if the organizer has specific permissions for general settings
         return $userOrganizer !== null;
     }
 }
