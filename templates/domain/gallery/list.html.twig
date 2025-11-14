@@ -1,0 +1,93 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ 'gallery.list'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        {% set actions %}
+            {% if is_granted('CREATE_GALLERY', larp) %}
+                {{ ui.primary_button('create', path('backoffice_larp_gallery_create', { larp: larp.id }), 'bi-plus-circle') }}
+            {% endif %}
+        {% endset %}
+        {{ ui.card_header('gallery.list', actions) }}
+
+        <div class="card-body p-0">
+            {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
+
+            {% if galleries is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            {% include 'includes/sort_th.html.twig' with {
+                                field: 'title',
+                                label: 'gallery.title'|trans
+                            } %}
+                            {% include 'includes/sort_th.html.twig' with {
+                                field: 'photographer',
+                                label: 'gallery.photographer'|trans
+                            } %}
+                            {% include 'includes/sort_th.html.twig' with {
+                                field: 'visibility',
+                                label: 'gallery.visibility'|trans
+                            } %}
+                            <th>{{ 'gallery.links'|trans }}</th>
+                            <th>{{ 'common.actions'|trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for gallery in galleries %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('backoffice_larp_gallery_view', { larp: larp.id, gallery: gallery.id }) }}">
+                                        {{ gallery.title }}
+                                    </a>
+                                </td>
+                                <td>{{ gallery.photographer.user.username }}</td>
+                                <td>
+                                    <span class="badge bg-{{ gallery.visibility.value == 'public' ? 'success' : (gallery.visibility.value == 'participants_only' ? 'primary' : 'warning') }}">
+                                        {{ gallery.visibility.label|trans }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if gallery.externalAlbumUrl %}
+                                        <a href="{{ gallery.externalAlbumUrl }}" target="_blank" class="btn btn-sm btn-outline-primary" title="{{ 'gallery.view_album'|trans }}">
+                                            <i class="bi bi-images"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if gallery.zipDownloadUrl %}
+                                        <a href="{{ gallery.zipDownloadUrl }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="{{ 'gallery.download_zip'|trans }}">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if gallery.zipFile %}
+                                        <a href="{{ gallery.zipFilePath }}" download class="btn btn-sm btn-outline-info" title="{{ 'gallery.download_zip'|trans }}">
+                                            <i class="bi bi-file-earmark-zip"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if is_granted('EDIT_GALLERY', gallery) %}
+                                        <a href="{{ path('backoffice_larp_gallery_edit', { larp: larp.id, gallery: gallery.id }) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if is_granted('DELETE_GALLERY', gallery) %}
+                                        {{ ui.delete_button(gallery.id, gallery.title, path('backoffice_larp_gallery_delete', { larp: larp.id, gallery: gallery.id })) }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'includes/pagination.html.twig' with { pagination: galleries } %}
+            {% else %}
+                {{ ui.empty_state('gallery.empty_list', 'bi-images') }}
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'includes/delete_modal.html.twig' %}
+{% endblock %}

@@ -21,6 +21,8 @@ class ParticipantController extends BaseController
         $filterForm = $this->createForm(ParticipantFilterType::class, null, ['larp' => $larp]);
         $filterForm->handleRequest($request);
         $qb = $repository->createQueryBuilder('c');
+        $qb->andWhere($qb->expr()->eq('c.larp', ':larp'))
+            ->setParameter('larp', $larp->getId());
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
         $pagination = $this->getPagination($qb, $request);
 

@@ -111,6 +111,11 @@ class LarpParticipant
         return in_array(ParticipantRole::ORGANIZER, $this->getRoles());
     }
 
+    public function isPhotographer(): bool
+    {
+        return in_array(ParticipantRole::PHOTOGRAPHER, $this->getRoles());
+    }
+
     public function isTrustPerson(): bool
     {
         return in_array(ParticipantRole::TRUST_PERSON, $this->getRoles());

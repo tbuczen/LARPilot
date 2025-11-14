@@ -28,8 +28,13 @@ class LarpDetailsVoter extends Voter
             return false;
         }
 
+        // Only approved users can access LARP backoffice
+        if (!$user->isApproved()) {
+            return false;
+        }
+
         $participants = $subject->getParticipants();
-        /** @var \App\Domain\Core\Controller\Backoffice\\App\Domain\Core\Entity\LarpParticipant|null $userOrganizer */
+        /** @var LarpParticipant|null $userOrganizer */
         $userOrganizer = $participants->filter(fn (LarpParticipant $participant): bool => $participant->getUser()->getId() === $user->getId() && $participant->isOrganizer())->first();
         // If the user is not participating as an organizer for this LARP, deny.
         return $userOrganizer !== null;

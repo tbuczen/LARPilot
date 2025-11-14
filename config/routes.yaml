@@ -48,6 +48,12 @@ feedback_api:
   type: attribute
   prefix: /api
 
+# Gallery Domain
+gallery_backoffice:
+  resource: '../src/Domain/Gallery/Controller/'
+  type: attribute
+  prefix: /backoffice
+
 # Incidents Domain
 incidents_public:
   resource: '../src/Domain/Incidents/Controller/Public/'

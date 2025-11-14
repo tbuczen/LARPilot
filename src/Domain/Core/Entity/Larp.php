@@ -104,6 +104,10 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\OneToMany(targetEntity: Faction::class, mappedBy: 'larp')]
     private Collection $factions;
 
+    /** @var Collection<\App\Domain\Gallery\Entity\Gallery> */
+    #[ORM\OneToMany(targetEntity: \App\Domain\Gallery\Entity\Gallery::class, mappedBy: 'larp')]
+    private Collection $galleries;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
@@ -114,6 +118,7 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
         $this->integrations = new ArrayCollection();
         $this->skills = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->galleries = new ArrayCollection();
     }
 
     public function getTitle(): ?string
@@ -432,6 +437,31 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
             return null;
         }
         return '/uploads/larps/' . $this->headerImage;
+    }
+
+    /**
+     * @return Collection<\App\Domain\Gallery\Entity\Gallery>
+     */
+    public function getGalleries(): Collection
+    {
+        return $this->galleries;
+    }
+
+    public function addGallery(\App\Domain\Gallery\Entity\Gallery $gallery): static
+    {
+        if (!$this->galleries->contains($gallery)) {
+            $this->galleries->add($gallery);
+            $gallery->setLarp($this);
+        }
+        return $this;
+    }
+
+    public function removeGallery(\App\Domain\Gallery\Entity\Gallery $gallery): static
+    {
+        if ($this->galleries->removeElement($gallery) && $gallery->getLarp() === $this) {
+            $gallery->setLarp(null);
+        }
+        return $this;
     }
 
     public function __toString(): string

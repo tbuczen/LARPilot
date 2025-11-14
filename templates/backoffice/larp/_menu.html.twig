@@ -237,6 +237,16 @@
                                     </a>
                                 </li>
                             {% endif %}
+
+                            {# Photo Galleries #}
+                            {% set isGalleryRoute = 'larp_gallery' in currentRoute %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if isGalleryRoute %}active{% endif %}"
+                                   href="{{ path('backoffice_larp_gallery_list', {'larp': larp.id}) }}"
+                                   title="{{ 'gallery.list'|trans }}">
+                                    <i class="bi bi-images"></i> {{ 'gallery.list'|trans }}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

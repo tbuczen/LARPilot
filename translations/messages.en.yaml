@@ -1031,3 +1031,23 @@ tag:
     title: 'Import Tags'
     heading: 'Select file for importing list of tags'
     no_files: 'No files available for import'
+
+gallery:
+  list: "Photo Galleries"
+  create: "Create Gallery"
+  edit: "Edit Gallery"
+  empty_list: "No galleries found. Create your first gallery!"
+  photographer: "Photographer"
+  links: "Links"
+  visibility_label: "Visibility"
+  visibility:
+    public: "Public"
+    participants_only: "Participants Only"
+    organizers_only: "Organizers Only"
+  view_album: "View Album"
+  download_zip: "Download ZIP"
+  uploaded_zip: "Uploaded ZIP File"
+  external_album: "External Photo Album"
+  zip_download: "Download Photos (ZIP)"
+  no_links: "No links or files have been added to this gallery yet."
+  upload_error: "Error uploading file. Please try again."

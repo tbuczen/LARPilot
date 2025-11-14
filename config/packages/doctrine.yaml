@@ -72,6 +72,12 @@ doctrine:
               dir: '%kernel.project_dir%/src/Domain/Map/Entity'
               prefix: 'App\Domain\Map\Entity'
               alias: Map
+            Gallery:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Gallery/Entity'
+              prefix: 'App\Domain\Gallery\Entity'
+              alias: Gallery
             StoryMarketplace:
               type: attribute
               is_bundle: false
