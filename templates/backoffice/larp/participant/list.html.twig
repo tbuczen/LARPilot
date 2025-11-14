@@ -5,10 +5,7 @@
 
 {% block larp_content %}
     <div class="card mt-4">
-        {% set actions %}
-            {{ ui.primary_button('create', path('backoffice_larp_participant_modify', { larp: larp.id }), 'bi-plus-circle') }}
-        {% endset %}
-        {{ ui.card_header('larp.participant.list', actions) }}
+        {{ ui.card_header('larp.participant.list') }}
 
         <div class="card-body p-0">
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
