@@ -29,19 +29,29 @@ readonly class LarpBackofficeSecurityListener
             return;
         }
 
-        // For larp list route, skip the larp-specific check (but user status is still checked below)
-        if ($route !== 'backoffice_larp_list' && $route !== 'backoffice_larp_create') {
-            // Check if the route has a larp parameter
-            $larpId = $request->attributes->get('larp');
-            $larp = $this->larpRepository->find($larpId);
-            if (!$larp instanceof Larp) {
-                return;
-            }
+        // Routes that don't require LARP-specific permissions (whitelisted)
+        $whitelistedRoutes = [
+            'backoffice_larp_list',
+            'backoffice_larp_create',
+            'backoffice_larp_connect_integration_check', // OAuth callback route without larp param
+        ];
 
-            // Apply the security check
-            if (!$this->authorizationChecker->isGranted(LarpDetailsVoter::VIEW, $larp)) {
-                throw new AccessDeniedHttpException('Access denied to LARP backoffice.');
-            }
+        if (in_array($route, $whitelistedRoutes, true)) {
+            return;
+        }
+
+        // All other backoffice_larp_* routes MUST have a {larp} parameter
+        $larpId = $request->attributes->get('larp');
+        $larp = $this->larpRepository->find($larpId);
+
+        if (!$larp instanceof Larp) {
+            // If route starts with backoffice_larp_ but has no valid larp param, it's a security issue
+            throw new AccessDeniedHttpException('Invalid or missing LARP parameter.');
+        }
+
+        // Apply the security check - user must be an organizer of this specific LARP
+        if (!$this->authorizationChecker->isGranted(LarpDetailsVoter::VIEW, $larp)) {
+            throw new AccessDeniedHttpException('Access denied to LARP backoffice.');
         }
     }
 }

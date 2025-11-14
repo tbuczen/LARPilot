@@ -3,6 +3,7 @@
 namespace App\Domain\Integrations\Controller\Backoffice;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Repository\LarpRepository;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Entity\SharedFile;
@@ -62,12 +63,28 @@ class IntegrationsSettingsController extends AbstractController
 
     #[Route('/integration/connect/{provider}/check', name: 'connect_integration_check')]
     public function connectIntegrationCheck(
-        string                     $provider,
-        SessionInterface           $session,
-        ClientRegistry             $clientRegistry,
-        IntegrationServiceProvider $integrationServiceProvider,
+        string                       $provider,
+        SessionInterface             $session,
+        ClientRegistry               $clientRegistry,
+        IntegrationServiceProvider   $integrationServiceProvider,
+        LarpRepository               $larpRepository,
     ): RedirectResponse {
         $larpId = $session->get('current_larp_id');
+
+        if (!$larpId) {
+            throw $this->createAccessDeniedException('No LARP ID in session.');
+        }
+
+        // Load the LARP and validate user has access
+        $larp = $larpRepository->find($larpId);
+        if (!$larp instanceof Larp) {
+            $session->remove('current_larp_id');
+            throw $this->createNotFoundException('LARP not found.');
+        }
+
+        // Verify user is an organizer of this LARP
+        $this->denyAccessUnlessGranted('VIEW_BO_LARP_INTEGRATION_SETTINGS', $larp);
+
         $client = $clientRegistry->getClient($provider);
 
         $accessToken = $client->getAccessToken([
@@ -111,8 +128,7 @@ class IntegrationsSettingsController extends AbstractController
         ?SharedFile     $sharedFile = null,
     ): Response {
         if (!$sharedFile instanceof SharedFile) {
-            /** @var SharedFile[] $files */
-            $files = $integration->getSharedFiles();
+            $files = $integration->getSharedFiles()->toArray();
         } else {
             $files = [$sharedFile];
         }

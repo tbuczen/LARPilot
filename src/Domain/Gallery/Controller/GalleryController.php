@@ -20,11 +20,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class GalleryController extends BaseController
 {
-    public function __construct(
-        private readonly GalleryFileService $galleryFileService
-    ) {
-    }
-
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(Request $request, Larp $larp, GalleryRepository $repository): Response
     {
@@ -61,7 +56,7 @@ class GalleryController extends BaseController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function create(Request $request, Larp $larp, GalleryRepository $repository): Response
+    public function create(Request $request, Larp $larp, GalleryRepository $repository, GalleryFileService $galleryFileService): Response
     {
         $this->denyAccessUnlessGranted(LarpGalleryVoter::CREATE, $larp);
 
@@ -77,7 +72,7 @@ class GalleryController extends BaseController
 
             if ($zipFile) {
                 try {
-                    $filename = $this->galleryFileService->uploadZipFile($gallery, $zipFile);
+                    $filename = $galleryFileService->uploadZipFile($gallery, $zipFile);
                     $gallery->setZipFile($filename);
                 } catch (\Exception $e) {
                     $this->addFlash('error', $this->translator->trans('gallery.upload_error'));
@@ -109,7 +104,7 @@ class GalleryController extends BaseController
     }
 
     #[Route('/{gallery}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Larp $larp, Gallery $gallery, GalleryRepository $repository): Response
+    public function edit(Request $request, Larp $larp, Gallery $gallery, GalleryRepository $repository, GalleryFileService $galleryFileService): Response
     {
         $this->denyAccessUnlessGranted(LarpGalleryVoter::EDIT, $gallery);
 
@@ -123,11 +118,11 @@ class GalleryController extends BaseController
             if ($zipFile) {
                 // Delete old file if exists
                 if ($gallery->getZipFile()) {
-                    $this->galleryFileService->deleteZipFile($gallery);
+                    $galleryFileService->deleteZipFile($gallery);
                 }
 
                 try {
-                    $filename = $this->galleryFileService->uploadZipFile($gallery, $zipFile);
+                    $filename = $galleryFileService->uploadZipFile($gallery, $zipFile);
                     $gallery->setZipFile($filename);
                 } catch (\Exception $e) {
                     $this->addFlash('error', $this->translator->trans('gallery.upload_error'));
@@ -148,12 +143,12 @@ class GalleryController extends BaseController
     }
 
     #[Route('/{gallery}/delete', name: 'delete', methods: ['POST'])]
-    public function delete(Larp $larp, Gallery $gallery, GalleryRepository $repository): Response
+    public function delete(Larp $larp, Gallery $gallery, GalleryRepository $repository, GalleryFileService $galleryFileService): Response
     {
         $this->denyAccessUnlessGranted(LarpGalleryVoter::DELETE, $gallery);
 
         // Delete uploaded files
-        $this->galleryFileService->deleteGalleryDirectory($gallery);
+        $galleryFileService->deleteGalleryDirectory($gallery);
 
         $repository->remove($gallery);
         $this->addFlash('success', $this->translator->trans('success_delete'));

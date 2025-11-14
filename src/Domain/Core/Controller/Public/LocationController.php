@@ -121,9 +121,25 @@ class LocationController extends BaseController
             throw $this->createNotFoundException('Location not found');
         }
 
-        // Get LARPs at this location (sorted by start date, most recent first)
+        $user = $this->getUser();
+
+        // Filter LARPs based on user access
         $larps = $location->getLarps()
-            ->filter(fn ($larp) => $larp->getStatus()->isVisibleForEveryone())
+            ->filter(function ($larp) use ($user) {
+                // Show only published LARPs to everyone (most public status)
+                if ($larp->getStatus() === \App\Domain\Core\Entity\Enum\LarpStageStatus::PUBLISHED) {
+                    return true;
+                }
+
+                // For authenticated users, also show LARPs they're participating in
+                if ($user instanceof \App\Domain\Account\Entity\User) {
+                    return $larp->getParticipants()->exists(
+                        fn ($key, $participant) => $participant->getUser()->getId() === $user->getId()
+                    );
+                }
+
+                return false;
+            })
             ->toArray();
 
         usort($larps, fn ($a, $b) => $b->getStartDate() <=> $a->getStartDate());

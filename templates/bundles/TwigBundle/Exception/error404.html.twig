@@ -1,0 +1,60 @@
+{% extends 'public/base.html.twig' %}
+
+{% block title %}{{ 'error.404.title'|trans }} - LARPilot{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="error-container py-5">
+                    {# Error Icon #}
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" class="text-warning" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                        </svg>
+                    </div>
+
+                    {# Error Code #}
+                    <h1 class="display-1 fw-bold text-warning mb-3">404</h1>
+
+                    {# Error Title #}
+                    <h2 class="h3 mb-3">{{ 'error.404.title'|trans }}</h2>
+
+                    {# Error Description #}
+                    <p class="text-muted mb-4">
+                        {{ 'error.404.description'|trans }}
+                    </p>
+
+                    {# Action Buttons #}
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>{{ 'error.go_back'|trans }}
+                        </a>
+                        <a href="{{ path('public_larp_list') }}" class="btn btn-primary">
+                            <i class="bi bi-house me-2"></i>{{ 'error.go_home'|trans }}
+                        </a>
+                    </div>
+
+                    {# Helpful Links #}
+                    <div class="mt-5 pt-4 border-top">
+                        <p class="text-muted small mb-3">{{ 'error.404.suggestions'|trans }}</p>
+                        <div class="d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="{{ path('public_larp_list') }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-calendar-event me-1"></i>{{ 'error.404.browse_larps'|trans }}
+                            </a>
+                            <a href="{{ path('public_location_list') }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-geo-alt me-1"></i>{{ 'error.404.browse_locations'|trans }}
+                            </a>
+                            {% if is_granted('ROLE_USER') %}
+                                <a href="{{ path('backoffice_larp_list') }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-grid me-1"></i>{{ 'error.404.my_larps'|trans }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

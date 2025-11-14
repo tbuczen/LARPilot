@@ -1,0 +1,52 @@
+{% extends 'public/base.html.twig' %}
+
+{% block title %}{{ 'error.403.title'|trans }} - LARPilot{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="error-container py-5">
+                    {# Error Icon #}
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" class="text-danger" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                        </svg>
+                    </div>
+
+                    {# Error Code #}
+                    <h1 class="display-1 fw-bold text-danger mb-3">403</h1>
+
+                    {# Error Title #}
+                    <h2 class="h3 mb-3">{{ 'error.403.title'|trans }}</h2>
+
+                    {# Error Description #}
+                    <p class="text-muted mb-4">
+                        {{ 'error.403.description'|trans }}
+                    </p>
+
+                    {# Action Buttons #}
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>{{ 'error.go_back'|trans }}
+                        </a>
+                        <a href="{{ path('public_larp_list') }}" class="btn btn-primary">
+                            <i class="bi bi-house me-2"></i>{{ 'error.go_home'|trans }}
+                        </a>
+                    </div>
+
+                    {# Additional Help #}
+                    <div class="mt-5 pt-4 border-top">
+                        <p class="text-muted small mb-2">{{ 'error.403.help'|trans }}</p>
+                        <ul class="list-unstyled small text-muted">
+                            <li>{{ 'error.403.reason1'|trans }}</li>
+                            <li>{{ 'error.403.reason2'|trans }}</li>
+                            <li>{{ 'error.403.reason3'|trans }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

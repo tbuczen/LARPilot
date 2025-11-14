@@ -1051,3 +1051,20 @@ gallery:
   zip_download: "Download Photos (ZIP)"
   no_links: "No links or files have been added to this gallery yet."
   upload_error: "Error uploading file. Please try again."
+error:
+  go_back: "Go Back"
+  go_home: "Go to Homepage"
+  403:
+    title: "Access Denied"
+    description: "You don't have permission to access this resource. This could be because you're not an organizer of this LARP or your account status doesn't allow this action."
+    help: "Why might this happen?"
+    reason1: "You're not an organizer or member of this LARP"
+    reason2: "Your account is pending approval"
+    reason3: "This resource requires special permissions"
+  404:
+    title: "Page Not Found"
+    description: "The page you're looking for doesn't exist or has been moved. Don't worry, we can help you find what you need!"
+    suggestions: "Here are some helpful links:"
+    browse_larps: "Browse LARPs"
+    browse_locations: "Browse Locations"
+    my_larps: "My LARPs"

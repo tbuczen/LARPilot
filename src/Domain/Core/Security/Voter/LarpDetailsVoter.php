@@ -34,9 +34,10 @@ class LarpDetailsVoter extends Voter
         }
 
         $participants = $subject->getParticipants();
-        /** @var LarpParticipant|null $userOrganizer */
+        /** @var LarpParticipant|false $userOrganizer */
         $userOrganizer = $participants->filter(fn (LarpParticipant $participant): bool => $participant->getUser()->getId() === $user->getId() && $participant->isOrganizer())->first();
-        // If the user is not participating as an organizer for this LARP, deny.
-        return $userOrganizer !== null;
+
+        // first() returns false if no match found, or the LarpParticipant if found
+        return $userOrganizer instanceof LarpParticipant;
     }
 }
