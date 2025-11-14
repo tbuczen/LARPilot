@@ -12,14 +12,13 @@ use App\Domain\Core\Service\LarpManager;
 use App\Domain\Core\UseCase\ImportTags\ImportTagsCommand;
 use App\Domain\Core\UseCase\ImportTags\ImportTagsHandler;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
-use App\Domain\Integrations\Entity\Enum\ResourceType;
 use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Entity\SharedFile;
-use App\Domain\Integrations\Repository\ObjectFieldMappingRepository;
 use App\Domain\Integrations\Service\IntegrationManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Webmozart\Assert\Assert;
 
 #[Route('/larp/{larp}/story/tag/', name: 'backoffice_larp_story_tag_')]
 class TagController extends BaseController
@@ -79,19 +78,20 @@ class TagController extends BaseController
         ]);
     }
 
-    #[Route('import/file-select/{provider}', name: 'import_file_select', methods: ['GET'])]
-    public function importFileSelect(
-        Larp $larp,
-        LarpIntegrationProvider $provider,
-        ObjectFieldMappingRepository $mappingRepository
+    #[Route('import/{provider}/select/file', name: 'import_file_select', methods: ['GET'])]
+    public function selectIntegrationFile(
+        Larp                    $larp,
+        LarpManager             $larpManager,
+        LarpIntegrationProvider $provider
     ): Response {
-        $files = $larp->getIntegrationByProvider($provider)?->getSharedFiles();
-        $mappings = $mappingRepository->findBy(['larp' => $larp, 'fileType' => ResourceType::TAG_LIST]);
+        $integration = $larpManager->getIntegrationTypeForLarp($larp, $provider);
+        Assert::notNull($integration, sprintf('Integration %s not found for LARP %s', $provider->value, $larp->getId()->toRfc4122()));
 
+        /** @var SharedFile[] $files */
+        $files = $integration->getSharedFiles();
         return $this->render('backoffice/larp/tag/fileSelect.html.twig', [
             'larp' => $larp,
             'files' => $files,
-            'mappings' => $mappings,
         ]);
     }
 

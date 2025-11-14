@@ -3,8 +3,11 @@
 namespace App\Domain\StoryObject\Form;
 
 use App\Domain\Core\Entity\Enum\Gender;
+use App\Domain\Core\Entity\Enum\ParticipantRole;
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\LarpParticipant;
 use App\Domain\Core\Entity\Tag;
+use App\Domain\Core\Repository\LarpParticipantRepository;
 use App\Domain\Core\Repository\TagRepository;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
@@ -26,6 +29,16 @@ class CharacterType extends AbstractType
     {
         /** @var Larp $larp */
         $larp = $options['larp'];
+        /** @var LarpParticipant|null $currentParticipant */
+        $currentParticipant = $options['current_participant'];
+
+        // Check if current user can assign story writers
+        $canAssignStoryWriter = false;
+        if ($currentParticipant) {
+            $roles = $currentParticipant->getRoles();
+            $canAssignStoryWriter = in_array(ParticipantRole::ORGANIZER, $roles, true)
+                || in_array(ParticipantRole::MAIN_STORY_WRITER, $roles, true);
+        }
 
         $builder
             ->add('title', TextType::class, [
@@ -89,6 +102,34 @@ class CharacterType extends AbstractType
                     ->where('f.larp = :larp')
                     ->setParameter('larp', $larp),
             ])
+            ->add('storyWriter', EntityType::class, [
+                'class' => LarpParticipant::class,
+                'choice_label' => fn (LarpParticipant $participant) => $participant->getUser()?->getUsername() ?? 'Unknown',
+                'label' => 'character.story_writer',
+                'required' => false,
+                'autocomplete' => true,
+                'placeholder' => 'character.choose_story_writer',
+                'disabled' => !$canAssignStoryWriter,
+                'help' => $canAssignStoryWriter ? null : 'character.story_writer_permission_denied',
+                'query_builder' => function (LarpParticipantRepository $repo) use ($larp): QueryBuilder {
+                    $qb = $repo->createQueryBuilder('p')
+                        ->join('p.user', 'u')
+                        ->addSelect('u')
+                        ->andWhere('p.larp = :larp')
+                        ->setParameter('larp', $larp)
+                        ->orderBy('u.username', 'ASC');
+
+                    $roles = ParticipantRole::getStoryWriters();
+                    $orX = $qb->expr()->orX();
+
+                    foreach ($roles as $i => $role) {
+                        $orX->add("JSONB_EXISTS(p.roles, :role_$i) = true");
+                        $qb->setParameter("role_$i", $role);
+                    }
+                    $qb->andWhere($orX);
+                    return $qb;
+                },
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'submit',
             ])
@@ -101,9 +142,11 @@ class CharacterType extends AbstractType
             'data_class' => Character::class,
             'translation_domain' => 'forms',
             'larp' => null,
+            'current_participant' => null,
         ]);
 
         $resolver->setRequired('larp');
         $resolver->setAllowedTypes('larp', Larp::class);
+        $resolver->setAllowedTypes('current_participant', ['null', LarpParticipant::class]);
     }
 }

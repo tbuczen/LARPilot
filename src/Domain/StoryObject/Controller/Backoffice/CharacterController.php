@@ -5,6 +5,7 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 use App\Domain\Application\Repository\LarpApplicationChoiceRepository;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Repository\LarpParticipantRepository;
 use App\Domain\Core\Service\LarpManager;
 use App\Domain\Core\UseCase\ImportCharacters\ImportCharactersCommand;
 use App\Domain\Core\UseCase\ImportCharacters\ImportCharactersHandler;
@@ -61,6 +62,7 @@ class CharacterController extends BaseController
         CharacterSheetExportService $exportService,
         LarpApplicationChoiceRepository $choiceRepository,
         CommentRepository $commentRepository,
+        LarpParticipantRepository $participantRepository,
         ?Character          $character = null,
     ): Response {
         $new = false;
@@ -70,7 +72,19 @@ class CharacterController extends BaseController
             $new = true;
         }
 
-        $form = $this->createForm(CharacterType::class, $character, ['larp' => $larp]);
+        // Get current user's participant for this LARP
+        $currentParticipant = null;
+        if ($this->getUser()) {
+            $currentParticipant = $participantRepository->findOneBy([
+                'user' => $this->getUser(),
+                'larp' => $larp,
+            ]);
+        }
+
+        $form = $this->createForm(CharacterType::class, $character, [
+            'larp' => $larp,
+            'current_participant' => $currentParticipant,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

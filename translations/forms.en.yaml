@@ -17,6 +17,9 @@ character:
   preferred_gender_placeholder: "Unisex"
   preferred_gender_help: "Select the preferred gender for this character (e.g., Male, Female, or leave blank for any gender)"
   tag: "Tags defining character gameplay"
+  story_writer: "Story Writer"
+  choose_story_writer: "Choose a story writer..."
+  story_writer_permission_denied: "Only main organizers and main story writers can assign story writers"
 faction_lbl: 'Faction'
 faction:
   name: "Unique Faction Name"

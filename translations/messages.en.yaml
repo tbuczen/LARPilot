@@ -1024,3 +1024,8 @@ super_admin:
     quick_actions: 'Quick Actions'
     filter_by_status: 'Filter by Status'
     all_statuses: 'All Statuses'
+tag:
+  file_select:
+    title: 'Import Tags'
+    heading: 'Select file for importing list of tags'
+    no_files: 'No files available for import'
