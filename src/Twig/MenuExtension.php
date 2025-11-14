@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -30,7 +31,14 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
             ]
         ];
 
-        if ($user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
+        $this->menuItems[] =
+            [
+                'label' => $this->translator->trans('larp.location.list'),
+                'url' => $this->router->generate('public_location_list'),
+            ]
+        ;
+
+        if ($user instanceof UserInterface) {
             $this->menuItems[] = [
                 'label' => $this->translator->trans('account.singular'),
                 'url' => '#',
@@ -69,24 +77,30 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
                 ],
             ];
 
+            $adminDropdown = [
+                [
+                    'label' => $this->translator->trans('larp.list'),
+                    'url' => $this->router->generate('backoffice_larp_list'),
+                ],
+                [
+                    'label' => $this->translator->trans('larp.create'),
+                    'url' => $this->router->generate('backoffice_larp_create'),
+                ],
+            ];
+
+            if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                $adminDropdown[] = [
+                    'label' => $this->translator->trans('larp.location.list'),
+                    'url' => $this->router->generate('backoffice_location_list'),
+                ];
+            }
+
             $this->menuItems[] = [
                 'label' => $this->translator->trans('backoffice_title'),
                 'url' => '#',
-                'children' => [
-                    [
-                        'label' => $this->translator->trans('larp.location.list'),
-                        'url' => $this->router->generate('backoffice_location_list'),
-                    ],
-                    [
-                        'label' => $this->translator->trans('larp.list'),
-                        'url' => $this->router->generate('backoffice_larp_list'),
-                    ],
-                    [
-                        'label' => $this->translator->trans('larp.create'),
-                        'url' => $this->router->generate('backoffice_larp_create'),
-                    ],
-                ],
+                'children' => $adminDropdown,
             ];
+
 
             // Add Super Admin menu for users with ROLE_SUPER_ADMIN
             if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {

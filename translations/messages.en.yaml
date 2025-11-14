@@ -604,6 +604,8 @@ account:
     status: 'Current Status'
     meanwhile: 'In the meantime, you can browse public LARPs and explore the community.'
     browse_public: 'Browse Public LARPs'
+  manage:
+    subtitle: "Manage your account preferences"
 
 integration:
   singular: 'Integration'

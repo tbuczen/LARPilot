@@ -516,6 +516,15 @@ account:
   link_another_social: "Połącz inne konto społecznościowe"
   unlink: "Odłącz"
   confirm_unlink: "Czy na pewno chcesz odłączyć to konto społecznościowe? Tej operacji nie można cofnąć."
+  pending_approval:
+    title: 'Konto oczekujące na zatwierdzenie'
+    message: 'Dziękujemy za rejestrację! Twoje konto jest obecnie oczekujące na zatwierdzenie przez administratorów.'
+    info: 'Otrzymasz dostęp do funkcji backoffice po zatwierdzeniu konta. Zazwyczaj to zajmuje 24-48 godzin.'
+    status: 'Aktualny status'
+    meanwhile: 'W międzyczasie możesz przeglądać publiczne LARPy i eksplorować społeczność.'
+    browse_public: 'Przeglądaj publiczne LARPy'
+  manage:
+    subtitle: "Zarządzaj swoimi preferencjami konta"
 
 integration:
   singular: 'Integracja'
@@ -752,3 +761,40 @@ email:
     powered_by: 'Obsługiwane przez'
 
 no_saved_filters: 'Brak zapisanych filtrów'
+
+
+super_admin:
+  users:
+    list: 'Zarządzanie Użytkownikami'
+    username: 'Nazwa użytkownika'
+    email: 'Email'
+    status: 'Status'
+    registered: 'Zarejestrowany'
+    edit: 'Edytuj użytkownika'
+    user_details: 'Szczegóły użytkownika'
+    current_status: 'Aktualny status'
+    change_status: 'Zmień status użytkownika'
+    status_help: 'Wybierz nowy status dla tego konta użytkownika'
+    change_plan: 'Zmień plan użytkownika'
+    plan_help: 'Wybierz plan subskrypcji dla tego użytkownika'
+    no_plan_free_tier: 'Brak planu (Tryb darmowy - 1 LARP)'
+    status_effects: 'Efekty statusu'
+    status_pending_desc: 'User cannot access backoffice features, only public pages'
+    status_approved_desc: 'User has full access to backoffice features'
+    status_suspended_desc: 'User access is temporarily suspended'
+    status_banned_desc: 'User is permanently banned from the platform'
+    approve: 'Approve'
+    suspend: 'Suspend'
+    ban: 'Ban'
+    approve_user: 'Approve User'
+    suspend_user: 'Suspend User'
+    ban_user: 'Ban User'
+    confirm_ban: 'Are you sure you want to ban this user? This is a serious action.'
+    quick_actions: 'Quick Actions'
+    filter_by_status: 'Filter by Status'
+    all_statuses: 'All Statuses'
+tag:
+  file_select:
+    title: 'Importuj tagi'
+    heading: 'Wybierz plik do importu listy tagów'
+    no_files: 'No files available for import'
