@@ -7,6 +7,11 @@
     <div class="container-xl mt-4">
         <div class="card mt-4">
             {% set actions %}
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <a href="{{ path('backoffice_location_pending_list') }}" class="btn btn-warning me-2">
+                        <i class="bi bi-hourglass-split"></i> {{ 'location.pending_locations'|trans }}
+                    </a>
+                {% endif %}
                 {{ ui.primary_button('create', path('backoffice_location_modify_global'), 'bi-plus-circle') }}
             {% endset %}
             {{ ui.card_header('backoffice.location.list', actions) }}
@@ -24,6 +29,7 @@
                                         <th>City</th>
                                         <th>Capacity</th>
                                         <th>Status</th>
+                                        <th>Approval</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -42,8 +48,18 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {{ ui.edit_button(path('backoffice_location_modify_global', {'location': location.id})) }}
-                                                {% if is_granted('ROLE_SUPER_ADMIN') or location.createdBy == app.user %}
+                                                {% include 'includes/location_approval_badge.html.twig' with { location: location } %}
+                                                {% if location.isRejected and location.rejectionReason %}
+                                                    <i class="bi bi-info-circle text-danger"
+                                                       data-bs-toggle="tooltip"
+                                                       title="{{ location.rejectionReason }}"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if is_granted('EDIT_LOCATION', location) %}
+                                                    {{ ui.edit_button(path('backoffice_location_modify_global', {'location': location.id})) }}
+                                                {% endif %}
+                                                {% if is_granted('DELETE_LOCATION', location) %}
                                                     {{ ui.delete_button(location.id, location.title, path('backoffice_location_delete', {'id': location.id})) }}
                                                 {% endif %}
                                             </td>

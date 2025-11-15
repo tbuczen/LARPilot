@@ -3,6 +3,7 @@
 namespace App\Domain\Core\Controller\Public;
 
 use App\Domain\Core\Controller\BaseController;
+use App\Domain\Core\Entity\Enum\LocationApprovalStatus;
 use App\Domain\Core\Form\Filter\LocationPublicFilterType;
 use App\Domain\Core\Repository\LocationRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,14 +16,16 @@ class LocationController extends BaseController
     #[Route('/locations', name: 'list', methods: ['GET'])]
     public function list(Request $request, LocationRepository $locationRepository): Response
     {
-        // Get distinct cities and countries for filter dropdowns
+        // Get distinct cities and countries for filter dropdowns (only approved locations)
         $cities = $locationRepository->createQueryBuilder('l')
             ->select('DISTINCT l.city')
             ->where('l.isPublic = :isPublic')
             ->andWhere('l.isActive = :isActive')
+            ->andWhere('l.approvalStatus = :approved')
             ->andWhere('l.city IS NOT NULL')
             ->setParameter('isPublic', true)
             ->setParameter('isActive', true)
+            ->setParameter('approved', LocationApprovalStatus::APPROVED)
             ->orderBy('l.city', 'ASC')
             ->getQuery()
             ->getResult();
@@ -31,9 +34,11 @@ class LocationController extends BaseController
             ->select('DISTINCT l.country')
             ->where('l.isPublic = :isPublic')
             ->andWhere('l.isActive = :isActive')
+            ->andWhere('l.approvalStatus = :approved')
             ->andWhere('l.country IS NOT NULL')
             ->setParameter('isPublic', true)
             ->setParameter('isActive', true)
+            ->setParameter('approved', LocationApprovalStatus::APPROVED)
             ->orderBy('l.country', 'ASC')
             ->getQuery()
             ->getResult();
@@ -55,12 +60,14 @@ class LocationController extends BaseController
         ]);
         $filterForm->handleRequest($request);
 
-        // Build query
+        // Build query (only show approved locations)
         $qb = $locationRepository->createQueryBuilder('l')
             ->where('l.isPublic = :isPublic')
             ->andWhere('l.isActive = :isActive')
+            ->andWhere('l.approvalStatus = :approved')
             ->setParameter('isPublic', true)
-            ->setParameter('isActive', true);
+            ->setParameter('isActive', true)
+            ->setParameter('approved', LocationApprovalStatus::APPROVED);
 
         // Apply filters
         $this->filterBuilderUpdater->addFilterConditions($filterForm, $qb);
@@ -115,7 +122,12 @@ class LocationController extends BaseController
         string $slug,
         LocationRepository $repository,
     ): Response {
-        $location = $repository->findOneBy(['slug' => $slug]);
+        $location = $repository->findOneBy([
+            'slug' => $slug,
+            'approvalStatus' => LocationApprovalStatus::APPROVED,
+            'isPublic' => true,
+            'isActive' => true,
+        ]);
 
         if (!$location) {
             throw $this->createNotFoundException('Location not found');

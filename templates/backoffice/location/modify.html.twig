@@ -1,7 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 {% import 'macros/ui_components.html.twig' as ui %}
 
-{% block larp_title %}{{ (location is defined and location.id ? 'backoffice.location.modify' : 'backoffice.location.create')|trans }}{% endblock %}
+{% block larp_title %}{{ (not isNew ? 'backoffice.location.modify' : 'backoffice.location.create')|trans }}{% endblock %}
 
 {% block body %}
     <div class="container-xl mt-4">
@@ -10,9 +10,30 @@
             {{ ui.secondary_button('back', path('backoffice_location_list'), 'bi-arrow-left') }}
         {% endset %}
         {{ ui.page_header(
-            location is defined and location.id ? 'backoffice.location.modify' : 'backoffice.location.create',
+            isNew ? 'backoffice.location.create' : 'backoffice.location.modify',
             actions
         ) }}
+
+        {# Show approval status for existing locations #}
+        {% if not isNew %}
+            <div class="alert alert-{{ location.approvalStatus.badgeClass }} mt-3">
+                <strong>{{ 'location.approval_status'|trans }}:</strong>
+                {% include 'includes/location_approval_badge.html.twig' with { location: location } %}
+
+                {% if location.isRejected and location.rejectionReason %}
+                    <div class="mt-2">
+                        <strong>{{ 'location.rejection_reason'|trans }}:</strong>
+                        <p class="mb-0">{{ location.rejectionReason }}</p>
+                    </div>
+                {% endif %}
+
+                {% if location.isPending %}
+                    <p class="mb-0 mt-2">
+                        <small>{{ 'location.pending_message'|trans }}</small>
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
 
         <div class="card mt-4">
                     <div class="card-body">
@@ -127,9 +148,15 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.recaptcha) }}
+                            </div>
+                        </div>
+
                         {# Form actions with consistent styling #}
                         {{ ui.form_actions(
-                            location is defined and location.id ? 'save' : 'create',
+                            isNew ? 'create' : 'save',
                             'bi-check-circle',
                             path('backoffice_location_list')
                         ) }}
