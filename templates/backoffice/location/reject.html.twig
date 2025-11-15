@@ -12,16 +12,16 @@
                     </div>
                     <div class="card-body">
                         <div class="alert alert-warning">
-                            <strong>{{ 'common.warning'|trans }}:</strong>
+                            <strong>{{ 'warning'|trans }}:</strong>
                             {{ 'location.reject_warning'|trans({ '%location%': location.title }) }}
                         </div>
 
                         <div class="mb-3">
-                            <strong>{{ 'common.title'|trans }}:</strong> {{ location.title }}<br>
-                            <strong>{{ 'location.address'|trans }}:</strong> {{ location.fullAddress }}<br>
-                            <strong>{{ 'common.creator'|trans }}:</strong>
+                            <strong>{{ 'title'|trans }}:</strong> {{ location.title }}<br>
+                            <strong>{{ 'address'|trans }}:</strong> {{ location.fullAddress }}<br>
+                            <strong>{{ 'creator'|trans }}:</strong>
                             {% if location.createdBy %}
-                                {{ location.createdBy.name }}
+                                {{ location.createdBy.username }}
                             {% else %}
                                 -
                             {% endif %}
@@ -32,7 +32,7 @@
 
                             <div class="mt-4 d-flex justify-content-between">
                                 <a href="{{ path('backoffice_location_pending_list') }}" class="btn btn-secondary">
-                                    {{ 'common.cancel'|trans }}
+                                    {{ 'cancel'|trans }}
                                 </a>
                                 <button type="submit" class="btn btn-danger">
                                     {{ 'location.reject'|trans }}

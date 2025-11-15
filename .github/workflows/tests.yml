@@ -1,0 +1,183 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop, fix/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  code-quality:
+    name: Code Quality (ECS + PHPStan)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, json
+          coverage: none
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run ECS (Code Style Check)
+        run: vendor/bin/ecs check
+
+      - name: Run PHPStan (Static Analysis)
+        run: |
+          XDEBUG_MODE=off php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon
+
+  tests:
+    name: Codeception Tests (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.2']
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: larpilot_test
+          POSTGRES_PASSWORD: larpilot_test
+          POSTGRES_DB: larpilot_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, json, pdo, dom, filter, gd, hash, pcre, session, tokenizer, zip
+          coverage: xdebug
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Setup test environment
+        run: |
+          cp .env .env.test.local || true
+          echo "APP_ENV=test" >> .env.test.local
+          echo "DATABASE_URL=postgresql://larpilot_test:larpilot_test@127.0.0.1:5432/larpilot_test?serverVersion=15&charset=utf8" >> .env.test.local
+
+      - name: Create test database
+        run: |
+          php bin/console doctrine:database:create --env=test --if-not-exists
+          php bin/console doctrine:migrations:migrate --env=test --no-interaction
+
+      - name: Build Codeception Actors
+        run: vendor/bin/codecept build
+
+      - name: Run All Codeception Tests
+        run: |
+          APP_ENV=test vendor/bin/codecept run --colors
+
+      - name: Run Unit Tests Only
+        run: |
+          APP_ENV=test vendor/bin/codecept run unit --colors
+
+      - name: Run Functional Tests Only
+        run: |
+          APP_ENV=test vendor/bin/codecept run functional --colors
+
+  docker-tests:
+    name: Docker Environment Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy .env file
+        run: cp .env .env.local || true
+
+      - name: Build Docker containers
+        run: docker compose build
+
+      - name: Start Docker containers
+        run: docker compose up -d
+
+      - name: Wait for services to be ready
+        run: |
+          sleep 30
+          docker compose ps
+
+      - name: Install dependencies in container
+        run: docker compose exec -T php composer install --no-interaction
+
+      - name: Run migrations in container
+        run: |
+          docker compose exec -T php php bin/console doctrine:database:create --env=test --if-not-exists
+          docker compose exec -T php php bin/console doctrine:migrations:migrate --env=test --no-interaction
+
+      - name: Build Codeception Actors in container
+        run: docker compose exec -T php vendor/bin/codecept build
+
+      - name: Run Codeception tests in Docker container
+        run: |
+          docker compose exec -T php bash -lc "APP_ENV=test vendor/bin/codecept run --colors"
+
+      - name: Stop Docker containers
+        if: always()
+        run: docker compose down
+
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [code-quality, tests, docker-tests]
+    if: always()
+
+    steps:
+      - name: Check test results
+        run: |
+          if [ "${{ needs.code-quality.result }}" != "success" ]; then
+            echo "Code quality checks failed"
+            exit 1
+          fi
+          if [ "${{ needs.tests.result }}" != "success" ]; then
+            echo "Codeception tests failed"
+            exit 1
+          fi
+          if [ "${{ needs.docker-tests.result }}" != "success" ]; then
+            echo "Docker tests failed"
+            exit 1
+          fi
+          echo "All tests passed successfully!"

@@ -21,6 +21,15 @@
         <testsuite name="Project Test Suite">
             <directory>tests</directory>
         </testsuite>
+        <testsuite name="Functional Tests">
+            <directory>tests/Functional</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <directory>tests/Integration</directory>
+        </testsuite>
+        <testsuite name="Domain Tests">
+            <directory>tests/Domain</directory>
+        </testsuite>
     </testsuites>
 
     <coverage processUncoveredFiles="true">
@@ -34,5 +43,6 @@
     </listeners>
 
     <extensions>
+        <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension" />
     </extensions>
 </phpunit>

@@ -1,0 +1,22 @@
+# Codeception Acceptance Test Suite Configuration
+#
+# Perform tests in browser using WebDriver
+
+actor: AcceptanceTester
+modules:
+    enabled:
+        - Asserts
+        - WebDriver:
+            url: 'http://nginx'
+            browser: chrome
+            host: selenium
+            port: 4444
+            wait: 2
+            capabilities:
+                chromeOptions:
+                    args: ["--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"]
+# Add Codeception\Step\Retry trait to AcceptanceTester to enable retries
+step_decorators:
+    - Codeception\Step\ConditionalAssertion
+    - Codeception\Step\TryTo
+    - Codeception\Step\Retry

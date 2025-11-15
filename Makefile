@@ -94,16 +94,30 @@ prepare-test-db:
 	docker compose exec -T php bash -lc "php bin/console doctrine:database:create --if-not-exists --env=test"
 	docker compose exec -T php bash -lc "php bin/console doctrine:migrations:migrate --no-interaction --env=test"
 
+# Run all Codeception tests
 test:
-	docker compose exec -T php bash -lc "APP_ENV=test php vendor/bin/phpunit -c phpunit.xml.dist --colors=always"
+	docker compose exec -T php bash -lc "APP_ENV=test vendor/bin/codecept run --colors"
 
-# Run a single test class or method: make test-filter FILTER=BackofficeAccessHappyPathTest
+# Run only unit tests (fast, no database)
+test-unit:
+	docker compose exec -T php bash -lc "APP_ENV=test vendor/bin/codecept run unit --colors"
+
+# Run only functional tests (with database, no browser)
+test-functional:
+	docker compose exec -T php bash -lc "APP_ENV=test vendor/bin/codecept run functional --colors"
+
+# Run only acceptance tests (browser-based)
+test-acceptance:
+	docker compose exec -T php bash -lc "APP_ENV=test vendor/bin/codecept run acceptance --colors"
+
+# Run a single test or test suite: make test-filter FILTER=Unit/Domain/Infrastructure
 test-filter:
-	@if [ -z "$(FILTER)" ]; then echo "Usage: make test-filter FILTER=Pattern"; exit 1; fi
-	docker compose exec -T php vendor/bin/phpunit -c phpunit.xml.dist --colors=always --filter "$(FILTER)"
+	@if [ -z "$(FILTER)" ]; then echo "Usage: make test-filter FILTER=TestPath"; exit 1; fi
+	docker compose exec -T php vendor/bin/codecept run "$(FILTER)" --colors
 
-# Optional alias for unit tests if you separate suites later
-test-unit: test
+# Build Codeception actors (run after suite config changes)
+test-build:
+	docker compose exec -T php vendor/bin/codecept build
 
 # Static analysis (PHPStan)
 stan:

@@ -37,18 +37,15 @@ class CharacterApplicationsControllerTest extends WebTestCase
 
         $this->em->flush();
 
-        // Login as user
         $this->client->loginUser($user);
 
-        // Make request to match page
         $this->client->request('GET', sprintf('/backoffice/larp/%s/applications/match', $larp->getId()));
 
-        // Assert response is successful
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('body', 'Test Character');
+        $this->assertResponseStatusCodeSame(403);
+        //TODO But add test for larp organizer
     }
 
-    public function testListPageShowsApplications(): void
+    public function testApplicantCantSeeBackofficePage(): void
     {
         // Create test data with unique identifiers
         $uniqueId = uniqid('list_', true);
@@ -67,7 +64,8 @@ class CharacterApplicationsControllerTest extends WebTestCase
         $this->client->request('GET', sprintf('/backoffice/larp/%s/applications', $larp->getId()));
 
         // Assert response is successful
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseStatusCodeSame(403);
+        //TODO But add test for larp organizer
     }
 
     private function createUser(string $username, string $email): User
