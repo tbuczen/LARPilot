@@ -67,6 +67,11 @@
                                                 <i class="bi bi-people"></i> {{ 'larp.participant.plural'|trans }}
                                             </a>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('backoffice_larp_mailing_templates', {'larp': larp.id}) }}">
+                                                <i class="bi bi-envelope-paper"></i> {{ 'larp.mailing.title'|trans }}
+                                            </a>
+                                        </li>
                                         {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
                                             <li>
 {#                                                {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}#}
