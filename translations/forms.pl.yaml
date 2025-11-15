@@ -286,3 +286,11 @@ enum:
     outdoor: "Na zewnątrz"
     special: "Specjalna"
     transition: "Przejście"
+
+mail_template:
+  name: "Nazwa szablonu"
+  type: "Typ szablonu"
+  subject: "Temat wiadomości"
+  body: "Treść wiadomości"
+  enabled: "Wysyłaj automatycznie"
+  available_placeholders: "Dostępne znaczniki"

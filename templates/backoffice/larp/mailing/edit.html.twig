@@ -1,0 +1,56 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ 'mail_template.edit'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                    <h2 class="mb-1">{{ template.name }}</h2>
+                    <p class="text-muted mb-0">{{ definition ? definition.description : 'mail_template.edit_description'|trans }}</p>
+                </div>
+                <a href="{{ path('backoffice_larp_mailing_templates', { larp: larp.id }) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if template.type.belongsToFinanceContext %}
+                {{ ui.warning_alert('mail_template.finance_hint') }}
+            {% endif %}
+            {% if definition and definition.placeholders is not empty %}
+                <div class="alert alert-info">
+                    <h6 class="text-uppercase text-muted small mb-2">{{ 'mail_template.available_placeholders'|trans }}</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for placeholder in definition.placeholders %}
+                            <span class="badge bg-light text-dark border">{{ '{{ ' ~ placeholder ~ ' }}' }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {{ form_start(form) }}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.name) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.type) }}
+                    </div>
+                    <div class="col-12">
+                        {{ form_row(form.subject) }}
+                    </div>
+                    <div class="col-12">
+                        {{ form_row(form.body) }}
+                    </div>
+                    <div class="col-12">
+                        {{ form_row(form.enabled) }}
+                    </div>
+                </div>
+                {{ ui.form_actions('save', 'bi-check-circle', path('backoffice_larp_mailing_templates', { larp: larp.id })) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
