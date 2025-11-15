@@ -1,0 +1,6 @@
+{#
+  Usage: {% include 'includes/location_approval_badge.html.twig' with { location: location } %}
+#}
+<span class="badge bg-{{ location.approvalStatus.badgeClass }}">
+    {{ location.approvalStatus.label }}
+</span>

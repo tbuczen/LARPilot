@@ -2,6 +2,8 @@
 
 namespace App\Domain\Core\Entity;
 
+use App\Domain\Account\Entity\User;
+use App\Domain\Core\Entity\Enum\LocationApprovalStatus;
 use App\Domain\Core\Entity\Trait\CreatorAwareInterface;
 use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
@@ -91,6 +93,19 @@ class Location implements Timestampable, CreatorAwareInterface, \Stringable
 
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
     private bool $isPublic = false;
+
+    #[ORM\Column(enumType: LocationApprovalStatus::class, options: ['default' => 'pending'])]
+    private LocationApprovalStatus $approvalStatus = LocationApprovalStatus::PENDING;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $approvedBy = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $approvedAt = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $rejectionReason = null;
 
     /** @var Collection<Larp> */
     #[ORM\OneToMany(targetEntity: Larp::class, mappedBy: 'location')]
@@ -426,7 +441,7 @@ class Location implements Timestampable, CreatorAwareInterface, \Stringable
     public function getSocialMediaLinks(): array
     {
         $links = [];
-        
+
         if ($this->facebook) {
             $links['facebook'] = $this->facebook;
         }
@@ -439,8 +454,67 @@ class Location implements Timestampable, CreatorAwareInterface, \Stringable
         if ($this->website) {
             $links['website'] = $this->website;
         }
-        
+
         return $links;
+    }
+
+    public function getApprovalStatus(): LocationApprovalStatus
+    {
+        return $this->approvalStatus;
+    }
+
+    public function setApprovalStatus(LocationApprovalStatus $approvalStatus): self
+    {
+        $this->approvalStatus = $approvalStatus;
+        return $this;
+    }
+
+    public function getApprovedBy(): ?User
+    {
+        return $this->approvedBy;
+    }
+
+    public function setApprovedBy(?User $approvedBy): self
+    {
+        $this->approvedBy = $approvedBy;
+        return $this;
+    }
+
+    public function getApprovedAt(): ?\DateTimeInterface
+    {
+        return $this->approvedAt;
+    }
+
+    public function setApprovedAt(?\DateTimeInterface $approvedAt): self
+    {
+        $this->approvedAt = $approvedAt;
+        return $this;
+    }
+
+    public function getRejectionReason(): ?string
+    {
+        return $this->rejectionReason;
+    }
+
+    public function setRejectionReason(?string $rejectionReason): self
+    {
+        $this->rejectionReason = $rejectionReason;
+        return $this;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->approvalStatus === LocationApprovalStatus::APPROVED;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->approvalStatus === LocationApprovalStatus::PENDING;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->approvalStatus === LocationApprovalStatus::REJECTED;
     }
 
     public function __toString(): string

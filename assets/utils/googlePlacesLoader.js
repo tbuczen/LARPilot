@@ -11,13 +11,15 @@ export function loadGooglePlacesApi(apiKey) {
             return;
         }
 
-        // Create script element
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async`;
-        script.async = true;
-        script.defer = true;
+        // Define a unique callback name
+        const callbackName = 'initGooglePlaces_' + Date.now();
 
-        script.onload = () => {
+        // Set up the callback
+        window[callbackName] = () => {
+            // Clean up the callback
+            delete window[callbackName];
+
+            // Verify the API loaded correctly
             if (window.google && window.google.maps && window.google.maps.places) {
                 resolve();
             } else {
@@ -25,7 +27,14 @@ export function loadGooglePlacesApi(apiKey) {
             }
         };
 
+        // Create script element with callback
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=${callbackName}`;
+        script.async = true;
+        script.defer = true;
+
         script.onerror = () => {
+            delete window[callbackName];
             reject(new Error('Failed to load Google Places API script'));
         };
 

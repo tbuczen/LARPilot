@@ -86,14 +86,11 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
                     'label' => $this->translator->trans('larp.create'),
                     'url' => $this->router->generate('backoffice_larp_create'),
                 ],
-            ];
-
-            if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
-                $adminDropdown[] = [
+                [
                     'label' => $this->translator->trans('larp.location.list'),
                     'url' => $this->router->generate('backoffice_location_list'),
-                ];
-            }
+                ],
+            ];
 
             $this->menuItems[] = [
                 'label' => $this->translator->trans('backoffice_title'),

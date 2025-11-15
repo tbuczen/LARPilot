@@ -581,6 +581,17 @@ location:
   quick_stats: 'Quick Stats'
   get_directions: 'Get Directions'
   visit_website: 'Visit Website'
+  # Location approval system
+  approval_status: 'Status'
+  pending_message: "This location is still pending approval"
+  pending_locations: "Pending Locations"
+  no_pending_locations: "No locations pending approval"
+  approve: "Approve"
+  reject: "Reject"
+  approve_confirm: "Are you sure you want to approve this location?"
+  reject_location: "Reject Location"
+  reject_warning: "You are about to reject the location '%location%'. The creator will be able to see the rejection reason and resubmit after making changes."
+
 
 #Translations specific for Core Organizers backoffice
 backoffice_title: Admin Panel
@@ -606,6 +617,11 @@ account:
     browse_public: 'Browse Public LARPs'
   manage:
     subtitle: "Manage your account preferences"
+  status: "Account Status"
+  status.approved_message: "Your account is approved and you have full access to all features, including creating locations."
+  status.pending_message: "Your account is pending approval. Some features may be limited until an administrator approves your account."
+  status.suspended_message: "Your account has been suspended. Please contact an administrator for more information."
+  status.banned_message: "Your account has been banned. Please contact an administrator for more information."
 
 integration:
   singular: 'Integration'
@@ -1068,3 +1084,11 @@ error:
     browse_larps: "Browse LARPs"
     browse_locations: "Browse Locations"
     my_larps: "My LARPs"
+
+flash:
+  account_not_approved: 'Your account is not approved yet. Please wait for approval before creating LARPs.'
+  larp_limit_reached: 'You have reached your LARP creation limit (%current%/%max%). Please upgrade your plan to create more LARPs.'
+  larp_upload_failed: 'Could not upload header image: %reason%'
+  larp_created_draft: 'Core created as DRAFT.'
+  validation_error: 'Validation error occurred'
+

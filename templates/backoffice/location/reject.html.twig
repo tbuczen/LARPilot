@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'location.reject_location'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>{{ 'location.reject_location'|trans }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <strong>{{ 'common.warning'|trans }}:</strong>
+                            {{ 'location.reject_warning'|trans({ '%location%': location.title }) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <strong>{{ 'common.title'|trans }}:</strong> {{ location.title }}<br>
+                            <strong>{{ 'location.address'|trans }}:</strong> {{ location.fullAddress }}<br>
+                            <strong>{{ 'common.creator'|trans }}:</strong>
+                            {% if location.createdBy %}
+                                {{ location.createdBy.name }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+
+                        {{ form_start(form) }}
+                            {{ form_row(form.reason) }}
+
+                            <div class="mt-4 d-flex justify-content-between">
+                                <a href="{{ path('backoffice_location_pending_list') }}" class="btn btn-secondary">
+                                    {{ 'common.cancel'|trans }}
+                                </a>
+                                <button type="submit" class="btn btn-danger">
+                                    {{ 'location.reject'|trans }}
+                                </button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

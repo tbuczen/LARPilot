@@ -370,3 +370,11 @@ gallery:
   current_zip_file: "Current zip file"
   upload_new_replace: "Upload a new file to replace the current one"
   invalid_zip_file: "Please upload a valid ZIP file"
+
+# Location approval system
+location:
+  rejection_reason: "Rejection Reason"
+  rejection_reason_placeholder: "Provide a reason for rejecting this location (optional)"
+  address: "Address"
+  approval_status: "Approval Status"
+  pending_message: "This location is pending approval. It will be reviewed by an administrator before becoming visible to other users."
