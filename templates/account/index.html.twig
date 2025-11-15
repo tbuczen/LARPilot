@@ -10,6 +10,28 @@
     } %}
 
     <div class="container">
+        {# Account Status Card #}
+        <div class="alert alert-{{ user.status.badgeClass }} mb-4">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-person-badge fs-3 me-3"></i>
+                <div>
+                    <h5 class="mb-1">{{ 'account.status'|trans }}: <span class="badge bg-{{ user.status.badgeClass }}">{{ user.status.label }}</span></h5>
+                    <p class="mb-0">
+                        {% if user.isApproved %}
+                            {{ 'account.status.approved_message'|trans }}
+                        {% elseif user.isPending %}
+                            {{ 'account.status.pending_message'|trans }}
+                        {% elseif user.isSuspended %}
+                            {{ 'account.status.suspended_message'|trans }}
+                        {% elseif user.isBanned %}
+                            {{ 'account.status.banned_message'|trans }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {# Account Settings Form #}
         <div class="card">
             <div class="card-body">
                 {{ form_start(form) }}

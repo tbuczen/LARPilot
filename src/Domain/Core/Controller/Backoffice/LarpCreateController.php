@@ -15,26 +15,34 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/larp/create', name: 'backoffice_larp_create', methods: ['GET', 'POST'])]
 class LarpCreateController extends AbstractController
 {
-    public function __invoke(Request $request, LarpManager $larpManager, SluggerInterface $slugger): Response
+    public function __invoke(Request $request, LarpManager $larpManager, SluggerInterface $slugger, TranslatorInterface $translator): Response
     {
-        // Check if user can create a LARP based on their plan limit
+        // Check if a user can create a LARP based on their plan limit
         if (!$this->isGranted(LarpCreationVoter::CREATE)) {
             /** @var User $user */
             $user = $this->getUser();
             $currentCount = $user->getOrganizerLarpCount();
             $maxAllowed = $user->getMaxLarpsAllowed();
 
+            if (!$user->isApproved()) {
+                $this->addFlash(
+                    'error',
+                    $translator->trans('flash.account_not_approved')
+                );
+                return $this->redirectToRoute('backoffice_larp_list');
+            }
+
             $this->addFlash(
                 'error',
-                sprintf(
-                    'You have reached your LARP creation limit (%d/%d). Please upgrade your plan to create more LARPs.',
-                    $currentCount,
-                    $maxAllowed ?? 0
-                )
+                $translator->trans('flash.larp_limit_reached', [
+                    '%current%' => $currentCount,
+                    '%max%' => $maxAllowed ?? 0,
+                ])
             );
 
             return $this->redirectToRoute('backoffice_larp_list');
@@ -64,7 +72,9 @@ class LarpCreateController extends AbstractController
                     );
                     $larp->setHeaderImage($newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('error', 'Could not upload header image: ' . $e->getMessage());
+                    $this->addFlash('error', $translator->trans('flash.larp_upload_failed', [
+                        '%reason%' => $e->getMessage(),
+                    ]));
                 }
             }
 
@@ -72,13 +82,13 @@ class LarpCreateController extends AbstractController
             $user = $this->getUser();
             $larp = $larpManager->createLarp($larp, $user);
 
-            $this->addFlash('success', 'Core created as DRAFT.');
+            $this->addFlash('success', $translator->trans('flash.larp_created_draft'));
 
             return $this->redirectToRoute('backoffice_larp_dashboard', ['larp' => $larp->getId()->toRfc4122()]);
         }
 
         if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('error', 'Validation error occurred');
+            $this->addFlash('error', $translator->trans('flash.validation_error'));
         }
 
         return $this->render('backoffice/larp/create.html.twig', [

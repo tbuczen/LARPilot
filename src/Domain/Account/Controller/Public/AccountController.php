@@ -31,6 +31,7 @@ class AccountController extends BaseController
 
         return $this->render('account/index.html.twig', [
             'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 
