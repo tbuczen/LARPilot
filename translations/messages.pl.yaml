@@ -178,6 +178,8 @@ larp:
     title: 'Panel główny'
   kanban:
     board: 'Tablica zadań'
+  mailing:
+    title: 'Mailingi'
   faction:
     name: 'Frakcja'
     list: 'Frakcje'
@@ -798,3 +800,18 @@ tag:
     title: 'Importuj tagi'
     heading: 'Wybierz plik do importu listy tagów'
     no_files: 'No files available for import'
+
+mailing:
+  templates:
+    title: "Szablony mailingów"
+    subtitle: "Skonfiguruj wiadomości, które LARPilot wyśle do Twoich graczy."
+    empty: "Nie wygenerowano jeszcze żadnych szablonów dla tego LARPa."
+
+mail_template:
+  saved: "Szablon wiadomości został zapisany."
+  optional: "Opcjonalne"
+  finance: "Finanse"
+  finance_hint: "Ten szablon jest powiązany z przyszłymi funkcjami finansów i biletowania."
+  available_placeholders: "Dostępne znaczniki"
+  edit: "Edytuj szablon maila"
+  edit_description: "Dostosuj temat i treść wysyłaną do uczestników."

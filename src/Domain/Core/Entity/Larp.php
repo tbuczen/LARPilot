@@ -10,6 +10,7 @@ use App\Domain\Core\Entity\Trait\CreatorAwareInterface;
 use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
 use App\Domain\Core\Repository\LarpRepository;
+use App\Domain\Mailing\Entity\MailTemplate;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Faction;
@@ -108,6 +109,10 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\OneToMany(targetEntity: \App\Domain\Gallery\Entity\Gallery::class, mappedBy: 'larp')]
     private Collection $galleries;
 
+    /** @var Collection<MailTemplate> */
+    #[ORM\OneToMany(targetEntity: MailTemplate::class, mappedBy: 'larp', orphanRemoval: true)]
+    private Collection $mailTemplates;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
@@ -119,6 +124,7 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
         $this->skills = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->galleries = new ArrayCollection();
+        $this->mailTemplates = new ArrayCollection();
     }
 
     public function getTitle(): ?string
@@ -461,6 +467,31 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
         if ($this->galleries->removeElement($gallery) && $gallery->getLarp() === $this) {
             $gallery->setLarp(null);
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<MailTemplate>
+     */
+    public function getMailTemplates(): Collection
+    {
+        return $this->mailTemplates;
+    }
+
+    public function addMailTemplate(MailTemplate $mailTemplate): static
+    {
+        if (!$this->mailTemplates->contains($mailTemplate)) {
+            $this->mailTemplates->add($mailTemplate);
+            $mailTemplate->setLarp($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMailTemplate(MailTemplate $mailTemplate): static
+    {
+        $this->mailTemplates->removeElement($mailTemplate);
+
         return $this;
     }
 

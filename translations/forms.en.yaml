@@ -378,3 +378,11 @@ location:
   address: "Address"
   approval_status: "Approval Status"
   pending_message: "This location is pending approval. It will be reviewed by an administrator before becoming visible to other users."
+
+mail_template:
+  name: "Template name"
+  type: "Template type"
+  subject: "Email subject"
+  body: "Email body"
+  enabled: "Send automatically"
+  available_placeholders: "Available placeholders"

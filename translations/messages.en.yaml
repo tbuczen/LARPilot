@@ -208,6 +208,8 @@ larp:
     title: 'Dashboard'
   kanban:
     board: 'Task Board'
+  mailing:
+    title: 'Mailing'
   faction:
     name: 'Faction'
     list: 'Factions'
@@ -1094,3 +1096,18 @@ flash:
 address: 'Address'
 warning: 'Warning'
 creator: 'Created by'
+
+mailing:
+  templates:
+    title: "Mailing templates"
+    subtitle: "Customize emails that LARPilot will send on your behalf."
+    empty: "No mail templates were generated for this LARP yet."
+
+mail_template:
+  saved: "Mail template saved successfully."
+  optional: "Optional"
+  finance: "Finance"
+  finance_hint: "This notification is linked to upcoming finance & ticketing workflows."
+  available_placeholders: "Available placeholders"
+  edit: "Edit mail template"
+  edit_description: "Update the subject and content that gets delivered to your players."
