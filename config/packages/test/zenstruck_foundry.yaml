@@ -1,0 +1,10 @@
+when@test:
+    zenstruck_foundry:
+        # Auto-refresh objects after creation/persist
+        auto_refresh_proxies: true
+
+        # ORM configuration for database reset
+        orm:
+            # Reset database schema between tests
+            reset:
+                mode: schema

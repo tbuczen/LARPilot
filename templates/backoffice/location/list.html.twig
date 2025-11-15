@@ -8,9 +8,9 @@
         <div class="card mt-4">
             {% set actions %}
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <a href="{{ path('backoffice_location_pending_list') }}" class="btn btn-warning me-2">
-                        <i class="bi bi-hourglass-split"></i> {{ 'location.pending_locations'|trans }}
-                    </a>
+{#                    <a href="{{ path('backoffice_location_pending_list') }}" class="btn btn-warning me-2">#}
+{#                        <i class="bi bi-hourglass-split"></i> {{ 'location.pending_locations'|trans }}#}
+{#                    </a>#}
                 {% endif %}
                 {{ ui.primary_button('create', path('backoffice_location_modify_global'), 'bi-plus-circle') }}
             {% endset %}
@@ -61,6 +61,23 @@
                                                 {% endif %}
                                                 {% if is_granted('DELETE_LOCATION', location) %}
                                                     {{ ui.delete_button(location.id, location.title, path('backoffice_location_delete', {'id': location.id})) }}
+                                                {% endif %}
+                                                {% if is_granted('ROLE_SUPER_ADMIN') and location.isApproved == false %}
+                                                    <div class="btn-group" role="group">
+                                                        <form action="{{ path('backoffice_location_approve', { id: location.id }) }}"
+                                                              method="post"
+                                                              class="d-inline"
+                                                              onsubmit="return confirm('{{ 'location.approve_confirm'|trans }}');">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ location.id) }}">
+                                                            <button type="submit" class="btn btn-sm btn-success">
+                                                                {{ 'location.approve'|trans }}
+                                                            </button>
+                                                        </form>
+                                                        <a href="{{ path('backoffice_location_reject', { id: location.id }) }}"
+                                                           class="btn btn-sm btn-danger">
+                                                            {{ 'location.reject'|trans }}
+                                                        </a>
+                                                    </div>
                                                 {% endif %}
                                             </td>
                                         </tr>

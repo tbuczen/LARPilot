@@ -148,11 +148,13 @@
                             </div>
                         </div>
 
+                        {% if form.recaptcha is defined %}
                         <div class="row">
                             <div class="col-md-6">
                                 {{ form_row(form.recaptcha) }}
                             </div>
                         </div>
+                        {% endif %}
 
                         {# Form actions with consistent styling #}
                         {{ ui.form_actions(

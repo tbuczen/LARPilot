@@ -1,0 +1,17 @@
+namespace: Tests
+support_namespace: Support
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/Support/Data
+    support: tests/Support
+    envs: tests/_envs
+actor_suffix: Tester
+bootstrap: _bootstrap.php
+settings:
+  shuffle: false
+  lint: false
+  memory_limit: 2048M
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed

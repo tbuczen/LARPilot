@@ -169,17 +169,6 @@ class LocationController extends AbstractController
         return $this->redirectToRoute('backoffice_location_list');
     }
 
-    #[Route('/pending/list', name: 'pending_list', methods: ['GET'])]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function pendingList(): Response
-    {
-        $pendingLocations = $this->locationRepository->findPendingLocations();
-
-        return $this->render('backoffice/location/pending_list.html.twig', [
-            'locations' => $pendingLocations,
-        ]);
-    }
-
     #[Route('/{id}/approve', name: 'approve', methods: ['POST'])]
     #[IsGranted('ROLE_SUPER_ADMIN')]
     public function approve(Request $request, Location $location): Response

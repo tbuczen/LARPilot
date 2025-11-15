@@ -1091,4 +1091,6 @@ flash:
   larp_upload_failed: 'Could not upload header image: %reason%'
   larp_created_draft: 'Core created as DRAFT.'
   validation_error: 'Validation error occurred'
-
+address: 'Address'
+warning: 'Warning'
+creator: 'Created by'
