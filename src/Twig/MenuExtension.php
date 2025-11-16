@@ -115,6 +115,17 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
 
         //add service to check if user is organizer in any larp that is not cancelled - of so - add link to backoffice
 
+        // Add Privacy & Terms links at the bottom (for everyone)
+        $this->menuItems[] = [
+            'label' => $this->translator->trans('privacy_policy.title'),
+            'url' => $this->router->generate('privacy_policy'),
+        ];
+
+        $this->menuItems[] = [
+            'label' => $this->translator->trans('terms.title'),
+            'url' => $this->router->generate('terms'),
+        ];
+
         return [
             'menuItems' => $this->menuItems,
         ];

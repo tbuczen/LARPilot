@@ -72,6 +72,12 @@ doctrine:
               dir: '%kernel.project_dir%/src/Domain/Map/Entity'
               prefix: 'App\Domain\Map\Entity'
               alias: Map
+            Mailing:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/Mailing/Entity'
+              prefix: 'App\Domain\Mailing\Entity'
+              alias: Mailing
             Gallery:
               type: attribute
               is_bundle: false

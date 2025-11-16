@@ -815,3 +815,41 @@ mail_template:
   available_placeholders: "Dostępne znaczniki"
   edit: "Edytuj szablon maila"
   edit_description: "Dostosuj temat i treść wysyłaną do uczestników."
+
+# Zgoda na pliki cookie - Zgodność z RODO
+cookie:
+  banner:
+    title: 'Używamy plików cookie'
+    description: 'Używamy plików cookie, aby poprawić jakość przeglądania, dostarczać spersonalizowane treści i analizować nasz ruch. Klikając "Akceptuj wszystkie", wyrażasz zgodę na używanie plików cookie. Przeczytaj naszą'
+    privacy_link: 'Politykę Prywatności'
+    and: 'oraz'
+    terms_link: 'Regulamin'
+    customize: 'Dostosuj'
+    necessary_only: 'Tylko niezbędne'
+    accept_all: 'Akceptuj wszystkie'
+  preferences:
+    title: 'Preferencje plików cookie'
+    description: 'Używamy różnych typów plików cookie, aby zoptymalizować Twoje doświadczenie na naszej platformie. Możesz wybrać, które typy plików cookie chcesz zezwolić.'
+    necessary_only: 'Tylko niezbędne'
+    save: 'Zapisz preferencje'
+  category:
+    necessary:
+      title: 'Niezbędne pliki cookie'
+      description: 'Te pliki cookie są niezbędne do prawidłowego działania witryny. Umożliwiają podstawowe funkcje, takie jak bezpieczeństwo, zarządzanie sesją i uwierzytelnianie.'
+    preferences:
+      title: 'Pliki cookie preferencji'
+      description: 'Te pliki cookie pozwalają nam zapamiętać Twoje preferencje i ustawienia, takie jak wybór języka i opcje wyświetlania.'
+    analytics:
+      title: 'Pliki cookie analityczne'
+      description: 'Te pliki cookie pomagają nam zrozumieć, jak odwiedzający korzystają z naszej witryny, zbierając i raportując informacje anonimowo.'
+    marketing:
+      title: 'Pliki cookie marketingowe'
+      description: 'Te pliki cookie służą do śledzenia odwiedzających w witrynach w celu wyświetlania odpowiednich reklam i treści marketingowych.'
+    examples: 'Przykłady'
+    always_active: 'Zawsze aktywne'
+
+# Strony prawne
+privacy_policy:
+  title: 'Polityka Prywatności'
+terms:
+  title: 'Regulamin'

@@ -28,7 +28,6 @@ class LarpRepository extends BaseRepository
             LarpStageStatus::INQUIRIES->value,
             LarpStageStatus::CONFIRMED->value,
             LarpStageStatus::COMPLETED->value,
-            LarpStageStatus::CANCELLED->value,
         ];
 
         $upcoming = $qb->expr()->andX(

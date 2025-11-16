@@ -1,0 +1,505 @@
+{% extends 'public/base.html.twig' %}
+
+{% block title %}Privacy Policy - GDPR & RODO Compliance - LARPilot{% endblock %}
+
+{% block body %}
+{% include 'includes/page_header.html.twig' with {
+    title: 'Privacy Policy',
+    subtitle: 'GDPR & RODO Compliance - How we protect your data',
+    icon: 'bi bi-shield-lock'
+} %}
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <p class="text-muted mb-4">
+                <strong>Last updated:</strong> {{ "now"|date("F d, Y") }}
+            </p>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">1. Introduction</h2>
+                    <p>
+                        This Privacy Policy describes how LARPilot ("we," "us," or "our") collects, uses, and protects your personal data
+                        when you use our platform. We are committed to protecting your privacy and complying with the General Data Protection
+                        Regulation (GDPR) and the Polish implementation of GDPR known as RODO (Rozporządzenie o Ochronie Danych Osobowych).
+                    </p>
+                    <p>
+                        By using LARPilot, you consent to the data practices described in this policy.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">2. Data Controller Information</h2>
+                    <p>
+                        The data controller responsible for your personal data is:<br>
+                        <strong>LARPilot</strong><br>
+                        Email: <a href="mailto:admin@larpilot.com">admin@larpilot.com</a>
+                    </p>
+                    <p>
+                        For any questions regarding the processing of your personal data or to exercise your rights under GDPR/RODO,
+                        please contact us at the email address above.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">3. What Data We Collect</h2>
+                    <p>We collect and process the following categories of personal data:</p>
+
+                    <h5 class="mt-4">3.1 Account Information</h5>
+                    <ul>
+                        <li>Name and surname</li>
+                        <li>Email address</li>
+                        <li>Profile picture (if provided via OAuth)</li>
+                        <li>OAuth provider account ID (Google, Facebook, or Discord)</li>
+                        <li>Login and authentication credentials</li>
+                    </ul>
+
+                    <h5 class="mt-4">3.2 LARP-Related Data</h5>
+                    <ul>
+                        <li>Character information and descriptions</li>
+                        <li>Story objects (threads, quests, events, factions, items, places, relations)</li>
+                        <li>Application data for LARP events</li>
+                        <li>Participant information and roles</li>
+                        <li>Event scheduling and attendance data</li>
+                        <li>Comments and interactions on story elements</li>
+                    </ul>
+
+                    <h5 class="mt-4">3.3 Technical Data</h5>
+                    <ul>
+                        <li>IP address</li>
+                        <li>Browser type and version</li>
+                        <li>Device information</li>
+                        <li>Access times and dates</li>
+                        <li>Pages visited and actions taken</li>
+                        <li>Session information</li>
+                    </ul>
+
+                    <h5 class="mt-4">3.4 Location Data</h5>
+                    <ul>
+                        <li>Event location information (address, city, country, coordinates)</li>
+                        <li>Geographic data related to LARP events</li>
+                    </ul>
+
+                    <h5 class="mt-4">3.5 Communication Data</h5>
+                    <ul>
+                        <li>Feedback and support messages</li>
+                        <li>Incident reports</li>
+                        <li>Email communications</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">4. Legal Basis for Processing (GDPR Article 6)</h2>
+                    <p>We process your personal data based on the following legal grounds:</p>
+                    <ul>
+                        <li><strong>Consent (Article 6(1)(a)):</strong> You have given explicit consent for us to process your personal data for specific purposes, such as creating an account and participating in LARP events.</li>
+                        <li><strong>Contract Performance (Article 6(1)(b)):</strong> Processing is necessary to provide the services you requested, including event management, character creation, and application processing.</li>
+                        <li><strong>Legal Obligation (Article 6(1)(c)):</strong> Processing may be required to comply with legal obligations, such as data retention laws or responding to lawful requests from authorities.</li>
+                        <li><strong>Legitimate Interests (Article 6(1)(f)):</strong> Processing is necessary for our legitimate interests, such as improving our services, preventing fraud, and ensuring platform security, provided these interests do not override your fundamental rights.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">5. How We Use Your Data</h2>
+                    <p>We use your personal data for the following purposes:</p>
+                    <ul>
+                        <li>Creating and managing your user account</li>
+                        <li>Authenticating your identity via OAuth providers (Google, Facebook, Discord)</li>
+                        <li>Facilitating LARP event creation, management, and participation</li>
+                        <li>Processing character applications and matching players to characters</li>
+                        <li>Managing story elements and narrative content</li>
+                        <li>Sending notifications about events, applications, and system updates</li>
+                        <li>Integrating with Google services (Sheets, Docs, Calendar) for event management</li>
+                        <li>Generating reports and analytics to improve our services</li>
+                        <li>Responding to support requests and feedback</li>
+                        <li>Preventing fraud, abuse, and security incidents</li>
+                        <li>Complying with legal obligations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">6. Data Sharing and Third Parties</h2>
+                    <p>We may share your personal data with the following third parties:</p>
+
+                    <h5 class="mt-4">6.1 OAuth Providers</h5>
+                    <p>
+                        We use OAuth authentication through Google, Facebook, and Discord. When you authenticate,
+                        these providers share basic profile information (name, email, profile picture) with us.
+                        Please review the privacy policies of these providers:
+                    </p>
+                    <ul>
+                        <li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a></li>
+                        <li><a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener noreferrer">Facebook Privacy Policy</a></li>
+                        <li><a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Discord Privacy Policy</a></li>
+                    </ul>
+
+                    <h5 class="mt-4">6.2 Google Services Integration</h5>
+                    <p>
+                        We integrate with Google Sheets, Google Docs, and Google Calendar for event management features.
+                        When you use these integrations, data is shared with Google in accordance with their privacy policies.
+                    </p>
+
+                    <h5 class="mt-4">6.3 Google Maps API</h5>
+                    <p>
+                        We use Google Places API for location autocomplete features. When you enter location information,
+                        this data is processed by Google to provide address suggestions.
+                    </p>
+
+                    <h5 class="mt-4">6.4 Service Providers</h5>
+                    <p>
+                        We may share data with service providers who assist us in operating our platform, such as:
+                    </p>
+                    <ul>
+                        <li>Hosting and infrastructure providers</li>
+                        <li>Database management services</li>
+                        <li>Email delivery services</li>
+                        <li>Analytics and monitoring tools</li>
+                    </ul>
+                    <p>
+                        These providers are contractually obligated to protect your data and use it only for the purposes we specify.
+                    </p>
+
+                    <h5 class="mt-4">6.5 Event Organizers and Participants</h5>
+                    <p>
+                        When you participate in a LARP event, your data (name, character information, application details)
+                        is shared with the event organizers and other participants as necessary for the event's operation.
+                    </p>
+
+                    <h5 class="mt-4">6.6 Legal Requirements</h5>
+                    <p>
+                        We may disclose your data if required by law, court order, or regulatory authority, or to protect
+                        our rights, property, or safety, or that of others.
+                    </p>
+
+                    <h5 class="mt-4">6.7 Data Transfers Outside EEA</h5>
+                    <p>
+                        Some of our service providers may be located outside the European Economic Area (EEA). When we transfer
+                        data outside the EEA, we ensure appropriate safeguards are in place, such as:
+                    </p>
+                    <ul>
+                        <li>Standard Contractual Clauses (SCCs) approved by the European Commission</li>
+                        <li>Adequacy decisions by the European Commission</li>
+                        <li>Privacy Shield or equivalent frameworks (where applicable)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">7. Data Retention</h2>
+                    <p>
+                        We retain your personal data only for as long as necessary to fulfill the purposes outlined in this policy,
+                        unless a longer retention period is required or permitted by law.
+                    </p>
+                    <ul>
+                        <li><strong>Account Data:</strong> Retained while your account is active and for up to 2 years after account closure, unless you request deletion sooner.</li>
+                        <li><strong>LARP Event Data:</strong> Retained for the duration of the event and up to 5 years after the event concludes for archival purposes.</li>
+                        <li><strong>Technical Logs:</strong> Retained for up to 12 months for security and operational purposes.</li>
+                        <li><strong>Legal Compliance:</strong> Data may be retained longer if required by applicable laws or regulations.</li>
+                    </ul>
+                    <p>
+                        After the retention period expires, we will securely delete or anonymize your personal data.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">8. Your Rights Under GDPR/RODO</h2>
+                    <p>Under GDPR and RODO, you have the following rights regarding your personal data:</p>
+
+                    <h5 class="mt-4">8.1 Right of Access (Article 15)</h5>
+                    <p>
+                        You have the right to obtain confirmation as to whether your personal data is being processed,
+                        and if so, to access your data and receive information about how it is processed.
+                    </p>
+
+                    <h5 class="mt-4">8.2 Right to Rectification (Article 16)</h5>
+                    <p>
+                        You have the right to request correction of inaccurate or incomplete personal data.
+                    </p>
+
+                    <h5 class="mt-4">8.3 Right to Erasure / "Right to be Forgotten" (Article 17)</h5>
+                    <p>
+                        You have the right to request deletion of your personal data under certain circumstances, such as:
+                    </p>
+                    <ul>
+                        <li>The data is no longer necessary for the purposes it was collected</li>
+                        <li>You withdraw consent and there is no other legal basis for processing</li>
+                        <li>You object to processing and there are no overriding legitimate grounds</li>
+                        <li>The data has been unlawfully processed</li>
+                    </ul>
+
+                    <h5 class="mt-4">8.4 Right to Restriction of Processing (Article 18)</h5>
+                    <p>
+                        You have the right to request restriction of processing in certain situations, such as when
+                        you contest the accuracy of the data or object to processing.
+                    </p>
+
+                    <h5 class="mt-4">8.5 Right to Data Portability (Article 20)</h5>
+                    <p>
+                        You have the right to receive your personal data in a structured, commonly used, machine-readable format
+                        and to transmit that data to another controller.
+                    </p>
+
+                    <h5 class="mt-4">8.6 Right to Object (Article 21)</h5>
+                    <p>
+                        You have the right to object to processing of your personal data based on legitimate interests or for
+                        direct marketing purposes.
+                    </p>
+
+                    <h5 class="mt-4">8.7 Right Not to be Subject to Automated Decision-Making (Article 22)</h5>
+                    <p>
+                        You have the right not to be subject to decisions based solely on automated processing, including profiling,
+                        which produces legal effects or similarly significantly affects you.
+                    </p>
+
+                    <h5 class="mt-4">8.8 Right to Withdraw Consent</h5>
+                    <p>
+                        If processing is based on consent, you have the right to withdraw consent at any time without affecting
+                        the lawfulness of processing based on consent before its withdrawal.
+                    </p>
+
+                    <h5 class="mt-4">8.9 Right to Lodge a Complaint</h5>
+                    <p>
+                        You have the right to lodge a complaint with a supervisory authority:
+                    </p>
+                    <ul>
+                        <li><strong>Poland (PUODO):</strong> Urząd Ochrony Danych Osobowych<br>
+                            ul. Stawki 2, 00-193 Warszawa<br>
+                            Phone: +48 22 531 03 00<br>
+                            Website: <a href="https://uodo.gov.pl" target="_blank" rel="noopener noreferrer">uodo.gov.pl</a>
+                        </li>
+                        <li><strong>EU Supervisory Authorities:</strong>
+                            <a href="https://edpb.europa.eu/about-edpb/board/members_en" target="_blank" rel="noopener noreferrer">List of EU Data Protection Authorities</a>
+                        </li>
+                    </ul>
+
+                    <h5 class="mt-4">How to Exercise Your Rights</h5>
+                    <p>
+                        To exercise any of these rights, please contact us at
+                        <a href="mailto:admin@larpilot.com">admin@larpilot.com</a>.
+                        We will respond to your request within 30 days as required by GDPR/RODO.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">9. Data Security</h2>
+                    <p>
+                        We implement appropriate technical and organizational measures to protect your personal data against
+                        unauthorized access, alteration, disclosure, or destruction. These measures include:
+                    </p>
+                    <ul>
+                        <li>Encryption of data in transit (HTTPS/TLS)</li>
+                        <li>Secure password storage using industry-standard hashing algorithms</li>
+                        <li>OAuth2 authentication for secure login</li>
+                        <li>Access controls and authentication mechanisms</li>
+                        <li>Regular security assessments and updates</li>
+                        <li>Database backups and disaster recovery procedures</li>
+                        <li>Logging and monitoring of system access</li>
+                    </ul>
+                    <p>
+                        However, no method of transmission over the Internet or electronic storage is 100% secure.
+                        While we strive to protect your data, we cannot guarantee absolute security.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">10. Cookies and Tracking Technologies</h2>
+                    <p>
+                        We use cookies and similar tracking technologies to enhance your experience on our platform:
+                    </p>
+
+                    <h5 class="mt-4">10.1 Essential Cookies</h5>
+                    <p>
+                        These cookies are necessary for the platform to function properly. They enable core functionality
+                        such as security, session management, and authentication. These cannot be disabled.
+                    </p>
+
+                    <h5 class="mt-4">10.2 Preference Cookies</h5>
+                    <p>
+                        These cookies remember your preferences and settings, such as language selection and display preferences.
+                    </p>
+
+                    <h5 class="mt-4">10.3 Session Storage</h5>
+                    <p>
+                        We use session storage to maintain your logged-in state and temporary data during your browsing session.
+                    </p>
+
+                    <h5 class="mt-4">10.4 Third-Party Cookies</h5>
+                    <p>
+                        When you use OAuth authentication or Google services integration, third-party cookies from these
+                        providers may be set. Please refer to their respective privacy policies for information about these cookies.
+                    </p>
+
+                    <h5 class="mt-4">Managing Cookies</h5>
+                    <p>
+                        You can control and manage cookies through your browser settings. However, disabling cookies may
+                        affect the functionality of our platform.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">11. Children's Privacy</h2>
+                    <p>
+                        Our platform is not intended for children under the age of 16 (or the applicable age of digital consent
+                        in your jurisdiction). We do not knowingly collect personal data from children under this age.
+                    </p>
+                    <p>
+                        If you are a parent or guardian and believe your child has provided us with personal data without your
+                        consent, please contact us immediately at <a href="mailto:admin@larpilot.com">admin@larpilot.com</a>,
+                        and we will take steps to delete such data.
+                    </p>
+                    <p>
+                        For users in Poland: In accordance with Polish regulations, users under 16 years of age must have parental
+                        or guardian consent to use our services.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">12. Data Breach Notification</h2>
+                    <p>
+                        In the event of a personal data breach that is likely to result in a risk to your rights and freedoms,
+                        we will:
+                    </p>
+                    <ul>
+                        <li>Notify the relevant supervisory authority within 72 hours of becoming aware of the breach (as required by GDPR Article 33)</li>
+                        <li>Notify affected users without undue delay if the breach is likely to result in a high risk to their rights and freedoms (as required by GDPR Article 34)</li>
+                        <li>Document all data breaches, including the facts, effects, and remedial actions taken</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">13. Changes to This Privacy Policy</h2>
+                    <p>
+                        We may update this Privacy Policy from time to time to reflect changes in our practices, legal requirements,
+                        or operational needs. When we make significant changes, we will:
+                    </p>
+                    <ul>
+                        <li>Update the "Last updated" date at the top of this policy</li>
+                        <li>Notify you via email or prominent notice on our platform</li>
+                        <li>Where required, obtain your consent for material changes</li>
+                    </ul>
+                    <p>
+                        We encourage you to review this Privacy Policy periodically to stay informed about how we protect your data.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">14. International Users</h2>
+                    <p>
+                        LARPilot is operated from the European Union and complies with EU/EEA data protection laws.
+                        If you are accessing our services from outside the EU/EEA, please be aware that your data may be
+                        transferred to, stored, and processed in the EU/EEA.
+                    </p>
+                    <p>
+                        By using our services, you consent to the transfer of your data to the EU/EEA and the application
+                        of EU/EEA data protection laws.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">15. Contact Information</h2>
+                    <p>
+                        If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices,
+                        please contact us:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><strong>Email:</strong> <a href="mailto:admin@larpilot.com">admin@larpilot.com</a></li>
+                        <li><strong>Data Protection Officer:</strong> Available upon request</li>
+                    </ul>
+                    <p>
+                        For exercising your GDPR/RODO rights, please specify which right you wish to exercise and provide
+                        sufficient information for us to verify your identity.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">16. Specific Information for Polish Users (RODO)</h2>
+                    <p>
+                        Dla użytkowników w Polsce / For users in Poland:
+                    </p>
+
+                    <h5 class="mt-4">Administrator Danych / Data Controller</h5>
+                    <p>
+                        Administratorem Państwa danych osobowych jest LARPilot. W sprawach dotyczących ochrony danych osobowych
+                        prosimy o kontakt: <a href="mailto:admin@larpilot.com">admin@larpilot.com</a>
+                    </p>
+
+                    <h5 class="mt-4">Prawa Użytkowników / User Rights</h5>
+                    <p>
+                        Zgodnie z RODO, przysługują Państwu następujące prawa:
+                    </p>
+                    <ul>
+                        <li>Prawo dostępu do swoich danych osobowych (art. 15 RODO)</li>
+                        <li>Prawo do sprostowania danych (art. 16 RODO)</li>
+                        <li>Prawo do usunięcia danych (art. 17 RODO)</li>
+                        <li>Prawo do ograniczenia przetwarzania (art. 18 RODO)</li>
+                        <li>Prawo do przenoszenia danych (art. 20 RODO)</li>
+                        <li>Prawo do sprzeciwu wobec przetwarzania (art. 21 RODO)</li>
+                        <li>Prawo do cofnięcia zgody w dowolnym momencie</li>
+                        <li>Prawo do wniesienia skargi do Prezesa UODO</li>
+                    </ul>
+
+                    <h5 class="mt-4">Organ Nadzorczy / Supervisory Authority</h5>
+                    <p>
+                        Przysługuje Państwu prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych (PUODO):
+                    </p>
+                    <ul class="list-unstyled">
+                        <li>Urząd Ochrony Danych Osobowych</li>
+                        <li>ul. Stawki 2, 00-193 Warszawa</li>
+                        <li>Telefon: +48 22 531 03 00</li>
+                        <li>E-mail: kancelaria@uodo.gov.pl</li>
+                        <li>Strona: <a href="https://uodo.gov.pl" target="_blank" rel="noopener noreferrer">uodo.gov.pl</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-5">
+                <h5 class="alert-heading">
+                    <i class="bi bi-info-circle"></i> Summary
+                </h5>
+                <p class="mb-0">
+                    We are committed to protecting your privacy and complying with GDPR and RODO regulations.
+                    Your data is used solely for providing LARP event management services, and you maintain full
+                    control over your personal information with the right to access, modify, or delete it at any time.
+                    For questions or to exercise your rights, contact us at
+                    <a href="mailto:admin@larpilot.com" class="alert-link">admin@larpilot.com</a>.
+                </p>
+            </div>
+
+            <div class="text-center mt-5 mb-3">
+                <a href="{{ path('backoffice_dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+                <a href="{{ path('terms') }}" class="btn btn-outline-secondary">View Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Security;
 
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Enum\ParticipantRole;
+use App\Domain\Core\Entity\Larp;
 use App\Tests\Traits\AuthenticationTestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -33,6 +34,9 @@ class LarpVisibilitySecurityTest extends WebTestCase
     {
         self::ensureKernelShutdown();
         $this->client = static::createClient();
+
+        // Clear test data before each test to ensure isolation
+        $this->clearTestData();
     }
 
     public function test_published_larp_is_publicly_visible(): void
@@ -105,6 +109,11 @@ class LarpVisibilitySecurityTest extends WebTestCase
     {
         $organizer = $this->createApprovedUser();
         $publicLarp = $this->createPublishedLarp($organizer, 'Public LARP');
+
+        // Ensure the entity manager is flushed and cleared before making the request
+        $em = $this->getEntityManager();
+        $em->flush();
+        $em->clear();
 
         $crawler = $this->client->request('GET', $this->generateUrl('public_larp_list'));
 

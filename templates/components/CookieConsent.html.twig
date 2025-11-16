@@ -1,0 +1,331 @@
+{# Cookie Consent Banner Component - GDPR/RODO Compliant #}
+<div data-controller="cookie-consent"
+     data-cookie-consent-privacy-url-value="{{ path('privacy_policy') }}"
+     data-cookie-consent-terms-url-value="{{ path('terms') }}">
+
+    {# Main Cookie Banner #}
+    <div class="cookie-consent-banner" data-cookie-consent-target="banner" aria-hidden="true" role="dialog" aria-labelledby="cookie-banner-title">
+        <div class="cookie-consent-content">
+            <div class="cookie-consent-body">
+                <h3 id="cookie-banner-title" class="cookie-consent-title">
+                    <i class="bi bi-cookie"></i>
+                    {{ 'cookie.banner.title'|trans({}, 'messages') }}
+                </h3>
+                <p class="cookie-consent-text">
+                    {{ 'cookie.banner.description'|trans({}, 'messages') }}
+                    <a href="{{ path('privacy_policy') }}" target="_blank" rel="noopener">{{ 'cookie.banner.privacy_link'|trans({}, 'messages') }}</a>
+                    {{ 'cookie.banner.and'|trans({}, 'messages') }}
+                    <a href="{{ path('terms') }}" target="_blank" rel="noopener">{{ 'cookie.banner.terms_link'|trans({}, 'messages') }}</a>.
+                </p>
+            </div>
+            <div class="cookie-consent-actions">
+                <button type="button" class="btn btn-sm btn-outline-light" data-action="click->cookie-consent#showPreferences">
+                    <i class="bi bi-gear"></i> {{ 'cookie.banner.customize'|trans({}, 'messages') }}
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" data-action="click->cookie-consent#acceptNecessary">
+                    {{ 'cookie.banner.necessary_only'|trans({}, 'messages') }}
+                </button>
+                <button type="button" class="btn btn-sm btn-primary" data-action="click->cookie-consent#acceptAll">
+                    {{ 'cookie.banner.accept_all'|trans({}, 'messages') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {# Cookie Preferences Modal #}
+    <div class="cookie-preferences-modal" data-cookie-consent-target="preferences" aria-hidden="true" role="dialog" aria-labelledby="cookie-preferences-title">
+        <div class="cookie-preferences-overlay" data-action="click->cookie-consent#hidePreferences"></div>
+        <div class="cookie-preferences-content">
+            <div class="cookie-preferences-header">
+                <h3 id="cookie-preferences-title">
+                    <i class="bi bi-cookie"></i> {{ 'cookie.preferences.title'|trans({}, 'messages') }}
+                </h3>
+                <button type="button" class="btn-close" data-action="click->cookie-consent#hidePreferences" aria-label="{{ 'common.close'|trans }}"></button>
+            </div>
+            <div class="cookie-preferences-body">
+                <p class="mb-4">{{ 'cookie.preferences.description'|trans({}, 'messages') }}</p>
+
+                <form>
+                    {# Necessary Cookies - Always On #}
+                    <div class="cookie-category mb-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-2">
+                                    <i class="bi bi-shield-check text-success"></i>
+                                    {{ 'cookie.category.necessary.title'|trans({}, 'messages') }}
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    {{ 'cookie.category.necessary.description'|trans({}, 'messages') }}
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    <strong>{{ 'cookie.category.examples'|trans({}, 'messages') }}:</strong>
+                                    Session cookies, CSRF protection, authentication
+                                </p>
+                            </div>
+                            <div class="form-check form-switch ms-3">
+                                <input class="form-check-input" type="checkbox" checked disabled>
+                                <label class="form-check-label small text-muted">{{ 'cookie.category.always_active'|trans({}, 'messages') }}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Preference Cookies #}
+                    <div class="cookie-category mb-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-2">
+                                    <i class="bi bi-sliders text-info"></i>
+                                    {{ 'cookie.category.preferences.title'|trans({}, 'messages') }}
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    {{ 'cookie.category.preferences.description'|trans({}, 'messages') }}
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    <strong>{{ 'cookie.category.examples'|trans({}, 'messages') }}:</strong>
+                                    Language selection, locale settings, UI preferences
+                                </p>
+                            </div>
+                            <div class="form-check form-switch ms-3">
+                                <input class="form-check-input" type="checkbox" id="cookie-preferences" checked>
+                                <label class="form-check-label" for="cookie-preferences"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Analytics Cookies (if you implement analytics) #}
+                    <div class="cookie-category mb-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-2">
+                                    <i class="bi bi-graph-up text-primary"></i>
+                                    {{ 'cookie.category.analytics.title'|trans({}, 'messages') }}
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    {{ 'cookie.category.analytics.description'|trans({}, 'messages') }}
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    <strong>{{ 'cookie.category.examples'|trans({}, 'messages') }}:</strong>
+                                    Google Analytics, usage statistics, performance monitoring
+                                </p>
+                            </div>
+                            <div class="form-check form-switch ms-3">
+                                <input class="form-check-input" type="checkbox" id="cookie-analytics">
+                                <label class="form-check-label" for="cookie-analytics"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Marketing Cookies #}
+                    <div class="cookie-category mb-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-2">
+                                    <i class="bi bi-megaphone text-warning"></i>
+                                    {{ 'cookie.category.marketing.title'|trans({}, 'messages') }}
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    {{ 'cookie.category.marketing.description'|trans({}, 'messages') }}
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    <strong>{{ 'cookie.category.examples'|trans({}, 'messages') }}:</strong>
+                                    Advertising networks, social media trackers, remarketing
+                                </p>
+                            </div>
+                            <div class="form-check form-switch ms-3">
+                                <input class="form-check-input" type="checkbox" id="cookie-marketing">
+                                <label class="form-check-label" for="cookie-marketing"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cookie-preferences-footer">
+                        <button type="button" class="btn btn-secondary" data-action="click->cookie-consent#acceptNecessary">
+                            {{ 'cookie.preferences.necessary_only'|trans({}, 'messages') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" data-action="click->cookie-consent#savePreferences">
+                            {{ 'cookie.preferences.save'|trans({}, 'messages') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Cookie Consent Banner Styles */
+    .cookie-consent-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+        opacity: 0;
+    }
+
+    .cookie-consent-banner.show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .cookie-consent-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .cookie-consent-body {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .cookie-consent-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: white;
+    }
+
+    .cookie-consent-text {
+        margin-bottom: 0;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .cookie-consent-text a {
+        color: white;
+        text-decoration: underline;
+        font-weight: 500;
+    }
+
+    .cookie-consent-text a:hover {
+        color: #e0e0e0;
+    }
+
+    .cookie-consent-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    /* Cookie Preferences Modal */
+    .cookie-preferences-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cookie-preferences-modal.show {
+        display: flex;
+    }
+
+    .cookie-preferences-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+    }
+
+    .cookie-preferences-content {
+        position: relative;
+        background: white;
+        border-radius: 12px;
+        max-width: 700px;
+        width: 90%;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .cookie-preferences-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cookie-preferences-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .cookie-preferences-body {
+        padding: 1.5rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .cookie-category {
+        padding: 1.25rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background: #f8f9fa;
+    }
+
+    .cookie-category h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .cookie-preferences-footer {
+        padding: 1.5rem;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .cookie-consent-content {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .cookie-consent-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .cookie-consent-actions button {
+            width: 100%;
+        }
+
+        .cookie-preferences-content {
+            width: 95%;
+            max-height: 90vh;
+        }
+
+        .cookie-category {
+            flex-direction: column;
+        }
+
+        .cookie-category .form-check {
+            margin-left: 0 !important;
+            margin-top: 1rem;
+        }
+    }
+</style>

@@ -176,6 +176,17 @@ trait AuthenticationTestTrait
 
         $em->flush();
 
+        // Ensure slug is generated (Gedmo might not trigger in tests)
+        if ($larp->getSlug() === null) {
+            // Generate slug manually if Gedmo didn't generate it
+            $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title), '-'));
+            $larp->setSlug($slug);
+            $em->flush();
+        }
+
+        // Refresh to get the latest state from database
+        $em->refresh($larp);
+
         return $larp;
     }
 
