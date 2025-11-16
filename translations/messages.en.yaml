@@ -1111,3 +1111,41 @@ mail_template:
   available_placeholders: "Available placeholders"
   edit: "Edit mail template"
   edit_description: "Update the subject and content that gets delivered to your players."
+
+# Cookie Consent - GDPR/RODO Compliance
+cookie:
+  banner:
+    title: 'We use cookies'
+    description: 'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies. Read our'
+    privacy_link: 'Privacy Policy'
+    and: 'and'
+    terms_link: 'Terms of Service'
+    customize: 'Customize'
+    necessary_only: 'Necessary Only'
+    accept_all: 'Accept All'
+  preferences:
+    title: 'Cookie Preferences'
+    description: 'We use different types of cookies to optimize your experience on our platform. You can choose which types of cookies you want to allow.'
+    necessary_only: 'Necessary Only'
+    save: 'Save Preferences'
+  category:
+    necessary:
+      title: 'Necessary Cookies'
+      description: 'These cookies are essential for the website to function properly. They enable core functionality such as security, session management, and authentication.'
+    preferences:
+      title: 'Preference Cookies'
+      description: 'These cookies allow us to remember your preferences and settings, such as language selection and display options.'
+    analytics:
+      title: 'Analytics Cookies'
+      description: 'These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously.'
+    marketing:
+      title: 'Marketing Cookies'
+      description: 'These cookies are used to track visitors across websites to display relevant advertisements and marketing content.'
+    examples: 'Examples'
+    always_active: 'Always Active'
+
+# Legal Pages
+privacy_policy:
+  title: 'Privacy Policy'
+terms:
+  title: 'Terms of Service'

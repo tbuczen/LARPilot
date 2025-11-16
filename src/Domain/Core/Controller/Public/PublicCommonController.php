@@ -34,6 +34,12 @@ class PublicCommonController extends AbstractController
         return $this->render('public/terms.html.twig');
     }
 
+    #[Route('/privacy', name: 'privacy_policy')]
+    public function privacyPolicy(): Response
+    {
+        return $this->render('public/privacy.html.twig');
+    }
+
     #[Route('/connect', name: 'sso_connect')]
     public function index(Request $request, Session $session): Response
     {

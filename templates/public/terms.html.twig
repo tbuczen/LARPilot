@@ -1,5 +1,485 @@
 {% extends 'public/base.html.twig' %}
+
+{% block title %}Terms of Service - LARPilot{% endblock %}
+
 {% block body %}
-    <h1>{{ 'privacy_policy' }}</h1>
-    <div>{{ 'privacy_policy_content' }}</div>
+{% include 'includes/page_header.html.twig' with {
+    title: 'Terms of Service',
+    subtitle: 'Legal agreement for using LARPilot platform',
+    icon: 'bi bi-file-text'
+} %}
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <p class="text-muted mb-4">
+                <strong>Last updated:</strong> {{ "now"|date("F d, Y") }}
+            </p>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">1. Acceptance of Terms</h2>
+                    <p>
+                        Welcome to LARPilot. By accessing or using our platform, you agree to be bound by these Terms of Service ("Terms").
+                        If you do not agree to these Terms, please do not use our services.
+                    </p>
+                    <p>
+                        These Terms constitute a legally binding agreement between you and LARPilot. We reserve the right to update or modify
+                        these Terms at any time without prior notice. Your continued use of the platform after any such changes constitutes
+                        your acceptance of the new Terms.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">2. Description of Service</h2>
+                    <p>
+                        LARPilot is a web-based platform designed to help LARP (Live Action Role-Playing) organizers and players manage
+                        events, characters, story elements, and related activities. Our services include but are not limited to:
+                    </p>
+                    <ul>
+                        <li>LARP event creation and management</li>
+                        <li>Character application and management systems</li>
+                        <li>Story object creation (characters, threads, quests, events, factions, items, places, relations)</li>
+                        <li>Participant management and role assignment</li>
+                        <li>Integration with third-party services (Google Sheets, Docs, Calendar, Maps)</li>
+                        <li>Event scheduling and resource management</li>
+                        <li>Incident reporting and tracking</li>
+                        <li>Communication and collaboration tools</li>
+                    </ul>
+                    <p>
+                        We reserve the right to modify, suspend, or discontinue any aspect of the service at any time, with or without notice.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">3. User Accounts and Registration</h2>
+
+                    <h5 class="mt-4">3.1 Account Creation</h5>
+                    <p>
+                        To use certain features of LARPilot, you must create an account by authenticating through one of our supported
+                        OAuth providers (Google, Facebook, or Discord). You agree to:
+                    </p>
+                    <ul>
+                        <li>Provide accurate, current, and complete information during registration</li>
+                        <li>Maintain and update your information to keep it accurate and current</li>
+                        <li>Maintain the security of your account credentials</li>
+                        <li>Accept responsibility for all activities that occur under your account</li>
+                        <li>Notify us immediately of any unauthorized use of your account</li>
+                    </ul>
+
+                    <h5 class="mt-4">3.2 Age Requirements</h5>
+                    <p>
+                        You must be at least 16 years old (or the applicable age of digital consent in your jurisdiction) to create an account
+                        and use LARPilot. Users under 16 must have explicit parental or guardian consent.
+                    </p>
+
+                    <h5 class="mt-4">3.3 Account Termination</h5>
+                    <p>
+                        We reserve the right to suspend or terminate your account at any time, with or without notice, for conduct that we believe:
+                    </p>
+                    <ul>
+                        <li>Violates these Terms of Service</li>
+                        <li>Is harmful to other users, third parties, or our business interests</li>
+                        <li>Violates applicable laws or regulations</li>
+                        <li>Is fraudulent, abusive, or otherwise objectionable</li>
+                    </ul>
+                    <p>
+                        You may terminate your account at any time by contacting us at <a href="mailto:admin@larpilot.com">admin@larpilot.com</a>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">4. User Conduct and Responsibilities</h2>
+                    <p>
+                        As a user of LARPilot, you agree to the following code of conduct:
+                    </p>
+
+                    <h5 class="mt-4">4.1 Prohibited Activities</h5>
+                    <p>You agree NOT to:</p>
+                    <ul>
+                        <li>Use the platform for any unlawful purpose or in violation of any local, state, national, or international law</li>
+                        <li>Violate the intellectual property rights of others</li>
+                        <li>Upload, post, or transmit any content that is unlawful, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, or otherwise objectionable</li>
+                        <li>Impersonate any person or entity, or falsely state or misrepresent your affiliation with any person or entity</li>
+                        <li>Upload viruses, malware, or any other malicious code</li>
+                        <li>Attempt to gain unauthorized access to any part of the platform, other user accounts, or computer systems</li>
+                        <li>Interfere with or disrupt the integrity or performance of the platform</li>
+                        <li>Scrape, crawl, or use automated means to access the platform without our express written permission</li>
+                        <li>Use the platform to send spam, chain letters, or unsolicited commercial communications</li>
+                        <li>Engage in any form of harassment, bullying, or discrimination against other users</li>
+                        <li>Share or publish private or personal information of others without their consent</li>
+                    </ul>
+
+                    <h5 class="mt-4">4.2 LARP Event Organizer Responsibilities</h5>
+                    <p>If you create or organize LARP events using our platform, you additionally agree to:</p>
+                    <ul>
+                        <li>Comply with all applicable laws and regulations related to event organization</li>
+                        <li>Ensure the safety and well-being of event participants</li>
+                        <li>Respect participant privacy and data protection rights</li>
+                        <li>Handle payments, refunds, and financial matters in accordance with applicable laws</li>
+                        <li>Clearly communicate event rules, expectations, and safety protocols to participants</li>
+                        <li>Address incidents and conflicts professionally and promptly</li>
+                        <li>Not discriminate against participants based on race, ethnicity, religion, gender, sexual orientation, disability, or other protected characteristics</li>
+                    </ul>
+
+                    <h5 class="mt-4">4.3 Content Standards</h5>
+                    <p>All content you create or upload to LARPilot must:</p>
+                    <ul>
+                        <li>Comply with all applicable laws and regulations</li>
+                        <li>Be accurate and not misleading</li>
+                        <li>Respect the intellectual property rights of others</li>
+                        <li>Not contain hate speech, explicit violence, or sexually explicit material (unless clearly marked and appropriate for LARP narrative context)</li>
+                        <li>Not promote illegal activities or harmful behavior</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">5. Intellectual Property Rights</h2>
+
+                    <h5 class="mt-4">5.1 Platform Ownership</h5>
+                    <p>
+                        LARPilot and its original content, features, and functionality are owned by LARPilot and are protected by international
+                        copyright, trademark, patent, trade secret, and other intellectual property laws.
+                    </p>
+
+                    <h5 class="mt-4">5.2 User Content License</h5>
+                    <p>
+                        By posting, uploading, or submitting content to LARPilot ("User Content"), you grant us a worldwide, non-exclusive,
+                        royalty-free, transferable license to use, reproduce, distribute, prepare derivative works of, display, and perform
+                        your User Content in connection with operating and providing the platform.
+                    </p>
+                    <p>
+                        You retain all ownership rights to your User Content. This license allows us to:
+                    </p>
+                    <ul>
+                        <li>Store and display your content on the platform</li>
+                        <li>Share your content with other users as per your privacy settings and LARP configurations</li>
+                        <li>Create backups and ensure service reliability</li>
+                        <li>Make format adjustments for compatibility</li>
+                    </ul>
+
+                    <h5 class="mt-4">5.3 User Content Representations</h5>
+                    <p>You represent and warrant that:</p>
+                    <ul>
+                        <li>You own or have the necessary rights to all User Content you post</li>
+                        <li>Your User Content does not infringe upon the intellectual property rights of any third party</li>
+                        <li>You have obtained all necessary permissions and consents for any third-party content included in your submissions</li>
+                    </ul>
+
+                    <h5 class="mt-4">5.4 Third-Party Content</h5>
+                    <p>
+                        LARPilot may contain content from third parties, including other users. We do not endorse, support, represent, or
+                        guarantee the accuracy, completeness, or reliability of any third-party content.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">6. Third-Party Services and Integrations</h2>
+                    <p>
+                        LARPilot integrates with various third-party services to enhance functionality:
+                    </p>
+                    <ul>
+                        <li><strong>OAuth Providers:</strong> Google, Facebook, Discord (for authentication)</li>
+                        <li><strong>Google Services:</strong> Google Sheets, Google Docs, Google Calendar, Google Maps/Places API</li>
+                        <li><strong>ReCAPTCHA:</strong> Google ReCAPTCHA (for spam prevention)</li>
+                    </ul>
+                    <p>
+                        Your use of these third-party services is governed by their respective terms of service and privacy policies.
+                        We are not responsible for the practices, content, or services of third-party providers.
+                    </p>
+                    <p>
+                        When you connect third-party services to LARPilot, you authorize us to access and use your data from those services
+                        as necessary to provide our features. You can revoke these authorizations at any time through the respective
+                        third-party service settings.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">7. Privacy and Data Protection</h2>
+                    <p>
+                        Your privacy is important to us. Our collection, use, and protection of your personal data is governed by our
+                        <a href="{{ path('privacy_policy') }}" target="_blank">Privacy Policy</a>, which is incorporated into these Terms by reference.
+                    </p>
+                    <p>
+                        We comply with the General Data Protection Regulation (GDPR) and Polish RODO regulations. By using LARPilot, you consent
+                        to our data practices as described in the Privacy Policy.
+                    </p>
+                    <p>
+                        Key points regarding your data:
+                    </p>
+                    <ul>
+                        <li>You have the right to access, rectify, and delete your personal data</li>
+                        <li>You can export your data in a portable format</li>
+                        <li>You can withdraw consent for data processing at any time</li>
+                        <li>We implement appropriate security measures to protect your data</li>
+                        <li>We will notify you of any data breaches as required by law</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">8. Disclaimers and Limitations of Liability</h2>
+
+                    <h5 class="mt-4">8.1 "As Is" and "As Available" Disclaimer</h5>
+                    <p>
+                        LARPilot is provided on an "AS IS" and "AS AVAILABLE" basis without warranties of any kind, whether express or implied,
+                        including but not limited to:
+                    </p>
+                    <ul>
+                        <li>Warranties of merchantability, fitness for a particular purpose, or non-infringement</li>
+                        <li>Warranties that the service will be uninterrupted, timely, secure, or error-free</li>
+                        <li>Warranties regarding the accuracy, reliability, or completeness of any content</li>
+                    </ul>
+
+                    <h5 class="mt-4">8.2 Limitation of Liability</h5>
+                    <p>
+                        To the maximum extent permitted by applicable law, LARPilot and its officers, directors, employees, agents, and affiliates
+                        shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to:
+                    </p>
+                    <ul>
+                        <li>Loss of profits, data, use, or goodwill</li>
+                        <li>Service interruption or system failures</li>
+                        <li>Cost of substitute goods or services</li>
+                        <li>Unauthorized access to or alteration of your transmissions or data</li>
+                        <li>Statements or conduct of any third party on the service</li>
+                    </ul>
+                    <p>
+                        Our total liability for any claims arising out of or relating to these Terms or the service shall not exceed the amount
+                        you paid to us (if any) in the 12 months preceding the claim, or €100, whichever is greater.
+                    </p>
+
+                    <h5 class="mt-4">8.3 User Responsibility</h5>
+                    <p>
+                        You acknowledge and agree that:
+                    </p>
+                    <ul>
+                        <li>You use LARPilot at your own risk</li>
+                        <li>We are not responsible for the conduct of LARP event organizers or participants</li>
+                        <li>We are not liable for any physical, emotional, or financial harm that may occur during LARP events</li>
+                        <li>Event organizers are solely responsible for ensuring participant safety and compliance with laws</li>
+                        <li>You should independently verify information provided by other users</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">9. Indemnification</h2>
+                    <p>
+                        You agree to indemnify, defend, and hold harmless LARPilot and its officers, directors, employees, agents, affiliates,
+                        and partners from and against any and all claims, liabilities, damages, losses, costs, expenses, or fees (including
+                        reasonable attorneys' fees) arising from:
+                    </p>
+                    <ul>
+                        <li>Your use or misuse of the platform</li>
+                        <li>Your violation of these Terms</li>
+                        <li>Your violation of any rights of another party, including other users</li>
+                        <li>Your User Content or any content you post or share</li>
+                        <li>LARP events you organize or participate in</li>
+                        <li>Your violation of any applicable laws or regulations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">10. Payment Terms (If Applicable)</h2>
+                    <p>
+                        Currently, LARPilot is provided free of charge. If we introduce paid features or subscription plans in the future:
+                    </p>
+                    <ul>
+                        <li>We will provide clear pricing information before charging you</li>
+                        <li>Payment terms will be specified at the time of purchase</li>
+                        <li>All fees are non-refundable unless otherwise stated or required by law</li>
+                        <li>We reserve the right to change pricing with reasonable notice</li>
+                        <li>You are responsible for all taxes associated with your use of paid features</li>
+                    </ul>
+                    <p>
+                        <strong>Note:</strong> LARPilot is a platform tool. Any payments for LARP event attendance, tickets, or other
+                        event-related fees are handled directly between event organizers and participants. We are not responsible for
+                        these transactions.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">11. Termination</h2>
+
+                    <h5 class="mt-4">11.1 Termination by You</h5>
+                    <p>
+                        You may terminate your account at any time by contacting us at <a href="mailto:admin@larpilot.com">admin@larpilot.com</a>.
+                        Upon termination, you will lose access to your account and all associated data.
+                    </p>
+
+                    <h5 class="mt-4">11.2 Termination by Us</h5>
+                    <p>
+                        We may suspend or terminate your access to the platform immediately, without prior notice or liability, for any reason,
+                        including but not limited to:
+                    </p>
+                    <ul>
+                        <li>Breach of these Terms</li>
+                        <li>Violation of applicable laws</li>
+                        <li>Fraudulent, abusive, or illegal activity</li>
+                        <li>Extended periods of inactivity</li>
+                        <li>Requests by law enforcement or government agencies</li>
+                    </ul>
+
+                    <h5 class="mt-4">11.3 Effect of Termination</h5>
+                    <p>
+                        Upon termination:
+                    </p>
+                    <ul>
+                        <li>Your right to use the platform will immediately cease</li>
+                        <li>We may delete your account and all associated data (subject to data retention requirements)</li>
+                        <li>Provisions that by their nature should survive termination will survive (e.g., intellectual property, disclaimers, limitations of liability)</li>
+                        <li>You may request a copy of your data before deletion, subject to our Privacy Policy</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">12. Dispute Resolution and Governing Law</h2>
+
+                    <h5 class="mt-4">12.1 Governing Law</h5>
+                    <p>
+                        These Terms shall be governed by and construed in accordance with the laws of Poland and the European Union,
+                        without regard to conflict of law provisions.
+                    </p>
+
+                    <h5 class="mt-4">12.2 Jurisdiction</h5>
+                    <p>
+                        Any disputes arising out of or relating to these Terms or the use of LARPilot shall be subject to the exclusive
+                        jurisdiction of the courts of Poland.
+                    </p>
+
+                    <h5 class="mt-4">12.3 Dispute Resolution Process</h5>
+                    <p>
+                        Before filing a claim, we encourage you to contact us at <a href="mailto:admin@larpilot.com">admin@larpilot.com</a>
+                        to resolve the dispute informally. We will work in good faith to resolve any disputes.
+                    </p>
+
+                    <h5 class="mt-4">12.4 EU Consumer Rights</h5>
+                    <p>
+                        If you are a consumer in the European Union, nothing in these Terms affects your statutory rights under EU consumer
+                        protection laws. You have the right to use the European Commission's Online Dispute Resolution platform:
+                        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">13. Changes to Terms of Service</h2>
+                    <p>
+                        We reserve the right to modify or replace these Terms at any time at our sole discretion. We will provide notice
+                        of material changes by:
+                    </p>
+                    <ul>
+                        <li>Updating the "Last updated" date at the top of this page</li>
+                        <li>Sending an email notification to registered users (for significant changes)</li>
+                        <li>Displaying a prominent notice on the platform</li>
+                    </ul>
+                    <p>
+                        Your continued use of the platform after any modifications to the Terms constitutes your acceptance of such changes.
+                        If you do not agree to the modified Terms, you must stop using the platform and may terminate your account.
+                    </p>
+                    <p>
+                        We recommend reviewing this page periodically to stay informed of any updates.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">14. Miscellaneous Provisions</h2>
+
+                    <h5 class="mt-4">14.1 Entire Agreement</h5>
+                    <p>
+                        These Terms, together with our Privacy Policy and any other legal notices published by us on the platform,
+                        constitute the entire agreement between you and LARPilot.
+                    </p>
+
+                    <h5 class="mt-4">14.2 Severability</h5>
+                    <p>
+                        If any provision of these Terms is found to be invalid or unenforceable by a court of competent jurisdiction,
+                        the remaining provisions will remain in full force and effect.
+                    </p>
+
+                    <h5 class="mt-4">14.3 Waiver</h5>
+                    <p>
+                        No waiver of any term of these Terms shall be deemed a further or continuing waiver of such term or any other term.
+                        Our failure to enforce any right or provision of these Terms shall not constitute a waiver of such right or provision.
+                    </p>
+
+                    <h5 class="mt-4">14.4 Assignment</h5>
+                    <p>
+                        You may not assign or transfer these Terms or your rights hereunder without our prior written consent.
+                        We may assign or transfer these Terms without restriction.
+                    </p>
+
+                    <h5 class="mt-4">14.5 Force Majeure</h5>
+                    <p>
+                        We shall not be liable for any failure to perform our obligations where such failure results from circumstances
+                        beyond our reasonable control, including but not limited to acts of God, war, terrorism, civil unrest, labor disputes,
+                        or failure of third-party services.
+                    </p>
+
+                    <h5 class="mt-4">14.6 Headings</h5>
+                    <p>
+                        The headings and subheadings in these Terms are for convenience only and do not affect the interpretation of these Terms.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">15. Contact Information</h2>
+                    <p>
+                        If you have any questions about these Terms of Service, please contact us:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><strong>Email:</strong> <a href="mailto:admin@larpilot.com">admin@larpilot.com</a></li>
+                        <li><strong>Support:</strong> Available through our platform feedback system</li>
+                    </ul>
+                    <p>
+                        For privacy-related inquiries, please refer to our
+                        <a href="{{ path('privacy_policy') }}">Privacy Policy</a> contact information.
+                    </p>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-5">
+                <h5 class="alert-heading">
+                    <i class="bi bi-info-circle"></i> Summary
+                </h5>
+                <p class="mb-0">
+                    By using LARPilot, you agree to follow our community guidelines, respect other users, and comply with applicable laws.
+                    We provide the platform "as is" and are not responsible for LARP events or user conduct. You retain ownership of your
+                    content but grant us a license to operate the platform. For questions, contact us at
+                    <a href="mailto:admin@larpilot.com" class="alert-link">admin@larpilot.com</a>.
+                </p>
+            </div>
+
+            <div class="text-center mt-5 mb-3">
+                <a href="{{ path('backoffice_dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+                <a href="{{ path('privacy_policy') }}" class="btn btn-outline-secondary">View Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
