@@ -75,8 +75,8 @@ $desktop-min: 769px;
     right: 0;
     width: $sidebar-width-mobile;
     height: 100%;
-    background: $sidebar-bg;
-    border-left: 1px solid $sidebar-border-color;
+    background: var(--bg-sidebar, $sidebar-bg);
+    border-left: 1px solid var(--border-color-light, $sidebar-border-color);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 1050;
@@ -90,15 +90,15 @@ $desktop-min: 769px;
     }
 
     &::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.05);
+        background: var(--sidebar-scrollbar-track, rgba(0, 0, 0, 0.05));
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba(102, 126, 234, 0.3);
+        background: var(--sidebar-scrollbar-thumb, rgba(102, 126, 234, 0.3));
         border-radius: 4px;
 
         &:hover {
-            background: rgba(102, 126, 234, 0.5);
+            background: var(--sidebar-scrollbar-thumb-hover, rgba(102, 126, 234, 0.5));
         }
     }
 
@@ -111,10 +111,11 @@ $desktop-min: 769px;
 // Sidebar header
 .sidebar-header {
     padding: 1.5rem 1.25rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-sidebar-header, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     border-bottom: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -219,7 +220,7 @@ $desktop-min: 769px;
 // Enhanced menu items styling
 .sidebar-body {
     .nav-link {
-        color: #2d3748;
+        color: var(--sidebar-text, #2d3748);
         padding: 0.875rem 1rem;
         margin-bottom: 0.375rem;
         border-radius: 10px;
@@ -246,7 +247,7 @@ $desktop-min: 769px;
         }
 
         &:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            background: var(--sidebar-link-hover-bg, linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%));
             color: #667eea;
             transform: translateX(4px);
             padding-left: 1.125rem;
@@ -257,7 +258,7 @@ $desktop-min: 769px;
         }
 
         &.active {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            background: var(--sidebar-link-active-bg, linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%));
             color: #667eea;
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);

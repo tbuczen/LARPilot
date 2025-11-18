@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Title{% endblock %}</title>
+
+    {# Inline script to prevent FOUC (Flash of Unstyled Content) when dark mode is enabled #}
+    <script>
+        (function() {
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'true' || (darkMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
     <link rel="icon"
 {#          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">#}
           href="/images/favicon.png">
@@ -23,9 +34,16 @@
     <!-- Sidebar overlay for mobile -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-    <div id="sidebarMenu" class="sidebar-menu">
+    <div id="sidebarMenu" class="sidebar-menu" data-controller="dark-mode">
         <div class="sidebar-header">
             <h5 class="sidebar-title">{{ 'menu.navigation'|trans }}</h5>
+            <button type="button"
+                    class="dark-mode-toggle"
+                    data-action="click->dark-mode#toggle"
+                    title="{{ 'dark_mode.toggle'|trans }}"
+                    aria-label="{{ 'dark_mode.toggle'|trans }}">
+                <i class="bi bi-moon-fill"></i>
+            </button>
             <button type="button" class="btn-close btn-close-white sidebar-close" aria-label="{{ 'close'|trans }}"></button>
         </div>
         <div class="sidebar-body">

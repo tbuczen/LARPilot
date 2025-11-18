@@ -23,7 +23,7 @@ class GalleryFilterType extends AbstractType
         $builder
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
-                'label' => 'common.search',
+                'label' => 'search',
                 'required' => false,
             ])
             ->add('photographer', EntityType::class, [

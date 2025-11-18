@@ -1,0 +1,308 @@
+// Dark Mode Variables and Styles
+
+// Light mode variables (default)
+:root {
+    // Background colors
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #f0f0f0;
+    --bg-card: #ffffff;
+    --bg-sidebar: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+    --bg-sidebar-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    // Text colors
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #8e8e93;
+    --text-inverse: #ffffff;
+
+    // Border colors
+    --border-color: #dee2e6;
+    --border-color-light: #e0e0e0;
+
+    // Component colors
+    --card-bg: #ffffff;
+    --modal-bg: #ffffff;
+    --table-bg: #ffffff;
+    --table-hover-bg: rgba(0, 0, 0, 0.05);
+    --table-striped-bg: rgba(0, 0, 0, 0.025);
+
+    // Input colors
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --input-text: #212529;
+    --input-placeholder: #6c757d;
+
+    // Shadow colors
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+    // Sidebar specific
+    --sidebar-text: #2d3748;
+    --sidebar-link-hover-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+    --sidebar-link-active-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    --sidebar-scrollbar-track: rgba(0, 0, 0, 0.05);
+    --sidebar-scrollbar-thumb: rgba(102, 126, 234, 0.3);
+    --sidebar-scrollbar-thumb-hover: rgba(102, 126, 234, 0.5);
+}
+
+// Dark mode variables
+html.dark-mode {
+    // Background colors
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #3a3a3a;
+    --bg-card: #2d2d2d;
+    --bg-sidebar: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+    --bg-sidebar-header: linear-gradient(135deg, #5568d3 0%, #6a4c93 100%);
+
+    // Text colors
+    --text-primary: #e8e8e8;
+    --text-secondary: #b8b8b8;
+    --text-muted: #8e8e93;
+    --text-inverse: #1a1a1a;
+
+    // Border colors
+    --border-color: #404040;
+    --border-color-light: #4a4a4a;
+
+    // Component colors
+    --card-bg: #2d2d2d;
+    --modal-bg: #2d2d2d;
+    --table-bg: #2d2d2d;
+    --table-hover-bg: rgba(255, 255, 255, 0.05);
+    --table-striped-bg: rgba(255, 255, 255, 0.025);
+
+    // Input colors
+    --input-bg: #3a3a3a;
+    --input-border: #4a4a4a;
+    --input-text: #e8e8e8;
+    --input-placeholder: #8e8e93;
+
+    // Shadow colors
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+
+    // Sidebar specific
+    --sidebar-text: #e8e8e8;
+    --sidebar-link-hover-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.15) 0%, rgba(106, 76, 147, 0.15) 100%);
+    --sidebar-link-active-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.25) 0%, rgba(106, 76, 147, 0.25) 100%);
+    --sidebar-scrollbar-track: rgba(255, 255, 255, 0.05);
+    --sidebar-scrollbar-thumb: rgba(85, 104, 211, 0.4);
+    --sidebar-scrollbar-thumb-hover: rgba(85, 104, 211, 0.6);
+}
+
+// Apply dark mode styles to various components
+html.dark-mode {
+    body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    // Headers
+    header {
+        background-color: var(--bg-secondary) !important;
+    }
+
+    // Cards
+    .card {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .card-header {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .card-body {
+        background-color: var(--card-bg);
+        color: var(--text-primary);
+    }
+
+    .card-footer {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+    }
+
+    // Tables
+    .table {
+        --bs-table-bg: var(--table-bg);
+        --bs-table-striped-bg: var(--table-striped-bg);
+        --bs-table-hover-bg: var(--table-hover-bg);
+        --bs-table-color: var(--text-primary);
+        --bs-table-border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .table-light {
+        --bs-table-bg: var(--bg-secondary);
+        --bs-table-color: var(--text-primary);
+    }
+
+    // Modals
+    .modal-content {
+        background-color: var(--modal-bg);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .modal-header,
+    .modal-footer {
+        border-color: var(--border-color);
+    }
+
+    // Forms
+    .form-control,
+    .form-select {
+        background-color: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--input-text);
+
+        &::placeholder {
+            color: var(--input-placeholder);
+        }
+
+        &:focus {
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border-color: #667eea;
+        }
+    }
+
+    // Text colors
+    .text-muted {
+        color: var(--text-muted) !important;
+    }
+
+    .text-secondary {
+        color: var(--text-secondary) !important;
+    }
+
+    // Borders
+    .border,
+    .border-top,
+    .border-bottom,
+    .border-start,
+    .border-end {
+        border-color: var(--border-color) !important;
+    }
+
+    // List groups
+    .list-group-item {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    // Alerts
+    .alert {
+        border-color: var(--border-color);
+    }
+
+    // Links
+    a:not(.btn) {
+        &:hover {
+            filter: brightness(1.2);
+        }
+    }
+
+    // Dropdowns
+    .dropdown-menu {
+        background-color: var(--card-bg);
+        border-color: var(--border-color);
+    }
+
+    .dropdown-item {
+        color: var(--text-primary);
+
+        &:hover,
+        &:focus {
+            background-color: var(--bg-secondary);
+        }
+    }
+
+    // Badges
+    .badge {
+        filter: brightness(0.9);
+    }
+
+    // TomSelect (autocomplete)
+    .ts-wrapper .ts-control,
+    .ts-dropdown {
+        background-color: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--input-text);
+    }
+
+    .ts-dropdown .option {
+        color: var(--text-primary);
+
+        &:hover,
+        &.active {
+            background-color: var(--bg-secondary);
+        }
+    }
+
+    // Quill editor
+    .ql-toolbar,
+    .ql-container {
+        background-color: var(--input-bg);
+        border-color: var(--input-border);
+    }
+
+    .ql-editor {
+        color: var(--input-text);
+    }
+
+    .ql-snow .ql-stroke {
+        stroke: var(--text-primary);
+    }
+
+    .ql-snow .ql-fill {
+        fill: var(--text-primary);
+    }
+}
+
+// Dark mode toggle button styling
+.dark-mode-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-left: auto;
+
+    i {
+        font-size: 1.25rem;
+        color: white;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+
+        i {
+            transform: rotate(20deg);
+        }
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.5);
+        outline-offset: 2px;
+    }
+}

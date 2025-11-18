@@ -42,7 +42,7 @@ class PlanningResourceType extends AbstractType
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'planning_resource.quantity',
-                'attr' => ['min' => 1],
+                'attr' => ['min' => 1, 'max' => 99999],
             ])
             ->add('shareable', CheckboxType::class, [
                 'label' => 'planning_resource.shareable',

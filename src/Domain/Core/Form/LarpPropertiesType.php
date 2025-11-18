@@ -7,8 +7,10 @@ use App\Domain\Core\Entity\Enum\LarpSetting;
 use App\Domain\Core\Entity\Enum\LarpType;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Location;
+use App\Domain\Survey\Entity\Enum\ApplicationMode;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -55,7 +57,28 @@ class LarpPropertiesType extends AbstractType
             ->add('maxCharacterChoices', IntegerType::class, [
                 'label' => 'Max Character Choices',
                 'required' => true,
-                'attr' => ['class' => 'form-control', 'min' => 1]
+                'attr' => ['class' => 'form-control', 'min' => 1],
+                'help' => 'How many characters can players select when applying (only for Character Selection mode)'
+            ])
+            ->add('applicationMode', EnumType::class, [
+                'class' => ApplicationMode::class,
+                'choice_label' => fn (ApplicationMode $mode): string => $mode->getLabel(),
+                'expanded' => true,
+                'label' => 'Application Mode',
+                'help' => 'How players apply for this LARP',
+                'attr' => [
+                    'class' => 'form-check',
+                    'data-controller' => 'application-mode-toggle'
+                ]
+            ])
+            ->add('publishCharactersPublicly', CheckboxType::class, [
+                'label' => 'Publish Character Gallery',
+                'required' => false,
+                'help' => 'Show characters publicly on the LARP page (only available in Character Selection mode)',
+                'attr' => [
+                    'class' => 'form-check-input',
+                    'data-application-mode-toggle-target' => 'publishCheckbox'
+                ]
             ])
             ->add('setting', EnumType::class, [
                 'class' => LarpSetting::class,

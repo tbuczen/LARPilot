@@ -77,6 +77,15 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $headerImage = null;
 
+    #[ORM\Column(type: Types::STRING, length: 50, enumType: \App\Domain\Survey\Entity\Enum\ApplicationMode::class)]
+    private \App\Domain\Survey\Entity\Enum\ApplicationMode $applicationMode = \App\Domain\Survey\Entity\Enum\ApplicationMode::CHARACTER_SELECTION;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $publishCharactersPublicly = false;
+
+    #[ORM\OneToOne(targetEntity: \App\Domain\Survey\Entity\Survey::class, mappedBy: 'larp', cascade: ['persist', 'remove'])]
+    private ?\App\Domain\Survey\Entity\Survey $survey = null;
+
     /** @var Collection<Character> */
     #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'larp')]
     private Collection $characters;
@@ -491,6 +500,46 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     public function removeMailTemplate(MailTemplate $mailTemplate): static
     {
         $this->mailTemplates->removeElement($mailTemplate);
+
+        return $this;
+    }
+
+    public function getApplicationMode(): \App\Domain\Survey\Entity\Enum\ApplicationMode
+    {
+        return $this->applicationMode;
+    }
+
+    public function setApplicationMode(\App\Domain\Survey\Entity\Enum\ApplicationMode $applicationMode): static
+    {
+        $this->applicationMode = $applicationMode;
+
+        return $this;
+    }
+
+    public function getPublishCharactersPublicly(): bool
+    {
+        return $this->publishCharactersPublicly;
+    }
+
+    public function setPublishCharactersPublicly(bool $publishCharactersPublicly): static
+    {
+        $this->publishCharactersPublicly = $publishCharactersPublicly;
+
+        return $this;
+    }
+
+    public function getSurvey(): ?\App\Domain\Survey\Entity\Survey
+    {
+        return $this->survey;
+    }
+
+    public function setSurvey(?\App\Domain\Survey\Entity\Survey $survey): static
+    {
+        $this->survey = $survey;
+
+        if ($survey !== null && $survey->getLarp() !== $this) {
+            $survey->setLarp($this);
+        }
 
         return $this;
     }

@@ -13,6 +13,8 @@ incidents: Incydenty
 tags: Tagi
 menu:
   toggle: 'Menu'
+dark_mode:
+  toggle: 'Przełącz tryb ciemny'
 create: 'Stwórz'
 name: 'Nazwa'
 description: 'Opis'
@@ -441,7 +443,7 @@ larp:
     visibility: "Ustawienia widoczności"
     visible_everyone: "Widoczny dla wszystkich"
     visible_organizers: "Widoczny dla organizatorów"
-    manage: "Zarządzaj statusem"
+    manage: "Zarządzaj"
     draft: "Szkic"
     wip: "W trakcie prac"
     published: "Opublikowany"

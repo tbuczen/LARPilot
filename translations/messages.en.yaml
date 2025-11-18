@@ -32,6 +32,8 @@ list_view: 'List View'
 menu:
   toggle: 'Menu'
   navigation: 'Navigation'
+dark_mode:
+  toggle: 'Toggle Dark Mode'
 create: 'Create'
 name: 'Name'
 description: 'Description'
