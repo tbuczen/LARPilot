@@ -94,6 +94,16 @@ final class LocationFactory extends PersistentProxyObjectFactory
     }
 
     /**
+     * Location created by specific user
+     */
+    public function createdBy(mixed $user): self
+    {
+        return $this->with([
+            'createdBy' => $user,
+        ]);
+    }
+
+    /**
      * Public location (visible to all)
      */
     public function public(): self
@@ -120,6 +130,17 @@ final class LocationFactory extends PersistentProxyObjectFactory
     {
         return $this->with([
             'isActive' => false,
+        ]);
+    }
+
+    /**
+     * Add rejection reason and rejectedAT
+     */
+    public function withRejectionReason(string $reason): self
+    {
+        return $this->with([
+            'rejectionReason' => $reason,
+            'rejectedAt' => self::faker()->date(),
         ]);
     }
 }

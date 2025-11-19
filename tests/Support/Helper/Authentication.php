@@ -5,27 +5,42 @@ declare(strict_types=1);
 namespace Tests\Support\Helper;
 
 use App\Domain\Account\Entity\User;
+use App\Domain\Core\Entity\Enum\LarpStageStatus;
+use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\LarpParticipant;
+use App\Domain\Core\Entity\Location;
+use Codeception\Exception\ModuleException;
 use Codeception\Module;
 use Codeception\Module\Symfony;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Tests\Support\Factory\Account\UserFactory;
+use Tests\Support\Factory\Core\LarpFactory;
+use Tests\Support\Factory\Core\LarpParticipantFactory;
+use Tests\Support\Factory\Core\LocationFactory;
 
 /**
  * Authentication Helper for Codeception Tests
  *
- * Follows Single Responsibility Principle:
- * - Only handles session-based authentication for Codeception tests
- * - User creation delegated to Foundry factories
- * - URL generation and service access through parent Symfony module
+ * Integrates Foundry factories with Codeception actors:
+ * - Session-based authentication via amLoggedInAs()
+ * - User creation using UserFactory
+ * - LARP/Location creation using domain factories
+ * - Route generation and service access through Symfony module
  */
 class Authentication extends Module
 {
     protected ?Symfony $symfony = null;
 
+    /**
+     * @throws ModuleException
+     */
     public function _beforeSuite($settings = []): void
     {
-        $this->symfony = $this->getModule('Symfony');
+        /** @var Symfony $module */
+        $module = $this->getModule('Symfony');
+        $this->symfony = $module;
     }
 
     /**
@@ -48,7 +63,9 @@ class Authentication extends Module
      */
     public function getEntityManager(): EntityManagerInterface
     {
-        return $this->symfony->grabService(EntityManagerInterface::class);
+        /** @var EntityManagerInterface $service */
+        $service = $this->symfony->grabService(EntityManagerInterface::class);
+        return $service;
     }
 
     /**
@@ -57,5 +74,10 @@ class Authentication extends Module
     public function getUrl(string $route, array $parameters = []): string
     {
         return $this->symfony->grabService('router')->generate($route, $parameters);
+    }
+
+    public function createSuperAdmin(): User
+    {
+        return UserFactory::new()->approved()->superAdmin()->create()->_real();
     }
 }

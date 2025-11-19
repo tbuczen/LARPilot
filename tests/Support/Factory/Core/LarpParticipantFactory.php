@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Support\Factory\Core;
 
+use App\Domain\Core\Entity\Enum\ParticipantRole;
 use App\Domain\Core\Entity\LarpParticipant;
 use Tests\Support\Factory\Account\UserFactory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
@@ -16,24 +19,26 @@ final class LarpParticipantFactory extends PersistentProxyObjectFactory
         return LarpParticipant::class;
     }
 
+    protected function initialize(): static
+    {
+        return $this
+            // ->afterInstantiate(function(Larp $larp): void {})
+            ;
+    }
+
     protected function defaults(): array
     {
         return [
             'user' => UserFactory::new()->approved(),
             'larp' => LarpFactory::new(),
-            'roles' => ['ROLE_PLAYER'],
+            'roles' => [ParticipantRole::PLAYER],
         ];
     }
 
-    protected function initialize(): static
-    {
-        return $this
-            // ->afterInstantiate(function(LarpParticipant $larpParticipant): void {})
-        ;
-    }
+
 
     // ========================================================================
-    // Factory States
+    // Factory States - Role Methods
     // ========================================================================
 
     /**
@@ -42,7 +47,7 @@ final class LarpParticipantFactory extends PersistentProxyObjectFactory
     public function player(): self
     {
         return $this->with([
-            'roles' => ['ROLE_PLAYER'],
+            'roles' => [ParticipantRole::PLAYER],
         ]);
     }
 
@@ -52,17 +57,27 @@ final class LarpParticipantFactory extends PersistentProxyObjectFactory
     public function organizer(): self
     {
         return $this->with([
-            'roles' => ['ROLE_ORGANIZER'],
+            'roles' => [ParticipantRole::ORGANIZER],
         ]);
     }
 
     /**
-     * Participant with ADMIN role
+     * Participant with STAFF role
      */
-    public function admin(): self
+    public function staff(): self
     {
         return $this->with([
-            'roles' => ['ROLE_ADMIN'],
+            'roles' => [ParticipantRole::STAFF],
+        ]);
+    }
+
+    /**
+     * Participant with MAIN_STORY_WRITER role
+     */
+    public function mainStoryWriter(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::MAIN_STORY_WRITER],
         ]);
     }
 
@@ -72,7 +87,7 @@ final class LarpParticipantFactory extends PersistentProxyObjectFactory
     public function storyWriter(): self
     {
         return $this->with([
-            'roles' => ['ROLE_STORY_WRITER'],
+            'roles' => [ParticipantRole::STORY_WRITER],
         ]);
     }
 
@@ -82,19 +97,123 @@ final class LarpParticipantFactory extends PersistentProxyObjectFactory
     public function photographer(): self
     {
         return $this->with([
-            'roles' => ['ROLE_PHOTOGRAPHER'],
+            'roles' => [ParticipantRole::PHOTOGRAPHER],
         ]);
     }
 
     /**
-     * Participant with TRUST_PERSON role
+     * Participant with CRAFTER role
+     */
+    public function crafter(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::CRAFTER],
+        ]);
+    }
+
+    /**
+     * Participant with MAKEUP_ARTIST role
+     */
+    public function makeupArtist(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::MAKEUP_ARTIST],
+        ]);
+    }
+
+    /**
+     * Participant with GAME_MASTER role
+     */
+    public function gameMaster(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::GAME_MASTER],
+        ]);
+    }
+
+    /**
+     * Participant with NPC_LONG role (long-duration NPC)
+     */
+    public function npcLong(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::NPC_LONG],
+        ]);
+    }
+
+    /**
+     * Participant with NPC_SHORT role (short-duration NPC)
+     */
+    public function npcShort(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::NPC_SHORT],
+        ]);
+    }
+
+    /**
+     * Participant with MEDIC role
+     */
+    public function medic(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::MEDIC],
+        ]);
+    }
+
+    /**
+     * Participant with TRASHER role
+     */
+    public function trasher(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::TRASHER],
+        ]);
+    }
+
+    /**
+     * Participant with TRUST_PERSON role (person of trust)
      */
     public function trustPerson(): self
     {
         return $this->with([
-            'roles' => ['ROLE_TRUST_PERSON'],
+            'roles' => [ParticipantRole::TRUST_PERSON],
         ]);
     }
+
+    /**
+     * Participant with OUTFIT_APPROVER role
+     */
+    public function outfitApprover(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::OUTFIT_APPROVER],
+        ]);
+    }
+
+    /**
+     * Participant with ACCOUNTANT role
+     */
+    public function accountant(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::ACCOUNTANT],
+        ]);
+    }
+
+    /**
+     * Participant with GASTRONOMY role
+     */
+    public function gastronomy(): self
+    {
+        return $this->with([
+            'roles' => [ParticipantRole::GASTRONOMY],
+        ]);
+    }
+
+    // ========================================================================
+    // Factory Configuration Methods
+    // ========================================================================
 
     /**
      * Participant for a specific LARP
@@ -118,6 +237,8 @@ final class LarpParticipantFactory extends PersistentProxyObjectFactory
 
     /**
      * Participant with multiple roles
+     *
+     * @param ParticipantRole[] $roles
      */
     public function withRoles(array $roles): self
     {

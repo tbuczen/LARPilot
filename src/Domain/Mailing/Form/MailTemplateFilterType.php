@@ -17,6 +17,7 @@ class MailTemplateFilterType extends AbstractType
             ->add('name', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
                 'label' => 'name',
+                'required' => false,
             ])
             ->add('type', Filters\EnumFilterType::class, [
                 'class' => MailTemplateType::class,
@@ -27,6 +28,7 @@ class MailTemplateFilterType extends AbstractType
             ])
             ->add('enabled', Filters\BooleanFilterType::class, [
                 'label' => 'mail_template.enabled',
+                'translation_domain' => 'forms',
                 'required' => false,
             ]);
     }

@@ -1,0 +1,189 @@
+:root {
+
+  // ============================================
+  // BACKOFFICE COLOR VARIABLES
+  // ============================================
+  
+  // Base Colors
+  --bo-white: #ffffff;
+  --bo-black: #000000;
+  --bo-gray-50: #f8f9fa;
+  --bo-gray-100: #e9ecef;
+  --bo-gray-200: #dee2e6;
+  --bo-gray-300: #ced4da;
+  --bo-gray-400: #adb5bd;
+  --bo-gray-500: #6c757d;
+  --bo-gray-600: #495057;
+  --bo-gray-700: #343a40;
+  --bo-gray-800: #212529;
+
+  // Primary Colors (Bootstrap Blue)
+  --bo-primary: #0d6efd;
+  --bo-primary-hover: #0b5ed7;
+  --bo-primary-active: #0a58ca;
+  --bo-primary-light: #e7f1ff;
+  --bo-primary-dark: #084298;
+
+  // Success Colors (Green)
+  --bo-success: #198754;
+  --bo-success-hover: #157347;
+  --bo-success-active: #146c43;
+  --bo-success-light: #d1e7dd;
+  --bo-success-dark: #0f5132;
+
+  // Danger Colors (Red)
+  --bo-danger: #dc3545;
+  --bo-danger-hover: #bb2d3b;
+  --bo-danger-active: #b02a37;
+  --bo-danger-light: #f8d7da;
+  --bo-danger-dark: #842029;
+
+  // Warning Colors (Yellow)
+  --bo-warning: #ffc107;
+  --bo-warning-hover: #ffca2c;
+  --bo-warning-active: #ffcd39;
+  --bo-warning-light: #fff3cd;
+  --bo-warning-dark: #997404;
+
+  // Info Colors (Cyan)
+  --bo-info: #0dcaf0;
+  --bo-info-hover: #31d2f2;
+  --bo-info-active: #3dd5f3;
+  --bo-info-light: #cff4fc;
+  --bo-info-dark: #055160;
+
+  // Header Colors
+  --bo-header-bg: var(--bo-white);
+  --bo-header-border:  var(--bo-gray-200);
+  --bo-header-shadow: 0 2px 4px rgba(--bo-black, 0.08);
+
+  // Navigation Colors
+  --bo-nav-text:  var(--bo-gray-600);
+  --bo-nav-text-hover:  var(--bo-primary);
+  --bo-nav-text-active:  var(--bo-primary);
+  --bo-nav-bg-hover:  var(--bo-gray-50);
+  --bo-nav-bg-active:  var(--bo-primary-light);
+  --bo-nav-border-active:  var(--bo-primary);
+
+  // LARP Title Colors
+  --bo-title-color:  var(--bo-gray-800);
+  --bo-title-icon-color:  var(--bo-primary);
+
+  // Border Radius
+  --bo-border-radius: 6px;
+  --bo-border-radius-sm: 4px;
+  --bo-border-radius-lg: 8px;
+  --bo-border-radius-xl: 10px;
+
+  //--bo-border-radius: 8px;
+  //--bo-border-radius-sm: 6px;
+  //--bo-border-radius-lg: 10px;
+  //--bo-border-radius-xl: 12px;
+
+  // Transitions
+  --bo-transition-smooth: all 0.2s ease;
+  --bo-transition-fast: all 0.15s ease;
+  --bo-transition-default: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Shadows
+  --bo-shadow-sm: 0 2px 4px rgba(var(--bo-black), 0.08);
+  --bo-shadow: 0 2px 8px rgba(var(--bo-black), 0.08);
+  --bo-shadow-lg: 0 4px 12px rgba(var(--bo-black), 0.12);
+  --bo-shadow-xl: 0 8px 24px rgba(var(--bo-black), 0.15);
+
+  --bo-shadow-success: 0 4px 12px rgba(var(--bo-success), 0.3);
+  --bo-shadow-success-hover: 0 6px 16px rgba(var(--bo-success), 0.4);
+  --bo-shadow-danger: 0 4px 12px rgba(var(--bo-danger), 0.3);
+
+  ////////////////////////
+  // Background colors
+  --bg-primary: #2d2d2d;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f0f0f0;
+  --bg-card: #ffffff;
+  --bg-sidebar: linear-gradient(180deg, #2d2d2d 0%, #f8f9fa 100%);
+  --bg-sidebar-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  // Text colors
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-muted: #8e8e93;
+  --text-inverse: #ffffff;
+
+  // Border colors
+  --border-color: #dee2e6;
+  --border-color-light: #e0e0e0;
+
+  // Component colors
+  --card-bg: #ffffff;
+  --modal-bg: #ffffff;
+  --table-bg: #ffffff;
+  --table-hover-bg: rgba(0, 0, 0, 0.05);
+  --table-striped-bg: rgba(0, 0, 0, 0.025);
+
+  // Input colors
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-text: #212529;
+  --input-placeholder: #6c757d;
+
+  // Shadow colors
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+  // Sidebar specific
+  --sidebar-text: #2d3748;
+  --sidebar-link-hover-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+  --sidebar-link-active-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  --sidebar-scrollbar-track: rgba(0, 0, 0, 0.05);
+  --sidebar-scrollbar-thumb: rgba(102, 126, 234, 0.3);
+  --sidebar-scrollbar-thumb-hover: rgba(102, 126, 234, 0.5);
+}
+
+// Dark mode variables
+html.dark-mode {
+  // Background colors
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2f2f2f;
+  --bg-tertiary: #4a4a4a;
+  --bg-card: #2d2d2d;
+  --bg-sidebar: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+  --bg-sidebar-header: linear-gradient(135deg, #5568d3 0%, #6a4c93 100%);
+
+  // Text colors
+  --text-primary: #e8e8e8;
+  --text-secondary: #b8b8b8;
+  --text-muted: #8e8e93;
+  --text-inverse: #1a1a1a;
+
+  // Border colors
+  --border-color: #404040;
+  --border-color-light: #4a4a4a;
+
+  // Component colors
+  --card-bg: #2d2d2d;
+  --modal-bg: #2d2d2d;
+  --table-bg: #2d2d2d;
+  --table-hover-bg: rgba(255, 255, 255, 0.05);
+  --table-striped-bg: rgba(255, 255, 255, 0.025);
+
+  // Input colors
+  --input-bg: #3a3a3a;
+  --input-border: #4a4a4a;
+  --input-text: #e8e8e8;
+  --input-placeholder: #8e8e93;
+
+  // Shadow colors
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+
+  // Sidebar specific
+  --sidebar-text: #e8e8e8;
+  --sidebar-link-hover-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.15) 0%, rgba(106, 76, 147, 0.15) 100%);
+  --sidebar-link-active-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.25) 0%, rgba(106, 76, 147, 0.25) 100%);
+  --sidebar-scrollbar-track: rgba(255, 255, 255, 0.05);
+  --sidebar-scrollbar-thumb: rgba(85, 104, 211, 0.4);
+  --sidebar-scrollbar-thumb-hover: rgba(85, 104, 211, 0.6);
+}

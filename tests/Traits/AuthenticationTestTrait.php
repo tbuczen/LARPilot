@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Traits;
+namespace Tests\Traits;
 
 use App\Domain\Account\Entity\Enum\UserStatus;
 use App\Domain\Account\Entity\Plan;

@@ -1,0 +1,146 @@
+{% extends 'public/base.html.twig' %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                {# LARP Info Header #}
+                {% embed 'public/larp/_info_header.html.twig' with {
+                    'larp': larp,
+                    'showManageButton': false
+                } %}
+                {% endembed %}
+
+                {# Character Header #}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1 class="mb-0">{{ character.title }}</h1>
+                            {% if character.availableForRecruitment %}
+                                <span class="badge bg-success fs-6">
+                                    <i class="bi bi-check-circle me-1"></i>{{ 'public.character.available'|trans }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if character.inGameName %}
+                            <p class="mb-0 mt-2">
+                                <em>{{ character.inGameName }}</em>
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    {% if character.imageUrl %}
+                        <img src="{{ character.imageUrl }}" class="card-img-top" alt="{{ character.title }}" style="max-height: 400px; object-fit: cover;">
+                    {% endif %}
+
+                    <div class="card-body">
+                        {# Character metadata #}
+                        <div class="row mb-4">
+                            {% if character.gender %}
+                                <div class="col-md-4">
+                                    <h6 class="text-muted">{{ 'common.gender'|trans }}</h6>
+                                    <p><i class="bi bi-gender-ambiguous me-2"></i>{{ character.gender.label }}</p>
+                                </div>
+                            {% endif %}
+
+                            {% if character.characterType %}
+                                <div class="col-md-4">
+                                    <h6 class="text-muted">{{ 'character.type'|trans }}</h6>
+                                    <p><i class="bi bi-person-badge me-2"></i>{{ character.characterType.label }}</p>
+                                </div>
+                            {% endif %}
+
+                            {% if character.factions|length > 0 %}
+                                <div class="col-md-4">
+                                    <h6 class="text-muted">{{ 'character.factions'|trans }}</h6>
+                                    <p>
+                                        <i class="bi bi-shield me-2"></i>
+                                        {% for faction in character.factions %}
+                                            {{ faction.title }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <hr>
+
+                        {# Description #}
+                        <div class="mb-4">
+                            <h4>{{ 'character.description'|trans }}</h4>
+                            <div class="character-description">
+                                {{ character.description|sanitize_html|raw }}
+                            </div>
+                        </div>
+
+                        {# Tags #}
+                        {% if character.tags|length > 0 %}
+                            <div class="mb-4">
+                                <h5>{{ 'character.themes'|trans }}</h5>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for tag in character.tags %}
+                                        <span class="badge bg-info text-dark">{{ tag.title }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {# Threads #}
+                        {% if character.threads|length > 0 %}
+                            <div class="mb-4">
+                                <h5>{{ 'character.threads'|trans }}</h5>
+                                <div class="list-group">
+                                    {% for thread in character.threads %}
+                                        <div class="list-group-item">
+                                            <h6 class="mb-1">{{ thread.title }}</h6>
+                                            {% if thread.description %}
+                                                <p class="mb-0 small text-muted">
+                                                    {{ thread.description|sanitize_html|striptags|slice(0, 150) }}...
+                                                </p>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {# Skills (if visible) #}
+                        {% if character.skills|length > 0 %}
+                            <div class="mb-4">
+                                <h5>{{ 'character.skills'|trans }}</h5>
+                                <div class="row">
+                                    {% for skill in character.skills %}
+                                        <div class="col-md-6 mb-2">
+                                            <span class="badge bg-secondary me-2">{{ skill.skill.name }}</span>
+                                            <small class="text-muted">Level {{ skill.level }}</small>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('public_larp_characters_list', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>{{ 'common.back'|trans }}
+                            </a>
+
+                            {% if larp.applicationMode.value == 'character_selection' and larp.status.value == 'INQUIRIES' %}
+                                {% if app.user %}
+                                    <a href="{{ path('public_larp_application_create', {larp: larp.id}) }}" class="btn btn-success">
+                                        <i class="bi bi-send me-1"></i>{{ 'public.character.apply_for_larp'|trans }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i>{{ 'public.login_to_apply'|trans }}
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

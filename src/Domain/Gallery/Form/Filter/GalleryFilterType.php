@@ -31,7 +31,7 @@ class GalleryFilterType extends AbstractType
                 'choice_label' => fn (LarpParticipant $participant): string =>
                     $participant->getUser()->getUsername(),
                 'required' => false,
-                'placeholder' => 'common.all',
+                'placeholder' => 'all',
                 'autocomplete' => true,
                 'query_builder' => function (LarpParticipantRepository $repo) use ($larp) {
                     $qb = $repo->createQueryBuilder('p')
@@ -49,7 +49,7 @@ class GalleryFilterType extends AbstractType
                 'class' => GalleryVisibility::class,
                 'required' => false,
                 'multiple' => false,
-                'placeholder' => 'common.all',
+                'placeholder' => 'all',
             ]);
     }
 

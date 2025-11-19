@@ -6,7 +6,10 @@ use App\Domain\Core\Entity\Enum\LarpCharacterSystem;
 use App\Domain\Core\Entity\Enum\LarpSetting;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Enum\LarpType;
+use App\Domain\Core\Entity\Enum\LocationApprovalStatus;
 use App\Domain\Core\Entity\Location;
+use App\Domain\Core\Repository\LocationRepository;
+use Doctrine\ORM\QueryBuilder;
 use Spiriit\Bundle\FormFilterBundle\Filter\Form\Type as Filters;
 use Spiriit\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -65,7 +68,12 @@ class LarpPublicFilterType extends AbstractType
                 'placeholder' => 'choose',
                 'required' => false,
                 'autocomplete' => true,
-                'attr' => ['class' => 'form-select']
+                'attr' => ['class' => 'form-select'],
+                'query_builder' => fn (LocationRepository $repo): QueryBuilder => $repo->createQueryBuilder('l')
+                    ->where('l.isActive = true')
+                    ->andWhere('l.isPublic = true')
+                    ->andWhere('l.approvalStatus = :status')
+                    ->setParameter('status', LocationApprovalStatus::APPROVED->value)
             ])
             ->add('startDate', Filters\DateFilterType::class, [
                 'required' => false,
@@ -82,8 +90,10 @@ class LarpPublicFilterType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'min' => 1,
+                    'max' => 30,
                     'placeholder' => 'Min days'
                 ],
+                'html5' => true,
                 'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                     if (empty($values['value'])) {
                         return null;
@@ -100,8 +110,10 @@ class LarpPublicFilterType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'min' => 1,
+                    'max' => 31,
                     'placeholder' => 'Max days'
                 ],
+                'html5' => true,
                 'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
                     if (empty($values['value'])) {
                         return null;

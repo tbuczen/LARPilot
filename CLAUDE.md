@@ -40,9 +40,21 @@ make ecs-fix
 make stan
 # OR: docker compose exec -T php bash -lc "XDEBUG_MODE=off php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon"
 
-# Run tests
+# Run all tests (Codeception)
 make test
-# OR: docker compose exec -T php bash -lc "APP_ENV=test php vendor/bin/phpunit -c phpunit.xml.dist --colors=always"
+# OR: docker compose exec -T php vendor/bin/codecept run --colors
+
+# Run specific test suites
+make test-unit          # Unit tests only (fast, no database)
+make test-functional    # Functional tests (with database, no browser)
+make test-acceptance    # Acceptance tests (browser-based)
+
+# Run a specific test file
+make test-filter FILTER=Functional/Authentication/UserSignupAndApprovalCest
+
+# Rebuild Codeception actors (after suite config changes)
+make test-build
+# OR: docker compose exec -T php vendor/bin/codecept build
 
 # Automated refactoring (PHP 8.2)
 make rector-fix
@@ -377,7 +389,7 @@ $pagination = $this->getPagination($qb, $request);
 For sort controls in filter forms, use twig since they're UI controls, not filters:
 
 ```php
-{% include 'includes/sort_th.html.twig' with { field: 'name', label: 'common.name'|trans } %}
+{% include 'includes/sort_th.html.twig' with { field: 'name', label: 'name'|trans } %}
 ```
 
 **Examples**: See `FactionController::list()` for complete implementations.
@@ -396,7 +408,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
             <div class="d-flex gap-2">
                 <a href="{{ path('backoffice_larp_story_tag_modify', { larp: larp.id }) }}"
                    class="btn btn-success">
-                    {{ 'common.create'|trans }}
+                    {{ 'create'|trans }}
                 </a>
             </div>
         </div>
@@ -414,10 +426,10 @@ Backoffice list pages follow a consistent template pattern for displaying filter
                             {# Sortable column header #}
                             {% include 'includes/sort_th.html.twig' with {
                                 field: 'name',
-                                label: 'common.name'|trans
+                                label: 'name'|trans
                             } %}
-                            <th>{{ 'common.description'|trans }}</th>
-                            <th>{{ 'common.actions'|trans }}</th>
+                            <th>{{ 'description'|trans }}</th>
+                            <th>{{ 'actions'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -442,7 +454,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
                                             data-delete-url="{{ path('backoffice_larp_story_tag_delete', {
                                                 larp: larp.id, tag: tag.id
                                             }) }}">
-                                        {{ 'common.delete'|trans }}
+                                        {{ 'delete'|trans }}
                                     </button>
                                 </td>
                             </tr>
@@ -451,7 +463,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
                 </table>
             </div>
         {% else %}
-            <p class="text-muted">{{ 'common.empty_list'|trans }}</p>
+            <p class="text-muted">{{ 'empty_list'|trans }}</p>
         {% endif %}
     </div>
 </div>
@@ -470,7 +482,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
 
 3. **Conditional Data Display**:
    - Check `{% if items is not empty %}` before rendering table
-   - Show `{{ 'common.empty_list'|trans }}` message when no data
+   - Show `{{ 'empty_list'|trans }}` message when no data
 
 4. **Table Styling**:
    - `table-responsive` wrapper for mobile scrolling
@@ -488,7 +500,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
    - Pass item data via `data-*` attributes for JavaScript handling
 
 7. **Empty State**:
-   - Simple text message: `<p class="text-muted">{{ 'common.empty_list'|trans }}</p>`
+   - Simple text message: `<p class="text-muted">{{ 'empty_list'|trans }}</p>`
 
 **Sorting Implementation**:
 
@@ -528,12 +540,133 @@ Copy `.env` to `.env.local` and configure:
 
 ## Testing
 
-Run tests with PHPUnit:
+LARPilot uses **Codeception** for all testing (unit, functional, and acceptance tests).
+
+### Running Tests
+
 ```bash
-vendor/bin/phpunit -c phpunit.xml.dist
+# Run all tests
+make test
+
+# Run specific test suites
+make test-unit          # Unit tests only (fast, no database)
+make test-functional    # Functional tests (with database, no browser)
+make test-acceptance    # Acceptance tests (browser-based)
+
+# Run a specific test file or path
+make test-filter FILTER=Functional/Authentication/UserSignupAndApprovalCest
+make test-filter FILTER=Unit/Domain/Infrastructure
+
+# Rebuild actors after suite configuration changes
+make test-build
 ```
 
+### Test Structure
+
+```
+tests/
+├── Unit/                    # Unit tests (no dependencies)
+├── Functional/              # Functional tests (with database)
+├── Acceptance/              # Browser-based tests
+└── Support/
+    ├── Helper/
+    │   └── Authentication.php   # Custom Codeception helper
+    └── Factory/                 # Foundry factories (organized by domain)
+        ├── Account/
+        ├── Core/
+        └── Survey/
+```
+
+### Writing Tests
+
+**Functional Test Example** (Cest format):
+```php
+<?php
+
+namespace Tests\Functional\Authentication;
+
+use Tests\FunctionalTester;
+
+class UserSignupAndApprovalCest
+{
+    public function pendingUserCannotAccessBackoffice(FunctionalTester $I): void
+    {
+        $I->wantTo('verify PENDING users cannot access backoffice');
+
+        $pendingUser = $I->createPendingUser();
+        $I->amLoggedInAs($pendingUser);
+
+        $I->amOnRoute('backoffice_larp_create');
+        $I->seeResponseCodeIs(302);
+    }
+}
+```
+
+### Authentication Helper Methods
+
+The `Authentication` helper (`tests/Support/Helper/Authentication.php`) provides factory-based methods for test data:
+
+**User Creation:**
+- `$I->createPendingUser()` - Create PENDING user
+- `$I->createApprovedUser()` - Create APPROVED user
+- `$I->createSuspendedUser()` - Create SUSPENDED user
+- `$I->createBannedUser()` - Create BANNED user
+- `$I->createSuperAdmin()` - Create SUPER_ADMIN user
+
+**Authentication:**
+- `$I->amLoggedInAs($user)` - Log in as specific user
+
+**LARP Creation:**
+- `$I->createLarp($organizer)` - Create LARP (default: DRAFT)
+- `$I->createDraftLarp($organizer)` - Create DRAFT LARP
+- `$I->createPublishedLarp($organizer)` - Create PUBLISHED LARP
+- `$I->addParticipantToLarp($larp, $user, 'player')` - Add participant
+
+**Location Creation:**
+- `$I->createPendingLocation($creator)` - Create PENDING location
+- `$I->createApprovedLocation($creator)` - Create APPROVED location
+- `$I->createRejectedLocation($creator, $reason)` - Create REJECTED location
+
+**Utilities:**
+- `$I->getEntityManager()` - Get Doctrine EntityManager
+- `$I->getUrl('route_name', $params)` - Generate URL from route
+
+### Foundry Factories
+
+Tests use **Zenstruck Foundry** factories for test data creation. Factories are organized by domain under `tests/Support/Factory/`:
+
+**Example Usage:**
+```php
+use Tests\Support\Factory\Account\UserFactory;
+use Tests\Support\Factory\Core\LarpFactory;
+use Tests\Support\Factory\Survey\SurveyFactory;
+
+// Create user with factory
+$user = UserFactory::new()->approved()->create();
+
+// Create LARP with factory
+$larp = LarpFactory::new()
+    ->forOrganizer($user)
+    ->withStatus('published')
+    ->create();
+
+// Create survey with questions
+$survey = SurveyFactory::new()
+    ->forLarp($larp)
+    ->withQuestions(5)
+    ->create();
+```
+
+See factory classes for available methods and options.
+
+### Test Database
+
 Test database uses suffix `_test` (configured in `config/packages/doctrine.yaml`).
+
+**Prepare test database:**
+```bash
+make prepare-test-db
+```
 
 ## Code Quality Standards
 

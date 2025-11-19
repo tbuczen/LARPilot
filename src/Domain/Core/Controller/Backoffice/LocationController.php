@@ -152,7 +152,7 @@ class LocationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST', 'DELETE'])]
     public function delete(Request $request, Location $location): Response
     {
         // Use the voter for permission check
@@ -175,7 +175,7 @@ class LocationController extends AbstractController
     {
         if (!$this->isCsrfTokenValid('approve' . $location->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Invalid CSRF token.');
-            return $this->redirectToRoute('backoffice_location_pending_list');
+            return $this->redirectToRoute('backoffice_location_list');
         }
 
         /** @var User $user */
@@ -184,7 +184,7 @@ class LocationController extends AbstractController
         $this->approvalService->approve($location, $user);
         $this->addFlash('success', sprintf('Location "%s" has been approved.', $location->getTitle()));
 
-        return $this->redirectToRoute('backoffice_location_pending_list');
+        return $this->redirectToRoute('backoffice_location_list');
     }
 
     #[Route('/{id}/reject', name: 'reject', methods: ['GET', 'POST'])]
@@ -202,7 +202,7 @@ class LocationController extends AbstractController
             $this->approvalService->reject($location, $user, $reason);
             $this->addFlash('success', sprintf('Location "%s" has been rejected.', $location->getTitle()));
 
-            return $this->redirectToRoute('backoffice_location_pending_list');
+            return $this->redirectToRoute('backoffice_location_list');
         }
 
         return $this->render('backoffice/location/reject.html.twig', [

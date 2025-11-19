@@ -51,11 +51,13 @@ class LocationType extends AbstractType
             ->add('latitude', NumberType::class, [
                 'required' => false,
                 'scale' => 8,
+                'html5' => true,
                 'attr' => ['class' => 'form-control', 'step' => 0.00000001]
             ])
             ->add('longitude', NumberType::class, [
                 'required' => false,
                 'scale' => 8,
+                'html5' => true,
                 'attr' => ['class' => 'form-control', 'step' => 0.00000001]
             ])
             ->add('website', UrlType::class, [
@@ -100,7 +102,12 @@ class LocationType extends AbstractType
             ])
             ->add('capacity', IntegerType::class, [
                 'required' => false,
-                'attr' => ['class' => 'form-control']
+                'attr' => [
+                    'class' => 'form-control',
+                    'min' => 1,
+                    'max' => 9000,
+                ],
+//                'html5' => true,
             ])
             ->add('isPublic', CheckboxType::class, [
                 'required' => false,

@@ -13,8 +13,9 @@
 - JavaScript is written as ES6 modules and organized under `assets/controllers/` using Stimulus. Use 4 space indentation and define `targets`, `values`, and life‑cycle methods (e.g., `connect`). Webpack Encore bundles assets and the entry point is `assets/app.js`.
 
 ## Tests and checks
-- Run unit tests with `vendor/bin/phpunit -c phpunit.xml.dist`.
-- Run code style checks with `vendor/bin/ecs check`.
-- Run static analysis with `vendor/bin/phpstan analyse -c phpstan.neon`.
+- Prepare tests with `make test-build`.
+- Run unit tests with `make test`.
+- Run code style checks with `make ecs-fix`.
+- Run static analysis with `make stan`.
 
 Make sure these checks pass before committing changes.

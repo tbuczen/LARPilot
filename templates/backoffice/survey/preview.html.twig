@@ -1,0 +1,127 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_title %}{{ 'survey.preview'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0"><i class="bi bi-eye me-2"></i>{{ 'survey.preview'|trans }}</h2>
+                <a href="{{ path('backoffice_larp_survey_edit', { larp: larp.id }) }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-pencil me-1"></i>{{ 'survey.edit'|trans }}
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            {# Survey header #}
+            <div class="mb-4">
+                <h3>{{ survey.title }}</h3>
+                {% if survey.description %}
+                    <p class="text-muted">{{ survey.description }}</p>
+                {% endif %}
+                <div class="mb-2">
+                    {% if survey.isActive %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>{{ 'survey.active'|trans }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary"><i class="bi bi-pause-circle me-1"></i>{{ 'survey.inactive'|trans }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <hr>
+
+            {# Preview questions #}
+            {% if survey.questions|length > 0 %}
+                <div class="questions-preview">
+                    {% for question in survey.questions %}
+                        <div class="card mb-4 border-primary">
+                            <div class="card-body">
+                                {# Question header #}
+                                <div class="mb-3">
+                                    <h5 class="mb-2">
+                                        <span class="badge bg-secondary me-2">{{ loop.index }}</span>
+                                        {{ question.questionText }}
+                                        {% if question.isRequired %}
+                                            <span class="text-danger">*</span>
+                                        {% endif %}
+                                    </h5>
+                                    {% if question.helpText %}
+                                        <small class="text-muted">{{ question.helpText }}</small>
+                                    {% endif %}
+                                </div>
+
+                                {# Question type badge #}
+                                <div class="mb-3">
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-info-circle me-1"></i>{{ question.questionType.label }}
+                                    </span>
+                                </div>
+
+                                {# Preview based on question type #}
+                                <div class="question-preview">
+                                    {% if question.questionType.value == 'text' %}
+                                        <input type="text" class="form-control" disabled placeholder="{{ 'survey.preview.short_text'|trans }}">
+
+                                    {% elseif question.questionType.value == 'textarea' %}
+                                        <textarea class="form-control" rows="3" disabled placeholder="{{ 'survey.preview.long_text'|trans }}"></textarea>
+
+                                    {% elseif question.questionType.value == 'single_choice' %}
+                                        <div class="form-check-list">
+                                            {% for option in question.options %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="preview_q{{ question.id }}" disabled>
+                                                    <label class="form-check-label">
+                                                        {{ option.optionText }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                    {% elseif question.questionType.value == 'multiple_choice' %}
+                                        <div class="form-check-list">
+                                            {% for option in question.options %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" disabled>
+                                                    <label class="form-check-label">
+                                                        {{ option.optionText }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                    {% elseif question.questionType.value == 'rating' %}
+                                        <div class="rating-preview">
+                                            {% for i in 1..5 %}
+                                                <button type="button" class="btn btn-outline-primary btn-sm" disabled>{{ i }}</button>
+                                            {% endfor %}
+                                        </div>
+
+                                    {% elseif question.questionType.value == 'tag_selection' %}
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-tags me-1"></i>{{ 'survey.preview.tag_selection_info'|trans }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>{{ 'survey.no_questions'|trans }}
+                </div>
+            {% endif %}
+
+            {# Preview submit button #}
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ path('backoffice_larp_survey_edit', { larp: larp.id }) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>{{ 'common.back'|trans }}
+                </a>
+                <button type="button" class="btn btn-success" disabled>
+                    <i class="bi bi-send me-1"></i>{{ 'survey.preview.submit_button'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

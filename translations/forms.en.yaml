@@ -378,6 +378,7 @@ location:
   address: "Address"
   approval_status: "Approval Status"
   pending_message: "This location is pending approval. It will be reviewed by an administrator before becoming visible to other users."
+  no_locations_found: "No locations found"
 
 mail_template:
   name: "Template name"
@@ -386,3 +387,10 @@ mail_template:
   body: "Email body"
   enabled: "Send automatically"
   available_placeholders: "Available placeholders"
+
+name: Name
+
+boolean:
+  yes: "Yes"
+  no: "No"
+  yes_or_no: 'Yes or no'

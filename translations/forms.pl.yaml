@@ -294,3 +294,9 @@ mail_template:
   body: "Treść wiadomości"
   enabled: "Wysyłaj automatycznie"
   available_placeholders: "Dostępne znaczniki"
+
+
+boolean:
+  yes: "Tak"
+  no: "Nie"
+  yes_or_no: 'Obojętnie'

@@ -3,6 +3,8 @@
 namespace App\Domain\Core\Repository;
 
 use App\Domain\Account\Entity\User;
+use App\Domain\Core\Entity\Enum\ParticipantRole;
+use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,5 +39,21 @@ class LarpParticipantRepository extends BaseRepository
             ->addOrderBy('characters.title', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Count the number of organizers for a given LARP
+     */
+    public function countMainOrganizersForLarp(Larp $larp): int
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(DISTINCT p.id)')
+            ->where('p.larp = :larp')
+            ->setParameter('larp', $larp);
+
+        $qb->andWhere("JSONB_EXISTS(p.roles, :role) = true");
+        $qb->setParameter("role", ParticipantRole::ORGANIZER->value);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

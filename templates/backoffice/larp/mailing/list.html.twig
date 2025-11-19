@@ -43,11 +43,11 @@
                                         <span class="badge bg-secondary ms-1">{{ 'mail_template.optional'|trans }}</span>
                                     {% endif %}
                                     {% if template.type.belongsToFinanceContext %}
-                                        <span class="badge bg-warning text-dark ms-1">{{ 'mail_template.finance'|trans }}</span>
+                                        <span class="badge bg-warning  ms-1">{{ 'mail_template.finance'|trans }}</span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark">{{ template.type.label }}</span>
+                                    <span class="badge bg-light ">{{ template.type.label }}</span>
                                 </td>
                                 <td class="text-muted">
                                     {{ definition ? definition.description : '-' }}
