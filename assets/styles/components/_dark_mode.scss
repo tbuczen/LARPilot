@@ -84,9 +84,10 @@ html.dark-mode {
         &.dropdown {
 
           .dropdown-menu {
+            background-color: var(--bg-card);
             border: 1px solid var(--bo-header-border);
             border-radius: var(--bo-border-radius-lg);
-            box-shadow: 0 4px 12px rgba(var(--bo-black), 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
             .dropdown-item {
               border-radius: var(--bo-border-radius);
@@ -195,7 +196,7 @@ html.dark-mode {
         &:focus {
             background-color: var(--input-bg);
             color: var(--input-text);
-            border-color: #667eea;
+            border-color: var(--bo-primary);
         }
     }
 
@@ -339,4 +340,49 @@ html.dark-mode {
     border-bottom: 1px solid rgba(var(--bo-black), 0.08);
     background: linear-gradient(180deg, #2d2d2d 0%, var(--bo-gray-50) 100%);
   }
+}
+
+// Google Maps dark mode styling
+html.dark-mode {
+    // Invert map colors for dark mode effect
+    #map,
+    .google-map,
+    [data-google-map] {
+        filter: invert(90%) hue-rotate(180deg);
+    }
+
+    // Preserve marker and image colors by double-inverting
+    #map .gm-style img,
+    #map .gm-style canvas,
+    .google-map .gm-style img,
+    .google-map .gm-style canvas {
+        filter: invert(100%) hue-rotate(180deg);
+    }
+
+    // InfoWindow styling
+    .gm-style .gm-style-iw-c,
+    .gm-style .gm-style-iw-d {
+        background-color: var(--card-bg) !important;
+    }
+
+    .gm-style .gm-style-iw-tc::after {
+        background: var(--card-bg) !important;
+    }
+
+    .gm-style .gm-style-iw {
+        color: var(--text-primary) !important;
+
+        h6, .h6 {
+            color: var(--text-primary) !important;
+        }
+
+        p, .text-muted {
+            color: var(--text-secondary) !important;
+        }
+    }
+
+    // Close button in InfoWindow
+    .gm-style .gm-ui-hover-effect {
+        filter: invert(100%);
+    }
 }

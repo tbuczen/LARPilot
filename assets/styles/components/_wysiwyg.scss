@@ -3,17 +3,17 @@
 .wysiwyg-editor {
   min-height: 300px;
   padding: 0.75rem;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--input-border);
   border-radius: 0.25rem;
-  background-color: #fff;
-  color: #212529;
+  background-color: var(--input-bg);
+  color: var(--input-text);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   overflow: auto;
   line-height: 1.5;
   resize: vertical;
 
   &:focus {
-    border-color: #86b7fe;
+    border-color: var(--bo-primary);
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   }
@@ -23,9 +23,9 @@
     display: inline-block;
     padding: 0 0.25rem;
     margin: 0 0.125rem;
-    background-color: rgba(13, 110, 253, 0.1);
+    background-color: var(--bo-primary-light);
     border-radius: 0.25rem;
-    color: #0d6efd;
+    color: var(--bo-primary);
     font-weight: 500;
     white-space: nowrap;
     cursor: default;
@@ -41,21 +41,22 @@
   max-width: 350px;
   max-height: 250px;
   overflow-y: auto;
-  background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 0.25rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow);
 
   .mention-item {
     padding: 0.5rem 1rem;
     cursor: pointer;
+    color: var(--text-primary);
 
     &:hover, &.selected {
-      background-color: #f8f9fa;
+      background-color: var(--bg-secondary);
     }
 
     &.selected {
-      background-color: rgba(13, 110, 253, 0.1);
+      background-color: var(--bo-primary-light);
     }
   }
 }

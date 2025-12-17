@@ -101,8 +101,8 @@
   --bg-secondary: #f8f9fa;
   --bg-tertiary: #f0f0f0;
   --bg-card: #ffffff;
-  --bg-sidebar: linear-gradient(180deg, #2d2d2d 0%, #f8f9fa 100%);
-  --bg-sidebar-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-header: #0d6efd;
 
   // Text colors
   --text-primary: #212529;
@@ -132,24 +132,47 @@
   --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
 
-  // Sidebar specific
+  // Sidebar specific (using primary blue)
   --sidebar-text: #2d3748;
-  --sidebar-link-hover-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-  --sidebar-link-active-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  --sidebar-link-hover-bg: rgba(13, 110, 253, 0.08);
+  --sidebar-link-active-bg: rgba(13, 110, 253, 0.15);
   --sidebar-scrollbar-track: rgba(0, 0, 0, 0.05);
-  --sidebar-scrollbar-thumb: rgba(102, 126, 234, 0.3);
-  --sidebar-scrollbar-thumb-hover: rgba(102, 126, 234, 0.5);
+  --sidebar-scrollbar-thumb: rgba(13, 110, 253, 0.3);
+  --sidebar-scrollbar-thumb-hover: rgba(13, 110, 253, 0.5);
 }
 
 // Dark mode variables
 html.dark-mode {
+  // Header Colors (dark mode)
+  --bo-header-bg: #2d2d2d;
+  --bo-header-border: #404040;
+  --bo-header-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  // Navigation Colors (dark mode)
+  --bo-nav-text: #b8b8b8;
+  --bo-nav-text-hover: #6ea8fe;
+  --bo-nav-text-active: #ffffff;
+  --bo-nav-bg-hover: rgba(13, 110, 253, 0.15);
+  --bo-nav-bg-active: rgba(13, 110, 253, 0.25);
+  --bo-nav-border-active: #0d6efd;
+
+  // LARP Title Colors (dark mode)
+  --bo-title-color: #e8e8e8;
+  --bo-title-icon-color: #6ea8fe;
+
+  // Gray scale (dark mode)
+  --bo-gray-50: #3a3a3a;
+  --bo-gray-100: #4a4a4a;
+  --bo-gray-200: #5a5a5a;
+  --bo-gray-500: #999999;
+
   // Background colors
   --bg-primary: #1a1a1a;
   --bg-secondary: #2f2f2f;
   --bg-tertiary: #4a4a4a;
   --bg-card: #2d2d2d;
-  --bg-sidebar: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
-  --bg-sidebar-header: linear-gradient(135deg, #5568d3 0%, #6a4c93 100%);
+  --bg-sidebar: #4a4a4a;
+  --bg-sidebar-header: var(--bo-primary);
 
   // Text colors
   --text-primary: #e8e8e8;
@@ -179,11 +202,11 @@ html.dark-mode {
   --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
 
-  // Sidebar specific
+  // Sidebar specific (using primary blue)
   --sidebar-text: #e8e8e8;
-  --sidebar-link-hover-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.15) 0%, rgba(106, 76, 147, 0.15) 100%);
-  --sidebar-link-active-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.25) 0%, rgba(106, 76, 147, 0.25) 100%);
+  --sidebar-link-hover-bg: rgba(13, 110, 253, 0.15);
+  --sidebar-link-active-bg: rgba(13, 110, 253, 0.25);
   --sidebar-scrollbar-track: rgba(255, 255, 255, 0.05);
-  --sidebar-scrollbar-thumb: rgba(85, 104, 211, 0.4);
-  --sidebar-scrollbar-thumb-hover: rgba(85, 104, 211, 0.6);
+  --sidebar-scrollbar-thumb: rgba(13, 110, 253, 0.4);
+  --sidebar-scrollbar-thumb-hover: rgba(13, 110, 253, 0.6);
 }

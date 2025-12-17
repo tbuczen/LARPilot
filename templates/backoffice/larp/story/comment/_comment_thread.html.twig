@@ -22,7 +22,7 @@
                             <small class="text-muted ms-2">
                                 <i class="bi bi-clock"></i> {{ comment.createdAt|date('M d, Y H:i') }}
                                 {% if comment.createdAt != comment.updatedAt %}
-                                    <span class="badge bg-light  ms-1" title="{{ 'comment.edited'|trans }}">
+                                    <span class="badge   ms-1" title="{{ 'comment.edited'|trans }}">
                                         <i class="bi bi-pencil-square"></i>
                                     </span>
                                 {% endif %}
