@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Functional\Security;
 
 use App\Domain\Core\Entity\Enum\LocationApprovalStatus;
+use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\FunctionalTester;
 
 /**
@@ -31,7 +32,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canEdit = $authChecker->isGranted('EDIT_LOCATION', $location);
 
         $I->assertTrue($canEdit, 'User should be able to edit their PENDING location');
@@ -46,7 +47,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canEdit = $authChecker->isGranted('EDIT_LOCATION', $location);
 
         $I->assertTrue($canEdit, 'User should be able to edit their REJECTED location');
@@ -62,14 +63,14 @@ class LocationApprovalSecurityCest
         $location = $I->createPendingLocation($user);
 
         // Approve it
-        $locationApprovalService = $I->getContainer()->get(
+        $locationApprovalService = $I->grabService(
             \App\Domain\Core\Service\LocationApprovalService::class
         );
         $locationApprovalService->approve($location, $superAdmin);
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canEdit = $authChecker->isGranted('EDIT_LOCATION', $location);
 
         $I->assertFalse($canEdit, 'User should not be able to edit their APPROVED location');
@@ -86,7 +87,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($user2);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canEdit = $authChecker->isGranted('EDIT_LOCATION', $location);
 
         $I->assertFalse($canEdit, 'User should not be able to edit other user\'s location');
@@ -101,7 +102,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canApprove = $authChecker->isGranted('APPROVE_LOCATION', $location);
 
         $I->assertFalse($canApprove, 'Regular user should not be able to approve locations');
@@ -118,7 +119,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($superAdmin);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canApprove = $authChecker->isGranted('APPROVE_LOCATION', $location);
 
         $I->assertTrue($canApprove, 'SUPER_ADMIN should be able to approve locations');
@@ -135,7 +136,7 @@ class LocationApprovalSecurityCest
 
         $I->assertEquals(LocationApprovalStatus::PENDING, $location->getApprovalStatus());
 
-        $locationApprovalService = $I->getContainer()->get(
+        $locationApprovalService = $I->grabService(
             \App\Domain\Core\Service\LocationApprovalService::class
         );
         $locationApprovalService->approve($location, $superAdmin);
@@ -154,7 +155,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canReject = $authChecker->isGranted('REJECT_LOCATION', $location);
 
         $I->assertFalse($canReject, 'Regular user should not be able to reject locations');
@@ -171,7 +172,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($superAdmin);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canReject = $authChecker->isGranted('REJECT_LOCATION', $location);
 
         $I->assertTrue($canReject, 'SUPER_ADMIN should be able to reject locations');
@@ -188,7 +189,7 @@ class LocationApprovalSecurityCest
 
         $rejectionReason = 'Invalid address provided';
 
-        $locationApprovalService = $I->getContainer()->get(
+        $locationApprovalService = $I->grabService(
             \App\Domain\Core\Service\LocationApprovalService::class
         );
         $locationApprovalService->reject($location, $superAdmin, $rejectionReason);
@@ -206,7 +207,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canDelete = $authChecker->isGranted('DELETE_LOCATION', $location);
 
         $I->assertTrue($canDelete, 'User should be able to delete their PENDING location');
@@ -221,7 +222,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canDelete = $authChecker->isGranted('DELETE_LOCATION', $location);
 
         $I->assertTrue($canDelete, 'User should be able to delete their REJECTED location');
@@ -237,14 +238,14 @@ class LocationApprovalSecurityCest
         $location = $I->createPendingLocation($user);
 
         // Approve it
-        $locationApprovalService = $I->getContainer()->get(
+        $locationApprovalService = $I->grabService(
             \App\Domain\Core\Service\LocationApprovalService::class
         );
         $locationApprovalService->approve($location, $superAdmin);
 
         $I->amLoggedInAs($user);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canDelete = $authChecker->isGranted('DELETE_LOCATION', $location);
 
         $I->assertFalse($canDelete, 'User should not be able to delete their APPROVED location');
@@ -261,7 +262,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($superAdmin);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canDelete = $authChecker->isGranted('DELETE_LOCATION', $location);
 
         $I->assertTrue($canDelete, 'SUPER_ADMIN should be able to delete any location');
@@ -278,7 +279,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($superAdmin);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canEdit = $authChecker->isGranted('EDIT_LOCATION', $location);
 
         $I->assertTrue($canEdit, 'SUPER_ADMIN should be able to edit any location');
@@ -370,7 +371,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($pendingUser);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canCreate = $authChecker->isGranted('CREATE_LOCATION');
 
         $I->assertFalse($canCreate, 'PENDING user should not be able to create locations');
@@ -384,7 +385,7 @@ class LocationApprovalSecurityCest
 
         $I->amLoggedInAs($approvedUser);
 
-        $authChecker = $I->getContainer()->get('security.authorization_checker');
+        $authChecker = $I->grabService('security.authorization_checker');
         $canCreate = $authChecker->isGranted('CREATE_LOCATION');
 
         $I->assertTrue($canCreate, 'APPROVED user should be able to create locations');

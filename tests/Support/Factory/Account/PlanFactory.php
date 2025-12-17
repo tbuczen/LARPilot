@@ -17,8 +17,9 @@ final class PlanFactory extends PersistentProxyObjectFactory
 
     protected function defaults(): array
     {
+        $suffix = uniqid('', true);
         return [
-            'name' => self::faker()->words(2, true),
+            'name' => 'Plan_' . $suffix,
             'description' => self::faker()->sentence(),
             'maxLarps' => 3,
             'maxParticipantsPerLarp' => 50,
@@ -49,7 +50,7 @@ final class PlanFactory extends PersistentProxyObjectFactory
     public function free(): self
     {
         return $this->with([
-            'name' => 'Free',
+            'name' => 'Free_' . uniqid('', true),
             'maxLarps' => 1,
             'maxParticipantsPerLarp' => 20,
             'storageLimitMb' => 100,
@@ -67,7 +68,7 @@ final class PlanFactory extends PersistentProxyObjectFactory
     public function unlimited(): self
     {
         return $this->with([
-            'name' => 'Unlimited',
+            'name' => 'Unlimited_' . uniqid('', true),
             'maxLarps' => null,
             'maxParticipantsPerLarp' => null,
             'storageLimitMb' => null,
@@ -85,7 +86,7 @@ final class PlanFactory extends PersistentProxyObjectFactory
     public function premium(): self
     {
         return $this->with([
-            'name' => 'Premium',
+            'name' => 'Premium_' . uniqid('', true),
             'maxLarps' => 10,
             'maxParticipantsPerLarp' => 200,
             'storageLimitMb' => 5000,
@@ -103,7 +104,7 @@ final class PlanFactory extends PersistentProxyObjectFactory
     public function basic(): self
     {
         return $this->with([
-            'name' => 'Basic',
+            'name' => 'Basic_' . uniqid('', true),
             'maxLarps' => 3,
             'maxParticipantsPerLarp' => 50,
             'storageLimitMb' => 1000,

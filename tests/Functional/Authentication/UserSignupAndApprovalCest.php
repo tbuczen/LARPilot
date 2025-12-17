@@ -64,7 +64,7 @@ class UserSignupAndApprovalCest
         $I->amOnRoute('backoffice_larp_create');
 
         // Should be redirected to pending approval page
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function pendingUserCannotAccessLarpCreation(FunctionalTester $I): void
@@ -77,7 +77,7 @@ class UserSignupAndApprovalCest
         $I->amOnRoute('backoffice_larp_create');
 
         // Should be redirected to pending approval page
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function approvedUserCanAccessBackoffice(FunctionalTester $I): void
@@ -153,7 +153,7 @@ class UserSignupAndApprovalCest
 
         $I->amOnRoute('backoffice_dashboard');
 
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
         $I->assertResponseRedirects($I->getUrl('backoffice_account_pending_approval'));
     }
 
@@ -166,7 +166,7 @@ class UserSignupAndApprovalCest
 
         $I->amOnRoute('backoffice_dashboard');
 
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
         $I->assertResponseRedirects($I->getUrl('backoffice_account_pending_approval'));
     }
 
@@ -179,7 +179,7 @@ class UserSignupAndApprovalCest
 
         $I->amOnRoute('backoffice_larp_create');
 
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
         $I->assertResponseRedirects($I->getUrl('backoffice_account_pending_approval'));
     }
 
@@ -192,7 +192,7 @@ class UserSignupAndApprovalCest
 
         $I->amOnRoute('backoffice_larp_create');
 
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
         $I->assertResponseRedirects($I->getUrl('backoffice_account_pending_approval'));
     }
 

@@ -39,13 +39,25 @@ class SubmissionStatsServiceTest extends Unit
 
         $factionsArray = $larp->getFactions()->toArray();
 
+        // Track preload calls since withConsecutive() was removed in PHPUnit 10
+        $preloadCalls = [];
         $preloader = $this->createMock(EntityPreloader::class);
         $preloader->expects($this->exactly(2))
             ->method('preload')
-            ->withConsecutive(
-                [$this->identicalTo([$application]), 'choices'],
-                [$this->identicalTo($factionsArray), 'members'],
-            );
+            ->willReturnCallback(function ($entities, $relation) use (&$preloadCalls, $application, $factionsArray) {
+                $preloadCalls[] = ['entities' => $entities, 'relation' => $relation];
+
+                // Verify the calls match expected arguments
+                if (count($preloadCalls) === 1) {
+                    $this->assertSame([$application], $entities);
+                    $this->assertSame('choices', $relation);
+                } elseif (count($preloadCalls) === 2) {
+                    $this->assertSame($factionsArray, $entities);
+                    $this->assertSame('members', $relation);
+                }
+
+                return $entities;
+            });
 
         $service = new SubmissionStatsService($repo, $preloader);
         $stats = $service->getStatsForLarp($larp);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\StoryMarketplace;
 
 use App\Domain\StoryMarketplace\Entity\StoryRecruitment;
+use App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository;
 use Codeception\Test\Unit;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,7 +23,7 @@ class StoryRecruitmentRepositoryCest extends Unit
         $em->expects($this->once())->method('flush');
 
         $registry = $this->createMock(ManagerRegistry::class);
-        $repository = new class($registry, $em) extends \App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository {
+        $repository = new class($registry, $em) extends StoryRecruitmentRepository {
             public function __construct(ManagerRegistry $registry, private readonly EntityManagerInterface $em)
             {
                 parent::__construct($registry);

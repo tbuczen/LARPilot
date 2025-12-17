@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Repository;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Enum\ParticipantRole;
 use App\Domain\Core\Repository\LarpRepository;
+use Tests\Support\Factory\Account\UserFactory;
+use Tests\Support\Factory\Core\LarpFactory;
 use Tests\Support\FunctionalTester;
 
 /**
@@ -31,7 +34,7 @@ class LarpRepositoryCest
         $organizer2 = $I->createApprovedUser('organizer2@example.com');
 
         $larp1 = LarpFactory::createDraftLarp($organizer1, 'LARP 1');
-        $larp2 = $I->createPublishedLarp($organizer2, 'LARP 2');
+        $larp2 = LarpFactory::createPublishedLarp($organizer2, 'LARP 2');
 
         $allLarps = $this->larpRepository->findAll();
 
@@ -68,7 +71,7 @@ class LarpRepositoryCest
 
         $draftLarp = LarpFactory::createDraftLarp($organizer, 'Draft');
         $wipLarp = $I->createWipLarp($organizer, 'WIP');
-        $publishedLarp = $I->createPublishedLarp($organizer, 'Published');
+        $publishedLarp = LarpFactory::createPublishedLarp($organizer, 'Published');
         $inquiriesLarp = $I->createLarp($organizer, LarpStageStatus::INQUIRIES, 'Inquiries');
 
         // Query for public LARPs
@@ -124,7 +127,7 @@ class LarpRepositoryCest
 
         LarpFactory::createDraftLarp($organizer, 'Draft 1');
         LarpFactory::createDraftLarp($organizer, 'Draft 2');
-        $I->createPublishedLarp($organizer, 'Published 1');
+        LarpFactory::createPublishedLarp($organizer, 'Published 1');
 
         $draftLarps = $this->larpRepository->createQueryBuilder('l')
             ->where('l.status = :status')
@@ -218,7 +221,7 @@ class LarpRepositoryCest
         $organizer = UserFactory::createApprovedUser();
 
         // Create future LARP
-        $futureLarp = $I->createPublishedLarp($organizer, 'Future LARP');
+        $futureLarp = LarpFactory::createPublishedLarp($organizer, 'Future LARP');
 
         $futureLarps = $this->larpRepository->createQueryBuilder('l')
             ->where('l.startDate > :now')
@@ -241,7 +244,7 @@ class LarpRepositoryCest
 
         $organizer = UserFactory::createApprovedUser();
 
-        $larp = $I->createPublishedLarp($organizer, 'LARP in Range');
+        $larp = LarpFactory::createPublishedLarp($organizer, 'LARP in Range');
 
         $startDate = new \DateTime('-1 month');
         $endDate = new \DateTime('+2 months');
@@ -297,7 +300,7 @@ class LarpRepositoryCest
         // Clear and reload user to get fresh count
         $I->getEntityManager()->clear();
         $reloadedUser = $I->getEntityManager()->find(
-            \App\Domain\Account\Entity\User::class,
+            User::class,
             $organizer->getId()
         );
 

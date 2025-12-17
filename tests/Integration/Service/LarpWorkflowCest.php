@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Service;
 
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
+use Tests\Support\Factory\Account\UserFactory;
+use Tests\Support\Factory\Core\LarpFactory;
 use Tests\Support\FunctionalTester;
 use Symfony\Component\Workflow\WorkflowInterface;
 
@@ -170,7 +172,7 @@ class LarpWorkflowCest
         $I->wantTo('verify that workflow allows transition from PUBLISHED to INQUIRIES');
 
         $organizer = UserFactory::createApprovedUser();
-        $larp = $I->createPublishedLarp($organizer);
+        $larp = LarpFactory::createPublishedLarp($organizer);
 
         $canTransition = $this->larpWorkflow->can($larp, 'to_inquiries');
 
@@ -230,7 +232,7 @@ class LarpWorkflowCest
         $I->wantTo('verify that workflow allows transition back from PUBLISHED to DRAFT');
 
         $organizer = UserFactory::createApprovedUser();
-        $larp = $I->createPublishedLarp($organizer);
+        $larp = LarpFactory::createPublishedLarp($organizer);
 
         $canTransition = $this->larpWorkflow->can($larp, 'back_to_draft');
 
@@ -245,7 +247,7 @@ class LarpWorkflowCest
         $I->wantTo('verify that workflow allows transition back from PUBLISHED to WIP');
 
         $organizer = UserFactory::createApprovedUser();
-        $larp = $I->createPublishedLarp($organizer);
+        $larp = LarpFactory::createPublishedLarp($organizer);
 
         $canTransition = $this->larpWorkflow->can($larp, 'back_to_wip');
 

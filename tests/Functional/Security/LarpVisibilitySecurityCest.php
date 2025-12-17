@@ -6,6 +6,8 @@ namespace Tests\Functional\Security;
 
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Enum\ParticipantRole;
+use Tests\Support\Factory\Account\UserFactory;
+use Tests\Support\Factory\Core\LarpFactory;
 use Tests\Support\FunctionalTester;
 
 /**
@@ -28,7 +30,7 @@ class LarpVisibilitySecurityCest
         $I->wantTo('verify that a PUBLISHED LARP is publicly visible');
 
         $organizer = UserFactory::createApprovedUser();
-        $larp = $I->createPublishedLarp($organizer);
+        $larp = LarpFactory::createPublishedLarp($organizer);
 
         $I->assertTrue(
             $larp->getStatus()->isVisibleForEveryone(),
@@ -106,7 +108,7 @@ class LarpVisibilitySecurityCest
         $I->wantTo('verify that unauthenticated users can see public LARPs in the list');
 
         $organizer = UserFactory::createApprovedUser();
-        $publicLarp = $I->createPublishedLarp($organizer, 'Public LARP');
+        $publicLarp = LarpFactory::createPublishedLarp($organizer, 'Public LARP');
 
         // Ensure the entity manager is flushed and cleared before making the request
         $em = $I->getEntityManager();
@@ -137,11 +139,12 @@ class LarpVisibilitySecurityCest
         $I->wantTo('verify that unauthenticated users cannot access LARP backoffice');
 
         $organizer = UserFactory::createApprovedUser();
-        $larp = $I->createPublishedLarp($organizer);
+        $larp = LarpFactory::createPublishedLarp($organizer);
 
+        $I->stopFollowingRedirects();
         $I->amOnRoute('backoffice_larp_dashboard', ['larp' => $larp->getId()]);
 
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function pendingUserCannotAccessLarpBackoffice(FunctionalTester $I): void
@@ -149,14 +152,17 @@ class LarpVisibilitySecurityCest
         $I->wantTo('verify that pending users cannot access LARP backoffice');
 
         $organizer = UserFactory::createApprovedUser();
-        $larp = $I->createPublishedLarp($organizer);
+        $larp = LarpFactory::createPublishedLarp($organizer);
 
         $pendingUser = UserFactory::createPendingUser();
 
         $I->amLoggedInAs($pendingUser);
+        $I->stopFollowingRedirects();
         $I->amOnRoute('backoffice_larp_dashboard', ['larp' => $larp->getId()]);
 
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
+        // Follow redirect to verify destination
+        $I->followRedirect();
         $I->seeCurrentRouteIs('backoffice_account_pending_approval');
     }
 

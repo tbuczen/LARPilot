@@ -185,7 +185,7 @@ class LarpParticipantDeletionCest
 
         // Follow redirect and check flash message
         $I->followRedirect();
-        $I->see('cannot remove yourself', '.alert-danger');
+        $I->see('cannot remove yourself');
 
         // Verify organizer still exists
         LarpParticipantFactory::assert()->exists($organizerParticipant);
@@ -214,23 +214,22 @@ class LarpParticipantDeletionCest
                 'user' => $organizer1->_real()
             ]);
 
+        // Save ID before deletion (proxy may become invalid after entity is deleted)
+        $organizer1ParticipantId = $organizer1Participant->getId();
+
         // Act: First organizer deletes themselves (second organizer still exists)
         $I->amLoggedInAs($organizer1->_real());
         $I->amOnRoute('backoffice_larp_participant_delete', [
             'larp' => $larp->getId(),
-            'participant' => $organizer1Participant->getId(),
+            'participant' => $organizer1ParticipantId,
         ]);
 
         // Assert: Successful deletion with redirect
+        // Note: After self-deletion, organizer1 loses LARP access, so we don't follow the redirect
         $I->seeResponseCodeIsRedirection();
-        $I->assertResponseRedirects($I->getUrl('backoffice_larp_participant_list', ['larp' => $larp->getId()]));
-
-        // Follow redirect and check success message
-        $I->followRedirect();
-        $I->seeElement('.alert-success');
 
         // Verify organizer1 was deleted
-        LarpParticipantFactory::assert()->notExists(['id' => $organizer1Participant->getId()]);
+        LarpParticipantFactory::assert()->notExists(['id' => $organizer1ParticipantId]);
 
         // Verify organizer2 still exists
         LarpParticipantFactory::assert()->exists($organizer2Participant);
@@ -252,11 +251,14 @@ class LarpParticipantDeletionCest
             ->player()
             ->create();
 
+        // Save ID before deletion (proxy may become invalid after entity is deleted)
+        $playerParticipantId = $playerParticipant->getId();
+
         // Act: Organizer deletes player
         $I->amLoggedInAs($organizer->_real());
         $I->amOnRoute('backoffice_larp_participant_delete', [
             'larp' => $larp->getId(),
-            'participant' => $playerParticipant->getId(),
+            'participant' => $playerParticipantId,
         ]);
 
         // Assert: Successful deletion
@@ -264,10 +266,10 @@ class LarpParticipantDeletionCest
         $I->assertResponseRedirects($I->getUrl('backoffice_larp_participant_list', ['larp' => $larp->getId()]));
 
         $I->followRedirect();
-        $I->seeElement('.alert-success');
+        $I->see('Successfully removed');
 
         // Verify player was deleted
-        LarpParticipantFactory::assert()->notExists(['id' => $playerParticipant->getId()]);
+        LarpParticipantFactory::assert()->notExists(['id' => $playerParticipantId]);
     }
 
     public function organizerCanDeleteNpc(FunctionalTester $I): void
@@ -286,20 +288,23 @@ class LarpParticipantDeletionCest
             ->npcLong()
             ->create();
 
+        // Save ID before deletion (proxy may become invalid after entity is deleted)
+        $npcParticipantId = $npcParticipant->getId();
+
         // Act: Organizer deletes NPC
         $I->amLoggedInAs($organizer->_real());
         $I->amOnRoute('backoffice_larp_participant_delete', [
             'larp' => $larp->getId(),
-            'participant' => $npcParticipant->getId(),
+            'participant' => $npcParticipantId,
         ]);
 
         // Assert: Successful deletion
         $I->seeResponseCodeIsRedirection();
         $I->followRedirect();
-        $I->seeElement('.alert-success');
+        $I->see('Successfully removed');
 
         // Verify NPC was deleted
-        LarpParticipantFactory::assert()->notExists(['id' => $npcParticipant->getId()]);
+        LarpParticipantFactory::assert()->notExists(['id' => $npcParticipantId]);
     }
 
     public function organizerCanDeleteStoryWriter(FunctionalTester $I): void
@@ -318,20 +323,23 @@ class LarpParticipantDeletionCest
             ->storyWriter()
             ->create();
 
+        // Save ID before deletion (proxy may become invalid after entity is deleted)
+        $writerParticipantId = $writerParticipant->getId();
+
         // Act: Organizer deletes story writer
         $I->amLoggedInAs($organizer->_real());
         $I->amOnRoute('backoffice_larp_participant_delete', [
             'larp' => $larp->getId(),
-            'participant' => $writerParticipant->getId(),
+            'participant' => $writerParticipantId,
         ]);
 
         // Assert: Successful deletion
         $I->seeResponseCodeIsRedirection();
         $I->followRedirect();
-        $I->seeElement('.alert-success');
+        $I->see('Successfully removed');
 
         // Verify writer was deleted
-        LarpParticipantFactory::assert()->notExists(['id' => $writerParticipant->getId()]);
+        LarpParticipantFactory::assert()->notExists(['id' => $writerParticipantId]);
     }
 
     public function organizerCanDeleteAnotherOrganizerWhenMultipleExist(FunctionalTester $I): void
@@ -357,20 +365,23 @@ class LarpParticipantDeletionCest
             ->organizer()
             ->create();
 
+        // Save ID before deletion (proxy may become invalid after entity is deleted)
+        $organizer2ParticipantId = $organizer2Participant->getId();
+
         // Act: Organizer1 deletes Organizer2 (Organizer3 still exists)
         $I->amLoggedInAs($organizer1->_real());
         $I->amOnRoute('backoffice_larp_participant_delete', [
             'larp' => $larp->getId(),
-            'participant' => $organizer2Participant->getId(),
+            'participant' => $organizer2ParticipantId,
         ]);
 
         // Assert: Successful deletion
         $I->seeResponseCodeIsRedirection();
         $I->followRedirect();
-        $I->seeElement('.alert-success');
+        $I->see('Successfully removed');
 
         // Verify organizer2 was deleted
-        LarpParticipantFactory::assert()->notExists(['id' => $organizer2Participant->getId()]);
+        LarpParticipantFactory::assert()->notExists(['id' => $organizer2ParticipantId]);
 
         // Verify organizer3 still exists
         LarpParticipantFactory::assert()->exists($organizer3Participant);

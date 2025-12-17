@@ -10,6 +10,7 @@ use App\Domain\Incidents\Entity\Enum\LarpIncidentStatus;
 use App\Domain\Incidents\Entity\LarpIncident;
 use App\Domain\Incidents\Form\Filter\LarpIncidentFilterType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Tests\Support\FunctionalTester;
 use Twig\Environment;
 
@@ -26,7 +27,7 @@ class LarpIncidentsTemplateCest
         // Ensure request stack has a request
         $requestStack = $I->grabService('request_stack');
         if (!$requestStack->getCurrentRequest()) {
-            $requestStack->push(new \Symfony\Component\HttpFoundation\Request());
+            $requestStack->push(new Request());
         }
     }
 

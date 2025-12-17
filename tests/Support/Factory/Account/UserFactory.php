@@ -22,9 +22,10 @@ final class UserFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array
     {
+        $suffix = uniqid('', true);
         return [
-            'username' => self::faker()->unique()->userName(),
-            'contactEmail' => self::faker()->unique()->safeEmail(),
+            'username' => self::faker()->userName() . '_' . $suffix,
+            'contactEmail' => 'user_' . $suffix . '@test.local',
             'preferredLocale' => Locale::EN,
             'status' => UserStatus::APPROVED,
             'roles' => ['ROLE_USER'],

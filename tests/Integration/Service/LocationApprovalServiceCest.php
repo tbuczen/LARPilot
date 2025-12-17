@@ -6,6 +6,7 @@ namespace Tests\Integration\Service;
 
 use App\Domain\Core\Entity\Enum\LocationApprovalStatus;
 use App\Domain\Core\Service\LocationApprovalService;
+use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\FunctionalTester;
 
 /**

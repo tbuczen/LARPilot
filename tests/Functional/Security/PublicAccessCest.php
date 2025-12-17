@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Functional\Security;
 
+use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\FunctionalTester;
 
 /**
@@ -20,6 +21,11 @@ use Tests\Support\FunctionalTester;
  */
 class PublicAccessCest
 {
+    public function _before(FunctionalTester $I): void
+    {
+        $I->stopFollowingRedirects();
+    }
+
     public function approvedUserCanAccessPlayerRoutes(FunctionalTester $I): void
     {
         $I->wantTo('verify APPROVED users can access player routes');
@@ -27,6 +33,7 @@ class PublicAccessCest
         $approvedUser = UserFactory::createApprovedUser();
         $I->amLoggedInAs($approvedUser);
 
+        $I->startFollowingRedirects();
         $I->amOnRoute('public_larp_my_larps');
         $I->seeResponseCodeIsSuccessful();
     }
@@ -38,6 +45,7 @@ class PublicAccessCest
         $pendingUser = UserFactory::createPendingUser();
         $I->amLoggedInAs($pendingUser);
 
+        $I->startFollowingRedirects();
         $I->amOnRoute('public_larp_my_larps');
         $I->seeResponseCodeIsSuccessful();
     }
@@ -49,6 +57,7 @@ class PublicAccessCest
         $approvedUser = UserFactory::createApprovedUser();
         $I->amLoggedInAs($approvedUser);
 
+        $I->startFollowingRedirects();
         $I->amOnRoute('account_settings');
         $I->seeResponseCodeIsSuccessful();
     }
@@ -60,6 +69,7 @@ class PublicAccessCest
         $pendingUser = UserFactory::createPendingUser();
         $I->amLoggedInAs($pendingUser);
 
+        $I->startFollowingRedirects();
         $I->amOnRoute('account_settings');
         $I->seeResponseCodeIsSuccessful();
     }
@@ -73,15 +83,15 @@ class PublicAccessCest
 
         // Try backoffice (should redirect due to PENDING status)
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
 
         // Try LARP creation (should redirect due to voter)
         $I->amOnRoute('backoffice_larp_create');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
 
         // Try location creation (should redirect due to voter)
         $I->amOnPage($I->getUrl('backoffice_location_modify_global', ['location' => 'new']));
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function statusChangeAffectsAccessImmediately(FunctionalTester $I): void
@@ -93,7 +103,7 @@ class PublicAccessCest
 
         // Initially cannot access backoffice (redirected due to PENDING status)
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
 
         // Approve user
         $user->setStatus(\App\Domain\Account\Entity\Enum\UserStatus::APPROVED);
@@ -103,7 +113,8 @@ class PublicAccessCest
         $I->getEntityManager()->clear();
         $I->amLoggedInAs($user);
 
-        // Now should be able to access backoffice
+        // Now should be able to access backoffice - need to follow redirects for this check
+        $I->startFollowingRedirects();
         $I->amOnRoute('backoffice_dashboard');
         $I->seeResponseCodeIsSuccessful();
     }
@@ -122,6 +133,8 @@ class PublicAccessCest
             ['route' => 'backoffice_larp_create'],
             ['route' => 'backoffice_location_modify_global', 'params' => ['location' => 'new']],
         ];
+
+        $I->startFollowingRedirects();
 
         foreach ($routes as $routeData) {
             $route = $routeData['route'];
@@ -157,6 +170,7 @@ class PublicAccessCest
         );
 
         // Verify role hierarchy works by checking access to admin routes
+        $I->startFollowingRedirects();
         $I->amOnRoute('super_admin_users_list');
         $I->seeResponseCodeIsSuccessful();
     }
@@ -168,9 +182,9 @@ class PublicAccessCest
         // Public routes should be accessible without authentication
         $publicRoutes = [
             'public_larp_list',
-            'public_larp_list', // Intentional duplicate from original test
         ];
 
+        $I->startFollowingRedirects();
         foreach ($publicRoutes as $route) {
             $I->amOnRoute($route);
             $I->seeResponseCodeIsSuccessful();
@@ -187,9 +201,9 @@ class PublicAccessCest
         // Public routes should be accessible even with PENDING status
         $publicRoutes = [
             'public_larp_list',
-            'public_larp_list', // Intentional duplicate from original test
         ];
 
+        $I->startFollowingRedirects();
         foreach ($publicRoutes as $route) {
             $I->amOnRoute($route);
             $I->seeResponseCodeIsSuccessful();

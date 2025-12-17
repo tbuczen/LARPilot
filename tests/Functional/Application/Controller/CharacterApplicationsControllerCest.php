@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Functional\Application\Controller;
 
-use App\Domain\Account\Entity\User;
 use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\Factory\Application\LarpApplicationChoiceFactory;
 use Tests\Support\Factory\Application\LarpApplicationFactory;
 use Tests\Support\Factory\Core\LarpFactory;
-use Tests\Support\Factory\Core\LarpParticipantFactory;
 use Tests\Support\Factory\StoryObject\CharacterFactory;
 use Tests\Support\FunctionalTester;
 

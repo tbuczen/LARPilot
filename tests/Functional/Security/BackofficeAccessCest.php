@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Functional\Security;
 
+use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\FunctionalTester;
 
 /**
@@ -20,12 +21,17 @@ use Tests\Support\FunctionalTester;
  */
 class BackofficeAccessCest
 {
+    public function _before(FunctionalTester $I): void
+    {
+        $I->stopFollowingRedirects();
+    }
+
     public function unauthenticatedUserRedirectedFromBackoffice(FunctionalTester $I): void
     {
         $I->wantTo('verify unauthenticated users are redirected from backoffice');
 
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function pendingUserCannotAccessBackoffice(FunctionalTester $I): void
@@ -36,7 +42,7 @@ class BackofficeAccessCest
         $I->amLoggedInAs($pendingUser);
 
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function approvedUserCanAccessBackoffice(FunctionalTester $I): void
@@ -58,7 +64,7 @@ class BackofficeAccessCest
         $I->amLoggedInAs($suspendedUser);
 
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function bannedUserCannotAccessBackoffice(FunctionalTester $I): void
@@ -69,7 +75,7 @@ class BackofficeAccessCest
         $I->amLoggedInAs($bannedUser);
 
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function superAdminCanAccessSuperAdminRoutes(FunctionalTester $I): void
@@ -110,7 +116,7 @@ class BackofficeAccessCest
         $I->wantTo('verify unauthenticated users are redirected from super-admin routes');
 
         $I->amOnRoute('super_admin_users_list');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function multipleAccessControlLayersWorkTogether(FunctionalTester $I): void
@@ -122,15 +128,15 @@ class BackofficeAccessCest
 
         // Try backoffice (should redirect due to PENDING status)
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
 
         // Try LARP creation (should redirect due to voter)
         $I->amOnRoute('backoffice_larp_create');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
 
         // Try location creation (should redirect due to voter)
         $I->amOnPage($I->getUrl('backoffice_location_modify_global', ['location' => 'new']));
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function statusChangeAffectsAccessImmediately(FunctionalTester $I): void
@@ -142,7 +148,7 @@ class BackofficeAccessCest
 
         // Initially cannot access backoffice
         $I->amOnRoute('backoffice_dashboard');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
 
         // Approve user
         $user->setStatus(\App\Domain\Account\Entity\Enum\UserStatus::APPROVED);
@@ -219,7 +225,7 @@ class BackofficeAccessCest
         $I->wantTo('verify unauthenticated users are redirected from backoffice LARP list');
 
         $I->amOnRoute('backoffice_larp_list');
-        $I->seeResponseCodeIs(302);
+        $I->seeResponseCodeIsRedirection();
     }
 
     public function pendingUserCanAccessPublicRoutes(FunctionalTester $I): void

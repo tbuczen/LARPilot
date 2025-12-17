@@ -166,6 +166,29 @@ final class LarpFactory extends PersistentProxyObjectFactory
         return $larp;
     }
 
+    public static function createPublishedLarp(User|Proxy $user, ?string $title = null): Larp|Proxy
+    {
+        $larpFactory = LarpFactory::new()
+            ->published()
+            ->withCreator($user);
+
+        if ($title !== null) {
+            $larpFactory = $larpFactory->withTitle($title);
+        }
+
+        // Create the LARP first so it has an ID
+        $larp = $larpFactory->create();
+
+        // Now create the participant with the persisted LARP
+        LarpParticipantFactory::new()
+            ->forUser($user)
+            ->organizer()
+            ->forLarp($larp)
+            ->create();
+
+        return $larp;
+    }
+
     public function withTitle(string $title): self
     {
         return $this->with([
