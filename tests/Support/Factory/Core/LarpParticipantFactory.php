@@ -23,7 +23,7 @@ final class LarpParticipantFactory extends PersistentProxyObjectFactory
     {
         return $this
             // ->afterInstantiate(function(Larp $larp): void {})
-            ;
+        ;
     }
 
     protected function defaults(): array

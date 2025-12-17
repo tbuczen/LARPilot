@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Service;
 
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
+use Symfony\Component\Workflow\WorkflowInterface;
 use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\Factory\Core\LarpFactory;
 use Tests\Support\FunctionalTester;
-use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
  * Integration tests for LARP workflow state machine

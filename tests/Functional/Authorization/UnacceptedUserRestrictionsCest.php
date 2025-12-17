@@ -278,7 +278,7 @@ class UnacceptedUserRestrictionsCest
         $I->amOnRoute('backoffice_larp_create');
 
         // If it's a redirect with flash message, follow and check
-        $I->seeResponseCodeIsBetween(300,400);
+        $I->seeResponseCodeIsBetween(300, 400);
         $I->followRedirect();
         $I->see('approved');
     }

@@ -5,7 +5,6 @@ namespace Tests\Support\Factory\Core;
 use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Core\Entity\LarpParticipant;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 

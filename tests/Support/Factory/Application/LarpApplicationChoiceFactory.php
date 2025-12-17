@@ -34,7 +34,7 @@ final class LarpApplicationChoiceFactory extends PersistentProxyObjectFactory
     {
         return $this
             // ->afterInstantiate(function(Larp $larp): void {})
-            ;
+        ;
     }
 
     // ========================================================================

@@ -32,7 +32,7 @@ final class ThreadFactory extends PersistentProxyObjectFactory
     {
         return $this
             // ->afterInstantiate(function(Larp $larp): void {})
-            ;
+        ;
     }
 
     // ========================================================================

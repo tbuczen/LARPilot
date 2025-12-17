@@ -31,7 +31,7 @@ final class FactionFactory extends PersistentProxyObjectFactory
     {
         return $this
             // ->afterInstantiate(function(Larp $larp): void {})
-            ;
+        ;
     }
 
     // ========================================================================

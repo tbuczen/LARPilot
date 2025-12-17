@@ -4,5 +4,4 @@ namespace Acceptance\Core;
 
 class RegistrationTest
 {
-
 }

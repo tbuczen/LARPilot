@@ -35,7 +35,7 @@ final class SurveyQuestionFactory extends PersistentProxyObjectFactory
     {
         return $this
             // ->afterInstantiate(function(Larp $larp): void {})
-            ;
+        ;
     }
 
     /**

@@ -43,7 +43,7 @@ final class CharacterFactory extends PersistentProxyObjectFactory
     {
         return $this
             // ->afterInstantiate(function(Larp $larp): void {})
-            ;
+        ;
     }
 
     // ========================================================================
@@ -181,7 +181,7 @@ final class CharacterFactory extends PersistentProxyObjectFactory
 
     public function withCreator(null|User|Proxy $user): self
     {
-        if(null === $user) {
+        if (null === $user) {
             $user = UserFactory::new();
         }
         return $this->with([

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Functional\Account;
 
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
@@ -15,8 +14,6 @@ use Tests\Support\FunctionalTester;
 
 class BackofficeAccessHappyPathCest
 {
-
-
     public function _before(FunctionalTester $I): void
     {
         $user = $I->createSuperAdmin();
@@ -55,8 +52,8 @@ class BackofficeAccessHappyPathCest
             }
 
             $I->amOnPage($path);
-//            $I->g
-            $I->seeResponseCodeIsBetween(200,302);
+            //            $I->g
+            $I->seeResponseCodeIsBetween(200, 302);
         }
     }
 
