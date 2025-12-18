@@ -94,12 +94,12 @@ jobs:
 
       - name: Setup test environment
         run: |
-          cp .env.test .env.test.local || true
-          echo "DATABASE_URL=postgresql://larpilot:password@127.0.0.1:5432/larpilot?serverVersion=15&charset=utf8" >> .env.test
-          echo "DATABASE_HOST=127.0.0.1" >> .env.test
-          echo "DATABASE_HOST=127.0.0.1" >> .env
+          # Create .env.test.local to override .env.test values for GitHub Actions
+          echo "DATABASE_HOST=127.0.0.1" > .env.test.local
 
       - name: Create test database
+        env:
+          DATABASE_HOST: 127.0.0.1
         run: |
           php bin/console doctrine:database:create --env=test --if-not-exists
           php bin/console doctrine:migrations:migrate --env=test --no-interaction
@@ -108,14 +108,20 @@ jobs:
         run: vendor/bin/codecept build
 
       - name: Run All Codeception Tests
+        env:
+          DATABASE_HOST: 127.0.0.1
         run: |
           APP_ENV=test vendor/bin/codecept run --colors
 
       - name: Run Unit Tests Only
+        env:
+          DATABASE_HOST: 127.0.0.1
         run: |
           APP_ENV=test vendor/bin/codecept run unit --colors
 
       - name: Run Functional Tests Only
+        env:
+          DATABASE_HOST: 127.0.0.1
         run: |
           APP_ENV=test vendor/bin/codecept run functional --colors
 
