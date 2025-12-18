@@ -131,6 +131,8 @@
     "require-dev": {
         "codeception/codeception": "^5.3.2",
         "codeception/module-asserts": "^3.2.1",
+        "codeception/module-doctrine": "*",
+        "codeception/module-phpbrowser": ">=3.0.2",
         "codeception/module-symfony": "^3.7.1",
         "codeception/module-webdriver": "^4.0.3",
         "doctrine/doctrine-fixtures-bundle": "^4.3",
@@ -143,7 +145,6 @@
         "symfony/stopwatch": "7.2.*",
         "symfony/web-profiler-bundle": "7.2.*",
         "symplify/easy-coding-standard": "^12.6.2",
-        "zenstruck/foundry": "^2.8",
-        "codeception/module-phpbrowser": ">=3.0.2"
+        "zenstruck/foundry": "^2.8"
     }
 }
