@@ -104,26 +104,21 @@ jobs:
           php bin/console doctrine:database:create --env=test --if-not-exists
           php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
+      - name: Build assets (SASS)
+        env:
+          DATABASE_HOST: 127.0.0.1
+        run: |
+          php bin/console sass:build --env=test
+          php bin/console asset-map:compile --env=test
+
       - name: Build Codeception Actors
         run: vendor/bin/codecept build
 
-      - name: Run All Codeception Tests
+      - name: Run Codeception Tests
         env:
           DATABASE_HOST: 127.0.0.1
         run: |
           APP_ENV=test vendor/bin/codecept run --colors
-
-      - name: Run Unit Tests Only
-        env:
-          DATABASE_HOST: 127.0.0.1
-        run: |
-          APP_ENV=test vendor/bin/codecept run unit --colors
-
-      - name: Run Functional Tests Only
-        env:
-          DATABASE_HOST: 127.0.0.1
-        run: |
-          APP_ENV=test vendor/bin/codecept run functional --colors
 
 
   summary:
