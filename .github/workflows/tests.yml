@@ -95,8 +95,9 @@ jobs:
       - name: Setup test environment
         run: |
           cp .env.test .env.test.local || true
-          echo "DATABASE_URL=postgresql://larpilot:password@127.0.0.1:5432/larpilot?serverVersion=15&charset=utf8" >> .env.test.local
-          echo "DATABASE_HOST=127.0.0.1" >> .env.test.local
+          echo "DATABASE_URL=postgresql://larpilot:password@127.0.0.1:5432/larpilot?serverVersion=15&charset=utf8" >> .env.test
+          echo "DATABASE_HOST=127.0.0.1" >> .env.test
+          echo "DATABASE_HOST=127.0.0.1" >> .env
 
       - name: Create test database
         run: |
