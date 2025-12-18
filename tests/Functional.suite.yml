@@ -16,4 +16,7 @@ modules:
             cache_router: false
             rebootable_client: true
             env_file: '.env.test'
+        - Doctrine:
+            depends: Symfony
+            cleanup: true  # Rollback transaction after each test (closes connections properly)
 step_decorators: ~
