@@ -135,17 +135,41 @@ jobs:
       - name: Start Docker containers
         run: docker compose up -d
 
-      - name: Wait for services to be ready
+      - name: Wait for PostgreSQL to be ready
         run: |
-          sleep 30
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..30}; do
+            if docker compose exec -T postgres pg_isready -U larpilot -h localhost; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL... ($i/30)"
+            sleep 2
+          done
           docker compose ps
 
       - name: Install dependencies in container
         run: docker compose exec -T php composer install --no-interaction
 
+      - name: Verify database connectivity from PHP container
+        run: |
+          echo "Verifying PHP container can connect to PostgreSQL..."
+          for i in {1..10}; do
+            if docker compose exec -T php php -r "new PDO('pgsql:host=postgres;port=5432;dbname=larpilot', 'larpilot', 'password');"; then
+              echo "PHP can connect to PostgreSQL!"
+              break
+            fi
+            echo "Waiting for connectivity... ($i/10)"
+            sleep 3
+          done
+
+      - name: Create test database
+        run: |
+          # Create the test database directly in postgres container
+          docker compose exec -T postgres psql -U larpilot -c "CREATE DATABASE larpilot_test;" || true
+
       - name: Run migrations in container
         run: |
-          docker compose exec -T php php bin/console doctrine:database:create --env=test --if-not-exists
           docker compose exec -T php php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
       - name: Build Codeception Actors in container

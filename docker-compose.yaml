@@ -21,6 +21,9 @@ services:
         - .:/var/www/html
         - ./docker/dev/php/php.ini:/usr/local/etc/php/conf.d/dev.ini
         - /var/www/html/var/cache
+      depends_on:
+        postgres:
+          condition: service_started
       networks:
         - larpilot-network
 

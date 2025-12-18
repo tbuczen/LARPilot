@@ -82,7 +82,7 @@ readonly class CharacterAllocationService
      * - Tag match bonus (if implemented)
      *
      * @param array<string, array{character: Character, choices: LarpApplicationChoice[]}> $characterApplicants
-     * @return array<string, array{choice: LarpApplicationChoice, score: float}>
+     * @return array<string, array{choice: LarpApplicationChoice, score: float, characterId: string}>
      */
     private function calculateScores(array $characterApplicants): array
     {

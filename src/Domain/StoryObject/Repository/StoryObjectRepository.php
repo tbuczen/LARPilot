@@ -147,24 +147,6 @@ class StoryObjectRepository extends BaseRepository
         return array_map(static fn ($id): string => $id instanceof Uuid ? $id->toRfc4122() : (string) $id, $rows);
     }
 
-    /**
-     * @param array<int, array<string>> $sets
-     * @return string[]
-     */
-    private function intersectSets(array $sets): array
-    {
-        if ($sets === []) {
-            return [];
-        }
-
-        $base = array_shift($sets);
-        foreach ($sets as $set) {
-            $base = array_intersect($base, $set);
-        }
-
-        return array_values(array_unique($base));
-    }
-
     private function getConnectedToThread(Larp $larp, string $threadId): array
     {
         $ids = [];

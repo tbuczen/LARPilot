@@ -405,7 +405,7 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
 
     public function getMarking(): string
     {
-        return $this->status?->value ?? LarpStageStatus::DRAFT->value;
+        return $this->status !== null ? $this->status->value : LarpStageStatus::DRAFT->value;
     }
 
     public function setMarking(string $marking): void

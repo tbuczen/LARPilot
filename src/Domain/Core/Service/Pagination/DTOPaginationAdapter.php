@@ -16,15 +16,23 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
  * });
  * ```
  */
-readonly class DTOPaginationAdapter implements \IteratorAggregate, \Countable, \ArrayAccess
+class DTOPaginationAdapter implements \IteratorAggregate, \Countable, \ArrayAccess
 {
+    private PaginationInterface $originalPagination;
+
+    /** @var array<mixed> */
+    private array $items;
+
     /**
+     * @param PaginationInterface $originalPagination
      * @param array<mixed> $items Transformed DTO items
      */
     private function __construct(
-        private PaginationInterface $originalPagination,
-        private array $items
+        PaginationInterface $originalPagination,
+        array $items
     ) {
+        $this->originalPagination = $originalPagination;
+        $this->items = $items;
     }
 
     /**
@@ -45,7 +53,7 @@ readonly class DTOPaginationAdapter implements \IteratorAggregate, \Countable, \
     /**
      * Get the transformed DTO items
      *
-     * @return array<mixed>
+     * @return array
      */
     public function getItems(): array
     {
@@ -68,29 +76,23 @@ readonly class DTOPaginationAdapter implements \IteratorAggregate, \Countable, \
         return $this->originalPagination->getItemNumberPerPage();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPaginationData(): array
     {
-        return $this->originalPagination->getPaginationData();
-    }
+        if (method_exists($this->originalPagination, 'getPaginationData')) {
+            /** @var array<string, mixed> $result */
+            $result = $this->originalPagination->getPaginationData();
+            return $result;
+        }
 
-    public function getCustomParameters(): array
-    {
-        return $this->originalPagination->getCustomParameters();
+        return [];
     }
 
     public function setCustomParameters(array $parameters): void
     {
         $this->originalPagination->setCustomParameters($parameters);
-    }
-
-    public function getRoute(): ?string
-    {
-        return $this->originalPagination->getRoute();
-    }
-
-    public function getParams(): array
-    {
-        return $this->originalPagination->getParams();
     }
 
     // IteratorAggregate implementation
@@ -116,15 +118,6 @@ readonly class DTOPaginationAdapter implements \IteratorAggregate, \Countable, \
         return $this->items[$offset];
     }
 
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        if ($offset === null) {
-            $this->items[] = $value;
-        } else {
-            $this->items[$offset] = $value;
-        }
-    }
-
     public function offsetUnset(mixed $offset): void
     {
         unset($this->items[$offset]);
@@ -141,5 +134,10 @@ readonly class DTOPaginationAdapter implements \IteratorAggregate, \Countable, \
         }
 
         throw new \BadMethodCallException(sprintf('Method "%s" does not exist', $name));
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->originalPagination->offsetSet($offset, $value);
     }
 }

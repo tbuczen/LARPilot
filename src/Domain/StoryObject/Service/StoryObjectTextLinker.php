@@ -24,6 +24,9 @@ final readonly class StoryObjectTextLinker
 
         $xpath = new \DOMXPath($dom);
         foreach ($xpath->query('//*[@data-story-object-id]') as $node) {
+            if (!$node instanceof \DOMElement) {
+                continue;
+            }
             $id = $node->getAttribute('data-story-object-id');
             $object = $this->storyObjectRepository->find(Uuid::fromString($id));
             if (!$object) {
@@ -39,7 +42,7 @@ final readonly class StoryObjectTextLinker
             $link = $dom->createElement('a');
             $link->setAttribute('href', $href);
             $link->nodeValue = $node->textContent;
-            $node->parentNode->replaceChild($link, $node);
+            $node->parentNode?->replaceChild($link, $node);
         }
         return $dom->saveHTML();
     }

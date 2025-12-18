@@ -82,7 +82,7 @@ class CharacterGalleryController extends AbstractController
         }
 
         // Verify character is eligible for public viewing
-        if ($character->getCharacterType() !== CharacterType::Player && !$character->getAvailableForRecruitment()) {
+        if ($character->getCharacterType() !== CharacterType::Player) {
             throw $this->createAccessDeniedException('This character is not publicly available.');
         }
 

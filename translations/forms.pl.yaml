@@ -168,6 +168,13 @@ game_map:
   grid_opacity_help: "Przezroczystość nakładki siatki (0.0 = niewidoczna, 1.0 = całkowicie widoczna)"
   grid_visible: "Pokaż siatkę"
   grid_visible_help: "Przełącz widoczność siatki na mapie"
+  basic_info: "Informacje podstawowe"
+  grid_settings: "Konfiguracja siatki"
+  preview: "Podgląd mapy"
+  upload_to_preview: "Prześlij obraz, aby zobaczyć podgląd mapy z nakładką siatki"
+  fit_image: "Dopasuj do widoku"
+  current_image: "Aktualny obraz"
+  grid_preview_hint: "Dostosuj ustawienia siatki powyżej, aby zobaczyć zmiany w czasie rzeczywistym na podglądzie poniżej."
 
 map_location:
   name: "Nazwa lokalizacji"

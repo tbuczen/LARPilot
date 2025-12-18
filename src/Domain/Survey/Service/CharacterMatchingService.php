@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Survey\Service;
 
+use App\Domain\Core\Entity\Enum\Gender;
 use App\Domain\Core\Entity\Tag;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Enum\CharacterType;
@@ -20,7 +21,7 @@ class CharacterMatchingService
     /**
      * Generate character match suggestions for a survey response.
      *
-     * @return array<string, mixed> Array of match suggestions with character IDs and scores
+     * @return list<array<string, mixed>> Array of match suggestions with character IDs and scores
      */
     public function generateMatchSuggestions(SurveyResponse $response): array
     {
@@ -98,7 +99,7 @@ class CharacterMatchingService
 
         // +5 points for gender preference match
         $genderPreference = $this->extractGenderPreference($response);
-        if ($genderPreference !== null && $character->getGender() === $genderPreference) {
+        if ($character->getGender() === $genderPreference) {
             $score += 5;
         }
 
@@ -156,7 +157,7 @@ class CharacterMatchingService
     /**
      * Extract gender preference from survey answers.
      */
-    private function extractGenderPreference(SurveyResponse $response): ?string
+    private function extractGenderPreference(SurveyResponse $response): ?Gender
     {
         foreach ($response->getAnswers() as $answer) {
             $question = $answer->getQuestion();
@@ -166,9 +167,9 @@ class CharacterMatchingService
                     $optionText = $selectedOptions->first()->getOptionText();
                     // Map option text to Gender enum values
                     return match ($optionText) {
-                        'Male character' => 'MALE',
-                        'Female character' => 'FEMALE',
-                        'Non-binary character' => 'NON_BINARY',
+                        'Male character' => Gender::Male,
+                        'Female character' => Gender::Female,
+                        'Non-binary character' => Gender::Other,
                         default => null,
                     };
                 }

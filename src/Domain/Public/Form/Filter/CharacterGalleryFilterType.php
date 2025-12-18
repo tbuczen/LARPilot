@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Public\Form\Filter;
 
+use App\Domain\Core\Entity\Enum\Gender;
 use App\Domain\Core\Entity\Tag;
-use App\Domain\StoryObject\Entity\Enum\Gender;
 use Spiriit\Bundle\FormFilterBundle\Filter\Query\QueryInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -69,7 +69,7 @@ class CharacterGalleryFilterType extends AbstractType
                 'label' => 'Gender',
                 'required' => false,
                 'placeholder' => 'Any gender',
-                'choice_label' => fn (Gender $gender): string => $gender->getLabel(),
+                'choice_label' => fn (Gender $gender): string => $gender->name,
                 'attr' => ['class' => 'form-select'],
             ])
         ;

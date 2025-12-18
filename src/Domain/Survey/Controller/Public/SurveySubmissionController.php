@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Survey\Controller\Public;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Application\Entity\Enum\SubmissionStatus;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Survey\Entity\Enum\SurveyQuestionType;
@@ -87,7 +88,9 @@ class SurveySubmissionController extends AbstractController
             $response = new SurveyResponse();
             $response->setSurvey($survey);
             $response->setLarp($larp);
-            $response->setUser($this->getUser());
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            $response->setUser($currentUser);
             $response->setStatus(SubmissionStatus::NEW);
 
             // Process answers

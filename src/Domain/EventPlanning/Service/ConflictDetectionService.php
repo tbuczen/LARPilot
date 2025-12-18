@@ -14,7 +14,7 @@ readonly class ConflictDetectionService
 {
     public function __construct(
         private ResourceBookingRepository $resourceBookingRepository,
-        private ScheduledEventRepository  $scheduledEventRepository
+        //        private ScheduledEventRepository  $scheduledEventRepository
     ) {
     }
 

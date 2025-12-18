@@ -23,4 +23,44 @@ class CharacterSkill
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $description = null;
+
+    public function getCharacter(): Character
+    {
+        return $this->character;
+    }
+
+    public function setCharacter(Character $character): void
+    {
+        $this->character = $character;
+    }
+
+    public function getSkill(): Skill
+    {
+        return $this->skill;
+    }
+
+    public function setSkill(Skill $skill): void
+    {
+        $this->skill = $skill;
+    }
+
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level): void
+    {
+        $this->level = $level;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
 }

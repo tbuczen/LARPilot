@@ -28,7 +28,7 @@ class IntegrationSettingsVoter extends Voter
         }
 
         $participants = $subject->getParticipants();
-        /** @var \App\Domain\Core\Controller\Backoffice\LarpParticipant|null $userOrganizer */
+        /** @var LarpParticipant|null $userOrganizer */
         $userOrganizer = $participants->filter(fn (LarpParticipant $participant): bool => $participant->getUser()->getId() === $user->getId() && $participant->isAdmin())->first();
         return $userOrganizer !== null;
     }

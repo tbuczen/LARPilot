@@ -14,9 +14,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LarpIncidentType extends AbstractType
 {
-    public function __construct(private readonly ParticipantCodeValidator $validator)
-    {
-    }
+    //    public function __construct(private readonly ParticipantCodeValidator $validator)
+    //    {
+    //    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

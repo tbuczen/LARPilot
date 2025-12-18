@@ -41,7 +41,6 @@ final readonly class IntegrationManager
             is_string($input), $input instanceof Uuid => $this->larpIntegrationRepository->find($input)?->getProvider(),
             $input instanceof LarpIntegrationProvider => $input,
             $input instanceof LarpIntegration => $input->getProvider(),
-            default => throw new \InvalidArgumentException("Invalid type for integrationOrId: " . get_debug_type($input)),
         };
 
         if (!$provider) {

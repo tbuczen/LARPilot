@@ -7,8 +7,8 @@ use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Repository\LarpRepository;
 use App\Domain\Core\Repository\TagRepository;
 use App\Domain\Integrations\Repository\SharedFileRepository;
-use App\Domain\Integrations\Service\IntegrationManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use Exception;
 use Symfony\Component\Uid\Uuid;
 use Webmozart\Assert\Assert;
@@ -21,13 +21,12 @@ class ImportTagsHandler
         private readonly LarpRepository $larpRepository,
         private readonly TagRepository $tagRepository,
         private readonly SharedFileRepository $sharedFileRepository,
-        private readonly IntegrationManager $integrationManager,
         private readonly EntityManagerInterface $entityManager
     ) {
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|ORMException
      */
     public function handle(ImportTagsCommand $command): array
     {

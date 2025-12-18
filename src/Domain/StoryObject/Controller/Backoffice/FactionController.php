@@ -85,7 +85,7 @@ class FactionController extends BaseController
 
         // Get mentions only for existing factions (not new ones)
         $mentions = [];
-        if ($faction->getId() !== null) {
+        if (!$new) {
             $mentions = $mentionService->findMentions($faction);
         }
 

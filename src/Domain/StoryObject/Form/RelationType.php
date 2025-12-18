@@ -132,7 +132,7 @@ class RelationType extends AbstractType
         /** @var Relation|null $relation */
         $relation = $builder->getData();
 
-        $isEditing = $relation && null !== $relation->getId();
+        $isEditing = $relation && null !== $relation->getCreatedAt();
         $disableFrom = false;
         $disableTo = false;
 

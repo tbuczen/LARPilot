@@ -69,7 +69,7 @@ class ItemController extends BaseController
 
         // Get mentions only for existing items (not new ones)
         $mentions = [];
-        if ($item->getId() !== null) {
+        if (!$new) {
             $mentions = $mentionService->findMentions($item);
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Domain\EventPlanning\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\EventPlanning\Entity\PlanningResource;
@@ -54,7 +55,11 @@ class ResourceController extends BaseController
         if ($isNew) {
             $resource = new PlanningResource();
             $resource->setLarp($larp);
-            $resource->setCreatedBy($this->getUser());
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            if ($currentUser instanceof User) {
+                $resource->setCreatedBy($currentUser);
+            }
         }
 
         $form = $this->createForm(PlanningResourceType::class, $resource, ['larp' => $larp]);

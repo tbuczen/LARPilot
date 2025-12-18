@@ -233,7 +233,7 @@ readonly class GoogleSpreadsheetIntegrationHelper
             $columnCount = count($columnRange);
 
             foreach ($rows as $index => $row) {
-                $cells = $row->getValues() ?? [];
+                $cells = $row->getValues();
                 $cellsInRange = array_slice($cells, 0, $columnCount); // Only slice needed columns
 
                 $hasContent = false;

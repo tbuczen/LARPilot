@@ -2,6 +2,7 @@
 
 namespace App\Domain\Core\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
@@ -74,11 +75,12 @@ class ParticipantController extends BaseController
     ): Response {
         // Check authorization - only organizers can delete participants
         $this->denyAccessUnlessGranted('DELETE_LARP_PARTICIPANT', $participant);
-        
+
+        /** @var User|null $currentUser */
         $currentUser = $this->getUser();
-        
+
         // Check if the user is trying to delete themselves
-        if ($currentUser && $participant->getUser()->getId() === $currentUser->getId()) {
+        if ($currentUser instanceof User && $participant->getUser()->getId() === $currentUser->getId()) {
             // Check if this participant is an organizer
             if ($participant->isAdmin()) {
                 // Count total organizers for this LARP

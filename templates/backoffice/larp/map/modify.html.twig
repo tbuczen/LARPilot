@@ -5,7 +5,13 @@
 {% block larp_title %}{{ (map is defined and map.id ? 'larp.map.modify' : 'larp.map.create')|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
-    <div class="card mt-4">
+    <div class="card mt-4"
+         data-controller="map-config-preview"
+         data-map-config-preview-existing-image-value="{{ map is defined and map.imagePath ? map.imagePath : '' }}"
+         data-map-config-preview-grid-rows-value="{{ map is defined ? map.gridRows : 10 }}"
+         data-map-config-preview-grid-columns-value="{{ map is defined ? map.gridColumns : 10 }}"
+         data-map-config-preview-grid-opacity-value="{{ map is defined ? map.gridOpacity : 0.5 }}"
+         data-map-config-preview-grid-visible-value="{{ map is defined and map.gridVisible ? 'true' : 'false' }}">
         <div class="card-header">
             <h2>
                 {% if isNew %}
@@ -17,7 +23,170 @@
         </div>
         <div class="card-body">
             {{ form_start(form) }}
-            {{ form_widget(form) }}
+
+            <div class="row">
+                {# Left column: Basic info #}
+                <div class="col-md-6">
+                    <h5 class="mb-3">{{ 'game_map.basic_info'|trans({}, 'forms') }}</h5>
+
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.description) }}
+
+                    <div class="mb-3">
+                        {{ form_label(form.imageFile) }}
+                        <input type="file"
+                               id="{{ form.imageFile.vars.id }}"
+                               name="{{ form.imageFile.vars.full_name }}"
+                               class="form-control {{ form.imageFile.vars.errors|length > 0 ? 'is-invalid' : '' }}"
+                               accept="image/jpeg,image/png,image/gif,image/webp"
+                               data-map-config-preview-target="fileInput"
+                               data-action="change->map-config-preview#onFileChange">
+                        {% if form.imageFile.vars.help %}
+                            <div class="form-text">{{ form.imageFile.vars.help|trans({}, 'forms') }}</div>
+                        {% endif %}
+                        {{ form_errors(form.imageFile) }}
+
+                        {% if map is defined and map.imagePath %}
+                            <div class="mt-2 text-muted small">
+                                <i class="bi bi-info-circle"></i>
+                                {{ 'game_map.current_image'|trans({}, 'forms') }}: {{ map.imageFile }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# Right column: Grid configuration #}
+                <div class="col-md-6">
+                    <h5 class="mb-3">{{ 'game_map.grid_settings'|trans({}, 'forms') }}</h5>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                {{ form_label(form.gridRows) }}
+                                <input type="number"
+                                       id="{{ form.gridRows.vars.id }}"
+                                       name="{{ form.gridRows.vars.full_name }}"
+                                       value="{{ form.gridRows.vars.value }}"
+                                       class="form-control {{ form.gridRows.vars.errors|length > 0 ? 'is-invalid' : '' }}"
+                                       min="1"
+                                       max="100"
+                                       data-map-config-preview-target="gridRows"
+                                       data-action="input->map-config-preview#onGridRowsChange">
+                                {% if form.gridRows.vars.help %}
+                                    <div class="form-text">{{ form.gridRows.vars.help|trans({}, 'forms') }}</div>
+                                {% endif %}
+                                {{ form_errors(form.gridRows) }}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                {{ form_label(form.gridColumns) }}
+                                <input type="number"
+                                       id="{{ form.gridColumns.vars.id }}"
+                                       name="{{ form.gridColumns.vars.full_name }}"
+                                       value="{{ form.gridColumns.vars.value }}"
+                                       class="form-control {{ form.gridColumns.vars.errors|length > 0 ? 'is-invalid' : '' }}"
+                                       min="1"
+                                       max="100"
+                                       data-map-config-preview-target="gridColumns"
+                                       data-action="input->map-config-preview#onGridColumnsChange">
+                                {% if form.gridColumns.vars.help %}
+                                    <div class="form-text">{{ form.gridColumns.vars.help|trans({}, 'forms') }}</div>
+                                {% endif %}
+                                {{ form_errors(form.gridColumns) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.gridOpacity) }}
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="range"
+                                   id="{{ form.gridOpacity.vars.id }}_range"
+                                   class="form-range flex-grow-1"
+                                   min="0"
+                                   max="1"
+                                   step="0.05"
+                                   value="{{ form.gridOpacity.vars.value }}"
+                                   data-action="input->map-config-preview#onGridOpacityChange"
+                                   oninput="document.getElementById('{{ form.gridOpacity.vars.id }}').value = this.value">
+                            <input type="number"
+                                   id="{{ form.gridOpacity.vars.id }}"
+                                   name="{{ form.gridOpacity.vars.full_name }}"
+                                   value="{{ form.gridOpacity.vars.value }}"
+                                   class="form-control {{ form.gridOpacity.vars.errors|length > 0 ? 'is-invalid' : '' }}"
+                                   min="0"
+                                   max="1"
+                                   step="0.01"
+                                   style="width: 80px;"
+                                   data-map-config-preview-target="gridOpacity"
+                                   data-action="input->map-config-preview#onGridOpacityChange"
+                                   oninput="document.getElementById('{{ form.gridOpacity.vars.id }}_range').value = this.value">
+                        </div>
+                        {% if form.gridOpacity.vars.help %}
+                            <div class="form-text">{{ form.gridOpacity.vars.help|trans({}, 'forms') }}</div>
+                        {% endif %}
+                        {{ form_errors(form.gridOpacity) }}
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox"
+                                   id="{{ form.gridVisible.vars.id }}"
+                                   name="{{ form.gridVisible.vars.full_name }}"
+                                   class="form-check-input"
+                                   {{ form.gridVisible.vars.value ? 'checked' : '' }}
+                                   value="1"
+                                   data-map-config-preview-target="gridVisible"
+                                   data-action="change->map-config-preview#onGridVisibleChange">
+                            {{ form_label(form.gridVisible, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                        </div>
+                        {% if form.gridVisible.vars.help %}
+                            <div class="form-text">{{ form.gridVisible.vars.help|trans({}, 'forms') }}</div>
+                        {% endif %}
+                        {{ form_errors(form.gridVisible) }}
+                    </div>
+
+                    <div class="alert alert-info small">
+                        <i class="bi bi-lightbulb me-1"></i>
+                        {{ 'game_map.grid_preview_hint'|trans({}, 'forms') }}
+                    </div>
+                </div>
+            </div>
+
+            {# Map Preview Section #}
+            <div class="mt-4">
+                <h5 class="mb-3">
+                    <i class="bi bi-eye me-2"></i>{{ 'game_map.preview'|trans({}, 'forms') }}
+                </h5>
+
+                <div class="map-preview-container border rounded">
+                    {# Placeholder shown when no image #}
+                    <div class="map-preview-placeholder {{ map is defined and map.imagePath ? 'd-none' : '' }}"
+                         data-map-config-preview-target="placeholder">
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-image display-1 mb-3 d-block opacity-25"></i>
+                            <p class="mb-0">{{ 'game_map.upload_to_preview'|trans({}, 'forms') }}</p>
+                        </div>
+                    </div>
+
+                    {# Map preview container #}
+                    <div id="mapPreview"
+                         class="map-preview {{ map is defined and map.imagePath ? '' : 'd-none' }}"
+                         data-map-config-preview-target="preview">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-2">
+                    <button type="button"
+                            class="btn btn-sm btn-outline-secondary"
+                            data-action="click->map-config-preview#fitImage">
+                        <i class="bi bi-arrows-fullscreen me-1"></i>
+                        {{ 'game_map.fit_image'|trans({}, 'forms') }}
+                    </button>
+                </div>
+            </div>
+
             {{ ui.form_actions(
                 map is defined and map.id ? 'save' : 'create',
                 'bi-check-circle',

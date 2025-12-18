@@ -105,7 +105,7 @@ class CharacterController extends BaseController
         $applicantsCount = 0;
         $commentsCount = 0;
         $unresolvedCommentsCount = 0;
-        if ($character->getId() !== null) {
+        if (!$new) {
             $mentions = $mentionService->findMentions($character);
             $applicantsCount = $choiceRepository->getApplicationsCountForCharacter($character);
             $commentsCount = $commentRepository->countByStoryObject($character);
@@ -229,7 +229,6 @@ class CharacterController extends BaseController
         $integration = $larpManager->getIntegrationTypeForLarp($larp, $provider);
         Assert::notNull($integration, sprintf('Integration %s not found for LARP %s', $provider->value, $larp->getId()->toRfc4122()));
 
-        /** @var SharedFile[] $files */
         $files = $integration->getSharedFiles();
         return $this->render('backoffice/larp/characters/fileSelect.html.twig', [
             'larp' => $larp,

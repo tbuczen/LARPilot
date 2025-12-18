@@ -36,8 +36,9 @@ class ParticipantFilterType extends AbstractType
                     if (!is_array($roles)) {
                         return null;
                     }
+                    $qb = $filterQuery->getQueryBuilder();
                     $parameters = [];
-                    $expression = $filterQuery->getExpr()->andX();
+                    $expression = $qb->expr()->andX();
                     /** @var ParticipantRole $role */
                     foreach ($roles as $i => $role) {
                         $expression->add("JSONB_EXISTS($field, :role_$i) = true");

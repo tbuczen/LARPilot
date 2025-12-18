@@ -93,7 +93,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         );
     }
 
-    private function addSocialAccountToUser(GoogleUser $googleUser, UserInterface|User $currentUser): UserInterface
+    private function addSocialAccountToUser(GoogleUser $googleUser, User $currentUser): UserInterface
     {
         $command = new AddSocialAccountToUserCommand(
             provider: SocialAccountProvider::Google,

@@ -140,10 +140,6 @@ class ImportCharactersHandler
         $this->entityManager->persist($reference);
     }
 
-    /**
-     * @param Larp|null $larp
-     * @return array
-     */
     private function getExistingCharactersMap(?string $larpId): array
     {
         $existingCharacters = $this->characterRepository->findBy(['larp' => Uuid::fromString($larpId)]);

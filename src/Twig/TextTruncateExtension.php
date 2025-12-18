@@ -40,7 +40,7 @@ final class TextTruncateExtension extends AbstractExtension
 
         $tokens = preg_split('/(<[^>]+>)/u', $html, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY) ?: [];
         foreach ($tokens as $token) {
-            if ($token !== '' && $token[0] === '<') {
+            if ($token[0] === '<') {
                 // HTML tag
                 // Track open/close tags for proper closing later (ignore self-closing)
                 if (preg_match('#^<\s*([a-zA-Z0-9:_-]+)(\s[^>]*)?>$#u', $token, $m)) {

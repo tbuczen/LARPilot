@@ -92,7 +92,7 @@ class DiscordAuthenticator extends OAuth2Authenticator implements Authentication
         );
     }
 
-    private function addSocialAccountToUser(DiscordResourceOwner $user, UserInterface|User $currentUser): UserInterface
+    private function addSocialAccountToUser(DiscordResourceOwner $user, User $currentUser): UserInterface
     {
         $command = new AddSocialAccountToUserCommand(
             provider: SocialAccountProvider::Discord,
