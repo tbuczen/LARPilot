@@ -61,7 +61,7 @@ class StoryObjectMentionService
             $mentions[] = new MentionDTO(
                 sourceObject: $sourceObject,
                 mentionType: 'story_object.mention.type.relation',
-                context: $relationType ? sprintf('relation.%s', $relationType->value) : 'relation',
+                context: sprintf('relation.%s', $relationType->value),
                 fieldName: 'relation',
             );
         }

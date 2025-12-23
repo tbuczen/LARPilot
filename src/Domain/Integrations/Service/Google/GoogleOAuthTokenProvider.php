@@ -2,7 +2,6 @@
 
 namespace App\Domain\Integrations\Service\Google;
 
-use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Service\Exceptions\ReAuthenticationNeededException;
 use App\Domain\Integrations\Service\OAuthTokenProviderInterface;
@@ -17,7 +16,6 @@ readonly class GoogleOAuthTokenProvider implements OAuthTokenProviderInterface
 
     public function getTokenForIntegration(string $integrationId): ?string
     {
-        /** @var LarpIntegration $integration */
         $integration = $this->integrationRepository->find($integrationId);
 
         if (!$integration) {

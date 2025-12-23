@@ -239,7 +239,7 @@ class PlanningResource implements Timestampable, CreatorAwareInterface, \Stringa
             return $this->item->getTitle();
         }
         if ($this->participant) {
-            return $this->participant->getUser()->getFullName();
+            return $this->participant->getUser()?->getUsername();
         }
         return null;
     }

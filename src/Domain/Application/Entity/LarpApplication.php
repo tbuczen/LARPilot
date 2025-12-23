@@ -46,7 +46,7 @@ class LarpApplication implements Timestampable, CreatorAwareInterface
     }
 
     #[ORM\Column(length: 50)]
-    private ?SubmissionStatus $status = SubmissionStatus::NEW;
+    private SubmissionStatus $status = SubmissionStatus::NEW;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
@@ -111,7 +111,7 @@ class LarpApplication implements Timestampable, CreatorAwareInterface
         return $this;
     }
 
-    public function getStatus(): ?SubmissionStatus
+    public function getStatus(): SubmissionStatus
     {
         return $this->status;
     }

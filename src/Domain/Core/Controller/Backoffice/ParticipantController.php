@@ -2,6 +2,7 @@
 
 namespace App\Domain\Core\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
@@ -72,6 +73,30 @@ class ParticipantController extends BaseController
         LarpParticipantRepository $participantRepository,
         LarpParticipant           $participant,
     ): Response {
+        // Check authorization - only organizers can delete participants
+        $this->denyAccessUnlessGranted('DELETE_LARP_PARTICIPANT', $participant);
+
+        /** @var User|null $currentUser */
+        $currentUser = $this->getUser();
+
+        // Check if the user is trying to delete themselves
+        if ($currentUser instanceof User && $participant->getUser()->getId() === $currentUser->getId()) {
+            // Check if this participant is an organizer
+            if ($participant->isAdmin()) {
+                // Count total organizers for this LARP
+                $organizerCount = $participantRepository->countMainOrganizersForLarp($larp);
+                
+                // Prevent deletion if this is the last organizer
+                if ($organizerCount <= 1) {
+                    $this->addFlash('danger', $this->translator->trans('larp.participant.error.cannot_delete_last_organizer'));
+                    
+                    return $this->redirectToRoute('backoffice_larp_participant_list', [
+                        'larp' => $larp->getId(),
+                    ]);
+                }
+            }
+        }
+        
         $participantRepository->remove($participant);
         $this->addFlash('success', $this->translator->trans('success_delete'));
 

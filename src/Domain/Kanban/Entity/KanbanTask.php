@@ -49,7 +49,7 @@ class KanbanTask
     private ?\DateTimeInterface $dueDate = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    private ?array $activityLog = [];
+    private array $activityLog = [];
 
     public function getLarp(): ?Larp
     {
@@ -169,10 +169,6 @@ class KanbanTask
 
     private function logActivity(string $type, array $data): void
     {
-        if ($this->activityLog === null) {
-            $this->activityLog = [];
-        }
-
         $this->activityLog[] = [
             'type' => $type,
             'data' => $data,

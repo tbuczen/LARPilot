@@ -2,6 +2,7 @@
 
 namespace App\Domain\Core\Controller\Public;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Application\Repository\LarpApplicationRepository;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Form\Filter\LarpPublicFilterType;
@@ -12,7 +13,6 @@ use App\Domain\Core\Service\LarpManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/', name: 'public_larp_')]
@@ -43,9 +43,10 @@ class LarpController extends BaseController
     #[IsGranted('ROLE_USER')]
     public function myLarps(LarpParticipantRepository $participantRepository): Response
     {
+        /** @var User|null $user */
         $user = $this->getUser();
 
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof User) {
             throw $this->createAccessDeniedException();
         }
 
@@ -72,10 +73,10 @@ class LarpController extends BaseController
         $userIsParticipant = false;
         $userHasApplication = false;
         
-        if ($user instanceof UserInterface) {
+        if ($user instanceof User) {
             // Check if user is already a participant
             $userIsParticipant = $larp->getParticipants()->exists(fn ($key, $participant): bool => $participant->getUser() === $user);
-        
+
             // Check if user already has an application
             $userHasApplication = $applicationRepository->findOneBy(['larp' => $larp, 'user' => $user]) !== null;
         }
@@ -131,7 +132,9 @@ class LarpController extends BaseController
         }
 
         try {
-            $larpManager->acceptInvitation($invitation, $this->getUser());
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            $larpManager->acceptInvitation($invitation, $currentUser);
         } catch (\DomainException $e) {
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('public_larp_list');

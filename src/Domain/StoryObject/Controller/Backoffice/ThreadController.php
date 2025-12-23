@@ -2,6 +2,7 @@
 
 namespace App\Domain\StoryObject\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
@@ -19,6 +20,7 @@ use App\Domain\StoryObject\Form\ThreadType;
 use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\ThreadRepository;
 use App\Domain\StoryObject\Service\StoryObjectMentionService;
+use App\Domain\StoryObject\Service\StoryObjectTextLinker;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -56,7 +58,7 @@ class ThreadController extends BaseController
         Larp                                                  $larp,
         ThreadRepository                                      $threadRepository,
         CharacterRepository                                   $characterRepository,
-        \App\Domain\StoryObject\Service\StoryObjectTextLinker $textLinker,
+        StoryObjectTextLinker $textLinker,
         ?Thread                                               $thread = null,
     ): Response {
         $new = false;
@@ -92,7 +94,7 @@ class ThreadController extends BaseController
 
         // Get mentions only for existing threads (not new ones)
         $mentions = [];
-        if ($thread->getId() !== null) {
+        if (!$new) {
             $mentions = $mentionService->findMentions($thread);
         }
 
@@ -246,7 +248,11 @@ class ThreadController extends BaseController
         if (!$recruitment instanceof StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($thread);
-            $recruitment->setCreatedBy($this->getUser());
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            if ($currentUser instanceof User) {
+                $recruitment->setCreatedBy($currentUser);
+            }
         }
 
         $form = $this->createForm(StoryRecruitmentType::class, $recruitment);

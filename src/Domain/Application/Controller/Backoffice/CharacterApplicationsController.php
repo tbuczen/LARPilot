@@ -2,6 +2,7 @@
 
 namespace App\Domain\Application\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Application\Entity\Enum\SubmissionStatus;
 use App\Domain\Application\Entity\LarpApplication;
 use App\Domain\Application\Entity\LarpApplicationChoice;
@@ -24,7 +25,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/larp/{larp}/applications', name: 'backoffice_larp_applications_')]
 class CharacterApplicationsController extends BaseController
@@ -152,8 +152,9 @@ class CharacterApplicationsController extends BaseController
             return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
         }
 
+        /** @var User|null $user */
         $user = $this->getUser();
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof User) {
             $this->addFlash('error', 'larp.applications.login_required');
             return $this->redirectToRoute('backoffice_larp_applications_match', ['larp' => $larp->getId()]);
         }
@@ -227,7 +228,7 @@ class CharacterApplicationsController extends BaseController
         $userVotes = [];
 
         $currentUser = $this->getUser();
-        if ($currentUser instanceof UserInterface) {
+        if ($currentUser instanceof User) {
             $votes = $voteRepository->findBy(['user' => $currentUser]);
             foreach ($votes as $vote) {
                 $userVotes[$vote->getChoice()->getId()->toRfc4122()] = $vote;

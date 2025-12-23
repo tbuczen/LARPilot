@@ -6,9 +6,9 @@
 
 // vis-timeline container
 #timeline-container {
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--border-color);
     border-radius: 0.375rem;
-    background: #fff;
+    background: var(--card-bg);
 }
 
 // vis-timeline event category styling
@@ -18,35 +18,35 @@
     font-size: 14px;
 
     &.timeline-event-historical {
-        background-color: #6c757d;
-        border-color: #5a6268;
-        color: white;
+        background-color: var(--bo-gray-500);
+        border-color: var(--bo-gray-600, #5a6268);
+        color: var(--text-inverse);
 
         &.vis-selected {
-            background-color: #5a6268;
-            border-color: #4e555b;
+            background-color: var(--bo-gray-600, #5a6268);
+            border-color: var(--bo-gray-700, #4e555b);
         }
     }
 
     &.timeline-event-current {
-        background-color: #0d6efd;
-        border-color: #0a58ca;
-        color: white;
+        background-color: var(--bo-primary);
+        border-color: var(--bo-primary-active);
+        color: var(--text-inverse);
 
         &.vis-selected {
-            background-color: #0a58ca;
-            border-color: #084298;
+            background-color: var(--bo-primary-active);
+            border-color: var(--bo-primary-dark);
         }
     }
 
     &.timeline-event-future {
-        background-color: #0dcaf0;
-        border-color: #0aa2c0;
-        color: #000;
+        background-color: var(--bo-info);
+        border-color: var(--bo-info-hover, #0aa2c0);
+        color: var(--text-inverse);
 
         &.vis-selected {
-            background-color: #0aa2c0;
-            border-color: #088799;
+            background-color: var(--bo-info-hover, #0aa2c0);
+            border-color: var(--bo-info-dark);
         }
     }
 }
@@ -89,16 +89,17 @@
 // Current time marker
 .vis-time-axis .vis-text.vis-major {
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .vis-current-time {
-    background-color: #dc3545;
+    background-color: var(--bo-danger);
     width: 2px;
 }
 
 // Timeline background
 .vis-panel.vis-background {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
 }
 
 // Hover effects
@@ -124,8 +125,8 @@
         transform: translate(-50%, -50%);
         width: 3rem;
         height: 3rem;
-        border: 0.25rem solid rgba(0, 0, 0, 0.1);
-        border-top-color: #0d6efd;
+        border: 0.25rem solid var(--border-color-light);
+        border-top-color: var(--bo-primary);
         border-radius: 50%;
         animation: spinner-border 0.75s linear infinite;
     }
@@ -160,7 +161,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    border: 3px solid white;
+    border: 3px solid var(--card-bg);
     box-shadow: 0 0 0 2px currentColor;
     z-index: 2;
 }
@@ -168,7 +169,7 @@
 .timeline-line {
     flex: 1;
     width: 2px;
-    background: #dee2e6;
+    background: var(--border-color);
     margin-top: 4px;
 }
 
@@ -181,15 +182,15 @@
 // Category-specific styles for fallback timeline
 .lore-timeline {
     .timeline-event-historical .timeline-dot {
-        box-shadow: 0 0 0 2px #6c757d;
+        box-shadow: 0 0 0 2px var(--bo-gray-500);
     }
 
     .timeline-event-current .timeline-dot {
-        box-shadow: 0 0 0 2px #0d6efd;
+        box-shadow: 0 0 0 2px var(--bo-primary);
     }
 
     .timeline-event-future .timeline-dot {
-        box-shadow: 0 0 0 2px #0dcaf0;
+        box-shadow: 0 0 0 2px var(--bo-info);
     }
 }
 

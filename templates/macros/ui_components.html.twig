@@ -12,7 +12,7 @@
 
     Usage:
         {{ ui.empty_state('larp.tag.no_tags') }}
-        {{ ui.empty_state('common.empty_list', 'bi-inbox') }}
+        {{ ui.empty_state('empty_list', 'bi-inbox') }}
 #}
 {% macro empty_state(message = 'empty_list', icon = null, additionalClasses = '') %}
     <div class="text-center py-5 {{ additionalClasses }}">
@@ -95,7 +95,7 @@
 
     Usage:
         {{ ui.delete_button(tag.id, tag.title, path('...')) }}
-        {{ ui.delete_button(tag.id, tag.title, path('...'), 'common.delete', 'sm') }}
+        {{ ui.delete_button(tag.id, tag.title, path('...'), 'delete', 'sm') }}
 #}
 {% macro delete_button(itemId, itemName, deleteUrl, label = 'delete', size = 'sm', additionalClasses = '') %}
     <button type="button"
@@ -122,7 +122,7 @@
 
     Usage:
         {{ ui.edit_button(path('...')) }}
-        {{ ui.edit_button(path('...'), 'common.modify', 'sm', false) }}
+        {{ ui.edit_button(path('...'), 'modify', 'sm', false) }}
 #}
 {% macro edit_button(url, label = 'edit', size = 'sm', outline = true, additionalClasses = '') %}
     <a href="{{ url }}" class="btn {% if size %}btn-{{ size }}{% endif %} {% if outline %}btn-outline-primary{% else %}btn-primary{% endif %} {{ additionalClasses }}">
@@ -298,7 +298,7 @@
         - dismissible: Make alert dismissible (default: true)
 
     Usage:
-        {{ ui.success_alert('common.saved_successfully') }}
+        {{ ui.success_alert('saved_successfully') }}
 #}
 {% macro success_alert(message, icon = 'bi-check-circle', dismissible = true) %}
     <div class="alert alert-success {% if dismissible %}alert-dismissible fade show{% endif %}" role="alert">
@@ -319,7 +319,7 @@
         - dismissible: Make alert dismissible (default: true)
 
     Usage:
-        {{ ui.danger_alert('common.error_occurred') }}
+        {{ ui.danger_alert('error_occurred') }}
 #}
 {% macro danger_alert(message, icon = 'bi-x-circle', dismissible = true) %}
     <div class="alert alert-danger {% if dismissible %}alert-dismissible fade show{% endif %}" role="alert">

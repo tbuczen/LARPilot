@@ -2,6 +2,7 @@
 
 namespace App\Domain\StoryMarketplace\Entity;
 
+use App\Domain\Core\Entity\Trait\CreatorAwareInterface;
 use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
 use App\Domain\StoryMarketplace\Repository\StoryRecruitmentRepository;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: StoryRecruitmentRepository::class)]
-class StoryRecruitment
+class StoryRecruitment implements CreatorAwareInterface
 {
     use UuidTraitEntity;
     use TimestampableEntity;

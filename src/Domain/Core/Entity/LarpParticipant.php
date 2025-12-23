@@ -49,7 +49,7 @@ class LarpParticipant
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTime();
         $this->larpCharacters = new ArrayCollection();
     }
 
@@ -91,13 +91,13 @@ class LarpParticipant
     }
 
     /**
-     * Accepts an array of UserRole enum instances or valid role strings.
+     * Accepts an array of ParticipantRole enum instances or valid role strings.
      *
-     * @param ParticipantRole[] $roles
+     * @param array<ParticipantRole|string> $roles
      */
     public function setRoles(array $roles): self
     {
-        $this->roles = array_map(fn ($role) => $role instanceof ParticipantRole ? $role->value : $role, $roles);
+        $this->roles = array_map(fn (ParticipantRole|string $role) => $role instanceof ParticipantRole ? $role->value : $role, $roles);
         return $this;
     }
 

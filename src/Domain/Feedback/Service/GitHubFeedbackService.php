@@ -77,14 +77,8 @@ class GitHubFeedbackService
      */
     private function createIssue(string $title, string $body, array $labels, ?string $screenshot): array
     {
-        // Upload screenshot first if provided
-        $screenshotUrl = null;
-        if ($screenshot) {
-            $screenshotUrl = $this->uploadScreenshot($screenshot);
-            if ($screenshotUrl) {
-                $body .= "\n\n## Screenshot\n\n![Screenshot]({$screenshotUrl})";
-            }
-        }
+        // Note: Screenshot upload is currently disabled (GitHub API limitation)
+        // @see uploadScreenshot() method for details
 
         try {
             $response = $this->httpClient->request('POST', "https://api.github.com/repos/{$this->githubRepo}/issues", [
@@ -138,14 +132,8 @@ class GitHubFeedbackService
      */
     private function createDiscussion(string $title, string $body, ?string $screenshot): array
     {
-        // Upload screenshot first if provided
-        $screenshotUrl = null;
-        if ($screenshot) {
-            $screenshotUrl = $this->uploadScreenshot($screenshot);
-            if ($screenshotUrl) {
-                $body .= "\n\n## Screenshot\n\n![Screenshot]({$screenshotUrl})";
-            }
-        }
+        // Note: Screenshot upload is currently disabled (GitHub API limitation)
+        // @see uploadScreenshot() method for details
 
         // Get repository ID
         [$owner, $repo] = explode('/', $this->githubRepo);
@@ -204,51 +192,6 @@ GQL;
             ]);
 
             throw new \RuntimeException('Failed to create GitHub Discussion', 0, $e);
-        }
-    }
-
-    /**
-     * Upload screenshot to GitHub as an asset
-     *
-     * Uses GitHub's issue attachment API
-     *
-     * @param string $screenshotData Base64 encoded image (with data URI prefix)
-     * @return string|null URL of uploaded screenshot
-     */
-    private function uploadScreenshot(string $screenshotData): ?string
-    {
-        try {
-            // Extract base64 data from data URI
-            if (!preg_match('/^data:image\/(\w+);base64,(.+)$/', $screenshotData, $matches)) {
-                $this->logger->warning('Screenshot data format not recognized');
-                return null;
-            }
-
-            $imageType = $matches[1];
-            $base64Data = $matches[2];
-            $binaryData = base64_decode($base64Data);
-
-            // Create a unique filename
-            $filename = 'feedback_screenshot_' . date('Y-m-d_His') . '.' . $imageType;
-
-            // Upload to GitHub as release asset (alternative: use external service like imgur)
-            // For now, we'll return null and let GitHub handle it via markdown
-            // In production, you might want to upload to a CDN or use GitHub's asset upload
-
-            // Since GitHub doesn't have a direct screenshot upload API for issues,
-            // we'll need to use an alternative approach:
-            // 1. Create a temporary gist with the image
-            // 2. Or use an external image hosting service
-            // For simplicity, we'll skip this and rely on users uploading manually
-
-            $this->logger->info('Screenshot prepared but not uploaded (GitHub API limitation)');
-            return null;
-        } catch (\Exception $e) {
-            $this->logger->error('Failed to process screenshot', [
-                'error' => $e->getMessage(),
-            ]);
-
-            return null;
         }
     }
 

@@ -112,7 +112,7 @@ readonly class ApplicationMatchService
     }
 
     /**
-     * @param LarpApplicationVote $votesGrouped
+     * @param array<string, array<LarpApplicationVote>> $votesGrouped
      * @return array<string, VoteStatsDTO>
      */
     private function buildVoteStatsMap(array $votesGrouped): array

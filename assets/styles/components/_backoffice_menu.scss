@@ -1,76 +1,11 @@
 // Clean Backoffice Menu Styling
 // Modern Bootstrap navbar with solid colors - NO GRADIENTS
 
-// ============================================
-// BACKOFFICE COLOR VARIABLES
-// ============================================
-
-// Base Colors
-$bo-white: #ffffff;
-$bo-black: #000000;
-$bo-gray-50: #f8f9fa;
-$bo-gray-100: #e9ecef;
-$bo-gray-200: #dee2e6;
-$bo-gray-300: #ced4da;
-$bo-gray-400: #adb5bd;
-$bo-gray-500: #6c757d;
-$bo-gray-600: #495057;
-$bo-gray-700: #343a40;
-$bo-gray-800: #212529;
-
-// Primary Colors (Bootstrap Blue)
-$bo-primary: #0d6efd;
-$bo-primary-hover: #0b5ed7;
-$bo-primary-active: #0a58ca;
-$bo-primary-light: #e7f1ff;
-$bo-primary-dark: #084298;
-
-// Success Colors (Green)
-$bo-success: #198754;
-$bo-success-hover: #157347;
-$bo-success-active: #146c43;
-$bo-success-light: #d1e7dd;
-$bo-success-dark: #0f5132;
-
-// Danger Colors (Red)
-$bo-danger: #dc3545;
-$bo-danger-hover: #bb2d3b;
-$bo-danger-active: #b02a37;
-$bo-danger-light: #f8d7da;
-$bo-danger-dark: #842029;
-
-// Header Colors
-$bo-header-bg: $bo-white;
-$bo-header-border: $bo-gray-200;
-$bo-header-shadow: 0 2px 4px rgba($bo-black, 0.08);
-
-// Navigation Colors
-$bo-nav-text: $bo-gray-600;
-$bo-nav-text-hover: $bo-primary;
-$bo-nav-text-active: $bo-primary;
-$bo-nav-bg-hover: $bo-gray-50;
-$bo-nav-bg-active: $bo-primary-light;
-$bo-nav-border-active: $bo-primary;
-
-// LARP Title Colors
-$bo-title-color: $bo-gray-800;
-$bo-title-icon-color: $bo-primary;
-
-// Border Radius
-$bo-border-radius: 6px;
-$bo-border-radius-sm: 4px;
-$bo-border-radius-lg: 8px;
-$bo-border-radius-xl: 10px;
-
-// Transitions
-$bo-transition-smooth: all 0.2s ease;
-$bo-transition-fast: all 0.15s ease;
-
 // Main header container
 .larp-backoffice-header {
-    background: $bo-header-bg;
-    border-bottom: 2px solid $bo-header-border;
-    box-shadow: $bo-header-shadow;
+    background: var(--bo-header-bg);
+    border-bottom: 2px solid var(--bo-header-border);
+    box-shadow: var(--bo-header-shadow);
     margin-bottom: 1.5rem;
     padding: 1rem 0;
 
@@ -81,23 +16,23 @@ $bo-transition-fast: all 0.15s ease;
         gap: 1rem;
         padding-bottom: 1rem;
         margin-bottom: 1rem;
-        border-bottom: 1px solid $bo-header-border;
+        border-bottom: 1px solid var(--bo-header-border);
 
         // Hamburger toggle button
         .navbar-toggler {
             padding: 0.5rem;
-            border: 1px solid $bo-header-border;
-            border-radius: $bo-border-radius;
+            border: 1px solid var(--bo-header-border);
+            border-radius: var(--bo-border-radius);
             background: transparent;
-            transition: $bo-transition-smooth;
+            transition: var(--bo-transition-smooth);
 
             &:hover {
-                background: $bo-nav-bg-hover;
-                border-color: $bo-nav-text-hover;
+                background: var(--bo-nav-bg-hover);
+                border-color: var(--bo-nav-text-hover);
             }
 
             &:focus {
-                box-shadow: 0 0 0 0.25rem rgba($bo-primary, 0.15);
+                box-shadow: 0 0 0 0.25rem rgba(var(--bo-primary), 0.15);
             }
 
             // Hide on desktop
@@ -107,7 +42,7 @@ $bo-transition-fast: all 0.15s ease;
         }
 
         .larp-title {
-            color: $bo-title-color;
+            color: var(--bo-title-color);
             font-size: 1.75rem;
             font-weight: 600;
             margin: 0;
@@ -116,7 +51,7 @@ $bo-transition-fast: all 0.15s ease;
             gap: 0.75rem;
 
             i {
-                color: $bo-title-icon-color;
+                color: var(--bo-title-icon-color);
                 font-size: 2rem;
             }
 
@@ -148,12 +83,12 @@ $bo-transition-fast: all 0.15s ease;
 
             .nav-item {
                 .nav-link {
-                    color: $bo-nav-text;
+                    color: var(--bo-nav-text);
                     padding: 0.625rem 1rem;
-                    border-radius: $bo-border-radius;
+                    border-radius: var(--bo-border-radius);
                     font-weight: 500;
                     font-size: 0.9375rem;
-                    transition: $bo-transition-smooth;
+                    transition: var(--bo-transition-smooth);
                     display: flex;
                     align-items: center;
                     gap: 0.5rem;
@@ -161,13 +96,13 @@ $bo-transition-fast: all 0.15s ease;
 
                     i {
                         font-size: 1.125rem;
-                        transition: $bo-transition-smooth;
+                        transition: var(--bo-transition-smooth);
                     }
 
                     // Hover state
                     &:hover {
-                        color: $bo-nav-text-hover;
-                        background: $bo-nav-bg-hover;
+                        color: var(--bo-nav-text-hover);
+                        background: var(--bo-nav-bg-hover);
 
                         i {
                             transform: scale(1.1);
@@ -176,10 +111,10 @@ $bo-transition-fast: all 0.15s ease;
 
                     // Active state
                     &.active {
-                        color: $bo-nav-text-active;
-                        background: $bo-nav-bg-active;
+                        color: var(--bo-nav-text-active);
+                        background: var(--bo-nav-bg-active);
                         font-weight: 600;
-                        border-bottom: 2px solid $bo-nav-border-active;
+                        border-bottom: 2px solid var(--bo-nav-border-active);
                     }
                 }
 
@@ -197,48 +132,48 @@ $bo-transition-fast: all 0.15s ease;
                     }
 
                     .dropdown-menu {
-                        border: 1px solid $bo-header-border;
-                        border-radius: $bo-border-radius-lg;
-                        box-shadow: 0 4px 12px rgba($bo-black, 0.1);
+                        border: 1px solid var(--bo-header-border);
+                        border-radius: var(--bo-border-radius-lg);
+                        box-shadow: 0 4px 12px rgba(var(--bo-black), 0.1);
                         padding: 0.5rem;
                         margin-top: 0.25rem;
                         min-width: 240px;
 
                         .dropdown-item {
-                            border-radius: $bo-border-radius;
+                            border-radius: var(--bo-border-radius);
                             padding: 0.625rem 1rem;
-                            transition: $bo-transition-smooth;
+                            transition: var(--bo-transition-smooth);
                             display: flex;
                             align-items: center;
                             gap: 0.75rem;
-                            color: $bo-nav-text;
+                            color: var(--bo-nav-text);
                             font-size: 0.9375rem;
 
                             i {
-                                color: $bo-nav-text-hover;
+                                color: var(--bo-nav-text-hover);
                                 width: 1.25rem;
                                 font-size: 1rem;
                                 text-align: center;
                             }
 
                             &:hover {
-                                background: $bo-nav-bg-hover;
-                                color: $bo-nav-text-hover;
+                                background: var(--bo-nav-bg-hover);
+                                color: var(--bo-nav-text-hover);
                                 transform: translateX(4px);
                             }
 
                             &:active {
-                                background: $bo-nav-bg-active;
+                                background: var(--bo-nav-bg-active);
                             }
                         }
 
                         .dropdown-divider {
                             margin: 0.5rem 0;
-                            border-color: $bo-header-border;
+                            border-color: var(--bo-header-border);
                         }
 
                         .dropdown-header {
-                            color: $bo-gray-500;
+                            color: var(--bo-gray-500);
                             font-weight: 600;
                             font-size: 0.75rem;
                             text-transform: uppercase;
@@ -274,7 +209,7 @@ $bo-transition-fast: all 0.15s ease;
             .navbar-collapse {
                 margin-top: 1rem;
                 padding-top: 1rem;
-                border-top: 1px solid $bo-header-border;
+                border-top: 1px solid var(--bo-header-border);
             }
 
             .navbar-nav {

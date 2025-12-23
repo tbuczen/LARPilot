@@ -2,6 +2,7 @@
 
 namespace App\Domain\EventPlanning\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\EventPlanning\Entity\ScheduledEvent;
@@ -56,12 +57,20 @@ class ScheduledEventController extends BaseController
         if ($isNew) {
             $event = new ScheduledEvent();
             $event->setLarp($larp);
-            $event->setCreatedBy($this->getUser());
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            if ($currentUser instanceof User) {
+                $event->setCreatedBy($currentUser);
+            }
 
             // Set default times to LARP start date if available
-            if ($larp->getStartDate()) {
-                $event->setStartTime(clone $larp->getEndDate());
-                $event->setEndTime((clone $larp->getEndDate())->modify('+1 hour'));
+            $endDate = $larp->getEndDate();
+            if ($larp->getStartDate() && $endDate) {
+                $startTime = \DateTime::createFromInterface($endDate);
+                $endTime = \DateTime::createFromInterface($endDate);
+                $endTime->modify('+1 hour');
+                $event->setStartTime($startTime);
+                $event->setEndTime($endTime);
             }
         }
 

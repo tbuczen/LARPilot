@@ -5,6 +5,7 @@ namespace App\Domain\StoryObject\Service;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Entity\StoryObjectLogEntry;
 use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
 
 final readonly class StoryObjectVersionService
 {
@@ -17,9 +18,10 @@ final readonly class StoryObjectVersionService
      */
     public function getVersionHistory(StoryObject $object): array
     {
-        /** @var \Gedmo\Loggable\Entity\Repository\LogEntryRepository $repo */
+        /** @var LogEntryRepository<StoryObjectLogEntry> $repo */
         $repo = $this->em->getRepository(StoryObjectLogEntry::class);
-        $entries = $repo->getLogEntries($object);
+        /** @var array<StoryObjectLogEntry> $entries */
+        $entries = $repo->getLogEntries($object); // @phpstan-ignore argument.type (Gedmo generics issue)
 
         $history = [];
         $previousData = null;

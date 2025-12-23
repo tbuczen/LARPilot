@@ -41,7 +41,7 @@ class LarpInvitation
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTime();
         $this->code = bin2hex(random_bytes(16));
     }
 

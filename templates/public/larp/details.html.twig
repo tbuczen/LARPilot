@@ -43,7 +43,7 @@
                                 <p class="mb-3">{{ larp.description|raw }}</p>
                             </div>
                             <div class="col-md-4">
-                                <div class="card bg-light">
+                                <div class="card ">
                                     <div class="card-body p-3">
                                         <h6 class="card-title text-primary mb-3">{{ 'details'|trans }}</h6>
                                         <ul class="list-unstyled mb-0 small">
@@ -149,16 +149,46 @@
                                     </div>
                                 </div>
                             {% else %}
-                                <div class="text-center">
-                                    <div class="mb-4">
-                                        <i class="bi bi-person-plus fa-3x text-success mb-3"></i>
-                                        <h5 class="text-success">{{ 'larp.application_open'|trans }}</h5>
-                                        <p class="text-muted">{{ 'larp.application_open_description'|trans }}</p>
+                                {# Application mode: Character Selection #}
+                                {% if larp.applicationMode.value == 'character_selection' %}
+                                    {% if larp.publishCharactersPublicly %}
+                                        {# Show character gallery link #}
+                                        <div class="text-center">
+                                            <div class="mb-4">
+                                                <i class="bi bi-people fa-3x text-success mb-3"></i>
+                                                <h5 class="text-success">{{ 'larp.browse_characters'|trans }}</h5>
+                                                <p class="text-muted">{{ 'larp.browse_characters_description'|trans }}</p>
+                                            </div>
+                                            <a href="{{ path('public_larp_characters_list', {'slug': larp.slug}) }}" class="btn btn-success btn-lg">
+                                                <i class="bi bi-people me-2"></i>{{ 'larp.view_character_gallery'|trans }}
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        {# Traditional application form #}
+                                        <div class="text-center">
+                                            <div class="mb-4">
+                                                <i class="bi bi-person-plus fa-3x text-success mb-3"></i>
+                                                <h5 class="text-success">{{ 'larp.application_open'|trans }}</h5>
+                                                <p class="text-muted">{{ 'larp.application_open_description'|trans }}</p>
+                                            </div>
+                                            <a href="{{ path('public_larp_application_create', {'larp': larp.id}) }}" class="btn btn-success btn-lg">
+                                                <i class="bi bi-send me-2"></i>{{ 'larp.apply_for_character'|trans }}
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% elseif larp.applicationMode.value == 'survey' %}
+                                    {# Application mode: Survey #}
+                                    <div class="text-center">
+                                        <div class="mb-4">
+                                            <i class="bi bi-clipboard-check fa-3x text-success mb-3"></i>
+                                            <h5 class="text-success">{{ 'larp.survey_application'|trans }}</h5>
+                                            <p class="text-muted">{{ 'larp.survey_application_description'|trans }}</p>
+                                        </div>
+                                        <a href="{{ path('public_larp_survey_show', {'slug': larp.slug}) }}" class="btn btn-success btn-lg">
+                                            <i class="bi bi-clipboard-check me-2"></i>{{ 'larp.fill_out_survey'|trans }}
+                                        </a>
                                     </div>
-                                    <a href="{{ path('public_larp_application_create', {'larp': larp.id}) }}" class="btn btn-success btn-lg">
-                                        <i class="bi bi-send me-2"></i>{{ 'larp.apply_for_character'|trans }}
-                                    </a>
-                                </div>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

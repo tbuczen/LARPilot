@@ -9,7 +9,7 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
 use App\Domain\StoryObject\Entity\Character;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -82,9 +82,10 @@ class SeedLarpFixturesCommand extends Command
     /**
      * Create or load deterministic users for this larp namespace.
      *
+     * @param EntityRepository<User> $userRepo
      * @return User[]
      */
-    private function ensureUsers(ObjectRepository $userRepo, string $larpId, int $count): array
+    private function ensureUsers(EntityRepository $userRepo, string $larpId, int $count): array
     {
         $users = [];
         for ($i = 0; $i < $count; $i++) {
@@ -108,9 +109,11 @@ class SeedLarpFixturesCommand extends Command
     /**
      * Ensure exactly one participant per organizer role for the given LARP.
      *
-     * @return \App\Domain\Core\Controller\Backoffice\LarpParticipant[] keyed by role value
+     * @param EntityRepository<LarpParticipant> $participantRepo
+     * @param User[] $users
+     * @return LarpParticipant[] keyed by role value
      */
-    private function ensureOrganizerParticipants(ObjectRepository $participantRepo, Larp $larp, array $users): array
+    private function ensureOrganizerParticipants(EntityRepository $participantRepo, Larp $larp, array $users): array
     {
         $byRole = $this->getExistingRolesMap($participantRepo, $larp);
 
@@ -141,9 +144,10 @@ class SeedLarpFixturesCommand extends Command
     /**
      * Get all characters for the LARP.
      *
+     * @param EntityRepository<Character> $characterRepo
      * @return Character[]
      */
-    private function getLarpCharacters(ObjectRepository $characterRepo, Larp $larp): array
+    private function getLarpCharacters(EntityRepository $characterRepo, Larp $larp): array
     {
         return $characterRepo->createQueryBuilder('c')
             ->andWhere('c.larp = :larp')
@@ -156,9 +160,11 @@ class SeedLarpFixturesCommand extends Command
      * Ensure we have at least N player participants for this LARP.
      * Returns the full current list of player participants (existing + newly created).
      *
-     * @return \App\Domain\Core\Controller\Backoffice\LarpParticipant[]
+     * @param EntityRepository<LarpParticipant> $participantRepo
+     * @param User[] $users
+     * @return LarpParticipant[]
      */
-    private function ensurePlayerParticipantsForCharactersCount(ObjectRepository $participantRepo, Larp $larp, array $users, int $requiredCount): array
+    private function ensurePlayerParticipantsForCharactersCount(EntityRepository $participantRepo, Larp $larp, array $users, int $requiredCount): array
     {
         $existingPlayers = $participantRepo->createQueryBuilder('p')
             ->andWhere('p.larp = :larp')
@@ -266,11 +272,12 @@ class SeedLarpFixturesCommand extends Command
     /**
      * Build a map of role => existing participant, for the given LARP (first participant found with that role).
      *
-     * @return array<string,\App\Domain\Core\Controller\Backoffice\\App\Domain\Core\Entity\LarpParticipant>
+     * @param EntityRepository<LarpParticipant> $participantRepo
+     * @return array<string, LarpParticipant>
      */
-    private function getExistingRolesMap(ObjectRepository $participantRepo, Larp $larp): array
+    private function getExistingRolesMap(EntityRepository $participantRepo, Larp $larp): array
     {
-        /** @var \App\Domain\Core\Controller\Backoffice\LarpParticipant[] $all */
+        /** @var LarpParticipant[] $all */
         $all = $participantRepo->createQueryBuilder('p')
             ->andWhere('p.larp = :larp')
             ->setParameter('larp', $larp)

@@ -2,6 +2,7 @@
 
 namespace App\Domain\StoryObject\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
@@ -86,7 +87,7 @@ class QuestController extends BaseController
 
         // Get mentions only for existing quests (not new ones)
         $mentions = [];
-        if ($quest->getId() !== null) {
+        if (!$new) {
             $mentions = $mentionService->findMentions($quest);
         }
 
@@ -240,7 +241,11 @@ class QuestController extends BaseController
         if (!$recruitment instanceof StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($quest);
-            $recruitment->setCreatedBy($this->getUser());
+            /** @var User|null $currentUser */
+            $currentUser = $this->getUser();
+            if ($currentUser instanceof User) {
+                $recruitment->setCreatedBy($currentUser);
+            }
         }
 
         $form = $this->createForm(StoryRecruitmentType::class, $recruitment);

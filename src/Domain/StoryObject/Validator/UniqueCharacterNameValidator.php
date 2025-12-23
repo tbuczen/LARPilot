@@ -12,9 +12,11 @@ class UniqueCharacterNameValidator extends ConstraintValidator
     {
     }
 
+    /**
+     * @param UniqueCharacterName $constraint
+     */
     public function validate(mixed $value, Constraint $constraint): void
     {
-        /* @var $constraint UniqueCharacterName */
         if (null === $value || '' === $value) {
             return;
         }

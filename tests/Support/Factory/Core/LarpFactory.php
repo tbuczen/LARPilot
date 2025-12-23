@@ -2,8 +2,11 @@
 
 namespace Tests\Support\Factory\Core;
 
+use App\Domain\Account\Entity\User;
+use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Larp;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\Proxy;
 
 /**
  * @extends PersistentProxyObjectFactory<Larp>
@@ -14,6 +17,8 @@ final class LarpFactory extends PersistentProxyObjectFactory
     {
         return Larp::class;
     }
+
+
 
     protected function defaults(): array
     {
@@ -38,6 +43,13 @@ final class LarpFactory extends PersistentProxyObjectFactory
     // ========================================================================
     // Factory States (Workflow states)
     // ========================================================================
+
+    public function withStatus(LarpStageStatus $status): self
+    {
+        return $this->with([
+            'marking' => $status->value,
+        ]);
+    }
 
     /**
      * LARP in DRAFT state (initial state)
@@ -123,23 +135,63 @@ final class LarpFactory extends PersistentProxyObjectFactory
         ]);
     }
 
-    /**
-     * LARP with organizer participant
-     */
-    public function withOrganizer(mixed $user = null): self
+    public function withCreator(mixed $user): self
     {
-        $larp = $this->create();
-        
-        if ($user === null) {
-            $user = \Tests\Support\Factory\Account\UserFactory::new()->organizer()->create();
+        return $this->with([
+            'createdBy' => $user,
+        ]);
+    }
+
+    public static function createDraftLarp(User|Proxy $user, ?string $title = null): Larp|Proxy
+    {
+        $larpFactory = LarpFactory::new()
+            ->draft()
+            ->withCreator($user);
+
+        if ($title !== null) {
+            $larpFactory = $larpFactory->withTitle($title);
         }
 
+        // Create the LARP first so it has an ID
+        $larp = $larpFactory->create();
+
+        // Now create the participant with the persisted LARP
         LarpParticipantFactory::new()
+            ->forUser($user)
             ->organizer()
             ->forLarp($larp)
-            ->forUser($user)
             ->create();
 
-        return $this;
+        return $larp;
+    }
+
+    public static function createPublishedLarp(User|Proxy $user, ?string $title = null): Larp|Proxy
+    {
+        $larpFactory = LarpFactory::new()
+            ->published()
+            ->withCreator($user);
+
+        if ($title !== null) {
+            $larpFactory = $larpFactory->withTitle($title);
+        }
+
+        // Create the LARP first so it has an ID
+        $larp = $larpFactory->create();
+
+        // Now create the participant with the persisted LARP
+        LarpParticipantFactory::new()
+            ->forUser($user)
+            ->organizer()
+            ->forLarp($larp)
+            ->create();
+
+        return $larp;
+    }
+
+    public function withTitle(string $title): self
+    {
+        return $this->with([
+            'title' => $title,
+        ]);
     }
 }

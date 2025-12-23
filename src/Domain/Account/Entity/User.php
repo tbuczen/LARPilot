@@ -246,6 +246,22 @@ class User implements UserInterface
     }
 
     /**
+     * @return Collection<LarpApplication>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @return Collection<UserSocialAccount>
+     */
+    public function getSocialAccounts(): Collection
+    {
+        return $this->socialAccounts;
+    }
+
+    /**
      * Get count of LARPs where user is an organizer.
      */
     public function getOrganizerLarpCount(): int

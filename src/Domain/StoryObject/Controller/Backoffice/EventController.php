@@ -235,7 +235,7 @@ class EventController extends BaseController
 
         // Get mentions only for existing events (not new ones)
         $mentions = [];
-        if ($event->getId() !== null) {
+        if (!$new) {
             $mentions = $mentionService->findMentions($event);
         }
 
@@ -365,7 +365,6 @@ class EventController extends BaseController
         if (!$recruitment instanceof StoryRecruitment) {
             $recruitment = new StoryRecruitment();
             $recruitment->setStoryObject($event);
-            $recruitment->setCreatedBy($this->getUser());
         }
 
         $form = $this->createForm(StoryRecruitmentType::class, $recruitment);

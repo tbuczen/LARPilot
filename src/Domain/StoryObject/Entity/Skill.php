@@ -26,4 +26,34 @@ class Skill implements CreatorAwareInterface, Timestampable
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
+
+    public function getLarp(): Larp
+    {
+        return $this->larp;
+    }
+
+    public function setLarp(Larp $larp): void
+    {
+        $this->larp = $larp;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
 }

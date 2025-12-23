@@ -15,6 +15,7 @@ use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Service\IntegrationManager;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -87,7 +88,7 @@ class TagController extends BaseController
         $integration = $larpManager->getIntegrationTypeForLarp($larp, $provider);
         Assert::notNull($integration, sprintf('Integration %s not found for LARP %s', $provider->value, $larp->getId()->toRfc4122()));
 
-        /** @var SharedFile[] $files */
+        /** @var Collection<SharedFile> $files */
         $files = $integration->getSharedFiles();
         return $this->render('backoffice/larp/tag/fileSelect.html.twig', [
             'larp' => $larp,

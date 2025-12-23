@@ -23,7 +23,6 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
 use League\OAuth2\Client\Provider\GoogleUser;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
@@ -121,7 +120,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
     }
 
     public function createGoogleDriveIntegration(
-        AccessToken $accessToken,
+        AccessTokenInterface $accessToken,
         ResourceOwnerInterface $owner,
         string $larpId
     ): LarpIntegration {

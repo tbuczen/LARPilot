@@ -1,0 +1,196 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_title %}{{ 'survey.response.details'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    {# Response header #}
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">{{ 'survey.response.details'|trans }}</h2>
+                <div class="d-flex gap-2">
+                    <form method="post" action="{{ path('backoffice_larp_survey_responses_regenerate_matches', {
+                        larp: larp.id,
+                        response: response.id
+                    }) }}" class="d-inline">
+                        <button type="submit" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-repeat me-1"></i>{{ 'survey.response.regenerate_matches'|trans }}
+                        </button>
+                    </form>
+                    <a href="{{ path('backoffice_larp_survey_responses_list', { larp: larp.id }) }}" class="btn btn-light btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i>{{ 'common.back'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>{{ 'common.applicant'|trans }}</h5>
+                    <p class="mb-1"><strong>{{ response.user.displayName }}</strong></p>
+                    <p class="mb-1"><small class="text-muted">{{ response.user.contactEmail }}</small></p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-muted">{{ 'common.status'|trans }}</h6>
+                    {% set statusClass = {
+                        'NEW': 'secondary',
+                        'CONSIDER': 'warning',
+                        'OFFERED': 'info',
+                        'CONFIRMED': 'success',
+                        'REJECTED': 'danger',
+                        'DECLINED': 'danger'
+                    } %}
+                    <span class="badge bg-{{ statusClass[response.status.value] ?? 'secondary' }} fs-6">
+                        {{ response.status.value }}
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-muted">{{ 'common.submitted_at'|trans }}</h6>
+                    <p>{{ response.createdAt|date('Y-m-d H:i') }}</p>
+                </div>
+            </div>
+
+            {% if response.assignedCharacter %}
+                <hr>
+                <div class="alert alert-info">
+                    <h5><i class="bi bi-person-check me-2"></i>{{ 'survey.response.assigned_character'|trans }}</h5>
+                    <p class="mb-0">
+                        <strong>{{ response.assignedCharacter.title }}</strong>
+                        {% if response.assignedCharacter.description %}
+                            <br><small>{{ response.assignedCharacter.description|sanitize_html|striptags|slice(0, 200) }}...</small>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Match suggestions #}
+    {% if matchSuggestions and matchSuggestions|length > 0 %}
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-stars me-2"></i>{{ 'survey.response.match_suggestions'|trans }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for suggestion in matchSuggestions %}
+                        <div class="list-group-item">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="mb-2">
+                                        <span class="badge bg-primary me-2">#{{ loop.index }}</span>
+                                        {{ suggestion.characterTitle }}
+                                    </h5>
+                                    {% if suggestion.matchReasons %}
+                                        <ul class="small mb-0">
+                                            {% for reason in suggestion.matchReasons %}
+                                                <li>{{ reason }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <div class="match-score">
+                                        <div class="display-6 text-primary">{{ suggestion.score }}</div>
+                                        <small class="text-muted">{{ 'survey.response.points'|trans }}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <form method="post" action="{{ path('backoffice_larp_survey_responses_assign_character', {
+                                        larp: larp.id,
+                                        response: response.id,
+                                        character: suggestion.characterId
+                                    }) }}" class="d-inline">
+                                        <button type="submit"
+                                                class="btn btn-success"
+                                                onclick="return confirm('{{ 'survey.response.assign_confirm'|trans({ '%character%': suggestion.characterTitle }) }}')">
+                                            <i class="bi bi-check-circle me-1"></i>{{ 'survey.response.assign'|trans }}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ 'survey.response.no_matches'|trans }}
+        </div>
+    {% endif %}
+
+    {# Survey answers #}
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0"><i class="bi bi-chat-left-text me-2"></i>{{ 'survey.response.answers'|trans }}</h4>
+        </div>
+        <div class="card-body">
+            {% if response.answers|length > 0 %}
+                {% for answer in response.answers %}
+                    <div class="mb-4 pb-3 border-bottom">
+                        <h6 class="text-primary">
+                            <span class="badge bg-secondary me-2">Q{{ loop.index }}</span>
+                            {{ answer.question.questionText }}
+                        </h6>
+
+                        {% if answer.question.questionType.value == 'text' or answer.question.questionType.value == 'textarea' %}
+                            <p class="ms-4">{{ answer.answerText|default('-') }}</p>
+
+                        {% elseif answer.question.questionType.value in ['single_choice', 'multiple_choice'] %}
+                            {% if answer.selectedOptions|length > 0 %}
+                                <ul class="ms-4">
+                                    {% for option in answer.selectedOptions %}
+                                        <li>{{ option.optionText }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="ms-4 text-muted">{{ 'common.not_answered'|trans }}</p>
+                            {% endif %}
+
+                        {% elseif answer.question.questionType.value == 'tag_selection' %}
+                            {% if answer.selectedTags|length > 0 %}
+                                <div class="ms-4">
+                                    {% for tag in answer.selectedTags %}
+                                        <span class="badge bg-info me-1">{{ tag.title }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="ms-4 text-muted">{{ 'common.not_answered'|trans }}</p>
+                            {% endif %}
+
+                        {% elseif answer.question.questionType.value == 'rating' %}
+                            <p class="ms-4">
+                                {% if answer.answerText %}
+                                    {{ answer.answerText }} / 5
+                                    {% for i in 1..(answer.answerText|number_format) %}
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="text-muted">{{ 'common.not_answered'|trans }}</span>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">{{ 'survey.response.no_answers'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Organizer notes #}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-sticky me-2"></i>{{ 'survey.response.organizer_notes'|trans }}</h5>
+        </div>
+        <div class="card-body">
+            {% if response.organizerNotes %}
+                <p>{{ response.organizerNotes }}</p>
+            {% else %}
+                <p class="text-muted">{{ 'survey.response.no_notes'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

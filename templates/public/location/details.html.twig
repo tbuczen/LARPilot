@@ -114,13 +114,13 @@
                             {# Fallback: Link to Google Maps with map icon #}
                             <a href="https://www.google.com/maps/search/?api=1&query={{ location.latitude }},{{ location.longitude }}"
                                target="_blank" rel="noopener noreferrer"
-                               class="card-body d-flex align-items-center justify-content-center text-decoration-none bg-light"
+                               class="card-body d-flex align-items-center justify-content-center text-decoration-none "
                                style="height: 400px;">
                                 <div class="text-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="text-primary mb-3" viewBox="0 0 16 16">
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
                                     </svg>
-                                    <h5 class="text-dark mb-2">{{ location.title }}</h5>
+                                    <h5 class=" mb-2">{{ location.title }}</h5>
                                     <p class="text-muted mb-3">{{ location.fullAddress }}</p>
                                     <span class="btn btn-primary">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1" viewBox="0 0 16 16">

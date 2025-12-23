@@ -38,23 +38,26 @@ final class DomainBoundaryRule implements Rule
      */
     private const DOMAIN_DEPENDENCIES = [
         'Infrastructure' => [], // Shared kernel, no dependencies on other domains
-        'Core' => ['StoryObject', 'Infrastructure', 'Account'], // Shared kernel (legacy name, being migrated to Infrastructure)
-        'Account' => ['Infrastructure', 'Core'],
-        'Public' => ['Infrastructure', 'Core', 'Account', 'Larp'],
+        'Core' => ['StoryObject', 'Infrastructure', 'Account', 'Application', 'Integrations', 'Mailing', 'Survey'], // Shared kernel with necessary cross-domain access
+        'Account' => ['Infrastructure', 'Core', 'Application', 'Integrations'], // Account needs Application for user-application relation, Integrations for social accounts
+        'Public' => ['Infrastructure', 'Core', 'Account', 'Larp', 'StoryObject', 'Application'],
         'Larp' => ['Infrastructure', 'Core', 'Account'],
-        'StoryObject' => ['Infrastructure', 'Core', 'Larp', 'Integrations', 'Account', 'StoryMarketplace'],
+        'StoryObject' => ['Infrastructure', 'Core', 'Larp', 'Integrations', 'Account', 'StoryMarketplace', 'Application'],
         'Application' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Participant', 'Account'],
         'Participant' => ['Infrastructure', 'Core', 'Account', 'Larp'],
-        'StoryMarketplace' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account'],
+        'StoryMarketplace' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account', 'Application'],
         'Kanban' => ['Infrastructure', 'Core', 'Larp'],
-        'Incident' => ['Infrastructure', 'Core', 'Larp'],
-        'Incidents' => ['Infrastructure', 'Core', 'Larp'],
-        'Map' => ['Infrastructure', 'Core', 'Larp'],
-        'EventPlanning' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Map', 'Participant'],
-        'Integration' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
-        'Integrations' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
+        'Incident' => ['Infrastructure', 'Core', 'Larp', 'Account'],
+        'Incidents' => ['Infrastructure', 'Core', 'Larp', 'Account'],
+        'Map' => ['Infrastructure', 'Core', 'Larp', 'StoryObject'],
+        'EventPlanning' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Map', 'Participant', 'Account'],
+        'Integration' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account'],
+        'Integrations' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account'],
         'Feedback' => ['Infrastructure', 'Core'],
         'Gallery' => ['Infrastructure', 'Core', 'Larp', 'Account'],
+        'Survey' => ['Infrastructure', 'Core', 'Larp', 'Account', 'Application', 'StoryObject'],
+        'Mailing' => ['Infrastructure', 'Core', 'Larp'],
+        'SuperAdmin' => ['Infrastructure', 'Core', 'Account'],
     ];
 
     public function getNodeType(): string
@@ -64,7 +67,7 @@ final class DomainBoundaryRule implements Rule
 
     /**
      * @param Node\Stmt\Use_ $node
-     * @return array<PHPStan\Rules\IdentifierRuleError>
+     * @return array<\PHPStan\Rules\IdentifierRuleError>
      */
     public function processNode(Node $node, Scope $scope): array
     {

@@ -24,9 +24,9 @@ enum ResourceType: string
     case TAG_LIST = 'tag_list';
 
     /**
-     * @return class-string<AbstractType>|null
+     * @return class-string<AbstractType>
      */
-    public function getSubForm(): ?string
+    public function getSubForm(): string
     {
         return match ($this) {
             self::CHARACTER_LIST => CharacterListColumnMappingType::class,
@@ -47,7 +47,6 @@ enum ResourceType: string
             self::CHARACTER_LIST, self::EVENT_LIST, self::TAG_LIST => SpreadsheetMetaFormType::class,
             self::CHARACTER_DOC, self::CHARACTER_DOC_TEMPLATE, self::EVENT_DOC => DocumentMetaFormType::class,
             default => null,
-            // etc.
         };
     }
 
@@ -57,7 +56,6 @@ enum ResourceType: string
             self::CHARACTER_LIST, self::CHARACTER_DOC, self::CHARACTER_DOC_TEMPLATE, self::CHARACTER_DOC_DIRECTORY => $targetType === TargetType::Character,
             self::EVENT_LIST, self::EVENT_DOC => $targetType === TargetType::Faction,
             self::TAG_LIST => $targetType === TargetType::Tag,
-            default => false,
         };
     }
 

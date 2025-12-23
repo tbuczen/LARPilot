@@ -16,48 +16,8 @@ class LocationController extends BaseController
     #[Route('/locations', name: 'list', methods: ['GET'])]
     public function list(Request $request, LocationRepository $locationRepository): Response
     {
-        // Get distinct cities and countries for filter dropdowns (only approved locations)
-        $cities = $locationRepository->createQueryBuilder('l')
-            ->select('DISTINCT l.city')
-            ->where('l.isPublic = :isPublic')
-            ->andWhere('l.isActive = :isActive')
-            ->andWhere('l.approvalStatus = :approved')
-            ->andWhere('l.city IS NOT NULL')
-            ->setParameter('isPublic', true)
-            ->setParameter('isActive', true)
-            ->setParameter('approved', LocationApprovalStatus::APPROVED)
-            ->orderBy('l.city', 'ASC')
-            ->getQuery()
-            ->getResult();
-
-        $countries = $locationRepository->createQueryBuilder('l')
-            ->select('DISTINCT l.country')
-            ->where('l.isPublic = :isPublic')
-            ->andWhere('l.isActive = :isActive')
-            ->andWhere('l.approvalStatus = :approved')
-            ->andWhere('l.country IS NOT NULL')
-            ->setParameter('isPublic', true)
-            ->setParameter('isActive', true)
-            ->setParameter('approved', LocationApprovalStatus::APPROVED)
-            ->orderBy('l.country', 'ASC')
-            ->getQuery()
-            ->getResult();
-
-        // Transform to choice array format
-        $cityChoices = array_combine(
-            array_column($cities, 'city'),
-            array_column($cities, 'city')
-        );
-        $countryChoices = array_combine(
-            array_column($countries, 'country'),
-            array_column($countries, 'country')
-        );
-
         // Create and handle filter form
-        $filterForm = $this->createForm(LocationPublicFilterType::class, null, [
-            'cities' => $cityChoices,
-            'countries' => $countryChoices,
-        ]);
+        $filterForm = $this->createForm(LocationPublicFilterType::class);
         $filterForm->handleRequest($request);
 
         // Build query (only show approved locations)

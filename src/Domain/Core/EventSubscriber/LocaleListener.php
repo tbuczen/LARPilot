@@ -8,14 +8,14 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 #[AsEventListener(event: KernelEvents::REQUEST, priority: 0)]
 readonly class LocaleListener
 {
     public function __construct(
         private Security $security,
-        private TranslatorInterface $translator,
+        private LocaleAwareInterface $translator,
         private string $defaultLocale = 'en',
     ) {
     }

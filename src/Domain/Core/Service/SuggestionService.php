@@ -16,8 +16,8 @@ readonly class SuggestionService
     public function __construct(
         private CharacterRepository $characterRepository,
         private QuestRepository $questRepository,
-        private EventRepository $eventRepository,
-        private ThreadRepository $threadRepository,
+        //        private EventRepository $eventRepository,
+        //        private ThreadRepository $threadRepository,
     ) {
     }
 

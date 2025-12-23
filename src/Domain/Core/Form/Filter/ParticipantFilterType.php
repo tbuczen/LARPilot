@@ -30,14 +30,16 @@ class ParticipantFilterType extends AbstractType
                 'choice_value' => fn (?ParticipantRole $role) => $role?->value,
                 'autocomplete' => true,
                 'multiple' => true,
+                'required' => false,
                 'apply_filter' => static function (QueryInterface $filterQuery, $field, $values) {
                     $roles = $values['value'] ?? [];
                     if (!is_array($roles)) {
                         return null;
                     }
+                    $qb = $filterQuery->getQueryBuilder();
                     $parameters = [];
-                    $expression = $filterQuery->getExpr()->andX();
-                    /** @var \App\Domain\Account\Entity\Enum\\App\Domain\Core\Entity\Enum\ParticipantRole $role */
+                    $expression = $qb->expr()->andX();
+                    /** @var ParticipantRole $role */
                     foreach ($roles as $i => $role) {
                         $expression->add("JSONB_EXISTS($field, :role_$i) = true");
                         $parameters["role_$i"] = $role->value;

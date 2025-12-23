@@ -372,6 +372,8 @@ larp:
     create: 'Dodaj uczestnika'
     modify: 'Edytuj uczestnika'
     view: 'Szczegóły uczestnika'
+    error:
+      cannot_delete_last_organizer: 'Nie możesz usunąć siebie z tego LARPu, ponieważ jesteś ostatnim organizatorem. Przed opuszczeniem przypisz innego organizatora.'
   event:
     singular: 'Wydarzenie'
     plural: 'Wydarzenia'

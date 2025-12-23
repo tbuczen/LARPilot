@@ -22,9 +22,10 @@ final class UserFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array
     {
+        $suffix = uniqid('', true);
         return [
-            'username' => self::faker()->unique()->userName(),
-            'contactEmail' => self::faker()->unique()->safeEmail(),
+            'username' => self::faker()->userName() . '_' . $suffix,
+            'contactEmail' => 'user_' . $suffix . '@test.local',
             'preferredLocale' => Locale::EN,
             'status' => UserStatus::APPROVED,
             'roles' => ['ROLE_USER'],
@@ -110,11 +111,33 @@ final class UserFactory extends PersistentProxyObjectFactory
         ]);
     }
 
-    /**
-     * User who organizes LARPs (has approved status and a plan)
-     */
     public function organizer(): self
     {
         return $this->approved()->withPlan();
+    }
+
+    public static function createPendingUser(): User
+    {
+        return UserFactory::new()->pending()->create()->_real();
+    }
+
+    public static function createSuperAdmin(): User
+    {
+        return UserFactory::new()->approved()->superAdmin()->create()->_real();
+    }
+
+    public static function createApprovedUser(): User
+    {
+        return UserFactory::new()->approved()->create()->_real();
+    }
+
+    public static function createSuspendedUser(): User
+    {
+        return UserFactory::new()->suspended()->create()->_real();
+    }
+
+    public static function createBannedUser(): User
+    {
+        return UserFactory::new()->banned()->create()->_real();
     }
 }

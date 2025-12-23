@@ -4,18 +4,18 @@
     border: 2px solid transparent;
 }
 .character-choice-item:hover {
-    background-color: #f8f9fa;
-    border-color: #dee2e6;
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
 }
 .character-choice-item.sortable-chosen {
-    background-color: #fff;
+    background-color: var(--card-bg);
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-    border-color: #0d6efd;
+    border-color: var(--bo-primary);
     transform: rotate(3deg);
 }
 .character-choice-item.sortable-ghost {
-    background-color: #e7f3ff;
-    border: 2px dashed #0d6efd;
+    background-color: var(--bo-primary-light);
+    border: 2px dashed var(--bo-primary);
     opacity: 0.5;
 }
 .priority-badge {
@@ -29,18 +29,18 @@
 }
 .drag-handle {
     cursor: move;
-    color: #6c757d;
+    color: var(--text-secondary);
     font-size: 1.2em;
     padding: 5px;
     border-radius: 4px;
     transition: all 0.2s ease;
 }
 .drag-handle:hover {
-    color: #495057;
-    background-color: #f8f9fa;
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
 }
 .choice-content {
-    border-left: 3px solid #e9ecef;
+    border-left: 3px solid var(--border-color-light);
     padding-left: 1rem;
 }
 .choice-header {

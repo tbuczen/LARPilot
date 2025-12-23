@@ -1,4 +1,5 @@
 //assets/styles/app.scss
+@import "./components/colors";
 @import "./components/dark_mode";
 @import "./components/sidebar_menu";
 @import "./components/backoffice_menu";
@@ -9,6 +10,7 @@
 @import "./components/kanban";
 @import "./components/feedback";
 @import "./components/timeline";
+@import "./components/map_preview";
 @import "./vendors/quill.snow";
 @import "./vendors/vis-timeline-graph2d.min";
 
@@ -75,10 +77,6 @@ a.nav-link.active {
 
 .transition {
     transition: transform 0.3s ease;
-}
-
-.badge {
-    color: #000 !important;
 }
 
 // Mobile-first responsiveness

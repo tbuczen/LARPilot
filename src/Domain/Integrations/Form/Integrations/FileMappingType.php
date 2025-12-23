@@ -46,9 +46,7 @@ class FileMappingType extends AbstractType
                 $type = $this->getType($mimeType, $type);
 
                 $form = $type->getSubForm();
-                if ($form !== null) {
-                    $field->add($form);
-                }
+                $field->add($form);
             })
             ->add('submit', SubmitType::class);
     }

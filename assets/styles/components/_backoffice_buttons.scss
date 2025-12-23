@@ -1,86 +1,13 @@
-// ============================================
-// BACKOFFICE COLOR VARIABLES
-// ============================================
-
-// Base Colors
-$bo-white: #ffffff;
-$bo-black: #000000;
-$bo-gray-50: #f8f9fa;
-$bo-gray-100: #e9ecef;
-$bo-gray-200: #dee2e6;
-$bo-gray-300: #ced4da;
-$bo-gray-400: #adb5bd;
-$bo-gray-500: #6c757d;
-$bo-gray-600: #495057;
-$bo-gray-700: #343a40;
-$bo-gray-800: #212529;
-
-// Primary Colors (Bootstrap Blue)
-$bo-primary: #0d6efd;
-$bo-primary-hover: #0b5ed7;
-$bo-primary-active: #0a58ca;
-$bo-primary-light: #e7f1ff;
-$bo-primary-dark: #084298;
-
-// Success Colors (Green)
-$bo-success: #198754;
-$bo-success-hover: #157347;
-$bo-success-active: #146c43;
-$bo-success-light: #d1e7dd;
-$bo-success-dark: #0f5132;
-
-// Danger Colors (Red)
-$bo-danger: #dc3545;
-$bo-danger-hover: #bb2d3b;
-$bo-danger-active: #b02a37;
-$bo-danger-light: #f8d7da;
-$bo-danger-dark: #842029;
-
-// Warning Colors (Yellow)
-$bo-warning: #ffc107;
-$bo-warning-hover: #ffca2c;
-$bo-warning-active: #ffcd39;
-$bo-warning-light: #fff3cd;
-$bo-warning-dark: #997404;
-
-// Info Colors (Cyan)
-$bo-info: #0dcaf0;
-$bo-info-hover: #31d2f2;
-$bo-info-active: #3dd5f3;
-$bo-info-light: #cff4fc;
-$bo-info-dark: #055160;
-
-// Border Radius
-$bo-border-radius: 8px;
-$bo-border-radius-sm: 6px;
-$bo-border-radius-lg: 10px;
-$bo-border-radius-xl: 12px;
-
-// Shadows
-$bo-shadow-sm: 0 2px 4px rgba($bo-black, 0.08);
-$bo-shadow: 0 2px 8px rgba($bo-black, 0.08);
-$bo-shadow-lg: 0 4px 12px rgba($bo-black, 0.12);
-$bo-shadow-xl: 0 8px 24px rgba($bo-black, 0.15);
-
-$bo-shadow-success: 0 4px 12px rgba($bo-success, 0.3);
-$bo-shadow-success-hover: 0 6px 16px rgba($bo-success, 0.4);
-$bo-shadow-danger: 0 4px 12px rgba($bo-danger, 0.3);
-
-// Transitions
-$bo-transition-default: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-$bo-transition-smooth: all 0.2s ease;
-$bo-transition-fast: all 0.15s ease;
-
 // Modern SUCCESS button styling (GREEN for create/save)
 .btn-success-modern {
-    background: $bo-success;
+    background: var(--bo-success);
     border: none;
-    color: $bo-white;
-    border-radius: $bo-border-radius-lg;
+    color: var(--bo-white);
+    border-radius: var(--bo-border-radius-lg);
     padding: 0.625rem 1.25rem;
     font-weight: 500;
-    box-shadow: $bo-shadow-success;
-    transition: $bo-transition-default;
+    box-shadow: var(--bo-shadow-success);
+    transition: var(--bo-transition-default);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -90,10 +17,10 @@ $bo-transition-fast: all 0.15s ease;
     }
 
     &:hover {
-        background: $bo-success-hover;
+        background: var(--bo-success-hover);
         transform: translateY(-2px);
-        box-shadow: $bo-shadow-success-hover;
-        color: $bo-white;
+        box-shadow: var(--bo-shadow-success-hover);
+        color: var(--bo-white);
 
         i {
             transform: scale(1.1);
@@ -102,41 +29,41 @@ $bo-transition-fast: all 0.15s ease;
 
     &:active {
         transform: translateY(0);
-        box-shadow: $bo-shadow-success;
+        box-shadow: var(--bo-shadow-success);
     }
 
     &:focus {
-        box-shadow: 0 0 0 0.25rem rgba($bo-success, 0.25);
-        color: $bo-white;
+        box-shadow: 0 0 0 0.25rem rgba(var(--bo-success), 0.25);
+        color: var(--bo-white);
     }
 }
 
 // Small button variant
 .btn-sm.btn-primary-modern {
     padding: 0.375rem 0.875rem;
-    border-radius: $bo-border-radius;
+    border-radius: var(--bo-border-radius);
     font-size: 0.875rem;
 }
 
 // Secondary button with outline (GRAY for cancel/decline)
 .btn-secondary-modern {
-    background: $bo-white;
-    border: 2px solid $bo-gray-500;
-    color: $bo-gray-500;
-    border-radius: $bo-border-radius-lg;
+    background: var(--bo-white);
+    border: 2px solid var(--bo-gray-500);
+    color: var(--bo-gray-500);
+    border-radius: var(--bo-border-radius-lg);
     padding: 0.625rem 1.25rem;
     font-weight: 500;
-    transition: $bo-transition-default;
+    transition: var(--bo-transition-default);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
 
     &:hover {
-        background: $bo-gray-500;
-        border-color: $bo-gray-500;
-        color: $bo-white;
+        background: var(--bo-gray-500);
+        border-color: var(--bo-gray-500);
+        color: var(--bo-white);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba($bo-gray-500, 0.3);
+        box-shadow: 0 4px 12px rgba(var(--bo-gray-500), 0.3);
     }
 
     &:active {
@@ -144,18 +71,18 @@ $bo-transition-fast: all 0.15s ease;
     }
 
     &:focus {
-        box-shadow: 0 0 0 0.25rem rgba($bo-gray-500, 0.25);
+        box-shadow: 0 0 0 0.25rem rgba(var(--bo-gray-500), 0.25);
     }
 }
 
 // Danger button with transition
 .btn-danger {
-    border-radius: $bo-border-radius;
-    transition: $bo-transition-default;
+    border-radius: var(--bo-border-radius);
+    transition: var(--bo-transition-default);
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: $bo-shadow-danger;
+        box-shadow: var(--bo-shadow-danger);
     }
 
     &:active {
@@ -166,24 +93,24 @@ $bo-transition-fast: all 0.15s ease;
 // Button group with clean styling (NO GRADIENT)
 .btn-group {
     position: relative;
-    box-shadow: $bo-shadow;
-    border-radius: $bo-border-radius;
+    box-shadow: var(--bo-shadow);
+    border-radius: var(--bo-border-radius);
     overflow: hidden;
-    border: 1px solid $bo-gray-200;
-    transition: $bo-transition-default;
+    border: 1px solid var(--bo-gray-200);
+    transition: var(--bo-transition-default);
 
     &:hover {
-        box-shadow: $bo-shadow-lg;
+        box-shadow: var(--bo-shadow-lg);
     }
 
     .btn {
         border: none;
-        border-right: 1px solid $bo-gray-200;
-        background: $bo-white;
-        color: $bo-gray-600;
+        border-right: 1px solid var(--bo-gray-200);
+        background: var(--bo-white);
+        color: var(--bo-gray-600);
         margin: 0;
         border-radius: 0;
-        transition: $bo-transition-default;
+        transition: var(--bo-transition-default);
         font-weight: 500;
 
         &:last-child {
@@ -191,35 +118,35 @@ $bo-transition-fast: all 0.15s ease;
         }
 
         &:hover {
-            background: $bo-gray-50;
-            color: $bo-primary;
+            background: var(--bo-gray-50);
+            color: var(--bo-primary);
             z-index: 1;
         }
 
         &.active {
-            background: $bo-primary;
-            color: $bo-white;
+            background: var(--bo-primary);
+            color: var(--bo-white);
             font-weight: 600;
         }
 
         &.btn-outline-success {
-            background: $bo-white;
-            color: $bo-gray-600;
+            background: var(--bo-white);
+            color: var(--bo-gray-600);
             border: none;
-            border-right: 1px solid $bo-gray-200;
+            border-right: 1px solid var(--bo-gray-200);
 
             &:last-child {
                 border-right: none;
             }
 
             &:hover {
-                background: $bo-gray-50;
-                color: $bo-primary;
+                background: var(--bo-gray-50);
+                color: var(--bo-primary);
             }
 
             &.active {
-                background: $bo-primary;
-                color: $bo-white;
+                background: var(--bo-primary);
+                color: var(--bo-white);
             }
         }
     }
@@ -228,72 +155,72 @@ $bo-transition-fast: all 0.15s ease;
 // Dropdown toggle with clean styling (NO GRADIENT - except for top menu which has its own styles)
 .dropdown:not(.user-menu) {
     .btn {
-        background: $bo-white;
-        border: 1px solid $bo-gray-200;
-        color: $bo-gray-600;
-        border-radius: $bo-border-radius;
-        box-shadow: $bo-shadow;
-        transition: $bo-transition-default;
+        background: var(--bo-white);
+        border: 1px solid var(--bo-gray-200);
+        color: var(--bo-gray-600);
+        border-radius: var(--bo-border-radius);
+        box-shadow: var(--bo-shadow);
+        transition: var(--bo-transition-default);
         font-weight: 500;
 
         &:hover {
-            background: $bo-gray-50;
-            color: $bo-primary;
-            border-color: $bo-primary;
+            background: var(--bo-gray-50);
+            color: var(--bo-primary);
+            border-color: var(--bo-primary);
             transform: translateY(-2px);
-            box-shadow: $bo-shadow-lg;
+            box-shadow: var(--bo-shadow-lg);
         }
 
         &:focus {
-            box-shadow: 0 0 0 0.25rem rgba($bo-primary, 0.15);
+            box-shadow: 0 0 0 0.25rem rgba(var(--bo-primary), 0.15);
         }
 
         &.active {
-            background: $bo-primary;
-            color: $bo-white;
-            border-color: $bo-primary;
+            background: var(--bo-primary);
+            color: var(--bo-white);
+            border-color: var(--bo-primary);
         }
     }
 
     .dropdown-menu {
-        border-radius: $bo-border-radius-lg;
-        box-shadow: $bo-shadow-xl;
-        border: 1px solid rgba($bo-black, 0.08);
+        border-radius: var(--bo-border-radius-lg);
+        box-shadow: var(--bo-shadow-xl);
+        border: 1px solid rgba(var(--bo-black), 0.08);
         padding: 0.5rem;
         margin-top: 0.5rem;
         animation: dropdownSlide 0.2s ease;
 
         .dropdown-item {
-            border-radius: $bo-border-radius;
+            border-radius: var(--bo-border-radius);
             padding: 0.625rem 1rem;
-            transition: $bo-transition-smooth;
+            transition: var(--bo-transition-smooth);
             display: flex;
             align-items: center;
             gap: 0.75rem;
 
             i {
-                color: $bo-primary;
+                color: var(--bo-primary);
                 width: 1.25rem;
             }
 
             &:hover {
-                background: $bo-gray-50;
-                color: $bo-primary;
+                background: var(--bo-gray-50);
+                color: var(--bo-primary);
                 transform: translateX(4px);
             }
 
             &:active {
-                background: $bo-primary-light;
+                background: var(--bo-primary-light);
             }
         }
 
         .dropdown-divider {
             margin: 0.5rem 0;
-            border-color: rgba($bo-black, 0.08);
+            border-color: rgba(var(--bo-black), 0.08);
         }
 
         .dropdown-header {
-            color: $bo-gray-500;
+            color: var(--bo-gray-500);
             font-weight: 600;
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -316,40 +243,40 @@ $bo-transition-fast: all 0.15s ease;
 
 // Card with modern styling
 .card {
-    border-radius: $bo-border-radius-xl;
-    border: 1px solid rgba($bo-black, 0.08);
-    box-shadow: $bo-shadow-sm;
-    transition: $bo-transition-default;
+    border-radius: var(--bo-border-radius-xl);
+    border: 1px solid rgba(var(--bo-black), 0.08);
+    box-shadow: var(--bo-shadow-sm);
+    transition: var(--bo-transition-default);
 
     &:hover {
-        box-shadow: $bo-shadow;
+        box-shadow: var(--bo-shadow);
     }
 
     .card-header {
-        border-radius: $bo-border-radius-xl $bo-border-radius-xl 0 0;
-        border-bottom: 1px solid rgba($bo-black, 0.08);
-        background: linear-gradient(180deg, $bo-white 0%, $bo-gray-50 100%);
+        border-radius: var(--bo-border-radius-xl) var(--bo-border-radius-xl) 0 0;
+        border-bottom: 1px solid rgba(var(--bo-black), 0.08);
+        background: linear-gradient(180deg, var(--bo-white) 0%, var(--bo-gray-50) 100%);
     }
 }
 
 // Modern alert styling (NO GRADIENT)
 .alert {
-    border-radius: $bo-border-radius-lg;
+    border-radius: var(--bo-border-radius-lg);
     border: none;
-    box-shadow: $bo-shadow;
+    box-shadow: var(--bo-shadow);
 
     &.alert-info {
-        background: $bo-primary-light;
-        color: $bo-primary-dark;
-        border-left: 4px solid $bo-primary;
+        background: var(--bo-primary-light);
+        color: var(--bo-primary-dark);
+        border-left: 4px solid var(--bo-primary);
     }
 }
 
 // Table action buttons
 .table {
     .btn-sm {
-        border-radius: $bo-border-radius;
-        transition: $bo-transition-default;
+        border-radius: var(--bo-border-radius);
+        transition: var(--bo-transition-default);
 
         &:hover {
             transform: translateY(-2px);
@@ -363,7 +290,7 @@ $bo-transition-fast: all 0.15s ease;
 
 // Badge modern styling
 .badge {
-    border-radius: $bo-border-radius-sm;
+    border-radius: var(--bo-border-radius-sm);
     padding: 0.375rem 0.75rem;
     font-weight: 500;
 }
@@ -371,19 +298,19 @@ $bo-transition-fast: all 0.15s ease;
 // Empty state with modern styling
 .empty-state {
     i {
-        color: $bo-primary;
+        color: var(--bo-primary);
     }
 }
 
 // Form controls modern styling
 .form-control, .form-select {
-    border-radius: $bo-border-radius;
-    border: 1px solid $bo-gray-200;
-    transition: $bo-transition-smooth;
+    border-radius: var(--bo-border-radius);
+    border: 1px solid var(--bo-gray-200);
+    transition: var(--bo-transition-smooth);
 
     &:focus {
-        border-color: $bo-success;
-        box-shadow: 0 0 0 0.25rem rgba($bo-success, 0.25);
+        border-color: var(--bo-success);
+        box-shadow: 0 0 0 0.25rem rgba(var(--bo-success), 0.25);
     }
 }
 
@@ -399,52 +326,52 @@ $bo-transition-fast: all 0.15s ease;
 
 // Modern outline success button (green outline)
 .btn-outline-success:not(.btn-group .btn) {
-    background: $bo-white;
-    border: 2px solid $bo-success;
-    color: $bo-success;
-    border-radius: $bo-border-radius-lg;
+    background: var(--bo-white);
+    border: 2px solid var(--bo-success);
+    color: var(--bo-success);
+    border-radius: var(--bo-border-radius-lg);
     padding: 0.625rem 1.25rem;
     font-weight: 500;
-    transition: $bo-transition-default;
+    transition: var(--bo-transition-default);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
 
     &:hover {
-        background: rgba($bo-success, 0.08);
-        border-color: $bo-success-hover;
-        color: $bo-success-hover;
+        background: rgba(var(--bo-success), 0.08);
+        border-color: var(--bo-success-hover);
+        color: var(--bo-success-hover);
         transform: translateY(-2px);
-        box-shadow: $bo-shadow-success;
+        box-shadow: var(--bo-shadow-success);
     }
 
     &:active {
         transform: translateY(0);
-        background: rgba($bo-success, 0.15);
+        background: rgba(var(--bo-success), 0.15);
     }
 
     &:focus {
-        box-shadow: 0 0 0 0.25rem rgba($bo-success, 0.25);
-        color: $bo-success;
+        box-shadow: 0 0 0 0.25rem rgba(var(--bo-success), 0.25);
+        color: var(--bo-success);
     }
 }
 
 // Custom text colors (clean Bootstrap primary)
 .text-primary-violet {
-    color: $bo-primary !important;
+    color: var(--bo-primary !important);
 }
 
 // Button group enhancements
 .btn-group {
     .btn-success, .btn-outline-success {
         &:first-child {
-            border-top-left-radius: $bo-border-radius-lg;
-            border-bottom-left-radius: $bo-border-radius-lg;
+            border-top-left-radius: var(--bo-border-radius-lg);
+            border-bottom-left-radius: var(--bo-border-radius-lg);
         }
 
         &:last-child {
-            border-top-right-radius: $bo-border-radius-lg;
-            border-bottom-right-radius: $bo-border-radius-lg;
+            border-top-right-radius: var(--bo-border-radius-lg);
+            border-bottom-right-radius: var(--bo-border-radius-lg);
         }
 
         &:not(:first-child):not(:last-child) {
@@ -493,10 +420,10 @@ $bo-transition-fast: all 0.15s ease;
 
 // Table row hover effect (NO GRADIENT)
 .table-hover tbody tr {
-    transition: $bo-transition-smooth;
+    transition: var(--bo-transition-smooth);
 
     &:hover {
-        background-color: $bo-gray-50;
+        background-color: var(--bo-gray-50);
         //transform: scale(1.001);
     }
 }

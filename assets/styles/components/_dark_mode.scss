@@ -1,101 +1,126 @@
-// Dark Mode Variables and Styles
-
-// Light mode variables (default)
-:root {
-    // Background colors
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-tertiary: #f0f0f0;
-    --bg-card: #ffffff;
-    --bg-sidebar: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-    --bg-sidebar-header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-    // Text colors
-    --text-primary: #212529;
-    --text-secondary: #6c757d;
-    --text-muted: #8e8e93;
-    --text-inverse: #ffffff;
-
-    // Border colors
-    --border-color: #dee2e6;
-    --border-color-light: #e0e0e0;
-
-    // Component colors
-    --card-bg: #ffffff;
-    --modal-bg: #ffffff;
-    --table-bg: #ffffff;
-    --table-hover-bg: rgba(0, 0, 0, 0.05);
-    --table-striped-bg: rgba(0, 0, 0, 0.025);
-
-    // Input colors
-    --input-bg: #ffffff;
-    --input-border: #ced4da;
-    --input-text: #212529;
-    --input-placeholder: #6c757d;
-
-    // Shadow colors
-    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-
-    // Sidebar specific
-    --sidebar-text: #2d3748;
-    --sidebar-link-hover-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-    --sidebar-link-active-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-    --sidebar-scrollbar-track: rgba(0, 0, 0, 0.05);
-    --sidebar-scrollbar-thumb: rgba(102, 126, 234, 0.3);
-    --sidebar-scrollbar-thumb-hover: rgba(102, 126, 234, 0.5);
-}
-
-// Dark mode variables
-html.dark-mode {
-    // Background colors
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
-    --bg-tertiary: #3a3a3a;
-    --bg-card: #2d2d2d;
-    --bg-sidebar: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
-    --bg-sidebar-header: linear-gradient(135deg, #5568d3 0%, #6a4c93 100%);
-
-    // Text colors
-    --text-primary: #e8e8e8;
-    --text-secondary: #b8b8b8;
-    --text-muted: #8e8e93;
-    --text-inverse: #1a1a1a;
-
-    // Border colors
-    --border-color: #404040;
-    --border-color-light: #4a4a4a;
-
-    // Component colors
-    --card-bg: #2d2d2d;
-    --modal-bg: #2d2d2d;
-    --table-bg: #2d2d2d;
-    --table-hover-bg: rgba(255, 255, 255, 0.05);
-    --table-striped-bg: rgba(255, 255, 255, 0.025);
-
-    // Input colors
-    --input-bg: #3a3a3a;
-    --input-border: #4a4a4a;
-    --input-text: #e8e8e8;
-    --input-placeholder: #8e8e93;
-
-    // Shadow colors
-    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
-    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
-
-    // Sidebar specific
-    --sidebar-text: #e8e8e8;
-    --sidebar-link-hover-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.15) 0%, rgba(106, 76, 147, 0.15) 100%);
-    --sidebar-link-active-bg: linear-gradient(135deg, rgba(85, 104, 211, 0.25) 0%, rgba(106, 76, 147, 0.25) 100%);
-    --sidebar-scrollbar-track: rgba(255, 255, 255, 0.05);
-    --sidebar-scrollbar-thumb: rgba(85, 104, 211, 0.4);
-    --sidebar-scrollbar-thumb-hover: rgba(85, 104, 211, 0.6);
-}
-
 // Apply dark mode styles to various components
 html.dark-mode {
+    .larp-backoffice-header{
+      background: var(--bg-tertiary);
+      border-bottom: 2px solid #0d6efd;
+    }
+
+  .larp-header-title {
+    border-bottom: 1px solid var(--bo-header-border);
+
+    // Hamburger toggle button
+    .navbar-toggler {
+      border: 1px solid var(--bo-header-border);
+      border-radius: var(--bo-border-radius);
+      background: transparent;
+      transition: var(--bo-transition-smooth);
+
+      &:hover {
+        background: var(--bo-nav-bg-hover);
+        border-color: var(--bo-nav-text-hover);
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(var(--bo-primary), 0.15);
+      }
+    }
+
+    .larp-title {
+      color: var(--bo-title-color);
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      i {
+        color: var(--bo-title-icon-color);
+        font-size: 2rem;
+      }
+
+      span {
+        line-height: 1.2;
+      }
+    }
+
+    // Preview button
+    .btn-outline-primary {
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  // Navigation Bar
+  .larp-navbar {
+
+    .navbar-nav {
+
+      .nav-item {
+        .nav-link {
+          color: var(--bo-nav-text);
+          border-radius: var(--bo-border-radius);
+          transition: var(--bo-transition-smooth);
+          i {
+            transition: var(--bo-transition-smooth);
+          }
+          // Hover state
+          &:hover {
+            color: var(--bo-nav-text-hover);
+            background: var(--bo-nav-bg-hover);
+          }
+
+          // Active state
+          &.active {
+            color: var(--bo-nav-text-active);
+            background: var(--bo-nav-bg-active);
+            border-bottom: 2px solid var(--bo-nav-border-active);
+          }
+        }
+
+        // Dropdown styling
+        &.dropdown {
+
+          .dropdown-menu {
+            background-color: var(--bg-card);
+            border: 1px solid var(--bo-header-border);
+            border-radius: var(--bo-border-radius-lg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+            .dropdown-item {
+              border-radius: var(--bo-border-radius);
+              transition: var(--bo-transition-smooth);
+              color: var(--bo-nav-text);
+
+              i {
+                color: var(--bo-nav-text-hover);
+              }
+
+              &:hover {
+                background: var(--bo-nav-bg-hover);
+                color: var(--bo-nav-text-hover);
+              }
+
+              &:active {
+                background: var(--bo-nav-bg-active);
+              }
+            }
+
+            .dropdown-divider {
+              border-color: var(--bo-header-border);
+            }
+
+            .dropdown-header {
+              color: var(--bo-gray-500);
+            }
+          }
+        }
+      }
+    }
+  }
+
     body {
         background-color: var(--bg-primary);
         color: var(--text-primary);
@@ -117,6 +142,7 @@ html.dark-mode {
         background-color: var(--bg-secondary);
         border-color: var(--border-color);
         color: var(--text-primary);
+        background: var(--bs-primary-rgb);
     }
 
     .card-body {
@@ -170,7 +196,7 @@ html.dark-mode {
         &:focus {
             background-color: var(--input-bg);
             color: var(--input-text);
-            border-color: #667eea;
+            border-color: var(--bo-primary);
         }
     }
 
@@ -304,5 +330,59 @@ html.dark-mode {
     &:focus {
         outline: 2px solid rgba(255, 255, 255, 0.5);
         outline-offset: 2px;
+    }
+}
+
+.card {
+
+
+  .card-header {
+    border-bottom: 1px solid rgba(var(--bo-black), 0.08);
+    background: linear-gradient(180deg, #2d2d2d 0%, var(--bo-gray-50) 100%);
+  }
+}
+
+// Google Maps dark mode styling
+html.dark-mode {
+    // Invert map colors for dark mode effect
+    #map,
+    .google-map,
+    [data-google-map] {
+        filter: invert(90%) hue-rotate(180deg);
+    }
+
+    // Preserve marker and image colors by double-inverting
+    #map .gm-style img,
+    #map .gm-style canvas,
+    .google-map .gm-style img,
+    .google-map .gm-style canvas {
+        filter: invert(100%) hue-rotate(180deg);
+    }
+
+    // InfoWindow styling
+    .gm-style .gm-style-iw-c,
+    .gm-style .gm-style-iw-d {
+        background-color: var(--card-bg) !important;
+    }
+
+    .gm-style .gm-style-iw-tc::after {
+        background: var(--card-bg) !important;
+    }
+
+    .gm-style .gm-style-iw {
+        color: var(--text-primary) !important;
+
+        h6, .h6 {
+            color: var(--text-primary) !important;
+        }
+
+        p, .text-muted {
+            color: var(--text-secondary) !important;
+        }
+    }
+
+    // Close button in InfoWindow
+    .gm-style .gm-ui-hover-effect {
+        filter: invert(100%);
     }
 }

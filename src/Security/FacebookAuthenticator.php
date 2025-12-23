@@ -91,7 +91,7 @@ class FacebookAuthenticator extends OAuth2Authenticator implements Authenticatio
         );
     }
 
-    private function addSocialAccountToUser(FacebookUser $user, UserInterface|User $currentUser): UserInterface
+    private function addSocialAccountToUser(FacebookUser $user, User $currentUser): UserInterface
     {
         $command = new AddSocialAccountToUserCommand(
             provider: SocialAccountProvider::Facebook,

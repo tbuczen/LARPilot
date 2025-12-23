@@ -16,7 +16,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 use Spiriit\Bundle\FormFilterBundle\Filter\FilterBuilderUpdaterInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +37,6 @@ class BaseController extends AbstractController
 
     protected function showErrorsAsFlash(FormErrorIterator $errors): void
     {
-        /** @var FormError $error */
         foreach ($errors as $error) {
             $fieldName = $error->getOrigin()?->getName();
 

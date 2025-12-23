@@ -19,8 +19,8 @@ class LarpApplicationChoice
     private LarpApplication $application;
 
     #[ORM\ManyToOne(targetEntity: Character::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private Character $character;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Character $character = null;
 
     #[ORM\Column(type: 'integer')]
     private int $priority = 1;
@@ -44,12 +44,12 @@ class LarpApplicationChoice
         $this->application = $application;
     }
 
-    public function getCharacter(): Character
+    public function getCharacter(): ?Character
     {
         return $this->character;
     }
 
-    public function setCharacter(Character $character): void
+    public function setCharacter(?Character $character): void
     {
         $this->character = $character;
     }

@@ -19,6 +19,6 @@ readonly class OAuthTokenProviderFactory
             return $this->googleOAuthTokenProvider;
         }
 
-        throw new \InvalidArgumentException("No OAuth provider found for integration:" . $integration->getId()->toRfc4122());
+        throw new \LogicException("No OAuth provider found for integration:" . $integration->getId()->toRfc4122());
     }
 }

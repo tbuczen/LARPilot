@@ -56,9 +56,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: larpilot_test
-          POSTGRES_PASSWORD: larpilot_test
-          POSTGRES_DB: larpilot_test
+          POSTGRES_USER: larpilot
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: larpilot
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -94,75 +94,37 @@ jobs:
 
       - name: Setup test environment
         run: |
-          cp .env .env.test.local || true
-          echo "APP_ENV=test" >> .env.test.local
-          echo "DATABASE_URL=postgresql://larpilot_test:larpilot_test@127.0.0.1:5432/larpilot_test?serverVersion=15&charset=utf8" >> .env.test.local
+          # Create .env.test.local to override .env.test values for GitHub Actions
+          echo "DATABASE_HOST=127.0.0.1" > .env.test.local
 
       - name: Create test database
+        env:
+          DATABASE_HOST: 127.0.0.1
         run: |
           php bin/console doctrine:database:create --env=test --if-not-exists
           php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
+      - name: Build assets (SASS)
+        env:
+          DATABASE_HOST: 127.0.0.1
+        run: |
+          php bin/console sass:build --env=test
+          php bin/console asset-map:compile --env=test
+
       - name: Build Codeception Actors
         run: vendor/bin/codecept build
 
-      - name: Run All Codeception Tests
+      - name: Run Codeception Tests
+        env:
+          DATABASE_HOST: 127.0.0.1
         run: |
           APP_ENV=test vendor/bin/codecept run --colors
 
-      - name: Run Unit Tests Only
-        run: |
-          APP_ENV=test vendor/bin/codecept run unit --colors
-
-      - name: Run Functional Tests Only
-        run: |
-          APP_ENV=test vendor/bin/codecept run functional --colors
-
-  docker-tests:
-    name: Docker Environment Tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Copy .env file
-        run: cp .env .env.local || true
-
-      - name: Build Docker containers
-        run: docker compose build
-
-      - name: Start Docker containers
-        run: docker compose up -d
-
-      - name: Wait for services to be ready
-        run: |
-          sleep 30
-          docker compose ps
-
-      - name: Install dependencies in container
-        run: docker compose exec -T php composer install --no-interaction
-
-      - name: Run migrations in container
-        run: |
-          docker compose exec -T php php bin/console doctrine:database:create --env=test --if-not-exists
-          docker compose exec -T php php bin/console doctrine:migrations:migrate --env=test --no-interaction
-
-      - name: Build Codeception Actors in container
-        run: docker compose exec -T php vendor/bin/codecept build
-
-      - name: Run Codeception tests in Docker container
-        run: |
-          docker compose exec -T php bash -lc "APP_ENV=test vendor/bin/codecept run --colors"
-
-      - name: Stop Docker containers
-        if: always()
-        run: docker compose down
 
   summary:
     name: Test Summary
     runs-on: ubuntu-latest
-    needs: [code-quality, tests, docker-tests]
+    needs: [code-quality, tests]
     if: always()
 
     steps:
@@ -174,10 +136,6 @@ jobs:
           fi
           if [ "${{ needs.tests.result }}" != "success" ]; then
             echo "Codeception tests failed"
-            exit 1
-          fi
-          if [ "${{ needs.docker-tests.result }}" != "success" ]; then
-            echo "Docker tests failed"
             exit 1
           fi
           echo "All tests passed successfully!"

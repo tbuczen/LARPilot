@@ -2,6 +2,7 @@
 
 namespace App\Domain\Application\Controller\Public;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Application\Entity\Enum\SubmissionStatus;
 use App\Domain\Application\Entity\LarpApplication;
 use App\Domain\Application\Entity\LarpApplicationChoice;
@@ -36,7 +37,9 @@ class CharacterApplicationController extends BaseController
 
         $application = new LarpApplication();
         $application->setLarp($larp);
-        $application->setUser($this->getUser());
+        /** @var User|null $currentUser */
+        $currentUser = $this->getUser();
+        $application->setUser($currentUser);
 
         for ($i = 1; $i <= $larp->getMaxCharacterChoices(); ++$i) {
             $choice = new LarpApplicationChoice();

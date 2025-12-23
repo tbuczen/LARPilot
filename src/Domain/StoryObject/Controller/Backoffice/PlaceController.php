@@ -66,7 +66,7 @@ class PlaceController extends BaseController
 
         // Get mentions only for existing places (not new ones)
         $mentions = [];
-        if ($place->getId() !== null) {
+        if (!$new) {
             $mentions = $mentionService->findMentions($place);
         }
 

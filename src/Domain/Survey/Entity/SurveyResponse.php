@@ -41,7 +41,7 @@ class SurveyResponse implements Timestampable
     private ?User $user = null;
 
     #[ORM\Column(type: Types::STRING, length: 50, enumType: SubmissionStatus::class)]
-    private ?SubmissionStatus $status = SubmissionStatus::NEW;
+    private SubmissionStatus $status = SubmissionStatus::NEW;
 
     /** @var Collection<SurveyAnswer> */
     #[ORM\OneToMany(targetEntity: SurveyAnswer::class, mappedBy: 'response', cascade: ['persist', 'remove'], orphanRemoval: true)]

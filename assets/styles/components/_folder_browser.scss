@@ -14,7 +14,7 @@
 }
 
 .tree-row:hover {
-    background-color: #f0f0f0;
+    background-color: var(--bg-tertiary);
 }
 
 .checkbox-label {
@@ -29,17 +29,18 @@
 .tree-label {
     cursor: pointer;
     transition: color 0.2s;
+    color: var(--text-primary);
 }
 
 .tree-label:hover {
-    color: #007bff;
+    color: var(--bo-primary);
 }
 
 .subfolders {
     margin-left: 20px;
 }
 
-/* ✅ Loader styling */
+/* Loader styling */
 .loader {
     text-align: center;
 }

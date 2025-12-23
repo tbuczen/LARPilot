@@ -1,0 +1,95 @@
+// ============================================
+// MAP PREVIEW COMPONENT STYLES
+// For map configuration with grid preview
+// ============================================
+
+// Map preview container
+.map-preview-container {
+    background-color: var(--bg-secondary);
+    overflow: hidden;
+}
+
+// Placeholder when no image
+.map-preview-placeholder {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+
+    .bi-image {
+        color: var(--text-muted);
+    }
+
+    p {
+        color: var(--text-secondary);
+    }
+}
+
+// Map preview (Leaflet container)
+.map-preview {
+    height: 500px;
+    width: 100%;
+    background: var(--bg-secondary);
+
+    // Leaflet container styling
+    .leaflet-container {
+        background: var(--bg-secondary);
+    }
+}
+
+// Grid label styling
+.map-grid-label {
+    background: transparent;
+    border: none;
+
+    .grid-label-text {
+        font-size: 12px;
+        font-weight: bold;
+        color: var(--text-primary);
+        text-align: center;
+        text-shadow:
+            1px 1px 0 var(--bg-secondary),
+            -1px -1px 0 var(--bg-secondary),
+            1px -1px 0 var(--bg-secondary),
+            -1px 1px 0 var(--bg-secondary);
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 767.98px) {
+    .map-preview-placeholder {
+        min-height: 250px;
+    }
+
+    .map-preview {
+        height: 350px;
+    }
+}
+
+// Dark mode adjustments
+html.dark-mode {
+    .map-preview-container {
+        border-color: var(--border-color) !important;
+    }
+
+    .map-grid-label .grid-label-text {
+        color: var(--text-primary);
+        text-shadow:
+            1px 1px 0 var(--bg-primary),
+            -1px -1px 0 var(--bg-primary),
+            1px -1px 0 var(--bg-primary),
+            -1px 1px 0 var(--bg-primary);
+    }
+
+    .leaflet-container {
+        background: var(--bg-secondary);
+    }
+}
+
+// Grid configuration section
+.grid-config-section {
+    .form-range {
+        accent-color: var(--bo-primary);
+    }
+}

@@ -120,7 +120,7 @@ readonly class LarpDashboardService
         foreach ($factions as $faction) {
             $factionParticipants = $participants->filter(function (LarpParticipant $participant) use ($faction) {
                 foreach ($participant->getLarpCharacters() as $larpCharacter) {
-                    return $larpCharacter?->belongsToFaction($faction);
+                    return $larpCharacter->belongsToFaction($faction);
                 }
             })->count();
             

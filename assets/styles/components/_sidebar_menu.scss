@@ -2,12 +2,7 @@
 $sidebar-width-mobile: 300px;
 $sidebar-width-tablet: 340px;
 $sidebar-width-desktop: 360px;
-$sidebar-bg: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-$sidebar-border-color: #e0e0e0;
-$sidebar-shadow: -4px 0 20px rgba(0, 0, 0, 0.08);
-$sidebar-shadow-open: -8px 0 30px rgba(0, 0, 0, 0.12);
 $sidebar-transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-$overlay-bg: rgba(0, 0, 0, 0.6);
 $overlay-transition: opacity 0.3s ease, visibility 0.3s ease;
 
 // Breakpoints
@@ -25,9 +20,9 @@ $desktop-min: 769px;
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-sidebar-header);
     border: none;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
@@ -35,14 +30,14 @@ $desktop-min: 769px;
 
     i {
         font-size: 24px;
-        color: white;
+        color: var(--text-inverse);
         transition: transform 0.2s ease;
     }
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        box-shadow: 0 6px 16px rgba(13, 110, 253, 0.4);
+        filter: brightness(1.1);
 
         i {
             transform: scale(1.1);
@@ -51,7 +46,7 @@ $desktop-min: 769px;
 
     &:active {
         transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
     }
 
     // Hide button when sidebar is open
@@ -75,14 +70,14 @@ $desktop-min: 769px;
     right: 0;
     width: $sidebar-width-mobile;
     height: 100%;
-    background: var(--bg-sidebar, $sidebar-bg);
-    border-left: 1px solid var(--border-color-light, $sidebar-border-color);
+    background: var(--bg-sidebar);
+    border-left: 1px solid var(--border-color-light);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 1050;
     transform: translateX(100%);
     transition: $sidebar-transition;
-    box-shadow: $sidebar-shadow;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.08);
 
     // Custom scrollbar
     &::-webkit-scrollbar {
@@ -90,15 +85,15 @@ $desktop-min: 769px;
     }
 
     &::-webkit-scrollbar-track {
-        background: var(--sidebar-scrollbar-track, rgba(0, 0, 0, 0.05));
+        background: var(--sidebar-scrollbar-track);
     }
 
     &::-webkit-scrollbar-thumb {
-        background: var(--sidebar-scrollbar-thumb, rgba(102, 126, 234, 0.3));
+        background: var(--sidebar-scrollbar-thumb);
         border-radius: 4px;
 
         &:hover {
-            background: var(--sidebar-scrollbar-thumb-hover, rgba(102, 126, 234, 0.5));
+            background: var(--sidebar-scrollbar-thumb-hover);
         }
     }
 
@@ -111,7 +106,7 @@ $desktop-min: 769px;
 // Sidebar header
 .sidebar-header {
     padding: 1.5rem 1.25rem;
-    background: var(--bg-sidebar-header, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+    background: var(--bg-sidebar-header);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -124,7 +119,7 @@ $desktop-min: 769px;
     margin: 0;
     font-size: 1.375rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-inverse);
     letter-spacing: -0.02em;
 }
 
@@ -144,7 +139,7 @@ $desktop-min: 769px;
     }
 
     &:focus {
-        outline: 2px solid white;
+        outline: 2px solid var(--text-inverse);
         outline-offset: 2px;
     }
 }
@@ -161,7 +156,7 @@ $desktop-min: 769px;
     left: 0;
     width: 100%;
     height: 100%;
-    background: $overlay-bg;
+    background: rgba(0, 0, 0, 0.6);
     z-index: 1040;
     opacity: 0;
     visibility: hidden;
@@ -207,7 +202,7 @@ $desktop-min: 769px;
         width: $sidebar-width-desktop;
 
         &.open {
-            box-shadow: $sidebar-shadow-open;
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
         }
     }
 
@@ -220,7 +215,7 @@ $desktop-min: 769px;
 // Enhanced menu items styling
 .sidebar-body {
     .nav-link {
-        color: var(--sidebar-text, #2d3748);
+        color: var(--sidebar-text);
         padding: 0.875rem 1rem;
         margin-bottom: 0.375rem;
         border-radius: 10px;
@@ -241,14 +236,14 @@ $desktop-min: 769px;
             top: 0;
             height: 100%;
             width: 3px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-sidebar-header);
             transform: scaleY(0);
             transition: transform 0.25s ease;
         }
 
         &:hover {
-            background: var(--sidebar-link-hover-bg, linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%));
-            color: #667eea;
+            background: var(--sidebar-link-hover-bg);
+            color: var(--bo-primary);
             transform: translateX(4px);
             padding-left: 1.125rem;
 
@@ -258,10 +253,10 @@ $desktop-min: 769px;
         }
 
         &.active {
-            background: var(--sidebar-link-active-bg, linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%));
-            color: #667eea;
+            background: var(--sidebar-link-active-bg);
+            color: var(--bo-primary);
             font-weight: 600;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 2px 8px rgba(13, 110, 253, 0.15);
 
             &::before {
                 transform: scaleY(1);
@@ -300,7 +295,7 @@ $desktop-min: 769px;
         .nav {
             margin-top: 0.375rem;
             padding-left: 1rem;
-            border-left: 2px solid rgba(102, 126, 234, 0.1);
+            border-left: 2px solid rgba(13, 110, 253, 0.1);
             margin-left: 0.5rem;
         }
 
@@ -314,7 +309,7 @@ $desktop-min: 769px;
 // Accessibility improvements
 .sidebar-menu {
     &:focus-within {
-        outline: 2px solid #667eea;
+        outline: 2px solid var(--bo-primary);
         outline-offset: -2px;
     }
 }

@@ -3,12 +3,10 @@
 namespace App\Domain\StoryMarketplace\Service;
 
 use App\Domain\Application\Entity\LarpApplication;
-use App\Domain\Application\Repository\LarpApplicationRepository;
 use App\Domain\Core\Entity\Tag;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\Thread;
-use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\EventRepository;
 use App\Domain\StoryObject\Repository\QuestRepository;
 use App\Domain\StoryObject\Repository\ThreadRepository;
@@ -19,8 +17,6 @@ readonly class MarketplaceService
         private ThreadRepository          $threadRepository,
         private QuestRepository           $questRepository,
         private EventRepository           $eventRepository,
-        private CharacterRepository       $characterRepository,
-        private LarpApplicationRepository $applicationRepository
     ) {
     }
 

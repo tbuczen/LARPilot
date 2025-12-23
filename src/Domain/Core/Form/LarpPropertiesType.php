@@ -68,7 +68,8 @@ class LarpPropertiesType extends AbstractType
                 'help' => 'How players apply for this LARP',
                 'attr' => [
                     'class' => 'form-check',
-                    'data-controller' => 'application-mode-toggle'
+                    'data-controller' => 'application-mode-toggle',
+                    'data-action' => 'change->application-mode-toggle#change'
                 ]
             ])
             ->add('publishCharactersPublicly', CheckboxType::class, [

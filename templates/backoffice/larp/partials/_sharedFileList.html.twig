@@ -45,8 +45,8 @@
                             </button>
                             <div class="collapse" id="config-{{ mapping.id }}">
                                 <div class="d-flex gap-3 flex-wrap">
-                                    <pre class="bg-light p-2 rounded small text-muted mt-1 flex-fill">{{ mapping.mappingConfiguration|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
-                                    <pre class="bg-light p-2 rounded small text-muted mt-1 flex-fill">{{ mapping.metaConfiguration|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                    <pre class=" p-2 rounded small text-muted mt-1 flex-fill">{{ mapping.mappingConfiguration|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                    <pre class=" p-2 rounded small text-muted mt-1 flex-fill">{{ mapping.metaConfiguration|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
                                 </div>
                             </div>
                         </li>

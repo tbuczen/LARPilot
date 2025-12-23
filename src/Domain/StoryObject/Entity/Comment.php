@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Domain\StoryObject\Entity;
 
 use App\Domain\Account\Entity\User;
+use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
+use App\Domain\Core\Entity\Trait\UuidTraitEntity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 #[ORM\Entity(repositoryClass: 'App\Domain\StoryObject\Repository\CommentRepository')]
 #[ORM\Table(name: 'comment')]
@@ -17,11 +17,9 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Index(name: 'idx_comment_parent', columns: ['parent_id'])]
 class Comment
 {
-    #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    use UuidTraitEntity;
+    use TimestampableEntity;
+    use CreatorAwareTrait;
 
     #[ORM\ManyToOne(targetEntity: StoryObject::class)]
     #[ORM\JoinColumn(name: 'story_object_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
@@ -44,18 +42,6 @@ class Comment
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isResolved = false;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Gedmo\Timestampable(on: 'update')]
-    private ?\DateTimeInterface $updatedAt = null;
-
-    public function getId(): ?Uuid
-    {
-        return $this->id;
-    }
 
     public function getStoryObject(): StoryObject
     {
@@ -113,30 +99,6 @@ class Comment
     public function setIsResolved(bool $isResolved): self
     {
         $this->isResolved = $isResolved;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }

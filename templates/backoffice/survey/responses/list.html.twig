@@ -1,0 +1,144 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_title %}{{ 'survey.responses.list'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">{{ 'survey.responses.list'|trans }}</h2>
+                <div class="d-flex gap-2">
+                    <form method="post" action="{{ path('backoffice_larp_survey_responses_regenerate_all', { larp: larp.id }) }}" class="d-inline">
+                        <button type="submit" class="btn btn-outline-primary" onclick="return confirm('{{ 'survey.responses.regenerate_all_confirm'|trans }}')">
+                            <i class="bi bi-arrow-repeat me-1"></i>{{ 'survey.responses.regenerate_all'|trans }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            {% if responses is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{{ 'common.user'|trans }}</th>
+                                <th>{{ 'common.email'|trans }}</th>
+                                <th>{{ 'common.status'|trans }}</th>
+                                <th>{{ 'survey.responses.assigned_character'|trans }}</th>
+                                <th>{{ 'survey.responses.match_score'|trans }}</th>
+                                <th>{{ 'common.submitted_at'|trans }}</th>
+                                <th>{{ 'common.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for response in responses %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('backoffice_larp_survey_responses_show', {
+                                            larp: larp.id,
+                                            response: response.id
+                                        }) }}">
+                                            {{ response.user.displayName }}
+                                        </a>
+                                    </td>
+                                    <td>{{ response.user.contactEmail }}</td>
+                                    <td>
+                                        {% set statusClass = {
+                                            'NEW': 'secondary',
+                                            'CONSIDER': 'warning',
+                                            'OFFERED': 'info',
+                                            'CONFIRMED': 'success',
+                                            'REJECTED': 'danger',
+                                            'DECLINED': 'danger'
+                                        } %}
+                                        <span class="badge bg-{{ statusClass[response.status.value] ?? 'secondary' }}">
+                                            {{ response.status.value }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if response.assignedCharacter %}
+                                            <strong>{{ response.assignedCharacter.title }}</strong>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if response.matchSuggestions and response.matchSuggestions|length > 0 %}
+                                            <span class="badge bg-primary">
+                                                {{ response.matchSuggestions[0].score }} pts
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ response.createdAt|date('Y-m-d H:i') }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('backoffice_larp_survey_responses_show', {
+                                            larp: larp.id,
+                                            response: response.id
+                                        }) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> {{ 'common.view'|trans }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="p-4 text-center text-muted">
+                    <i class="bi bi-inbox display-4"></i>
+                    <p class="mt-2">{{ 'survey.responses.empty'|trans }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Summary cards #}
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'survey.responses.total'|trans }}</h6>
+                    <h3 class="card-title">{{ responses|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'survey.responses.pending'|trans }}</h6>
+                    <h3 class="card-title">
+                        {{ responses|filter(r => r.status.value == 'NEW')|length }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'survey.responses.assigned'|trans }}</h6>
+                    <h3 class="card-title">
+                        {{ responses|filter(r => r.assignedCharacter is not null)|length }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">{{ 'survey.responses.confirmed'|trans }}</h6>
+                    <h3 class="card-title">
+                        {{ responses|filter(r => r.status.value == 'CONFIRMED')|length }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

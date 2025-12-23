@@ -307,7 +307,7 @@ class ScheduledEvent implements Timestampable, CreatorAwareInterface, \Stringabl
      */
     public function getEffectiveStartTime(): \DateTimeInterface
     {
-        $effective = clone $this->startTime;
+        $effective = \DateTime::createFromInterface($this->startTime);
         if ($this->setupMinutes > 0) {
             $effective->modify('-' . $this->setupMinutes . ' minutes');
         }
@@ -319,7 +319,7 @@ class ScheduledEvent implements Timestampable, CreatorAwareInterface, \Stringabl
      */
     public function getEffectiveEndTime(): \DateTimeInterface
     {
-        $effective = clone $this->endTime;
+        $effective = \DateTime::createFromInterface($this->endTime);
         if ($this->cleanupMinutes > 0) {
             $effective->modify('+' . $this->cleanupMinutes . ' minutes');
         }

@@ -59,7 +59,6 @@ class GameMapController extends BaseController
         if ($isNew) {
             $map = new GameMap();
             $map->setLarp($larp);
-            $map->setCreatedBy($this->getUser());
         }
 
         $form = $this->createForm(GameMapType::class, $map);
@@ -150,7 +149,6 @@ class GameMapController extends BaseController
         if ($isNew) {
             $location = new MapLocation();
             $location->setMap($map);
-            $location->setCreatedBy($this->getUser());
         }
 
         $form = $this->createForm(MapLocationType::class, $location, ['larp' => $larp]);

@@ -163,6 +163,12 @@ larp:
   application_open: 'Application form is open'
   application_open_description: 'LARP is ready to collect Your application'
   apply_for_character: 'Apply for character'
+  browse_characters: 'Browse Available Characters'
+  browse_characters_description: 'Explore the character gallery and apply for characters that interest you'
+  view_character_gallery: 'View Character Gallery'
+  survey_application: 'Fill Out Application Survey'
+  survey_application_description: 'Complete our survey to help us match you with the perfect character'
+  fill_out_survey: 'Fill Out Survey'
   application_form: 'Application Form'
   submit_application: 'Submit Application'
   application_form_description: 'Use this form to apply for the most interesting roles, please select tags that are interesting for You to play and the tags that You would like to omit in Your gameplay (triggers)'
@@ -437,6 +443,8 @@ larp:
     create: 'Add Participant'
     modify: 'Edit Participant'
     view: 'Participant Details'
+    error:
+      cannot_delete_last_organizer: 'You cannot remove yourself from this LARP as you are the last organizer. Please assign another organizer before leaving.'
   event:
     singular: 'Event'
     plural: 'Events'
@@ -564,10 +572,17 @@ marketplace:
   player_preferences: "Player Preferences"
   match_score: "Match Score"
 
+search: "Search"
+
 #Translations specific for public location pages
 location:
+  title: 'Location'
+  address: 'Address'
+  city: 'City'
   list: 'Locations'
   singular: 'Location'
+  status: 'Status'
+  approval: 'Approval'
   website: 'Website url'
   details: 'Location Details'
   about: 'About This Location'
@@ -595,6 +610,7 @@ location:
   approve_confirm: "Are you sure you want to approve this location?"
   reject_location: "Reject Location"
   reject_warning: "You are about to reject the location '%location%'. The creator will be able to see the rejection reason and resubmit after making changes."
+  rejection_reason: 'Rejection Reason'
 
 
 #Translations specific for Core Organizers backoffice
@@ -662,6 +678,14 @@ public:
       empty: 'You have not been assigned any characters yet.'
       view_public_page: 'View public page'
       no_characters: 'No characters have been assigned to you yet.'
+  characters:
+    gallery: 'Character Gallery'
+    gallery_description: 'Browse available characters for this LARP'
+    no_characters: 'No characters are currently available'
+  character:
+    available: 'Available for Recruitment'
+    apply_for_larp: 'Apply for this LARP'
+  login_to_apply: 'Login to Apply'
 
 character_type:
   player: "Player"
@@ -1145,6 +1169,63 @@ cookie:
       description: 'These cookies are used to track visitors across websites to display relevant advertisements and marketing content.'
     examples: 'Examples'
     always_active: 'Always Active'
+
+# Survey System
+survey:
+  edit: 'Edit Survey'
+  builder: 'Survey Builder'
+  questions: 'Questions'
+  add_question: 'Add Question'
+  question: 'Question'
+  options: 'Options'
+  add_option: 'Add Option'
+  active: 'Active'
+  inactive: 'Inactive'
+  no_questions: 'No questions have been added yet'
+  required_fields_notice: 'Fields marked with * are required'
+  what_happens_next: 'What happens next?'
+  submission_process_explanation: 'After submitting your survey, our organizers will review your responses and match you with a suitable character. You will be notified once a character has been assigned to you.'
+  not_accepting_responses: 'This LARP is not currently accepting survey responses'
+  not_in_survey_mode: 'This LARP is not using survey-based applications'
+  not_available: 'The survey is not currently available'
+  already_submitted: 'You have already submitted a survey response for this LARP'
+  submitted_successfully: 'Thank you! Your survey has been submitted successfully'
+  help:
+    title: 'Survey Builder Help'
+    drag_reorder: 'Drag and drop questions using the grip icon to reorder them'
+    question_types: 'Use different question types: text, textarea, single choice, multiple choice, rating (1-5), and tag selection'
+    tag_selection: 'Tag selection questions allow players to choose from LARP-specific tags'
+    preview: 'Use the preview button to see how players will view the survey'
+  preview:
+    title: 'Preview Survey'
+    short_text: 'Short answer text...'
+    long_text: 'Longer answer text...'
+    tag_selection_info: 'Players will be able to select tags from this LARP'
+    submit_button: 'Submit Survey (Preview Only)'
+  response:
+    details: 'Survey Response Details'
+    regenerate_matches: 'Regenerate Match Suggestions'
+    assigned_character: 'Assigned Character'
+    match_suggestions: 'Character Match Suggestions'
+    points: 'points'
+    assign_confirm: 'Are you sure you want to assign %character% to this player?'
+    assign: 'Assign Character'
+    no_matches: 'No character matches found. This may be because all suitable characters are already assigned, or the player''s preferences don''t match any available characters.'
+    answers: 'Survey Answers'
+    no_answers: 'No answers recorded'
+    organizer_notes: 'Organizer Notes'
+    no_notes: 'No notes yet'
+  responses:
+    list: 'Survey Responses'
+    regenerate_all_confirm: 'This will regenerate match suggestions for all responses. This may take a while. Continue?'
+    regenerate_all: 'Regenerate All Matches'
+    assigned_character: 'Assigned Character'
+    match_score: 'Match Score'
+    empty: 'No survey responses yet'
+    total: 'Total Responses'
+    pending: 'Pending Assignment'
+    assigned: 'Assigned'
+    confirmed: 'Confirmed'
 
 # Legal Pages
 privacy_policy:
