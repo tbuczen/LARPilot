@@ -210,20 +210,20 @@ game_map:
 map_location:
   name: "Location Name"
   name_placeholder: "Enter location name (e.g., Main Hall, Forest Clearing)"
-  grid_coordinates: "Grid Coordinates"
-  grid_coordinates_help: "Click on grid cells in the map above to select this location's area"
+  shape: "Marker Shape"
   type: "Location Type"
   type_placeholder: "Select location type..."
-  color: "Location Color"
-  color_help: "Color used to mark this location on the map"
+  color: "Marker Color"
+  color_help: "Color used to display this marker on the map (overrides tag color if set)"
   capacity: "Capacity"
   capacity_help: "Maximum number of people this location can hold (optional)"
   place: "Linked Story Place"
   place_placeholder: "Link to existing story place (optional)"
   place_help: "Associate this map location with a story place entity"
-  description: 'Click in grid to select location'
+  tags: "Tags"
+  tags_help: "Categorize this location with tags"
+  description: "Description"
   description_placeholder: "Describe this location and its purpose"
-
 
 # Event Planner
 planning_resource:
@@ -360,6 +360,21 @@ enum:
     outdoor: "Outdoor"
     special: "Special"
     transition: "Transition"
+  marker_shape:
+    dot: "Dot"
+    circle: "Circle"
+    square: "Square"
+    diamond: "Diamond"
+    triangle: "Triangle"
+    house: "House"
+    arrow_up: "Arrow Up"
+    arrow_down: "Arrow Down"
+    arrow_left: "Arrow Left"
+    arrow_right: "Arrow Right"
+    star: "Star"
+    flag: "Flag"
+    pin: "Pin"
+    cross: "Cross"
 gallery:
   title: "Gallery Title"
   title_placeholder: "e.g., LARP Photos - Day 1"

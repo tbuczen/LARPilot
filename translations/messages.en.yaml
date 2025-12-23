@@ -476,6 +476,21 @@ larp:
     no_image: 'No map image uploaded'
     locations: 'Map Locations'
     location_select_help: 'Click on grid cells to select the area for this location'
+    location_info: 'Location Information'
+    marker_position: 'Marker Position'
+    click_to_place_marker: 'Click on the map to place the marker. Drag to reposition.'
+    center_marker: 'Center Marker'
+    fit_image: 'Fit to View'
+    no_image_uploaded: 'No map image has been uploaded yet. Please upload an image first.'
+    tag:
+      singular: 'Map Tag'
+      plural: 'Map Tags'
+      list: 'Map Tags'
+      create: 'Create Map Tag'
+      edit: 'Edit Map Tag'
+      default_shape: 'Default Shape'
+      locations_count: 'Locations'
+      preview: 'Tag Preview'
 
   google_drive_folders:
     title: "Google Drive Folders"

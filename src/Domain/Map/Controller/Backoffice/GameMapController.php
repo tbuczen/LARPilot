@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Map\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
@@ -106,16 +108,20 @@ class GameMapController extends BaseController
     {
         $locations = $locationRepository->findByMap($map);
 
-        // Serialize locations for JavaScript with all required fields
         $locationsData = array_map(function (MapLocation $location) {
+            $tagNames = $location->getTags()->map(fn ($tag) => $tag->getTitle())->toArray();
+
             return [
                 'id' => $location->getId()->toString(),
                 'name' => $location->getName(),
-                'gridCoordinates' => $location->getGridCoordinates(),
-                'color' => $location->getColor(),
+                'positionX' => $location->getPositionX(),
+                'positionY' => $location->getPositionY(),
+                'shape' => $location->getShape()->value,
+                'color' => $location->getEffectiveColor(),
                 'type' => $location->getType()?->value,
                 'capacity' => $location->getCapacity(),
                 'description' => $location->getDescription(),
+                'tags' => $tagNames,
             ];
         }, $locations);
 
@@ -155,12 +161,6 @@ class GameMapController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Handle gridCoordinates JSON conversion
-            $coordinatesData = $form->get('gridCoordinates')->getData();
-            if (is_string($coordinatesData)) {
-                $location->setGridCoordinates(json_decode($coordinatesData, true) ?? []);
-            }
-
             $locationRepository->save($location);
             $this->addFlash('success', $this->translator->trans('success_save'));
 

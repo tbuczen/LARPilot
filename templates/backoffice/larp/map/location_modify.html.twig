@@ -1,5 +1,7 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 
+{% import 'macros/ui_components.html.twig' as ui %}
+
 {% block larp_title %}{{ 'larp.map.location_modify'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
@@ -15,33 +17,89 @@
             <p class="mb-0">{{ 'larp.map.on_map'|trans }}: {{ map.name }}</p>
         </div>
         <div class="card-body">
-            {% if map.imageFile %}
-                <div class="mb-4"
-                     data-controller="leaflet-map-editor"
-                     data-leaflet-map-editor-image-url-value="{{ map.imagePath }}"
-                     data-leaflet-map-editor-grid-rows-value="{{ map.gridRows }}"
-                     data-leaflet-map-editor-grid-columns-value="{{ map.gridColumns }}"
-                     data-leaflet-map-editor-grid-opacity-value="{{ map.gridOpacity }}"
-                     data-leaflet-map-editor-grid-visible-value="{{ map.isGridVisible ? 'true' : 'false' }}"
-                     data-leaflet-map-editor-coordinates-target-value="map_location_gridCoordinates">
-                    <div id="map-editor" style="height: 500px; width: 100%; border: 1px solid #ddd;" class="mb-3"></div>
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i>
-                        {{ 'larp.map.location_select_help'|trans }}
-                    </div>
-                </div>
-            {% endif %}
-
             {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <div class="d-flex gap-2 mt-3">
-                <button type="submit" class="btn btn-primary">
-                    {{ 'save'|trans }}
-                </button>
-                <a href="{{ path('backoffice_larp_map_view', { larp: larp.id, map: map.id }) }}" class="btn btn-secondary">
-                    {{ 'cancel'|trans }}
-                </a>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="mb-3">{{ 'larp.map.location_info'|trans }}</h5>
+
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.shape) }}
+                    {{ form_row(form.color) }}
+                    {{ form_row(form.type) }}
+                    {% if form.tags is defined %}
+                        {{ form_row(form.tags) }}
+                    {% endif %}
+                    {{ form_row(form.capacity) }}
+                    {% if form.place is defined %}
+                        {{ form_row(form.place) }}
+                    {% endif %}
+                    {{ form_row(form.description) }}
+                </div>
+
+                <div class="col-md-6">
+                    <h5 class="mb-3">
+                        <i class="bi bi-geo-alt me-2"></i>{{ 'larp.map.marker_position'|trans }}
+                    </h5>
+
+                    {% if map.imageFile %}
+                        <div data-controller="map-marker-editor"
+                             data-map-marker-editor-image-url-value="{{ map.imagePath }}"
+                             data-map-marker-editor-position-x-value="{{ location.positionX|default(50) }}"
+                             data-map-marker-editor-position-y-value="{{ location.positionY|default(50) }}"
+                             data-map-marker-editor-shape-value="{{ location.shape.value|default('dot') }}"
+                             data-map-marker-editor-color-value="{{ location.color|default('#3388ff') }}">
+
+                            <div class="map-editor-container border rounded mb-3"
+                                 data-map-marker-editor-target="container"
+                                 style="height: 400px; width: 100%; position: relative; overflow: hidden; cursor: crosshair;">
+                            </div>
+
+                            <div class="alert alert-info small">
+                                <i class="bi bi-info-circle me-1"></i>
+                                {{ 'larp.map.click_to_place_marker'|trans }}
+                            </div>
+
+                            <div class="d-flex gap-2 mb-3">
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        data-action="click->map-marker-editor#centerMarker">
+                                    <i class="bi bi-bullseye me-1"></i>
+                                    {{ 'larp.map.center_marker'|trans }}
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                        data-action="click->map-marker-editor#fitImage">
+                                    <i class="bi bi-arrows-fullscreen me-1"></i>
+                                    {{ 'larp.map.fit_image'|trans }}
+                                </button>
+                            </div>
+
+                            <div class="row small text-muted">
+                                <div class="col-6">
+                                    <strong>X:</strong> <span data-map-marker-editor-target="displayX">{{ location.positionX|default(50)|number_format(2) }}</span>%
+                                </div>
+                                <div class="col-6">
+                                    <strong>Y:</strong> <span data-map-marker-editor-target="displayY">{{ location.positionY|default(50)|number_format(2) }}</span>%
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            {{ 'larp.map.no_image_uploaded'|trans }}
+                        </div>
+                    {% endif %}
+
+                    {{ form_widget(form.positionX) }}
+                    {{ form_widget(form.positionY) }}
+                </div>
             </div>
+
+            {{ ui.form_actions(
+                isNew ? 'create' : 'save',
+                'bi-check-circle',
+                path('backoffice_larp_map_view', { larp: larp.id, map: map.id })
+            ) }}
+
             {{ form_end(form) }}
         </div>
     </div>

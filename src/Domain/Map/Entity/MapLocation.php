@@ -1,13 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Map\Entity;
 
+use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Entity\Trait\CreatorAwareInterface;
 use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
 use App\Domain\Map\Entity\Enum\LocationType;
+use App\Domain\Map\Entity\Enum\MarkerShape;
 use App\Domain\Map\Repository\MapLocationRepository;
 use App\Domain\StoryObject\Entity\Place;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
@@ -29,11 +35,22 @@ class MapLocation implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\JoinColumn(nullable: true)]
     private ?Place $place = null;
 
+    /** @var Collection<int, Tag> */
+    #[ORM\ManyToMany(targetEntity: Tag::class)]
+    #[ORM\JoinTable(name: 'map_location_tags')]
+    private Collection $tags;
+
     #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column(type: Types::JSON)]
-    private array $gridCoordinates = [];
+    #[ORM\Column(type: Types::DECIMAL, precision: 8, scale: 4)]
+    private string $positionX = '0';
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 8, scale: 4)]
+    private string $positionY = '0';
+
+    #[ORM\Column(length: 50, enumType: MarkerShape::class)]
+    private MarkerShape $shape = MarkerShape::DOT;
 
     #[ORM\Column(length: 7, nullable: true)]
     private ?string $color = null;
@@ -50,6 +67,7 @@ class MapLocation implements Timestampable, CreatorAwareInterface, \Stringable
     public function __construct()
     {
         $this->id = Uuid::v4();
+        $this->tags = new ArrayCollection();
     }
 
     public function getMap(): ?GameMap
@@ -74,6 +92,30 @@ class MapLocation implements Timestampable, CreatorAwareInterface, \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -85,14 +127,36 @@ class MapLocation implements Timestampable, CreatorAwareInterface, \Stringable
         return $this;
     }
 
-    public function getGridCoordinates(): array
+    public function getPositionX(): float
     {
-        return $this->gridCoordinates;
+        return (float) $this->positionX;
     }
 
-    public function setGridCoordinates(array $gridCoordinates): self
+    public function setPositionX(float $positionX): self
     {
-        $this->gridCoordinates = $gridCoordinates;
+        $this->positionX = (string) $positionX;
+        return $this;
+    }
+
+    public function getPositionY(): float
+    {
+        return (float) $this->positionY;
+    }
+
+    public function setPositionY(float $positionY): self
+    {
+        $this->positionY = (string) $positionY;
+        return $this;
+    }
+
+    public function getShape(): MarkerShape
+    {
+        return $this->shape;
+    }
+
+    public function setShape(MarkerShape $shape): self
+    {
+        $this->shape = $shape;
         return $this;
     }
 
@@ -145,8 +209,13 @@ class MapLocation implements Timestampable, CreatorAwareInterface, \Stringable
         return $this->name;
     }
 
-    public function getGridCoordinatesString(): string
+    public function getEffectiveColor(): string
     {
-        return implode(', ', $this->gridCoordinates);
+        return $this->color ?? '#3388ff';
+    }
+
+    public function getEffectiveShape(): MarkerShape
+    {
+        return $this->shape;
     }
 }

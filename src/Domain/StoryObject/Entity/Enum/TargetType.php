@@ -36,6 +36,7 @@ enum TargetType: string
     case Place = 'place'; // a location in the larp world, can be a place of interest, a quest location, etc.
     case Relation = 'relation'; // describes relation between players/factions, can be anything starting from friendship, family to rivalry
     case Tag = 'tag';
+    case MapLocation = 'map_location'; // a location on a game map, used for tagging map markers
 
     //Both storyline -> threads -> events and quests can have a decision tree
     public function getEntityClass(): string
@@ -50,6 +51,8 @@ enum TargetType: string
             self::Item => Item::class,
             self::Place => Place::class,
             self::Tag => Tag::class,
+            // Use FQCN string to avoid cross-domain import
+            self::MapLocation => 'App\\Domain\\Map\\Entity\\MapLocation',
         };
     }
 

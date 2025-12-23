@@ -192,7 +192,8 @@
                 'bi-check-circle',
                 path('backoffice_larp_map_list', { larp: larp.id })
             ) }}
-            {{ form_end(form) }}
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
         </div>
     </div>
 {% endblock %}
