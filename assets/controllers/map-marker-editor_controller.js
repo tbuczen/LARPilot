@@ -1,10 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.min.css';
 
 /**
- * Map Marker Editor Controller
+ * Map Marker Editor Controller (Leaflet version)
  *
  * Allows placing a single marker on a map image using percentage-based coordinates.
- * The marker can be dragged to reposition.
+ * Uses Leaflet for professional map interactions with zoom/pan.
  */
 export default class extends Controller {
     static values = {
@@ -22,78 +24,96 @@ export default class extends Controller {
     }
 
     disconnect() {
-        if (this.resizeObserver) {
-            this.resizeObserver.disconnect();
+        if (this.map) {
+            this.map.remove();
         }
     }
 
     initMap() {
         const container = this.containerTarget;
 
-        // Create image element
-        this.imageElement = document.createElement('img');
-        this.imageElement.src = this.imageUrlValue;
-        this.imageElement.style.cssText = 'max-width: 100%; max-height: 100%; object-fit: contain; display: block; margin: auto;';
-
-        // Create wrapper for image and marker
-        this.wrapper = document.createElement('div');
-        this.wrapper.style.cssText = 'position: relative; display: inline-block; max-width: 100%; max-height: 100%;';
-        this.wrapper.appendChild(this.imageElement);
-
+        // Create map div
+        this.mapDiv = document.createElement('div');
+        this.mapDiv.style.cssText = 'width: 100%; height: 100%;';
         container.innerHTML = '';
-        container.style.display = 'flex';
-        container.style.alignItems = 'center';
-        container.style.justifyContent = 'center';
-        container.appendChild(this.wrapper);
+        container.appendChild(this.mapDiv);
 
-        this.imageElement.onload = () => {
+        // Load image to get dimensions
+        const img = new Image();
+        img.src = this.imageUrlValue;
+
+        img.onload = () => {
+            this.imageWidth = img.width;
+            this.imageHeight = img.height;
+            const bounds = [[0, 0], [img.height, img.width]];
+
+            // Initialize Leaflet map
+            this.map = L.map(this.mapDiv, {
+                crs: L.CRS.Simple,
+                minZoom: -3,
+                maxZoom: 3,
+                center: [img.height / 2, img.width / 2],
+                zoom: 0
+            });
+
+            // Add image overlay
+            L.imageOverlay(this.imageUrlValue, bounds).addTo(this.map);
+            this.map.fitBounds(bounds);
+
+            // Create the marker
             this.createMarker();
-            this.updateMarkerPosition();
-            this.setupClickHandler();
-        };
 
-        // Handle resize
-        this.resizeObserver = new ResizeObserver(() => {
-            this.updateMarkerPosition();
-        });
-        this.resizeObserver.observe(container);
+            // Setup click handler on map
+            this.map.on('click', (e) => this.onMapClick(e));
+        };
     }
 
     createMarker() {
-        this.marker = document.createElement('div');
-        this.marker.className = 'map-marker';
-        this.marker.style.cssText = `
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            transform: translate(-50%, -50%);
-            cursor: grab;
-            z-index: 100;
-            pointer-events: auto;
-        `;
-
-        this.updateMarkerAppearance();
-        this.wrapper.appendChild(this.marker);
-
-        // Setup drag handling
-        this.setupDragHandler();
-    }
-
-    updateMarkerAppearance() {
-        if (!this.marker) return;
-
         const shape = this.hasShapeTarget ? this.shapeTarget.value : this.shapeValue;
         const color = this.hasColorTarget ? this.colorTarget.value : this.colorValue;
 
-        // Create SVG based on shape
+        // Convert percentage to pixel coordinates
+        const x = (this.positionXValue / 100) * this.imageWidth;
+        const y = (this.positionYValue / 100) * this.imageHeight;
+
+        // Create custom icon
+        const icon = this.createMarkerIcon(shape, color);
+
+        // Create draggable marker
+        this.marker = L.marker([y, x], {
+            icon: icon,
+            draggable: true
+        }).addTo(this.map);
+
+        // Handle drag events
+        this.marker.on('drag', (e) => this.onMarkerDrag(e));
+        this.marker.on('dragend', (e) => this.onMarkerDrag(e));
+
+        this.updateDisplays();
+    }
+
+    createMarkerIcon(shape, color) {
         const svgContent = this.getSvgForShape(shape, color);
-        this.marker.innerHTML = svgContent;
+
+        return L.divIcon({
+            className: 'map-marker-editor-icon',
+            html: `<div style="
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            ">${svgContent}</div>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+        });
     }
 
     getSvgForShape(shape, color) {
         const shapes = {
             dot: `<circle cx="12" cy="12" r="8" fill="${color}" stroke="white" stroke-width="2"/>`,
-            circle: `<circle cx="12" cy="12" r="10" fill="none" stroke="${color}" stroke-width="3"/>`,
+            circle: `<circle cx="12" cy="12" r="10" fill="${color}" fill-opacity="0.3" stroke="${color}" stroke-width="3"/>`,
             square: `<rect x="2" y="2" width="20" height="20" fill="${color}" stroke="white" stroke-width="2"/>`,
             diamond: `<polygon points="12,2 22,12 12,22 2,12" fill="${color}" stroke="white" stroke-width="2"/>`,
             triangle: `<polygon points="12,2 22,22 2,22" fill="${color}" stroke="white" stroke-width="2"/>`,
@@ -104,7 +124,7 @@ export default class extends Controller {
             arrow_right: `<path d="M22,12L10,22v-6H2V8h8V2z" fill="${color}" stroke="white" stroke-width="2"/>`,
             star: `<polygon points="12,2 15,8.5 22,9.5 17,15 18.2,22 12,18 5.8,22 7,15 2,9.5 9,8.5" fill="${color}" stroke="white" stroke-width="2"/>`,
             flag: `<path d="M4,2v20h2v-8h12l-4-6l4-6z" fill="${color}" stroke="white" stroke-width="2"/>`,
-            pin: `<path d="M12,2C8,2 5,5 5,9c0,5 7,13 7,13s7-8 7-13c0-4-3-7-7-7z" fill="${color}" stroke="white" stroke-width="2"/>`,
+            pin: `<path d="M12,2C8,2 5,5 5,9c0,5 7,13 7,13s7-8 7-13c0-4-3-7-7-7z" fill="${color}" stroke="white" stroke-width="2"/><circle cx="12" cy="9" r="3" fill="white"/>`,
             cross: `<path d="M4,8h6V2h4v6h6v4h-6v6h-4v-6H4z" fill="${color}" stroke="white" stroke-width="2"/>`
         };
 
@@ -113,18 +133,44 @@ export default class extends Controller {
         return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${shapeSvg}</svg>`;
     }
 
-    updateMarkerPosition() {
-        if (!this.marker || !this.imageElement) return;
+    updateMarkerAppearance() {
+        if (!this.marker) return;
 
-        const imgWidth = this.imageElement.offsetWidth;
-        const imgHeight = this.imageElement.offsetHeight;
+        const shape = this.hasShapeTarget ? this.shapeTarget.value : this.shapeValue;
+        const color = this.hasColorTarget ? this.colorTarget.value : this.colorValue;
 
-        const x = (this.positionXValue / 100) * imgWidth;
-        const y = (this.positionYValue / 100) * imgHeight;
+        const icon = this.createMarkerIcon(shape, color);
+        this.marker.setIcon(icon);
+    }
 
-        this.marker.style.left = `${x}px`;
-        this.marker.style.top = `${y}px`;
+    onMapClick(e) {
+        // Convert pixel coordinates to percentage
+        const x = (e.latlng.lng / this.imageWidth) * 100;
+        const y = (e.latlng.lat / this.imageHeight) * 100;
 
+        this.positionXValue = Math.max(0, Math.min(100, x));
+        this.positionYValue = Math.max(0, Math.min(100, y));
+
+        // Move marker to new position
+        const newLat = (this.positionYValue / 100) * this.imageHeight;
+        const newLng = (this.positionXValue / 100) * this.imageWidth;
+        this.marker.setLatLng([newLat, newLng]);
+
+        this.updateFormFields();
+        this.updateDisplays();
+    }
+
+    onMarkerDrag(e) {
+        const latlng = e.target.getLatLng();
+
+        // Convert pixel coordinates to percentage
+        const x = (latlng.lng / this.imageWidth) * 100;
+        const y = (latlng.lat / this.imageHeight) * 100;
+
+        this.positionXValue = Math.max(0, Math.min(100, x));
+        this.positionYValue = Math.max(0, Math.min(100, y));
+
+        this.updateFormFields();
         this.updateDisplays();
     }
 
@@ -146,53 +192,7 @@ export default class extends Controller {
         }
     }
 
-    setupClickHandler() {
-        this.imageElement.style.cursor = 'crosshair';
-        this.imageElement.addEventListener('click', (e) => {
-            const rect = this.imageElement.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-            this.positionXValue = Math.max(0, Math.min(100, x));
-            this.positionYValue = Math.max(0, Math.min(100, y));
-
-            this.updateMarkerPosition();
-            this.updateFormFields();
-        });
-    }
-
-    setupDragHandler() {
-        let isDragging = false;
-
-        this.marker.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            this.marker.style.cursor = 'grabbing';
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-
-            const rect = this.imageElement.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-            this.positionXValue = Math.max(0, Math.min(100, x));
-            this.positionYValue = Math.max(0, Math.min(100, y));
-
-            this.updateMarkerPosition();
-            this.updateFormFields();
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                this.marker.style.cursor = 'grab';
-            }
-        });
-    }
-
-    // Actions
+    // Actions triggered by form field changes
     onShapeChange() {
         this.updateMarkerAppearance();
     }
@@ -204,13 +204,19 @@ export default class extends Controller {
     centerMarker() {
         this.positionXValue = 50;
         this.positionYValue = 50;
-        this.updateMarkerPosition();
+
+        const newLat = (this.positionYValue / 100) * this.imageHeight;
+        const newLng = (this.positionXValue / 100) * this.imageWidth;
+        this.marker.setLatLng([newLat, newLng]);
+
         this.updateFormFields();
+        this.updateDisplays();
     }
 
     fitImage() {
-        // Reset zoom/pan if we add that feature later
-        // For now, just center the marker
-        this.updateMarkerPosition();
+        if (this.map && this.imageWidth && this.imageHeight) {
+            const bounds = [[0, 0], [this.imageHeight, this.imageWidth]];
+            this.map.fitBounds(bounds);
+        }
     }
 }

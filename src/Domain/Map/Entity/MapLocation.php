@@ -218,4 +218,31 @@ class MapLocation implements Timestampable, CreatorAwareInterface, \Stringable
     {
         return $this->shape;
     }
+
+    /**
+     * Get grid coordinates string based on position percentage and map grid settings.
+     * Returns format like "A1", "B2", etc.
+     */
+    public function getGridCoordinatesString(): string
+    {
+        if (!$this->map) {
+            return '-';
+        }
+
+        $cols = $this->map->getGridColumns();
+        $rows = $this->map->getGridRows();
+
+        // Convert percentage to grid cell
+        $col = (int) floor(($this->getPositionX() / 100) * $cols);
+        $row = (int) floor(($this->getPositionY() / 100) * $rows);
+
+        // Clamp to valid range
+        $col = max(0, min($cols - 1, $col));
+        $row = max(0, min($rows - 1, $row));
+
+        // Convert to letter + number format (A1, B2, etc.)
+        $letter = chr(65 + $col); // A, B, C, ...
+
+        return sprintf('%s%d', $letter, $row + 1);
+    }
 }

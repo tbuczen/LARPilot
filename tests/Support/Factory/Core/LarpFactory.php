@@ -5,6 +5,7 @@ namespace Tests\Support\Factory\Core;
 use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Larp;
+use Tests\Support\Factory\Account\UserFactory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 
@@ -30,6 +31,7 @@ final class LarpFactory extends PersistentProxyObjectFactory
             'maxCharacterChoices' => 3,
             'minThreadsPerCharacter' => 2,
             'marking' => 'DRAFT',
+            'createdBy' => UserFactory::new(),
         ];
     }
 

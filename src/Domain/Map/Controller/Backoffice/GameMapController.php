@@ -13,6 +13,8 @@ use App\Domain\Map\Form\GameMapType;
 use App\Domain\Map\Form\MapLocationType;
 use App\Domain\Map\Repository\GameMapRepository;
 use App\Domain\Map\Repository\MapLocationRepository;
+use App\Domain\Map\Repository\StaffPositionRepository;
+use App\Domain\Map\Service\StaffPositionService;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,8 +106,14 @@ class GameMapController extends BaseController
     }
 
     #[Route('{map}/view', name: 'view', methods: ['GET'])]
-    public function view(Larp $larp, GameMap $map, MapLocationRepository $locationRepository): Response
-    {
+    public function view(
+        Larp $larp,
+        GameMap $map,
+        MapLocationRepository $locationRepository,
+        StaffPositionRepository $staffPositionRepository,
+        StaffPositionService $staffPositionService,
+        \App\Domain\Core\Repository\LarpParticipantRepository $participantRepository,
+    ): Response {
         $locations = $locationRepository->findByMap($map);
 
         $locationsData = array_map(function (MapLocation $location) {
@@ -125,11 +133,35 @@ class GameMapController extends BaseController
             ];
         }, $locations);
 
+        // Get all staff positions for the map (backoffice users see all)
+        $staffPositions = $staffPositionRepository->findByMap($map);
+        $staffPositionsData = array_map(
+            fn ($pos) => $staffPositionService->positionToArray($pos),
+            $staffPositions
+        );
+
+        // Get current user's participant and position
+        $user = $this->getUser();
+        $participant = $participantRepository->findOneBy(['user' => $user, 'larp' => $larp]);
+        $myPosition = null;
+        $canUpdatePosition = false;
+
+        if ($participant) {
+            $canUpdatePosition = $staffPositionService->canUpdatePosition($participant);
+            if ($canUpdatePosition) {
+                $myPosition = $staffPositionService->getPosition($participant, $map);
+            }
+        }
+
         return $this->render('backoffice/larp/map/view.html.twig', [
             'larp' => $larp,
             'map' => $map,
             'locations' => $locations,
             'locationsData' => $locationsData,
+            'staffPositions' => $staffPositions,
+            'staffPositionsData' => $staffPositionsData,
+            'myPosition' => $myPosition,
+            'canUpdatePosition' => $canUpdatePosition,
         ]);
     }
 

@@ -9,10 +9,12 @@ export default class extends Controller {
         gridColumns: Number,
         gridOpacity: Number,
         gridVisible: Boolean,
-        locations: Array
+        locations: Array,
+        staffPositions: Array
     };
 
     connect() {
+        this.staffPositionsLayer = null;
         this.initMap();
     }
 
@@ -27,6 +29,8 @@ export default class extends Controller {
         img.src = this.imageUrlValue;
 
         img.onload = () => {
+            this.imageWidth = img.width;
+            this.imageHeight = img.height;
             const bounds = [[0, 0], [img.height, img.width]];
 
             this.map = L.map('map', {
@@ -48,7 +52,21 @@ export default class extends Controller {
 
             // Add location markers
             this.addLocationMarkers(img.width, img.height);
+
+            // Add staff position markers if present
+            if (this.hasStaffPositionsValue && this.staffPositionsValue.length > 0) {
+                this.addStaffPositionMarkers();
+            }
         };
+    }
+
+    toggleStaffPositions(event) {
+        if (event.target.checked) {
+            this.addStaffPositionMarkers();
+        } else if (this.staffPositionsLayer) {
+            this.staffPositionsLayer.remove();
+            this.staffPositionsLayer = null;
+        }
     }
 
     drawGrid(width, height) {
@@ -102,64 +120,73 @@ export default class extends Controller {
             return;
         }
 
-        const cellWidth = width / this.gridColumnsValue;
-        const cellHeight = height / this.gridRowsValue;
-
         this.locationsValue.forEach(location => {
-            if (!location.gridCoordinates || location.gridCoordinates.length === 0) {
-                return;
-            }
-
             const markerColor = location.color || '#3388ff';
+            const shape = location.shape || 'dot';
 
-            // Highlight each grid cell for this location
-            let totalX = 0, totalY = 0;
-            location.gridCoordinates.forEach(coord => {
-                const { row, col } = this.parseCellCoordinate(coord);
+            // Convert percentage position to pixel coordinates
+            const x = (location.positionX / 100) * width;
+            const y = (location.positionY / 100) * height;
 
-                // Calculate cell bounds
-                const x1 = col * cellWidth;
-                const y1 = row * cellHeight;
-                const x2 = x1 + cellWidth;
-                const y2 = y1 + cellHeight;
-
-                // Draw highlighted rectangle for this cell
-                L.rectangle([[y1, x1], [y2, x2]], {
-                    color: markerColor,
-                    fillColor: markerColor,
-                    fillOpacity: 0.3,
-                    weight: 2
-                }).addTo(this.map);
-
-                // Accumulate center coordinates
-                totalX += col * cellWidth + cellWidth / 2;
-                totalY += row * cellHeight + cellHeight / 2;
-            });
-
-            const centerX = totalX / location.gridCoordinates.length;
-            const centerY = totalY / location.gridCoordinates.length;
-
-            // Create marker with custom icon at the center
-            const marker = L.marker([centerY, centerX], {
-                icon: L.divIcon({
-                    className: 'location-marker',
-                    html: `<div style="background-color: ${markerColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>`,
-                    iconSize: [20, 20]
-                })
+            // Create marker with shaped icon
+            const marker = L.marker([y, x], {
+                icon: this.createShapedIcon(shape, markerColor)
             }).addTo(this.map);
 
             // Add popup with location info
-            let popupContent = `<strong>${location.name}</strong><br>`;
+            let popupContent = `<strong>${location.name}</strong>`;
             if (location.type) {
-                popupContent += `Type: ${location.type}<br>`;
+                popupContent += `<br>Type: ${location.type}`;
             }
             if (location.capacity) {
-                popupContent += `Capacity: ${location.capacity}<br>`;
+                popupContent += `<br>Capacity: ${location.capacity}`;
             }
-            popupContent += `Cells: ${location.gridCoordinates.join(', ')}`;
+            if (location.description) {
+                popupContent += `<br><small>${location.description}</small>`;
+            }
 
             marker.bindPopup(popupContent);
         });
+    }
+
+    createShapedIcon(shape, color) {
+        const svgContent = this.getSvgForShape(shape, color);
+
+        return L.divIcon({
+            className: 'location-marker-icon',
+            html: `<div style="
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            ">${svgContent}</div>`,
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+        });
+    }
+
+    getSvgForShape(shape, color) {
+        const shapes = {
+            dot: `<circle cx="12" cy="12" r="8" fill="${color}" stroke="white" stroke-width="2"/>`,
+            circle: `<circle cx="12" cy="12" r="10" fill="${color}" fill-opacity="0.3" stroke="${color}" stroke-width="3"/>`,
+            square: `<rect x="2" y="2" width="20" height="20" fill="${color}" stroke="white" stroke-width="2"/>`,
+            diamond: `<polygon points="12,2 22,12 12,22 2,12" fill="${color}" stroke="white" stroke-width="2"/>`,
+            triangle: `<polygon points="12,2 22,22 2,22" fill="${color}" stroke="white" stroke-width="2"/>`,
+            house: `<path d="M12,2L2,10v12h8v-6h4v6h8V10z" fill="${color}" stroke="white" stroke-width="2"/>`,
+            arrow_up: `<path d="M12,2L22,14H16v8H8v-8H2z" fill="${color}" stroke="white" stroke-width="2"/>`,
+            arrow_down: `<path d="M12,22L2,10H8V2h8v8h6z" fill="${color}" stroke="white" stroke-width="2"/>`,
+            arrow_left: `<path d="M2,12L14,2v6h8v8h-8v6z" fill="${color}" stroke="white" stroke-width="2"/>`,
+            arrow_right: `<path d="M22,12L10,22v-6H2V8h8V2z" fill="${color}" stroke="white" stroke-width="2"/>`,
+            star: `<polygon points="12,2 15,8.5 22,9.5 17,15 18.2,22 12,18 5.8,22 7,15 2,9.5 9,8.5" fill="${color}" stroke="white" stroke-width="2"/>`,
+            flag: `<path d="M4,2v20h2v-8h12l-4-6l4-6z" fill="${color}" stroke="white" stroke-width="2"/>`,
+            pin: `<path d="M12,2C8,2 5,5 5,9c0,5 7,13 7,13s7-8 7-13c0-4-3-7-7-7z" fill="${color}" stroke="white" stroke-width="2"/><circle cx="12" cy="9" r="3" fill="white"/>`,
+            cross: `<path d="M4,8h6V2h4v6h6v4h-6v6h-4v-6H4z" fill="${color}" stroke="white" stroke-width="2"/>`
+        };
+
+        const shapeSvg = shapes[shape] || shapes.dot;
+        return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${shapeSvg}</svg>`;
     }
 
     getCellLabel(row, col) {
@@ -177,5 +204,92 @@ export default class extends Controller {
         const col = match[1].charCodeAt(0) - 65;
         const row = parseInt(match[2]) - 1;
         return { row, col };
+    }
+
+    addStaffPositionMarkers() {
+        if (!this.staffPositionsValue || this.staffPositionsValue.length === 0) {
+            return;
+        }
+
+        // Remove existing layer if any
+        if (this.staffPositionsLayer) {
+            this.staffPositionsLayer.remove();
+        }
+
+        this.staffPositionsLayer = L.layerGroup().addTo(this.map);
+
+        const cellWidth = this.imageWidth / this.gridColumnsValue;
+        const cellHeight = this.imageHeight / this.gridRowsValue;
+
+        this.staffPositionsValue.forEach(position => {
+            const { row, col } = this.parseCellCoordinate(position.gridCell);
+            const centerX = col * cellWidth + cellWidth / 2;
+            const centerY = row * cellHeight + cellHeight / 2;
+
+            // Determine marker color based on role
+            const color = this.getRoleColor(position.roles);
+
+            // Create marker
+            const marker = L.marker([centerY, centerX], {
+                icon: L.divIcon({
+                    className: 'staff-position-marker',
+                    html: `
+                        <div style="
+                            background-color: ${color};
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 50%;
+                            border: 2px solid white;
+                            box-shadow: 0 0 6px rgba(0,0,0,0.5);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        ">
+                            <i class="bi bi-person-fill" style="color: white; font-size: 14px;"></i>
+                        </div>
+                    `,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                })
+            }).addTo(this.staffPositionsLayer);
+
+            // Create popup content
+            let popupContent = `
+                <div style="min-width: 150px;">
+                    <strong>${position.participantName}</strong><br>
+                    <small class="text-muted">
+                        ${position.roles.map(r => r.replace('ROLE_', '').toLowerCase()).join(', ')}
+                    </small><br>
+                    <strong>${position.gridCell}</strong>
+                    ${position.statusNote ? `<br><em>${position.statusNote}</em>` : ''}
+                    <br><small class="text-muted">Updated: ${position.updatedAt}</small>
+                </div>
+            `;
+
+            marker.bindPopup(popupContent);
+        });
+    }
+
+    getRoleColor(roles) {
+        // Color coding by role priority
+        if (roles.includes('ROLE_ORGANIZER')) {
+            return '#dc3545'; // Red - main organizer
+        }
+        if (roles.includes('ROLE_PERSON_OF_TRUST')) {
+            return '#28a745'; // Green - trust person
+        }
+        if (roles.includes('ROLE_PHOTOGRAPHER')) {
+            return '#17a2b8'; // Cyan - photographer
+        }
+        if (roles.includes('ROLE_MEDIC')) {
+            return '#ffc107'; // Yellow - medic
+        }
+        if (roles.includes('ROLE_GAME_MASTER')) {
+            return '#6f42c1'; // Purple - game master
+        }
+        if (roles.includes('ROLE_STAFF')) {
+            return '#fd7e14'; // Orange - staff
+        }
+        return '#6c757d'; // Gray - other
     }
 }

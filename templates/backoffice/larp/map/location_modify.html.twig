@@ -19,6 +19,15 @@
         <div class="card-body">
             {{ form_start(form) }}
 
+            {% if map.imageFile %}
+            <div data-controller="map-marker-editor"
+                 data-map-marker-editor-image-url-value="{{ map.imagePath }}"
+                 data-map-marker-editor-position-x-value="{{ location.positionX|default(50) }}"
+                 data-map-marker-editor-position-y-value="{{ location.positionY|default(50) }}"
+                 data-map-marker-editor-shape-value="{{ location.shape.value|default('dot') }}"
+                 data-map-marker-editor-color-value="{{ location.color|default('#3388ff') }}">
+            {% endif %}
+
             <div class="row">
                 <div class="col-md-6">
                     <h5 class="mb-3">{{ 'larp.map.location_info'|trans }}</h5>
@@ -43,43 +52,35 @@
                     </h5>
 
                     {% if map.imageFile %}
-                        <div data-controller="map-marker-editor"
-                             data-map-marker-editor-image-url-value="{{ map.imagePath }}"
-                             data-map-marker-editor-position-x-value="{{ location.positionX|default(50) }}"
-                             data-map-marker-editor-position-y-value="{{ location.positionY|default(50) }}"
-                             data-map-marker-editor-shape-value="{{ location.shape.value|default('dot') }}"
-                             data-map-marker-editor-color-value="{{ location.color|default('#3388ff') }}">
+                        <div class="map-editor-container border rounded mb-3"
+                             data-map-marker-editor-target="container"
+                             style="height: 400px; width: 100%; position: relative; overflow: hidden; cursor: crosshair;">
+                        </div>
 
-                            <div class="map-editor-container border rounded mb-3"
-                                 data-map-marker-editor-target="container"
-                                 style="height: 400px; width: 100%; position: relative; overflow: hidden; cursor: crosshair;">
+                        <div class="alert alert-info small">
+                            <i class="bi bi-info-circle me-1"></i>
+                            {{ 'larp.map.click_to_place_marker'|trans }}
+                        </div>
+
+                        <div class="d-flex gap-2 mb-3">
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    data-action="click->map-marker-editor#centerMarker">
+                                <i class="bi bi-bullseye me-1"></i>
+                                {{ 'larp.map.center_marker'|trans }}
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    data-action="click->map-marker-editor#fitImage">
+                                <i class="bi bi-arrows-fullscreen me-1"></i>
+                                {{ 'larp.map.fit_image'|trans }}
+                            </button>
+                        </div>
+
+                        <div class="row small text-muted">
+                            <div class="col-6">
+                                <strong>X:</strong> <span data-map-marker-editor-target="displayX">{{ location.positionX|default(50)|number_format(2) }}</span>%
                             </div>
-
-                            <div class="alert alert-info small">
-                                <i class="bi bi-info-circle me-1"></i>
-                                {{ 'larp.map.click_to_place_marker'|trans }}
-                            </div>
-
-                            <div class="d-flex gap-2 mb-3">
-                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                        data-action="click->map-marker-editor#centerMarker">
-                                    <i class="bi bi-bullseye me-1"></i>
-                                    {{ 'larp.map.center_marker'|trans }}
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                        data-action="click->map-marker-editor#fitImage">
-                                    <i class="bi bi-arrows-fullscreen me-1"></i>
-                                    {{ 'larp.map.fit_image'|trans }}
-                                </button>
-                            </div>
-
-                            <div class="row small text-muted">
-                                <div class="col-6">
-                                    <strong>X:</strong> <span data-map-marker-editor-target="displayX">{{ location.positionX|default(50)|number_format(2) }}</span>%
-                                </div>
-                                <div class="col-6">
-                                    <strong>Y:</strong> <span data-map-marker-editor-target="displayY">{{ location.positionY|default(50)|number_format(2) }}</span>%
-                                </div>
+                            <div class="col-6">
+                                <strong>Y:</strong> <span data-map-marker-editor-target="displayY">{{ location.positionY|default(50)|number_format(2) }}</span>%
                             </div>
                         </div>
                     {% else %}
@@ -93,6 +94,10 @@
                     {{ form_widget(form.positionY) }}
                 </div>
             </div>
+
+            {% if map.imageFile %}
+            </div>
+            {% endif %}
 
             {{ ui.form_actions(
                 isNew ? 'create' : 'save',

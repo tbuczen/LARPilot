@@ -1,14 +1,18 @@
 {% extends 'backoffice/larp/base.html.twig' %}
 {% import 'macros/ui_components.html.twig' as ui %}
 
-{% block larp_title %}{{ 'larp.map.list'|trans }} - {{ larp.title }}{% endblock %}
+{% set staffPositionsMode = app.request.query.get('staff_positions') == '1' %}
+
+{% block larp_title %}{{ staffPositionsMode ? 'staff_position.title'|trans : 'larp.map.list'|trans }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
     <div class="card mt-4">
         {% set actions %}
-            {{ ui.primary_button('create', path('backoffice_larp_map_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {% if not staffPositionsMode %}
+                {{ ui.primary_button('create', path('backoffice_larp_map_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {% endif %}
         {% endset %}
-        {{ ui.card_header('larp.map.plural', actions) }}
+        {{ ui.card_header(staffPositionsMode ? 'staff_position.select_map' : 'larp.map.plural', actions) }}
 
         <div class="card-body p-0">
             {% include 'includes/filter_form.html.twig' with { form: filterForm } %}
@@ -31,7 +35,7 @@
                     {% for map in maps %}
                         <tr>
                             <td>
-                                <a href="{{ path('backoffice_larp_map_view', { larp: larp.id, map: map.id }) }}">
+                                <a href="{{ path('backoffice_larp_map_view', { larp: larp.id, map: map.id }) }}{% if staffPositionsMode %}?staff_positions=1{% endif %}">
                                     {{ map.name }}
                                 </a>
                             </td>
