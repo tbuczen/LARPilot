@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Map\Controller\Backoffice;
 
 use App\Domain\Core\Controller\BaseController;
@@ -11,6 +13,8 @@ use App\Domain\Map\Form\GameMapType;
 use App\Domain\Map\Form\MapLocationType;
 use App\Domain\Map\Repository\GameMapRepository;
 use App\Domain\Map\Repository\MapLocationRepository;
+use App\Domain\Map\Repository\StaffPositionRepository;
+use App\Domain\Map\Service\StaffPositionService;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,28 +106,62 @@ class GameMapController extends BaseController
     }
 
     #[Route('{map}/view', name: 'view', methods: ['GET'])]
-    public function view(Larp $larp, GameMap $map, MapLocationRepository $locationRepository): Response
-    {
+    public function view(
+        Larp $larp,
+        GameMap $map,
+        MapLocationRepository $locationRepository,
+        StaffPositionRepository $staffPositionRepository,
+        StaffPositionService $staffPositionService,
+        \App\Domain\Core\Repository\LarpParticipantRepository $participantRepository,
+    ): Response {
         $locations = $locationRepository->findByMap($map);
 
-        // Serialize locations for JavaScript with all required fields
         $locationsData = array_map(function (MapLocation $location) {
+            $tagNames = $location->getTags()->map(fn ($tag) => $tag->getTitle())->toArray();
+
             return [
                 'id' => $location->getId()->toString(),
                 'name' => $location->getName(),
-                'gridCoordinates' => $location->getGridCoordinates(),
-                'color' => $location->getColor(),
+                'positionX' => $location->getPositionX(),
+                'positionY' => $location->getPositionY(),
+                'shape' => $location->getShape()->value,
+                'color' => $location->getEffectiveColor(),
                 'type' => $location->getType()?->value,
                 'capacity' => $location->getCapacity(),
                 'description' => $location->getDescription(),
+                'tags' => $tagNames,
             ];
         }, $locations);
+
+        // Get all staff positions for the map (backoffice users see all)
+        $staffPositions = $staffPositionRepository->findByMap($map);
+        $staffPositionsData = array_map(
+            fn ($pos) => $staffPositionService->positionToArray($pos),
+            $staffPositions
+        );
+
+        // Get current user's participant and position
+        $user = $this->getUser();
+        $participant = $participantRepository->findOneBy(['user' => $user, 'larp' => $larp]);
+        $myPosition = null;
+        $canUpdatePosition = false;
+
+        if ($participant) {
+            $canUpdatePosition = $staffPositionService->canUpdatePosition($participant);
+            if ($canUpdatePosition) {
+                $myPosition = $staffPositionService->getPosition($participant, $map);
+            }
+        }
 
         return $this->render('backoffice/larp/map/view.html.twig', [
             'larp' => $larp,
             'map' => $map,
             'locations' => $locations,
             'locationsData' => $locationsData,
+            'staffPositions' => $staffPositions,
+            'staffPositionsData' => $staffPositionsData,
+            'myPosition' => $myPosition,
+            'canUpdatePosition' => $canUpdatePosition,
         ]);
     }
 
@@ -155,12 +193,6 @@ class GameMapController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Handle gridCoordinates JSON conversion
-            $coordinatesData = $form->get('gridCoordinates')->getData();
-            if (is_string($coordinatesData)) {
-                $location->setGridCoordinates(json_decode($coordinatesData, true) ?? []);
-            }
-
             $locationRepository->save($location);
             $this->addFlash('success', $this->translator->trans('success_save'));
 

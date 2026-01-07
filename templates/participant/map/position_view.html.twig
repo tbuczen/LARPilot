@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'staff_position.view_title'|trans }} - {{ map.name }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                                <h4 class="mb-0">{{ 'staff_position.view_title'|trans }}</h4>
+                                <small class="text-muted">{{ map.name }} - {{ larp.title }}</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                        data-action="staff-position-view#refresh">
+                                    <i class="bi bi-arrow-clockwise"></i> {{ 'refresh'|trans }}
+                                </button>
+                                <a href="{{ path('participant_staff_position_update', {
+                                    larp: larp.id,
+                                    map: map.id
+                                }) }}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-geo-alt-fill"></i> {{ 'staff_position.update_my_position'|trans }}
+                                </a>
+                                <a href="{{ path('participant_staff_position_index', { larp: larp.id }) }}"
+                                   class="btn btn-secondary btn-sm">
+                                    <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2">
+                        {% if not canViewAll %}
+                            <div class="alert alert-info mb-2">
+                                <i class="bi bi-info-circle"></i>
+                                {{ 'staff_position.limited_visibility'|trans }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-2">
+                            <strong>{{ 'staff_position.active_positions'|trans }}:</strong>
+                            <span class="badge bg-primary">{{ positions|length }}</span>
+                        </div>
+
+                        {% if map.imageFile %}
+                            <div data-controller="staff-position-view"
+                                 data-staff-position-view-image-url-value="{{ map.imagePath }}"
+                                 data-staff-position-view-grid-rows-value="{{ map.gridRows }}"
+                                 data-staff-position-view-grid-columns-value="{{ map.gridColumns }}"
+                                 data-staff-position-view-grid-opacity-value="{{ map.gridOpacity }}"
+                                 data-staff-position-view-positions-value="{{ positionsData|json_encode|e('html_attr') }}"
+                                 data-staff-position-view-api-url-value="{{ path('api_staff_position_list', {
+                                     larp: larp.id,
+                                     map: map.id
+                                 }) }}">
+
+                                <div id="mapContainer" style="height: 60vh; min-height: 300px; width: 100%; border: 1px solid #ddd;"></div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                {{ 'larp.map.no_image'|trans }}
+                            </div>
+                        {% endif %}
+
+                        {% if positions is not empty %}
+                            <div class="mt-3">
+                                <h5>{{ 'staff_position.positions_list'|trans }}</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ 'staff_position.staff_member'|trans }}</th>
+                                                <th>{{ 'staff_position.role'|trans }}</th>
+                                                <th>{{ 'staff_position.cell'|trans }}</th>
+                                                <th>{{ 'staff_position.status'|trans }}</th>
+                                                <th>{{ 'staff_position.updated'|trans }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for position in positions %}
+                                                <tr>
+                                                    <td>{{ position.participant.user.username }}</td>
+                                                    <td>
+                                                        {% for role in position.participant.roles %}
+                                                            <span class="badge bg-secondary">{{ role.value|replace({'ROLE_': ''})|lower }}</span>
+                                                        {% endfor %}
+                                                    </td>
+                                                    <td><strong>{{ position.gridCell }}</strong></td>
+                                                    <td>{{ position.statusNote ?? '-' }}</td>
+                                                    <td>{{ position.positionUpdatedAt|date('H:i') }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info mt-3">
+                                {{ 'staff_position.no_positions'|trans }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

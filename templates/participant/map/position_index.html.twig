@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'staff_position.title'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="mb-0">{{ 'staff_position.select_map'|trans }}</h2>
+                        <small class="text-muted">{{ larp.title }}</small>
+                    </div>
+                    <div class="card-body">
+                        {% if maps is empty %}
+                            <div class="alert alert-info">
+                                {{ 'staff_position.no_maps'|trans }}
+                            </div>
+                        {% else %}
+                            <div class="list-group">
+                                {% for map in maps %}
+                                    <a href="{{ path('participant_staff_position_update', {
+                                        larp: larp.id,
+                                        map: map.id
+                                    }) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">{{ map.name }}</h5>
+                                            {% if map.description %}
+                                                <small class="text-muted">{{ map.description|truncate_words(10) }}</small>
+                                            {% endif %}
+                                        </div>
+                                        <span class="badge bg-secondary">
+                                            {{ map.gridRows }}x{{ map.gridColumns }}
+                                        </span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

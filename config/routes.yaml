@@ -93,6 +93,16 @@ map_backoffice:
   type: attribute
   prefix: /backoffice
 
+map_participant:
+  resource: '../src/Domain/Map/Controller/Participant/'
+  type: attribute
+  prefix: /
+
+map_api:
+  resource: '../src/Domain/Map/Controller/API/'
+  type: attribute
+  prefix: /api
+
 # StoryMarketplace Domain
 story_marketplace_backoffice:
   resource: '../src/Domain/StoryMarketplace/Controller/Backoffice/'

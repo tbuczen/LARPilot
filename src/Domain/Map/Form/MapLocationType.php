@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Map\Form;
 
-use App\Domain\Core\Form\DataTransformer\JsonToArrayTransformer;
+use App\Domain\Core\Entity\Tag;
+use App\Domain\Core\Repository\TagRepository;
 use App\Domain\Map\Entity\Enum\LocationType;
+use App\Domain\Map\Entity\Enum\MarkerShape;
 use App\Domain\Map\Entity\MapLocation;
 use App\Domain\StoryObject\Entity\Place;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -31,11 +35,23 @@ class MapLocationType extends AbstractType
                     'placeholder' => 'map_location.name_placeholder',
                 ],
             ])
-            ->add('gridCoordinates', HiddenType::class, [
-                'label' => 'map_location.grid_coordinates',
-                'help' => 'map_location.grid_coordinates_help',
+            ->add('positionX', HiddenType::class, [
                 'attr' => [
-                    'data-map-location-target' => 'coordinates',
+                    'data-map-marker-editor-target' => 'positionX',
+                ],
+            ])
+            ->add('positionY', HiddenType::class, [
+                'attr' => [
+                    'data-map-marker-editor-target' => 'positionY',
+                ],
+            ])
+            ->add('shape', EnumType::class, [
+                'label' => 'map_location.shape',
+                'class' => MarkerShape::class,
+                'choice_label' => fn (MarkerShape $shape) => 'enum.marker_shape.' . $shape->value,
+                'attr' => [
+                    'data-map-marker-editor-target' => 'shape',
+                    'data-action' => 'change->map-marker-editor#onShapeChange',
                 ],
             ])
             ->add('type', EnumType::class, [
@@ -49,6 +65,10 @@ class MapLocationType extends AbstractType
                 'label' => 'map_location.color',
                 'required' => false,
                 'help' => 'map_location.color_help',
+                'attr' => [
+                    'data-map-marker-editor-target' => 'color',
+                    'data-action' => 'change->map-marker-editor#onColorChange',
+                ],
             ])
             ->add('capacity', IntegerType::class, [
                 'label' => 'map_location.capacity',
@@ -73,25 +93,36 @@ class MapLocationType extends AbstractType
         ;
 
         if ($larp) {
-            $builder->add('place', EntityType::class, [
-                'label' => 'map_location.place',
-                'choice_label' => 'title',
-                'class' => Place::class,
-                'required' => false,
-                'placeholder' => 'map_location.place_placeholder',
-                'help' => 'map_location.place_help',
-                'query_builder' => function ($repository) use ($larp) {
-                    return $repository->createQueryBuilder('p')
-                        ->where('p.larp = :larp')
+            $builder
+                ->add('tags', EntityType::class, [
+                    'label' => 'map_location.tags',
+                    'choice_label' => 'title',
+                    'class' => Tag::class,
+                    'required' => false,
+                    'multiple' => true,
+                    'autocomplete' => true,
+                    'help' => 'map_location.tags_help',
+                    'query_builder' => fn (TagRepository $repo) => $repo->createQueryBuilder('t')
+                        ->where('t.larp = :larp')
                         ->setParameter('larp', $larp)
-                        ->orderBy('p.title', 'ASC');
-                },
-                'autocomplete' => true,
-            ]);
+                        ->orderBy('t.title', 'ASC'),
+                ])
+                ->add('place', EntityType::class, [
+                    'label' => 'map_location.place',
+                    'choice_label' => 'title',
+                    'class' => Place::class,
+                    'required' => false,
+                    'placeholder' => 'map_location.place_placeholder',
+                    'help' => 'map_location.place_help',
+                    'query_builder' => function ($repository) use ($larp) {
+                        return $repository->createQueryBuilder('p')
+                            ->where('p.larp = :larp')
+                            ->setParameter('larp', $larp)
+                            ->orderBy('p.title', 'ASC');
+                    },
+                    'autocomplete' => true,
+                ]);
         }
-
-        $builder->get('gridCoordinates')
-            ->addModelTransformer(new JsonToArrayTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void

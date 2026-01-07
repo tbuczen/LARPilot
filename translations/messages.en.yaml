@@ -476,6 +476,21 @@ larp:
     no_image: 'No map image uploaded'
     locations: 'Map Locations'
     location_select_help: 'Click on grid cells to select the area for this location'
+    location_info: 'Location Information'
+    marker_position: 'Marker Position'
+    click_to_place_marker: 'Click on the map to place the marker. Drag to reposition.'
+    center_marker: 'Center Marker'
+    fit_image: 'Fit to View'
+    no_image_uploaded: 'No map image has been uploaded yet. Please upload an image first.'
+    tag:
+      singular: 'Map Tag'
+      plural: 'Map Tags'
+      list: 'Map Tags'
+      create: 'Create Map Tag'
+      edit: 'Edit Map Tag'
+      default_shape: 'Default Shape'
+      locations_count: 'Locations'
+      preview: 'Tag Preview'
 
   google_drive_folders:
     title: "Google Drive Folders"
@@ -773,6 +788,21 @@ enum:
     outdoor: "Outdoor"
     special: "Special"
     transition: "Transition"
+  marker_shape:
+    dot: "Dot"
+    circle: "Circle"
+    square: "Square"
+    diamond: "Diamond"
+    triangle: "Triangle"
+    house: "House"
+    arrow_up: "Arrow Up"
+    arrow_down: "Arrow Down"
+    arrow_left: "Arrow Left"
+    arrow_right: "Arrow Right"
+    star: "Star"
+    flag: "Flag"
+    pin: "Pin"
+    cross: "Cross"
 
 # Role enumeration translations
 user_role:
@@ -1226,6 +1256,42 @@ survey:
     pending: 'Pending Assignment'
     assigned: 'Assigned'
     confirmed: 'Confirmed'
+
+# Staff Position Tracking
+staff_position:
+  title: 'Staff Position'
+  select_map: 'Select Map'
+  no_maps: 'No maps available for this LARP'
+  update_title: 'Update My Position'
+  view_title: 'Staff Positions'
+  view_positions: 'View Staff'
+  update_my_position: 'Update My Position'
+  current_position: 'Current Position'
+  updated_at: 'Updated at'
+  tap_to_select: 'Tap on the grid to select your position'
+  selected_cell: 'Selected Cell'
+  no_cell_selected: 'No cell selected'
+  status_note: 'Status Note'
+  status_note_placeholder: 'e.g., On break, Handling incident...'
+  save_position: 'Save Position'
+  remove_position: 'Remove Position'
+  remove_confirm: 'Are you sure you want to remove your position from this map?'
+  updated: 'Position updated successfully'
+  removed: 'Position removed successfully'
+  invalid_cell: 'Invalid grid cell selected'
+  select_cell: 'Please select a grid cell first'
+  limited_visibility: 'You are viewing a limited list of staff positions. Contact organizers for full visibility.'
+  active_positions: 'Active Positions'
+  positions_list: 'Positions List'
+  staff_member: 'Staff Member'
+  role: 'Role'
+  cell: 'Cell'
+  status: 'Status'
+  no_positions: 'No staff positions recorded yet'
+  already_exists: 'You already have a position on this map'
+  show_on_map: 'Show Staff Positions'
+  update_position: 'Update Position'
+  my_position: 'My Position'
 
 # Legal Pages
 privacy_policy:

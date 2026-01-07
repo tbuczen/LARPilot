@@ -668,6 +668,111 @@ Test database uses suffix `_test` (configured in `config/packages/doctrine.yaml`
 make prepare-test-db
 ```
 
+### Testing Patterns Quick Reference
+
+**User Creation (via Factory):**
+```php
+use Tests\Support\Factory\Account\UserFactory;
+
+$user = UserFactory::createPendingUser();    // PENDING status
+$user = UserFactory::createApprovedUser();   // APPROVED status
+$user = UserFactory::createSuperAdmin();     // SUPER_ADMIN role
+```
+
+**LARP Creation (via Factory):**
+```php
+use Tests\Support\Factory\Core\LarpFactory;
+
+$larp = LarpFactory::new()->create();                           // Default LARP
+$larp = LarpFactory::createDraftLarp($organizer);               // DRAFT status
+$larp = LarpFactory::createPublishedLarp($organizer);           // PUBLISHED status
+```
+
+**Participant Roles (via Factory):**
+```php
+use Tests\Support\Factory\Core\LarpParticipantFactory;
+
+LarpParticipantFactory::new()
+    ->forLarp($larp)
+    ->forUser($user)
+    ->player()           // PLAYER role
+    ->create();
+
+// Available role methods:
+// ->player(), ->organizer(), ->staff(), ->gameMaster(),
+// ->trustPerson(), ->photographer(), ->medic()
+```
+
+**Access Control Testing Pattern:**
+```php
+public function roleCannotAccessFeature(FunctionalTester $I): void
+{
+    $user = UserFactory::createApprovedUser();
+    $larp = LarpFactory::new()->create();
+    LarpParticipantFactory::new()
+        ->forLarp($larp)
+        ->forUser($user)
+        ->player()
+        ->create();
+
+    $I->amLoggedInAs($user);
+    $I->amOnRoute('route_name', ['larp' => $larp->getId()]);
+    $I->seeResponseCodeIs(403);
+}
+```
+
+**Voter Testing Pattern:**
+```php
+public function voterGrantsPermission(FunctionalTester $I): void
+{
+    $user = UserFactory::createApprovedUser();
+    $larp = LarpFactory::new()->create();
+    LarpParticipantFactory::new()
+        ->forLarp($larp)
+        ->forUser($user)
+        ->organizer()
+        ->create();
+
+    $I->amLoggedInAs($user);
+
+    $authChecker = $I->grabService('security.authorization_checker');
+    $canAccess = $authChecker->isGranted('VOTER_ATTRIBUTE', $larp);
+
+    $I->assertTrue($canAccess, 'Organizer should have access');
+}
+```
+
+**Service Testing Pattern:**
+```php
+public function serviceMethodWorks(FunctionalTester $I): void
+{
+    // Setup test data with factories
+    $larp = LarpFactory::new()->create();
+    $participant = LarpParticipantFactory::new()
+        ->forLarp($larp)
+        ->organizer()
+        ->create();
+
+    /** @var MyService $service */
+    $service = $I->grabService(MyService::class);
+
+    // Call service method (use ->_real() to get actual entity from proxy)
+    $result = $service->doSomething($participant->_real());
+
+    // Assert results
+    $I->assertNotNull($result);
+}
+```
+
+**Available Assertions:**
+- `$I->seeResponseCodeIsSuccessful()` - 2xx status codes
+- `$I->seeResponseCodeIs(403)` - Specific status code
+- `$I->seeResponseCodeIsRedirection()` - 3xx status codes
+- `$I->followRedirect()` - Follow redirect
+- `$I->assertTrue($condition, $message)` / `$I->assertFalse(...)`
+- `$I->assertEquals($expected, $actual)` / `$I->assertNotNull(...)`
+- `$I->assertCount($expected, $array)`
+
 ## Code Quality Standards
 
 - **PHP Version**: 8.2+
