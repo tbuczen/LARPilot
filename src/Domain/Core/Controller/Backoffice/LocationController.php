@@ -160,10 +160,12 @@ class LocationController extends AbstractController
             throw $this->createAccessDeniedException('You cannot delete this location.');
         }
 
-        if ($this->isCsrfTokenValid('delete' . $location->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete', $request->request->get('_token'))) {
             $this->entityManager->remove($location);
             $this->entityManager->flush();
             $this->addFlash('success', 'Location deleted successfully.');
+        } else {
+            $this->addFlash('warning', 'Location could not be deleted.');
         }
 
         return $this->redirectToRoute('backoffice_location_list');

@@ -132,12 +132,16 @@ date: 'Date'
 view: 'View'
 minutes: 'Minutes'
 
-
 larp:
   singular: 'LARP'
   plural: 'LARPs'
   list: 'List of LARPs'
   no_larps: 'There are no published LARPs at the moment'
+  delete:
+    title: 'Delete LARP'
+    warning: 'This action is irreversible! All data associated with this LARP will be permanently deleted.'
+    confirm: 'Are you sure you want to delete %title%?'
+    success: 'LARP "%title%" has been deleted.'
   plan:
     your_plan: 'Your Plan'
     unlimited_larps: 'Unlimited LARPs'
@@ -708,11 +712,6 @@ character_type:
   short_npc: "Short NPC"
   gm: "Game Master"
   generic_npc: "Generic NPC"
-relation_type:
-  friend: "Friend"
-  enemy: "Enemy"
-  family: "Family"
-  ally: "Ally"
 
 event_planner:
   title: 'Event Planner'
@@ -1298,3 +1297,126 @@ privacy_policy:
   title: 'Privacy Policy'
 terms:
   title: 'Terms of Service'
+
+# Application Submission Status
+submission_status:
+  new: 'New'
+  consider: 'Under Consideration'
+  rejected: 'Rejected'
+  accepted: 'Accepted'
+  offered: 'Character Offered'
+  confirmed: 'Confirmed'
+  declined: 'Declined'
+
+# Incident Status
+incident_status:
+  NEW: 'New'
+  IN_PROGRESS: 'In Progress'
+  FEEDBACK_GIVEN: 'Feedback Given'
+  CLOSED: 'Closed'
+
+# Survey Question Types
+survey_question_type:
+  text: 'Short Text'
+  textarea: 'Long Text'
+  single_choice: 'Single Choice'
+  multiple_choice: 'Multiple Choice'
+  rating: 'Rating Scale'
+  tag_selection: 'Tag Selection'
+
+# Event Planning - Conflict Types
+conflict_type:
+  resource_double_booking: 'Resource Double Booking'
+  location_capacity: 'Location Capacity Exceeded'
+  character_impossible: 'Character in Two Places'
+  timeline_overlap: 'Timeline Overlap'
+  staff_overload: 'Staff Overload'
+
+# Event Planning - Conflict Severity
+conflict_severity:
+  critical: 'Critical'
+  warning: 'Warning'
+  info: 'Info'
+
+# Event Planning - Resource Types
+planning_resource_type:
+  npc: 'NPC/Character'
+  staff_gm: 'Game Master'
+  staff_tech: 'Technician'
+  staff_safety: 'Safety Marshal'
+  staff_photo: 'Photographer'
+  prop: 'Prop'
+  equipment: 'Equipment'
+  vehicle: 'Vehicle'
+  other: 'Other'
+
+# Gallery Visibility
+gallery_visibility:
+  public: 'Public'
+  participants_only: 'Participants Only'
+  organizers_only: 'Organizers Only'
+
+# Location Approval Status
+location_approval_status:
+  pending: 'Pending Approval'
+  approved: 'Approved'
+  rejected: 'Rejected'
+
+# Mail Template Types
+mail_template_type:
+  application_received: 'Application Received'
+  character_assigned: 'Character Assigned'
+  event_reminder: 'Event Reminder'
+  custom: 'Custom Message'
+
+# Relation Types
+relation_type:
+  family: 'Family'
+  friendship: 'Friendship'
+  rivalry: 'Rivalry'
+  romance: 'Romance'
+  professional: 'Professional'
+  political: 'Political'
+  religious: 'Religious'
+  other: 'Other'
+
+# Event Categories
+event_category:
+  historical: 'Historical/Lore'
+  current: 'Current Story'
+  future: 'Planned/Future'
+
+# Larp Settings
+larp_setting:
+  fantasy: 'Fantasy'
+  sci_fi: 'Science Fiction'
+  historical: 'Historical'
+  modern: 'Modern'
+  post_apocalyptic: 'Post-Apocalyptic'
+  horror: 'Horror'
+  steampunk: 'Steampunk'
+  cyberpunk: 'Cyberpunk'
+  other: 'Other'
+
+# Larp Types
+larp_type:
+  chamber: 'Chamber LARP'
+  field: 'Field LARP'
+  convention: 'Convention'
+  blockbuster: 'Blockbuster'
+  freeform: 'Freeform'
+  other: 'Other'
+
+# Common UI Elements
+ui:
+  loading: 'Loading...'
+  saving: 'Saving...'
+  deleting: 'Deleting...'
+  processing: 'Processing...'
+  please_wait: 'Please wait...'
+  no_results: 'No results found'
+  select_option: 'Select an option...'
+  confirm_action: 'Are you sure?'
+  action_cannot_be_undone: 'This action cannot be undone.'
+  required_field: 'This field is required'
+  optional: 'optional'

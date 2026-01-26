@@ -3,6 +3,8 @@ common:
 submit: "Zatwierdź"
 choose: "Wybierz..."
 character_lbl: 'Postać'
+title: 'Tytuł'
+all: 'Wszystkie'
 character:
   name: "Unikalna nazwa postaci"
   in_game_name: "Imię w grze"
@@ -15,6 +17,9 @@ character:
   preferred_gender_placeholder: "Unisex"
   preferred_gender_help: "Wybierz preferowaną płeć dla tej postaci (np. Mężczyzna, Kobieta lub pozostaw puste dla dowolnej płci)"
   tag: "Tagi definiujące rozgrywkę postaci"
+  story_writer: "Fabularzysta"
+  choose_story_writer: "Wybierz fabularystę..."
+  story_writer_permission_denied: "Tylko główni organizatorzy i główni scenarzyści mogą przypisywać fabularystów"
 faction_lbl: 'Frakcja'
 faction:
   name: "Unikalna nazwa frakcji"
@@ -38,6 +43,10 @@ mapping:
     end_column: "Kolumna końcowa"
     starting_row: "Wiersz początkowy"
   document:
+    header_type: "Typ nagłówka"
+    starting_paragraph: "Akapit początkowy"
+  directory:
+    group_by_faction: "Grupuj według frakcji"
 larp:
   create: "Stwórz nowy SZKIC LARPa"
   name: "Nazwa"
@@ -45,9 +54,22 @@ larp:
   location: "Lokalizacja"
   start_date: "Data rozpoczęcia"
   end_date: "Data zakończenia"
+  discord_server_url: "URL serwera Discord"
+  facebook_event_url: "URL wydarzenia na Facebooku"
+  header_image: "Obraz nagłówkowy"
+  header_image_help: "Prześlij obraz nagłówkowy dla swojego LARPa (maks. 5MB, JPG/PNG/GIF/WebP)"
+  header_image_invalid: "Proszę przesłać poprawny plik obrazu (JPG, PNG, GIF lub WebP)"
   integrations: "Integracje"
   invitations: "Zaproszenia"
   story: "Fabuła"
+  character:
+    export:
+      title: "Eksportuj kartę postaci"
+      description: "Wygeneruj dokument Google z pełnymi informacjami o postaci na podstawie skonfigurowanego szablonu"
+      button: "Eksportuj do Google Docs"
+      created: "Karta postaci została utworzona pomyślnie! Zobacz ją tutaj: %url%"
+      updated: "Karta postaci została zaktualizowana pomyślnie! Zobacz ją tutaj: %url%"
+      error: "Nie udało się wyeksportować karty postaci: %message%"
 save_filter_name: "Nazwa filtru"
 quest:
   name: "Unikalna nazwa zadania"
@@ -88,12 +110,18 @@ item:
   quantity: "Ilość"
   cost: "Koszt"
 tag:
+  title: "Tytuł tagu"
   name: "Nazwa tagu"
   description: "Opis tagu"
   target: "Cel"
+event.category: "Kategoria wydarzenia"
 event:
   name: "Nazwa wydarzenia"
   description: "Opis wydarzenia"
+  category:
+    historical: "Wydarzenie historyczne/lore"
+    current: "Bieżące wydarzenie"
+    future: "Przyszłe/planowane wydarzenie"
   place: "Miejsce"
   choose_place: "Wybierz miejsce..."
   factions: "Frakcje zaangażowane w wydarzenie"
@@ -102,6 +130,8 @@ event:
   start_time: 'Czas rozpoczęcia'
   end_time: 'Czas zakończenia'
   choose_faction: 'Wybierz frakcję...'
+  known_publicly: 'Publicznie znane'
+  known_publicly_help: 'Zaznacz, jeśli wydarzenie jest publicznie znane, mimo że zaangażowane były konkretne frakcje/postacie (np. "wioska została zaatakowana", "ktoś został stracony")'
 kanban:
   title: "Tytuł zadania"
   description: "Opis zadania"
@@ -151,7 +181,9 @@ filter_thread: "Filtruj według wątku"
 filter_quest: "Filtruj według zadania"
 filter_event: "Filtruj według wydarzenia"
 filter_character: "Filtruj według postaci"
-
+mappings: "Mapowanie"
+mapping_type: "Typ Mapowania"
+meta: "Meta"
 game_map:
   name: "Nazwa mapy"
   name_placeholder: "Wprowadź nazwę mapy (np. Miejsce gry, Obszar leśny)"
@@ -181,16 +213,19 @@ map_location:
   name_placeholder: "Wprowadź nazwę lokalizacji (np. Główna sala, Polana leśna)"
   grid_coordinates: "Współrzędne siatki"
   grid_coordinates_help: "Kliknij na komórki siatki na mapie powyżej, aby wybrać obszar tej lokalizacji"
+  shape: "Kształt znacznika"
   type: "Typ lokalizacji"
   type_placeholder: "Wybierz typ lokalizacji..."
-  color: "Kolor lokalizacji"
-  color_help: "Kolor używany do oznaczenia tej lokalizacji na mapie"
+  color: "Kolor znacznika"
+  color_help: "Kolor używany do wyświetlania tego znacznika na mapie (nadpisuje kolor tagu jeśli ustawiony)"
   capacity: "Pojemność"
   capacity_help: "Maksymalna liczba osób, jaką może pomieścić ta lokalizacja (opcjonalnie)"
   place: "Powiązane miejsce fabularne"
   place_placeholder: "Połącz z istniejącym miejscem fabularnym (opcjonalnie)"
   place_help: "Powiąż tę lokalizację mapy z encją miejsca fabularnego"
-  description: 'Kliknij w siatkę, aby wybrać lokalizację'
+  tags: "Tagi"
+  tags_help: "Kategoryzuj tę lokalizację za pomocą tagów"
+  description: "Opis"
   description_placeholder: "Opisz tę lokalizację i jej cel"
 
 
@@ -269,6 +304,41 @@ filter:
     priority_medium: 'Średni priorytet (4-6)'
     priority_low: 'Niski priorytet (1-3)'
     priority_none: 'Brak priorytetu (0)'
+  character:
+    title: 'Nazwa postaci'
+    title_placeholder: 'Szukaj według nazwy...'
+    in_game_name: 'Imię w grze'
+    in_game_name_placeholder: 'Szukaj według imienia w grze...'
+    gender: 'Płeć'
+    character_type: 'Typ postaci'
+    factions: 'Frakcje'
+    story_writer: 'Fabularzysta'
+    tags: 'Tagi'
+    threads: 'Wątki'
+    quests: 'Zadania'
+  faction:
+    title: 'Nazwa frakcji'
+    title_placeholder: 'Szukaj według nazwy...'
+  quest:
+    title: 'Nazwa zadania'
+    title_placeholder: 'Szukaj według nazwy...'
+  thread:
+    title: 'Nazwa wątku'
+    title_placeholder: 'Szukaj według nazwy...'
+  place:
+    title: 'Nazwa miejsca'
+    title_placeholder: 'Szukaj według nazwy...'
+  item:
+    title: 'Nazwa przedmiotu'
+    title_placeholder: 'Szukaj według nazwy...'
+  participant:
+    roles: 'Role'
+    user: 'Użytkownik'
+  gallery:
+    title: 'Tytuł galerii'
+    title_placeholder: 'Szukaj według tytułu...'
+    photographer: 'Fotograf'
+    visibility: 'Widoczność'
   all_types: 'Wszystkie typy'
   all_statuses: 'Wszystkie statusy'
   all_locations: 'Wszystkie lokalizacje'
@@ -276,6 +346,12 @@ filter:
   all_characters: 'Wszystkie postacie'
   all_priorities: 'Wszystkie priorytety'
   all_users: 'Wszyscy użytkownicy'
+  all_factions: 'Wszystkie frakcje'
+  all_writers: 'Wszyscy scenarzyści'
+  all_genders: 'Wszystkie płcie'
+  all_threads: 'Wszystkie wątki'
+  all_quests: 'Wszystkie zadania'
+  all_visibilities: 'Wszystkie widoczności'
   all: 'Wszystkie'
   shareable: 'Tylko współdzielone'
   exclusive: 'Tylko wyłączne'
@@ -307,3 +383,155 @@ boolean:
   yes: "Tak"
   no: "Nie"
   yes_or_no: 'Obojętnie'
+
+comment:
+  content: "Komentarz"
+  content_placeholder: "Napisz swój komentarz lub punkt dyskusji..."
+  is_resolved: "Oznacz jako rozwiązane"
+  discussions: "Dyskusje"
+  add_new: "Dodaj komentarz"
+  create: "Nowy komentarz"
+  edit: "Edytuj komentarz"
+  reply: "Odpowiedz na komentarz"
+  post: "Wyślij komentarz"
+  view_all: "Zobacz wszystkie dyskusje"
+  view_all_count: "Zobacz wszystkie %count% komentarzy"
+  no_comments_yet: "Brak komentarzy. Rozpocznij dyskusję!"
+  start_discussion: "Rozpocznij dyskusję"
+  total_comments: "Wszystkie komentarze"
+  unresolved_comments: "Nierozwiązane"
+  unresolved: "nierozwiązane"
+  resolved: "Rozwiązane"
+  mark_resolved: "Oznacz jako rozwiązane"
+  mark_unresolved: "Oznacz jako nierozwiązane"
+  marked_as_resolved: "Komentarz oznaczony jako rozwiązany"
+  marked_as_unresolved: "Komentarz oznaczony jako nierozwiązany"
+  created_successfully: "Komentarz został wysłany"
+  reply_created_successfully: "Odpowiedź została wysłana"
+  updated_successfully: "Komentarz został zaktualizowany"
+  deleted_successfully: "Komentarz został usunięty"
+  confirm_delete: "Czy na pewno chcesz usunąć ten komentarz?"
+  replying_to: "Odpowiadasz:"
+  edited: "edytowano"
+  live: "NA ŻYWO"
+  add_detailed: "Dodaj szczegółowy komentarz"
+  type_message: "Wpisz swoją wiadomość tutaj..."
+  send: "Wyślij"
+  press_enter_to_send: "Naciśnij Enter, aby wysłać, Shift+Enter dla nowej linii"
+  type_below_to_start: "Wpisz wiadomość poniżej, aby rozpocząć rozmowę"
+
+enum.marker_shape:
+  dot: "Punkt"
+  circle: "Okrąg"
+  square: "Kwadrat"
+  diamond: "Romb"
+  triangle: "Trójkąt"
+  house: "Dom"
+  arrow_up: "Strzałka w górę"
+  arrow_down: "Strzałka w dół"
+  arrow_left: "Strzałka w lewo"
+  arrow_right: "Strzałka w prawo"
+  star: "Gwiazda"
+  flag: "Flaga"
+  pin: "Szpilka"
+  cross: "Krzyż"
+
+gallery:
+  title: "Tytuł galerii"
+  title_placeholder: "np. Zdjęcia z LARPa - Dzień 1"
+  description: "Opis"
+  description_placeholder: "Dodatkowe informacje o tej galerii..."
+  photographer: "Fotograf"
+  external_album_url: "URL zewnętrznego albumu"
+  external_album_url_help: "Link do albumu zdjęć na Facebooku, Google Photos, itp."
+  zip_download_url: "URL do pobrania ZIP"
+  zip_download_url_help: "Zewnętrzny link do pliku zip do pobrania (Dropbox, Google Drive, itp.)"
+  zip_file_upload: "Prześlij plik ZIP"
+  zip_file_upload_help: "Prześlij plik zip bezpośrednio (maks. 500MB)"
+  visibility: "Widoczność"
+  visibility_help: "Kto może przeglądać tę galerię"
+  current_zip_file: "Aktualny plik zip"
+  upload_new_replace: "Prześlij nowy plik, aby zastąpić obecny"
+  invalid_zip_file: "Proszę przesłać poprawny plik ZIP"
+
+location:
+  rejection_reason: "Powód odrzucenia"
+  rejection_reason_placeholder: "Podaj powód odrzucenia tej lokalizacji (opcjonalnie)"
+  address: "Adres"
+  approval_status: "Status zatwierdzenia"
+  pending_message: "Ta lokalizacja oczekuje na zatwierdzenie. Zostanie sprawdzona przez administratora zanim stanie się widoczna dla innych użytkowników."
+  no_locations_found: "Nie znaleziono lokalizacji"
+
+name: Nazwa
+
+# Formularze Ankiet
+survey:
+  title: "Tytuł ankiety"
+  description: "Opis"
+  description_help: "Przedstaw ankietę uczestnikom"
+  is_active: "Aktywna"
+  is_active_help: "Tylko aktywne ankiety mogą otrzymywać odpowiedzi"
+  save: "Zapisz ankietę"
+  question:
+    text: "Pytanie"
+    text_placeholder: "Wpisz swoje pytanie tutaj..."
+    help_text: "Tekst pomocniczy"
+    help_text_placeholder: "Opcjonalna wskazówka dla uczestnika"
+    type: "Typ pytania"
+    required: "Wymagane"
+    options: "Opcje"
+    option_text: "Tekst opcji"
+    option_text_placeholder: "Wpisz tekst opcji..."
+    add_option: "Dodaj opcję"
+    remove_option: "Usuń"
+
+# Ustawienia Konta
+account:
+  username: "Nazwa użytkownika"
+  language: "Język"
+  email: "Email"
+  save: "Zapisz ustawienia"
+
+# Formularz Lokalizacji (pełne pola)
+location_form:
+  title: "Tytuł"
+  description: "Opis"
+  address: "Adres"
+  city: "Miasto"
+  country: "Kraj"
+  postal_code: "Kod pocztowy"
+  latitude: "Szerokość geograficzna"
+  longitude: "Długość geograficzna"
+  website: "Strona internetowa"
+  facebook: "Facebook"
+  instagram: "Instagram"
+  twitter: "Twitter"
+  contact_email: "Email kontaktowy"
+  contact_phone: "Telefon kontaktowy"
+  facilities: "Udogodnienia"
+  facilities_help: "Opisz dostępne udogodnienia (toalety, prysznice, prąd, itp.)"
+  accessibility: "Dostępność"
+  accessibility_help: "Informacje o dostępie dla wózków inwalidzkich i innych funkcjach dostępności"
+  parking_info: "Informacje o parkingu"
+  public_transport: "Transport publiczny"
+  capacity: "Pojemność"
+  capacity_help: "Maksymalna liczba osób, którą ta lokalizacja może pomieścić"
+  is_public: "Lokalizacja publiczna"
+  is_public_help: "Udostępnij tę lokalizację innym użytkownikom"
+  is_active: "Aktywna"
+  is_active_help: "Czy ta lokalizacja jest obecnie dostępna dla wydarzeń?"
+
+# Wspólne akcje formularzy
+save: "Zapisz"
+cancel: "Anuluj"
+delete: "Usuń"
+edit: "Edytuj"
+create: "Stwórz"
+back: "Wstecz"
+next: "Dalej"
+previous: "Poprzedni"
+search: "Szukaj"
+reset: "Resetuj"
+apply: "Zastosuj"
+confirm: "Potwierdź"
+close: "Zamknij"

@@ -19,4 +19,19 @@ class TagRepository extends BaseRepository
     {
         parent::__construct($registry, Tag::class);
     }
+
+    /**
+     * Find a tag by its title (case-insensitive) for a specific LARP.
+     */
+    public function findByTitleForLarp(string $title, string $larpId): ?Tag
+    {
+        return $this->createQueryBuilder('t')
+            ->where('LOWER(t.title) = LOWER(:title)')
+            ->andWhere('t.larp = :larpId')
+            ->setParameter('title', $title)
+            ->setParameter('larpId', $larpId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

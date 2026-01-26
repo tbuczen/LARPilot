@@ -70,7 +70,9 @@ larp:
       created: "Character sheet created successfully! View it here: %url%"
       updated: "Character sheet updated successfully! View it here: %url%"
       error: "Failed to export character sheet: %message%"
-
+mappings: "Mappings"
+mapping_type: "Mapping Type"
+meta: "Meta"
 save_filter_name: "Filter name"
 quest:
   name: "Unique Quest Name"
@@ -300,6 +302,41 @@ filter:
     priority_medium: 'Medium Priority (4-6)'
     priority_low: 'Low Priority (1-3)'
     priority_none: 'No Priority (0)'
+  character:
+    title: 'Character Name'
+    title_placeholder: 'Search by name...'
+    in_game_name: 'In-Game Name'
+    in_game_name_placeholder: 'Search by in-game name...'
+    gender: 'Gender'
+    character_type: 'Character Type'
+    factions: 'Factions'
+    story_writer: 'Story Writer'
+    tags: 'Tags'
+    threads: 'Threads'
+    quests: 'Quests'
+  faction:
+    title: 'Faction Name'
+    title_placeholder: 'Search by name...'
+  quest:
+    title: 'Quest Name'
+    title_placeholder: 'Search by name...'
+  thread:
+    title: 'Thread Name'
+    title_placeholder: 'Search by name...'
+  place:
+    title: 'Place Name'
+    title_placeholder: 'Search by name...'
+  item:
+    title: 'Item Name'
+    title_placeholder: 'Search by name...'
+  participant:
+    roles: 'Roles'
+    user: 'User'
+  gallery:
+    title: 'Gallery Title'
+    title_placeholder: 'Search by title...'
+    photographer: 'Photographer'
+    visibility: 'Visibility'
   all_types: 'All Types'
   all_statuses: 'All Statuses'
   all_locations: 'All Locations'
@@ -307,6 +344,12 @@ filter:
   all_characters: 'All Characters'
   all_priorities: 'All Priorities'
   all_users: 'All Users'
+  all_factions: 'All Factions'
+  all_writers: 'All Writers'
+  all_genders: 'All Genders'
+  all_threads: 'All Threads'
+  all_quests: 'All Quests'
+  all_visibilities: 'All Visibilities'
   all: 'All'
   shareable: 'Shareable Only'
   exclusive: 'Exclusive Only'
@@ -416,3 +459,75 @@ boolean:
   yes: "Yes"
   no: "No"
   yes_or_no: 'Yes or no'
+
+# Survey Forms
+survey:
+  title: "Survey Title"
+  description: "Description"
+  description_help: "Introduce the survey to applicants"
+  is_active: "Active"
+  is_active_help: "Only active surveys can receive responses"
+  save: "Save Survey"
+  question:
+    text: "Question"
+    text_placeholder: "Enter your question here..."
+    help_text: "Help Text"
+    help_text_placeholder: "Optional guidance for the applicant"
+    type: "Question Type"
+    required: "Required"
+    options: "Options"
+    option_text: "Option Text"
+    option_text_placeholder: "Enter option text..."
+    add_option: "Add Option"
+    remove_option: "Remove"
+
+# Account Settings
+account:
+  username: "Username"
+  language: "Language"
+  email: "Email"
+  save: "Save Settings"
+
+# Location Form (full fields)
+location_form:
+  title: "Title"
+  description: "Description"
+  address: "Address"
+  city: "City"
+  country: "Country"
+  postal_code: "Postal Code"
+  latitude: "Latitude"
+  longitude: "Longitude"
+  website: "Website"
+  facebook: "Facebook"
+  instagram: "Instagram"
+  twitter: "Twitter"
+  contact_email: "Contact Email"
+  contact_phone: "Contact Phone"
+  facilities: "Facilities"
+  facilities_help: "Describe available facilities (toilets, showers, electricity, etc.)"
+  accessibility: "Accessibility"
+  accessibility_help: "Information about wheelchair access and other accessibility features"
+  parking_info: "Parking Information"
+  public_transport: "Public Transport"
+  capacity: "Capacity"
+  capacity_help: "Maximum number of people this location can accommodate"
+  is_public: "Public Location"
+  is_public_help: "Make this location visible to other users"
+  is_active: "Active"
+  is_active_help: "Is this location currently available for events?"
+
+# Common form actions
+save: "Save"
+cancel: "Cancel"
+delete: "Delete"
+edit: "Edit"
+create: "Create"
+back: "Back"
+next: "Next"
+previous: "Previous"
+search: "Search"
+reset: "Reset"
+apply: "Apply"
+confirm: "Confirm"
+close: "Close"

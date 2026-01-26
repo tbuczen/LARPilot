@@ -31,9 +31,6 @@
                     <a class="nav-link {% if active_tab == 'characters' %}active{% endif %}"
                        href="{{ path('backoffice_larp_story_marketplace_characters_list', {larp: larp.id}) }}">
                         {{ 'marketplace.characters'|trans }}
-                        {% if active_tab == 'characters' and characters is defined and characters.totalItemCount is defined %}
-                            <span class="badge bg-danger ms-1">{{ characters.totalItemCount }}</span>
-                        {% endif %}
                     </a>
                 </li>
                 <li class="nav-item">

@@ -25,7 +25,7 @@ class FileMappingType extends AbstractType
         $builder
             ->add('mappingType', EnumType::class, [
                 'class' => ResourceType::class,
-                'label' => 'Mapping type',
+                'label' => 'mapping_type',
                 'choices' => $allowedTypes,
             ])
             ->addDependent('meta', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType): void {
@@ -57,6 +57,7 @@ class FileMappingType extends AbstractType
             'data_class' => ExternalResourceMappingModel::class,
             'mimeType' => null,
             'translation_domain' => 'forms',
+            'label' => 'mapping_type',
         ]);
     }
 

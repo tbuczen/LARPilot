@@ -56,4 +56,42 @@ class LarpParticipantRepository extends BaseRepository
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
+
+    /**
+     * Find a participant by user's full name (firstName + lastName) for a specific LARP.
+     * The name can be provided as "FirstName LastName" or "LastName FirstName".
+     */
+    public function findByUserFullName(string $fullName, string $larpId): ?LarpParticipant
+    {
+        $fullName = trim($fullName);
+        if (empty($fullName)) {
+            return null;
+        }
+
+        // Try exact match first: "firstName lastName"
+        $result = $this->createQueryBuilder('p')
+            ->join('p.user', 'u')
+            ->where('p.larp = :larpId')
+            ->andWhere("LOWER(CONCAT(u.firstName, ' ', u.lastName)) = LOWER(:fullName)")
+            ->setParameter('larpId', $larpId)
+            ->setParameter('fullName', $fullName)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        // Try reverse order: "lastName firstName"
+        return $this->createQueryBuilder('p')
+            ->join('p.user', 'u')
+            ->where('p.larp = :larpId')
+            ->andWhere("LOWER(CONCAT(u.lastName, ' ', u.firstName)) = LOWER(:fullName)")
+            ->setParameter('larpId', $larpId)
+            ->setParameter('fullName', $fullName)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

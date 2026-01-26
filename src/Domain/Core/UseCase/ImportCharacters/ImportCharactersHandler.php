@@ -3,7 +3,11 @@
 namespace App\Domain\Core\UseCase\ImportCharacters;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Entity\LarpParticipant;
+use App\Domain\Core\Entity\Tag;
+use App\Domain\Core\Repository\LarpParticipantRepository;
 use App\Domain\Core\Repository\LarpRepository;
+use App\Domain\Core\Repository\TagRepository;
 use App\Domain\Integrations\Entity\Enum\ReferenceRole;
 use App\Domain\Integrations\Entity\Enum\ReferenceType;
 use App\Domain\Integrations\Entity\ExternalReference;
@@ -21,16 +25,18 @@ use Webmozart\Assert\Assert;
 
 class ImportCharactersHandler
 {
-    private array $cache;
+    private array $cache = [];
     private ?IntegrationServiceInterface $integrationService = null;
 
     public function __construct(
-        private readonly LarpRepository          $larpRepository,
-        private readonly CharacterRepository $characterRepository,
-        private readonly FactionRepository   $factionRepository,
-        private readonly SharedFileRepository    $sharedFileRepository,
-        private readonly IntegrationManager      $integrationManager,
-        private readonly EntityManagerInterface  $entityManager
+        private readonly LarpRepository            $larpRepository,
+        private readonly CharacterRepository       $characterRepository,
+        private readonly FactionRepository         $factionRepository,
+        private readonly TagRepository             $tagRepository,
+        private readonly LarpParticipantRepository $larpParticipantRepository,
+        private readonly SharedFileRepository      $sharedFileRepository,
+        private readonly IntegrationManager        $integrationManager,
+        private readonly EntityManagerInterface    $entityManager
     ) {
     }
 
@@ -62,13 +68,20 @@ class ImportCharactersHandler
                         continue; // Skip rows missing a character name.
                     }
 
-                    $character = $existingCharactersMap[$characterName] ?? null;
-                    if ($character && !$command->force) {
+                    $existingCharacter = $existingCharactersMap[$characterName] ?? null;
+                    $isNew = $existingCharacter === null;
+
+                    // Skip existing characters unless force update is enabled
+                    if ($existingCharacter !== null && !$command->force) {
                         continue;
                     }
 
-                    $character = new Character();
-                    $character->setLarp($this->entityManager->getReference(Larp::class, Uuid::fromString($command->larpId)));
+                    // Use existing character or create new one
+                    $character = $existingCharacter ?? new Character();
+
+                    if ($isNew) {
+                        $character->setLarp($this->entityManager->getReference(Larp::class, Uuid::fromString($command->larpId)));
+                    }
 
                     // Process each mapping: iterate over the mapping configuration.
                     foreach ($command->mapping as $fieldName => $col) {
@@ -78,8 +91,22 @@ class ImportCharactersHandler
                         }
 
                         if ($fieldName === 'factions') {
+                            // Clear existing factions on update before adding new ones
+                            if (!$isNew) {
+                                $this->clearFactions($character);
+                            }
                             // For faction, we need to find or create and cache it.
                             $this->handleFaction($value, $command->larpId, $character);
+                        } elseif ($fieldName === 'storyWriter') {
+                            // Match story writer by full name.
+                            $this->handleStoryWriter($value, $command->larpId, $character);
+                        } elseif ($fieldName === 'tags') {
+                            // Clear existing tags on update before adding new ones
+                            if (!$isNew) {
+                                $this->clearTags($character);
+                            }
+                            // Parse and match tags.
+                            $this->handleTags($value, $command->larpId, $character);
                         } else {
                             // For scalar properties, we try a dynamic setter.
                             $setter = 'set' . ucfirst($fieldName);
@@ -91,7 +118,12 @@ class ImportCharactersHandler
                             }
                         }
                     }
-                    $this->createReference($character, $rowNo, $file, $command->additionalFileData);
+
+                    // Only create reference for new characters
+                    if ($isNew) {
+                        $this->createReference($character, $rowNo, $file, $command->additionalFileData);
+                    }
+
                     $this->entityManager->persist($character);
                 }
                 $this->entityManager->flush();
@@ -119,11 +151,80 @@ class ImportCharactersHandler
     private function handleFaction(mixed $value, string $larpId, Character $character): void
     {
         $factionName = trim((string) $value);
-        if (!isset($this->cache[$factionName])) {
-            $faction = $this->factionRepository->findByOrCreate($factionName, $larpId);
-            $this->cache[$factionName] = $faction;
+        if (empty($factionName)) {
+            return;
         }
-        $character->addFaction($this->cache[$factionName]);
+
+        if (!isset($this->cache['faction_' . $factionName])) {
+            $faction = $this->factionRepository->findByOrCreate($factionName, $larpId);
+            $this->cache['faction_' . $factionName] = $faction;
+        }
+        $character->addFaction($this->cache['faction_' . $factionName]);
+    }
+
+    private function clearFactions(Character $character): void
+    {
+        foreach ($character->getFactions() as $faction) {
+            $character->removeFaction($faction);
+        }
+    }
+
+    private function clearTags(Character $character): void
+    {
+        foreach ($character->getTags() as $tag) {
+            $character->removeTag($tag);
+        }
+    }
+
+    private function handleStoryWriter(mixed $value, string $larpId, Character $character): void
+    {
+        $fullName = trim((string) $value);
+        if (empty($fullName)) {
+            return;
+        }
+
+        $cacheKey = 'storywriter_' . strtolower($fullName);
+        if (!isset($this->cache[$cacheKey])) {
+            $participant = $this->larpParticipantRepository->findByUserFullName($fullName, $larpId);
+            $this->cache[$cacheKey] = $participant; // Can be null if not found
+        }
+
+        $participant = $this->cache[$cacheKey];
+        if ($participant instanceof LarpParticipant) {
+            $character->setStoryWriter($participant);
+        }
+    }
+
+    /**
+     * Parse tags from a string like "#weteran #zatarg #religijny" and match with existing tags.
+     */
+    private function handleTags(mixed $value, string $larpId, Character $character): void
+    {
+        $tagsString = trim((string) $value);
+        if (empty($tagsString)) {
+            return;
+        }
+
+        // Parse tags: split by # and clean up
+        $tagNames = preg_split('/\s*#\s*/', $tagsString, -1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($tagNames as $tagName) {
+            $tagName = trim($tagName);
+            if (empty($tagName)) {
+                continue;
+            }
+
+            $cacheKey = 'tag_' . strtolower($tagName);
+            if (!isset($this->cache[$cacheKey])) {
+                $tag = $this->tagRepository->findByTitleForLarp($tagName, $larpId);
+                $this->cache[$cacheKey] = $tag; // Can be null if not found
+            }
+
+            $tag = $this->cache[$cacheKey];
+            if ($tag instanceof Tag) {
+                $character->addTag($tag);
+            }
+        }
     }
 
     private function createReference(Character $character, int|string $rowNo, SharedFile $file, array $additionalData = []): void

@@ -385,4 +385,18 @@ html.dark-mode {
     .gm-style .gm-ui-hover-effect {
         filter: invert(100%);
     }
+
+  .card-header-tabs .nav-link.active {
+    background: var(--bo-nav-bg-active);
+    border-color: var(--input-border);
+    border-bottom: 1px solid var(--card-bg);
+    font-weight: normal;
+    color: var(--text-primary);
+  }
+
+  .card-header-tabs {
+    border-bottom: 1px solid var(--input-border);;
+
+  }
+
 }

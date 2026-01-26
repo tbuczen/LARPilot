@@ -117,6 +117,17 @@ larp:
   plural: 'LARPy'
   list: 'Lista LARPów'
   no_larps: 'Brak opublikowanych LARPów w tym momencie'
+  delete:
+    title: 'Usuń LARPa'
+    warning: 'Ta akcja jest nieodwracalna! Wszystkie dane powiązane z tym LARPem zostaną trwale usunięte.'
+    confirm: 'Czy na pewno chcesz usunąć %title%?'
+    success: 'LARP "%title%" został usunięty.'
+  plan:
+    your_plan: 'Twój Plan'
+    unlimited_larps: 'Nielimitowane LARPy'
+    larp_limit: 'Organizujesz %current% z %max% dozwolonych LARPów'
+    limit_reached: 'Limit osiągnięty'
+    upgrade: 'Ulepsz Plan'
   invitation:
     singular: 'Zaproszenie'
     plural: 'Zaproszenia'
@@ -182,6 +193,10 @@ larp:
     board: 'Tablica zadań'
   mailing:
     title: 'Mailingi'
+  management:
+    title: 'Zarządzanie'
+  administration:
+    title: 'Administracja'
   faction:
     name: 'Frakcja'
     list: 'Frakcje'
@@ -568,11 +583,6 @@ character_type:
   short_npc: "NPC krótkoterminowy"
   gm: "Mistrz gry"
   generic_npc: "Generyczny NPC"
-relation_type:
-  friend: "Przyjaciel"
-  enemy: "Wróg"
-  family: "Rodzina"
-  ally: "Sojusznik"
 
 event_planner:
   title: 'Planer wydarzeń'
@@ -646,21 +656,6 @@ enum:
     special: "Specjalna"
     transition: "Przejście"
 
-# Tłumaczenia enumeracji ról
-user_role:
-  ROLE_ORGANIZER: 'Organizator'
-  ROLE_STAFF: 'Personel'
-  ROLE_MAIN_STORY_WRITER: 'Główny scenarzysta'
-  ROLE_STORY_WRITER: 'Scenarzysta'
-  ROLE_PHOTOGRAPHER: 'Fotograf'
-  ROLE_CRAFTER: 'Rzemieślnik'
-  ROLE_MAKEUP_ARTIST: 'Charakteryzator'
-  ROLE_GAME_MASTER: 'Mistrz gry'
-  ROLE_NPC_LONG: 'NPC (długoterminowy)'
-  ROLE_NPC_SHORT: 'NPC (krótkoterminowy)'
-  ROLE_PLAYER: 'Gracz'
-  ROLE_MEDIC: 'Medyk'
-  ROLE_TRASHER: 'Sprzątający'
   ROLE_PERSON_OF_TRUST: 'Osoba zaufania'
   ROLE_OUTFIT_APPROVER: 'Osoba zatwierdzająca stroje'
   ROLE_ACCOUNTANT: 'Księgowy'
@@ -857,3 +852,232 @@ privacy_policy:
   title: 'Polityka Prywatności'
 terms:
   title: 'Regulamin'
+
+# Modal Opinii
+feedback:
+  modal:
+    title: 'Wyślij opinię'
+  type:
+    label: 'Typ opinii'
+    select: 'Wybierz typ opinii...'
+    bug_report: 'Zgłoszenie błędu'
+    feature_request: 'Propozycja funkcji'
+    question: 'Pytanie'
+    general: 'Ogólna opinia'
+  subject:
+    label: 'Temat'
+    placeholder: 'Krótkie podsumowanie Twojej opinii'
+  description:
+    label: 'Opis'
+    placeholder: 'Opisz szczegółowo swoją opinię...'
+  screenshot:
+    label: 'Zrzut ekranu (opcjonalnie)'
+    capture: 'Zrób zrzut ekranu'
+    remove: 'Usuń'
+    preview: 'Podgląd zrzutu ekranu'
+  context:
+    title: 'Informacje techniczne'
+  submit: 'Wyślij opinię'
+  submitting: 'Wysyłanie...'
+  success: 'Dziękujemy! Twoja opinia została wysłana pomyślnie.'
+  error: 'Nie udało się wysłać opinii. Spróbuj ponownie.'
+
+# Status Zgłoszenia
+submission_status:
+  new: 'Nowe'
+  consider: 'W rozpatrzeniu'
+  rejected: 'Odrzucone'
+  accepted: 'Zaakceptowane'
+  offered: 'Postać zaproponowana'
+  confirmed: 'Potwierdzone'
+  declined: 'Odrzucone przez gracza'
+
+# Status Incydentu
+incident_status:
+  NEW: 'Nowy'
+  IN_PROGRESS: 'W trakcie'
+  FEEDBACK_GIVEN: 'Przekazano informację zwrotną'
+  CLOSED: 'Zamknięty'
+
+# Typy Pytań Ankiety
+survey_question_type:
+  text: 'Krótki tekst'
+  textarea: 'Długi tekst'
+  single_choice: 'Wybór pojedynczy'
+  multiple_choice: 'Wybór wielokrotny'
+  rating: 'Skala ocen'
+  tag_selection: 'Wybór tagów'
+
+# Planowanie Wydarzeń - Typy Konfliktów
+conflict_type:
+  resource_double_booking: 'Podwójna rezerwacja zasobu'
+  location_capacity: 'Przekroczenie pojemności lokacji'
+  character_impossible: 'Postać w dwóch miejscach'
+  timeline_overlap: 'Nakładanie się czasu'
+  staff_overload: 'Przeciążenie obsługi'
+
+# Planowanie Wydarzeń - Poziom Konfliktu
+conflict_severity:
+  critical: 'Krytyczny'
+  warning: 'Ostrzeżenie'
+  info: 'Informacja'
+
+# Planowanie Wydarzeń - Typy Zasobów
+planning_resource_type:
+  npc: 'NPC/Postać'
+  staff_gm: 'Mistrz Gry'
+  staff_tech: 'Technik'
+  staff_safety: 'Osoba ds. bezpieczeństwa'
+  staff_photo: 'Fotograf'
+  prop: 'Rekwizyt'
+  equipment: 'Sprzęt'
+  vehicle: 'Pojazd'
+  other: 'Inne'
+
+# Galerie Zdjęć
+gallery:
+  list: "Galerie zdjęć"
+  create: "Stwórz galerię"
+  edit: "Edytuj galerię"
+  empty_list: "Nie znaleziono galerii. Stwórz pierwszą galerię!"
+  photographer: "Fotograf"
+  links: "Linki"
+  visibility_label: "Widoczność"
+  visibility:
+    public: "Publiczna"
+    participants_only: "Tylko uczestnicy"
+    organizers_only: "Tylko organizatorzy"
+  view_album: "Zobacz album"
+  download_zip: "Pobierz ZIP"
+  uploaded_zip: "Przesłany plik ZIP"
+  external_album: "Zewnętrzny album zdjęć"
+  zip_download: "Pobierz zdjęcia (ZIP)"
+  no_links: "Do tej galerii nie dodano jeszcze żadnych linków ani plików."
+  upload_error: "Błąd przesyłania pliku. Spróbuj ponownie."
+
+# Widoczność Galerii
+gallery_visibility:
+  public: 'Publiczna'
+  participants_only: 'Tylko uczestnicy'
+  organizers_only: 'Tylko organizatorzy'
+
+# Status Zatwierdzenia Lokacji
+location_approval_status:
+  pending: 'Oczekuje na zatwierdzenie'
+  approved: 'Zatwierdzona'
+  rejected: 'Odrzucona'
+
+# Typy Szablonów Maili
+mail_template_type:
+  application_received: 'Otrzymano zgłoszenie'
+  character_assigned: 'Przypisano postać'
+  event_reminder: 'Przypomnienie o wydarzeniu'
+  custom: 'Wiadomość niestandardowa'
+
+# Typy Relacji
+relation_type:
+  family: 'Rodzinna'
+  friendship: 'Przyjaźń'
+  rivalry: 'Rywalizacja'
+  romance: 'Romans'
+  professional: 'Zawodowa'
+  political: 'Polityczna'
+  religious: 'Religijna'
+  other: 'Inna'
+
+# Kategorie Wydarzeń
+event_category:
+  historical: 'Historyczne/Lore'
+  current: 'Aktualna historia'
+  future: 'Planowane/Przyszłe'
+
+# Ustawienia LARPu
+larp_setting:
+  fantasy: 'Fantasy'
+  sci_fi: 'Science Fiction'
+  historical: 'Historyczny'
+  modern: 'Współczesny'
+  post_apocalyptic: 'Postapokaliptyczny'
+  horror: 'Horror'
+  steampunk: 'Steampunk'
+  cyberpunk: 'Cyberpunk'
+  other: 'Inny'
+
+# Typy LARPu
+larp_type:
+  chamber: 'LARP kameralny'
+  field: 'LARP terenowy'
+  convention: 'Konwent'
+  blockbuster: 'Blockbuster'
+  freeform: 'Freeform'
+  other: 'Inny'
+
+# Wspólne Elementy UI
+ui:
+  loading: 'Ładowanie...'
+  saving: 'Zapisywanie...'
+  deleting: 'Usuwanie...'
+  processing: 'Przetwarzanie...'
+  please_wait: 'Proszę czekać...'
+  no_results: 'Brak wyników'
+  select_option: 'Wybierz opcję...'
+  confirm_action: 'Czy na pewno?'
+  action_cannot_be_undone: 'Ta akcja jest nieodwracalna.'
+  required_field: 'To pole jest wymagane'
+  optional: 'opcjonalne'
+
+# Role
+user_role:
+  ROLE_ORGANIZER: 'Organizator'
+  ROLE_STAFF: 'Obsługa'
+  ROLE_MAIN_STORY_WRITER: 'Główny scenarzysta'
+  ROLE_STORY_WRITER: 'Scenarzysta'
+  ROLE_PHOTOGRAPHER: 'Fotograf'
+  ROLE_CRAFTER: 'Rzemieślnik'
+  ROLE_MAKEUP_ARTIST: 'Charakteryzator'
+  ROLE_GAME_MASTER: 'Mistrz Gry'
+  ROLE_NPC_LONG: 'NPC (długie)'
+  ROLE_NPC_SHORT: 'NPC (krótkie)'
+  ROLE_PLAYER: 'Gracz'
+  ROLE_MEDIC: 'Medyk'
+  ROLE_TRASHER: 'Porządkowy'
+  ROLE_PERSON_OF_TRUST: 'Osoba zaufana'
+  ROLE_OUTFIT_APPROVER: 'Akceptujący stroje'
+  ROLE_ACCOUNTANT: 'Księgowy'
+  ROLE_GASTRO: 'Gastronomia'
+
+# Śledzenie uczestników
+staff_position:
+  title: 'Lokalizacje ekipy'
+  select_map: 'Wybierz mapę'
+  no_maps: 'Ten LARP nie posiada skonfigurowanych map'
+  update_title: 'Zaaktualizuj moją pozycję'
+  view_title: 'Pozycje'
+  view_positions: 'Wyświetl położenie'
+  update_my_position: 'Zaaktualizuj moją lokalizacje'
+  current_position: 'Obecna lokalizacja'
+  updated_at: 'Zaaktualizowano'
+  tap_to_select: 'Kliknij na mapę w celu określenia swojej lokalizacji'
+  selected_cell: 'Zaznaczony koordynat'
+  no_cell_selected: 'No cell selected'
+  status_note: 'Status Note'
+  status_note_placeholder: 'e.g., On break, Handling incident...'
+  save_position: 'Save Position'
+  remove_position: 'Remove Position'
+  remove_confirm: 'Are you sure you want to remove your position from this map?'
+  updated: 'Position updated successfully'
+  removed: 'Position removed successfully'
+  invalid_cell: 'Invalid grid cell selected'
+  select_cell: 'Please select a grid cell first'
+  limited_visibility: 'You are viewing a limited list of staff positions. Contact organizers for full visibility.'
+  active_positions: 'Active Positions'
+  positions_list: 'Positions List'
+  staff_member: 'Staff Member'
+  role: 'Role'
+  cell: 'Cell'
+  status: 'Status'
+  no_positions: 'No staff positions recorded yet'
+  already_exists: 'You already have a position on this map'
+  show_on_map: 'Show Staff Positions'
+  update_position: 'Update Position'
+  my_position: 'My Position'

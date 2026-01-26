@@ -49,6 +49,7 @@ class Character extends StoryObject
     #[ORM\Column(type: 'boolean')]
     private bool $availableForRecruitment = false;
 
+    #[Gedmo\Versioned]
     #[ORM\ManyToOne(targetEntity: LarpParticipant::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?LarpParticipant $storyWriter = null;

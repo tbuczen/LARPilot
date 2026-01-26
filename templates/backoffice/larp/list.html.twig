@@ -1,51 +1,82 @@
 {% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
 
 {% block larp_title %}{{ 'larp.list'|trans }}{% endblock %}
 
 {% block larp_content %}
-        <h1 class="mb-4">{{ 'larp.list'|trans }}</h1>
+    <div class="card mt-4">
+        {% set actions %}
+            {% if canCreateMore %}
+                {{ ui.primary_button('create', path('backoffice_larp_create'), 'bi-plus-circle') }}
+            {% endif %}
+        {% endset %}
+        {{ ui.card_header('larp.list', actions) }}
 
-        {# Plan limit information #}
-        <div class="alert {% if canCreateMore %}alert-info{% else %}alert-warning{% endif %} mb-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <i class="bi bi-info-circle me-2"></i>
-                    <strong>{{ 'larp.plan.your_plan'|trans }}:</strong>
-                    {% if maxLarpsAllowed is null %}
-                        {{ 'larp.plan.unlimited_larps'|trans }}
-                    {% else %}
-                        {{ 'larp.plan.larp_limit'|trans({'%current%': organizerLarpCount, '%max%': maxLarpsAllowed}) }}
+        <div class="card-body p-0">
+            {# Plan limit information #}
+            <div class="alert {% if canCreateMore %}alert-info{% else %}alert-warning{% endif %} m-3 mb-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>{{ 'larp.plan.your_plan'|trans }}:</strong>
+                        {% if maxLarpsAllowed is null %}
+                            {{ 'larp.plan.unlimited_larps'|trans }}
+                        {% else %}
+                            {{ 'larp.plan.larp_limit'|trans({'%current%': organizerLarpCount, '%max%': maxLarpsAllowed}) }}
+                        {% endif %}
+                    </div>
+                    {% if not canCreateMore %}
+                        <div>
+                            <strong class="text-danger">{{ 'larp.plan.limit_reached'|trans }}</strong>
+                            <button class="btn btn-sm btn-warning ms-2" disabled>
+                                <i class="bi bi-star me-1"></i>{{ 'larp.plan.upgrade'|trans }}
+                            </button>
+                        </div>
                     {% endif %}
                 </div>
-                {% if not canCreateMore %}
-                    <div>
-                        <strong class="text-danger">{{ 'larp.plan.limit_reached'|trans }}</strong>
-                        {# Placeholder for upgrade button - will be implemented in Phase 4 #}
-                        <button class="btn btn-sm btn-warning ms-2" disabled>
-                            <i class="bi bi-star me-1"></i>{{ 'larp.plan.upgrade'|trans }}
-                        </button>
-                    </div>
-                {% endif %}
             </div>
+
+            {% if larps|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{{ 'title'|trans }}</th>
+                                <th>{{ 'status'|trans }}</th>
+                                <th>{{ 'location'|trans }}</th>
+                                <th>{{ 'start_date'|trans }}</th>
+                                <th>{{ 'actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for larp in larps %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}">
+                                            {{ larp.title }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
+                                    </td>
+                                    <td>{{ larp.location|default('-') }}</td>
+                                    <td>{{ larp.startDate|date('Y-m-d') }}</td>
+                                    <td>
+                                        {% if is_granted('DELETE_LARP', larp) %}
+                                            {{ ui.delete_button(larp.id, larp.title, path('backoffice_larp_delete', {'larp': larp.id})) }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                {{ ui.empty_state('public.larp.no_larps', 'bi-calendar-event') }}
+            {% endif %}
         </div>
+    </div>
 
-        {% if larps|length > 0 %}
-            <div class="list-group">
-                {% for larp in larps %}
-                    <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <div><small>{{ larp.status.value }}</small><h5 class="mb-1">{{ larp.title }}</h5></div>
-                            <small>{{ larp.startDate|date('Y-m-d') }}</small>
-                        </div>
-                        <p class="mb-1">{{ larp.description|truncate_words(50)}}</p>
-                        <small>{{ larp.location }}</small>
-
-                    </a>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="alert alert-info">
-                {{ 'public.larp.no_larps'|trans }}
-            </div>
-        {% endif %}
+    {# Unified delete modal with Stimulus controller #}
+    {% include 'includes/delete_modal.html.twig' %}
 {% endblock %}
