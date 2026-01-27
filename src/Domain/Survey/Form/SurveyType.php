@@ -20,22 +20,22 @@ class SurveyType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'Survey Title',
+                'label' => 'survey.title',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description',
+                'label' => 'survey.description',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
                     'rows' => 3,
                 ],
-                'help' => 'Introduce the survey to applicants',
+                'help' => 'survey.description_help',
             ])
             ->add('isActive', CheckboxType::class, [
-                'label' => 'Active',
+                'label' => 'survey.is_active',
                 'required' => false,
-                'help' => 'Only active surveys can receive responses',
+                'help' => 'survey.is_active_help',
                 'attr' => ['class' => 'form-check-input'],
             ])
             ->add('questions', CollectionType::class, [
@@ -51,7 +51,7 @@ class SurveyType extends AbstractType
                 'label' => false,
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Save Survey',
+                'label' => 'survey.save',
                 'attr' => ['class' => 'btn btn-primary'],
             ])
         ;
