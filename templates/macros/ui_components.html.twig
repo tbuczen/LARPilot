@@ -329,3 +329,77 @@
         {% endif %}
     </div>
 {% endmacro %}
+
+{#
+    Speech-to-Text Dictation Button
+    Adds a microphone button with language selector for voice-to-text input
+
+    Parameters:
+        - targetFieldId: CSS selector for target input/textarea (e.g., '#form_description')
+        - defaultLanguage: Initial language ('en-US' or 'pl-PL', default: 'en-US')
+        - showLanguageSelect: Show language dropdown (default: true)
+        - buttonSize: Button size ('sm', 'lg', or empty, default: 'sm')
+        - additionalClasses: Additional CSS classes for wrapper (optional)
+
+    Usage:
+        {{ ui.dictation_button('#form_description') }}
+        {{ ui.dictation_button('#' ~ form.description.vars.id, 'pl-PL') }}
+        {{ ui.dictation_button('#my-textarea', 'en-US', true, 'sm', 'my-custom-class') }}
+#}
+{% macro dictation_button(targetFieldId, defaultLanguage = 'en-US', showLanguageSelect = true, buttonSize = 'sm', additionalClasses = '') %}
+    <div class="dictation-controls d-inline-flex align-items-center gap-2 {{ additionalClasses }}"
+         data-controller="speech-to-text"
+         data-speech-to-text-target-value="{{ targetFieldId }}"
+         data-speech-to-text-language-value="{{ defaultLanguage }}">
+
+        <button type="button"
+                class="btn {% if buttonSize %}btn-{{ buttonSize }}{% endif %} btn-outline-secondary"
+                data-action="speech-to-text#toggle"
+                data-speech-to-text-target="button"
+                title="{{ 'dictation.button_title'|trans }}"
+                aria-label="{{ 'dictation.button_title'|trans }}">
+            <i class="bi bi-mic"></i>
+            <span class="visually-hidden">{{ 'dictation.button_title'|trans }}</span>
+        </button>
+
+        {% if showLanguageSelect %}
+            <select class="form-select form-select-{{ buttonSize|default('sm') }}"
+                    data-action="speech-to-text#changeLanguage"
+                    data-speech-to-text-target="languageSelect"
+                    style="width: auto; min-width: 100px;"
+                    aria-label="{{ 'dictation.language_select'|trans }}">
+                <option value="en-US" {% if defaultLanguage == 'en-US' %}selected{% endif %}>English</option>
+                <option value="pl-PL" {% if defaultLanguage == 'pl-PL' %}selected{% endif %}>Polski</option>
+            </select>
+        {% endif %}
+
+        <small class="text-muted d-none" data-speech-to-text-target="status"></small>
+    </div>
+{% endmacro %}
+
+{#
+    Form Field with Dictation
+    Wraps a form field with an integrated dictation button
+
+    Parameters:
+        - formField: The form field to render (e.g., form.description)
+        - defaultLanguage: Initial language ('en-US' or 'pl-PL', default: 'en-US')
+        - showLanguageSelect: Show language dropdown (default: true)
+
+    Usage:
+        {{ ui.field_with_dictation(form.description) }}
+        {{ ui.field_with_dictation(form.description, 'pl-PL') }}
+
+    Note: This macro renders the label, widget, and help. Use for WYSIWYG fields.
+#}
+{% macro field_with_dictation(formField, defaultLanguage = 'en-US', showLanguageSelect = true) %}
+    <div class="mb-3">
+        {{ form_label(formField) }}
+        <div class="d-flex align-items-start gap-2 mb-2">
+            {{ _self.dictation_button('#' ~ formField.vars.id, defaultLanguage, showLanguageSelect) }}
+        </div>
+        {{ form_widget(formField) }}
+        {{ form_help(formField) }}
+        {{ form_errors(formField) }}
+    </div>
+{% endmacro %}

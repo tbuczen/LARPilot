@@ -15,6 +15,15 @@ menu:
   toggle: 'Menu'
 dark_mode:
   toggle: 'Przełącz tryb ciemny'
+dictation:
+  button_title: 'Dyktuj (zamiana mowy na tekst)'
+  language_select: 'Wybierz język dyktowania'
+  listening: 'Słucham...'
+  error:
+    not_allowed: 'Odmowa dostępu do mikrofonu. Proszę zezwolić na dostęp do mikrofonu.'
+    no_speech: 'Nie wykryto mowy. Spróbuj ponownie.'
+    network: 'Błąd sieci. Sprawdź połączenie.'
+    not_supported: 'Rozpoznawanie mowy nie jest obsługiwane w tej przeglądarce. Wypróbuj Chrome lub Edge.'
 create: 'Stwórz'
 name: 'Nazwa'
 description: 'Opis'

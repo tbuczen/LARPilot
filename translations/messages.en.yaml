@@ -34,6 +34,15 @@ menu:
   navigation: 'Navigation'
 dark_mode:
   toggle: 'Toggle Dark Mode'
+dictation:
+  button_title: 'Dictate (speech-to-text)'
+  language_select: 'Select dictation language'
+  listening: 'Listening...'
+  error:
+    not_allowed: 'Microphone access denied. Please allow microphone access.'
+    no_speech: 'No speech detected. Try again.'
+    network: 'Network error. Check your connection.'
+    not_supported: 'Speech recognition not supported in this browser. Try Chrome or Edge.'
 create: 'Create'
 name: 'Name'
 description: 'Description'
