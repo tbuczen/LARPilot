@@ -8,6 +8,10 @@ parameters:
     github.token: '%env(GITHUB_TOKEN)%'
     github.repo: '%env(GITHUB_REPO)%'
     github.discussion_category_id: '%env(GITHUB_DISCUSSION_CATEGORY_ID)%'
+    # StoryAI configuration
+    openai.api_key: '%env(OPENAI_API_KEY)%'
+    openai.embedding_model: '%env(OPENAI_EMBEDDING_MODEL)%'
+    openai.completion_model: '%env(OPENAI_COMPLETION_MODEL)%'
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -55,3 +59,17 @@ services:
             $integrationServices: !tagged_iterator app.integration
 
     ShipMonk\DoctrineEntityPreloader\EntityPreloader: ~
+
+    # StoryAI OpenAI Provider
+    App\Domain\StoryAI\Service\Provider\OpenAIProvider:
+        arguments:
+            $apiKey: '%openai.api_key%'
+            $embeddingModel: '%openai.embedding_model%'
+            $completionModel: '%openai.completion_model%'
+
+    # Register OpenAIProvider for both interfaces
+    App\Domain\StoryAI\Service\Provider\EmbeddingProviderInterface:
+        alias: App\Domain\StoryAI\Service\Provider\OpenAIProvider
+
+    App\Domain\StoryAI\Service\Provider\LLMProviderInterface:
+        alias: App\Domain\StoryAI\Service\Provider\OpenAIProvider
