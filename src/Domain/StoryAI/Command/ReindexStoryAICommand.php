@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\StoryAI\Command;
 
 use App\Domain\Core\Entity\Larp;
-use App\Domain\StoryAI\Entity\LarpLoreDocument;
 use App\Domain\StoryAI\Message\ReindexLarpMessage;
 use App\Domain\StoryAI\Repository\LarpLoreDocumentRepository;
 use App\Domain\StoryAI\Repository\StoryObjectEmbeddingRepository;
