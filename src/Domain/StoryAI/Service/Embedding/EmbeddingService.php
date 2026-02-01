@@ -5,18 +5,25 @@ declare(strict_types=1);
 namespace App\Domain\StoryAI\Service\Embedding;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\StoryAI\DTO\VectorDocument;
 use App\Domain\StoryAI\Entity\LarpLoreDocument;
 use App\Domain\StoryAI\Entity\LoreDocumentChunk;
 use App\Domain\StoryAI\Entity\StoryObjectEmbedding;
 use App\Domain\StoryAI\Repository\LoreDocumentChunkRepository;
 use App\Domain\StoryAI\Repository\StoryObjectEmbeddingRepository;
 use App\Domain\StoryAI\Service\Provider\EmbeddingProviderInterface;
+use App\Domain\StoryAI\Service\VectorStore\VectorStoreInterface;
 use App\Domain\StoryObject\Entity\StoryObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Service for generating and managing embeddings.
+ *
+ * This service follows CQRS principles:
+ * - Write operations go to external vector store (Supabase, etc.)
+ * - Local StoryObjectEmbedding entities are kept for tracking/metadata only
  */
 class EmbeddingService
 {
@@ -28,6 +35,7 @@ class EmbeddingService
     public function __construct(
         private readonly EmbeddingProviderInterface $embeddingProvider,
         private readonly StoryObjectSerializer $serializer,
+        private readonly VectorStoreInterface $vectorStore,
         private readonly StoryObjectEmbeddingRepository $embeddingRepository,
         private readonly LoreDocumentChunkRepository $chunkRepository,
         private readonly EntityManagerInterface $entityManager,
@@ -47,38 +55,42 @@ class EmbeddingService
 
         // Serialize the story object to text
         $serializedContent = $this->serializer->serialize($storyObject);
+        $contentHash = hash('sha256', $serializedContent);
 
-        // Check if embedding already exists
+        // Check if embedding already exists and content hasn't changed
         $existingEmbedding = $this->embeddingRepository->findByStoryObject($storyObject);
 
-        if ($existingEmbedding) {
-            // Check if content has changed
-            if (!$existingEmbedding->hasContentChanged($serializedContent)) {
-                $this->logger?->debug('Content unchanged, skipping re-embedding', [
-                    'story_object_id' => $storyObject->getId()->toRfc4122(),
-                ]);
-                return $existingEmbedding;
-            }
-
-            // Update existing embedding
-            $embedding = $existingEmbedding;
-            $this->logger?->debug('Updating existing embedding', [
+        if ($existingEmbedding && $existingEmbedding->getContentHash() === $contentHash) {
+            $this->logger?->debug('Content unchanged, skipping re-embedding', [
                 'story_object_id' => $storyObject->getId()->toRfc4122(),
             ]);
-        } else {
-            // Create new embedding
-            $embedding = new StoryObjectEmbedding();
-            $embedding->setLarp($larp);
-            $embedding->setStoryObject($storyObject);
-            $this->logger?->debug('Creating new embedding', [
-                'story_object_id' => $storyObject->getId()->toRfc4122(),
-            ]);
+            return $existingEmbedding;
         }
 
         // Generate embedding vector
         $vector = $this->embeddingProvider->embed($serializedContent);
 
-        // Update embedding
+        // Create VectorDocument and upsert to external store
+        $entityType = (new \ReflectionClass($storyObject))->getShortName();
+        $vectorDocument = VectorDocument::forStoryObject(
+            entityId: $storyObject->getId(),
+            larpId: $larp->getId(),
+            entityType: $entityType,
+            title: $storyObject->getTitle(),
+            serializedContent: $serializedContent,
+            embedding: $vector,
+            embeddingModel: $this->embeddingProvider->getModelName(),
+        );
+
+        $this->vectorStore->upsert($vectorDocument);
+
+        // Update or create local tracking entity
+        $embedding = $existingEmbedding ?? new StoryObjectEmbedding();
+        if (!$existingEmbedding) {
+            $embedding->setLarp($larp);
+            $embedding->setStoryObject($storyObject);
+        }
+
         $embedding->setSerializedContent($serializedContent);
         $embedding->setEmbedding($vector);
         $embedding->setEmbeddingModel($this->embeddingProvider->getModelName());
@@ -89,8 +101,9 @@ class EmbeddingService
 
         $this->logger?->info('Story object indexed successfully', [
             'story_object_id' => $storyObject->getId()->toRfc4122(),
-            'type' => $storyObject::class,
+            'type' => $entityType,
             'token_count' => $embedding->getTokenCount(),
+            'vector_store' => $this->vectorStore->getProviderName(),
         ]);
 
         return $embedding;
@@ -106,7 +119,14 @@ class EmbeddingService
             throw new \InvalidArgumentException('Lore document must belong to a LARP');
         }
 
-        // Clear existing chunks
+        // Delete existing chunks from vector store
+        $this->vectorStore->deleteByFilter([
+            'larp_id' => $larp->getId(),
+            'type' => VectorDocument::TYPE_LORE_CHUNK,
+            'metadata->>document_id' => $document->getId()->toRfc4122(),
+        ]);
+
+        // Clear local chunks
         $this->chunkRepository->deleteByDocument($document);
         $document->clearChunks();
 
@@ -133,8 +153,14 @@ class EmbeddingService
 
         $embeddings = $this->embeddingProvider->embedBatch($textsToEmbed);
 
-        // Create chunk entities
+        // Prepare vector documents for batch upsert
+        $vectorDocuments = [];
+
+        // Create chunk entities and vector documents
         foreach ($chunks as $index => $chunkContent) {
+            $chunkId = Uuid::v4();
+
+            // Create local chunk entity
             $chunk = new LoreDocumentChunk();
             $chunk->setDocument($document);
             $chunk->setLarp($larp);
@@ -146,13 +172,32 @@ class EmbeddingService
 
             $document->addChunk($chunk);
             $this->entityManager->persist($chunk);
+
+            // Create vector document for external store
+            $vectorDocuments[] = VectorDocument::forLoreChunk(
+                entityId: $chunk->getId(),
+                larpId: $larp->getId(),
+                documentTitle: $document->getTitle(),
+                chunkContent: $chunkContent,
+                chunkIndex: $index,
+                embedding: $embeddings[$index],
+                embeddingModel: $this->embeddingProvider->getModelName(),
+                metadata: [
+                    'document_id' => $document->getId()->toRfc4122(),
+                    'document_type' => $document->getType()->value,
+                ],
+            );
         }
+
+        // Batch upsert to vector store
+        $this->vectorStore->upsertBatch($vectorDocuments);
 
         $this->entityManager->flush();
 
         $this->logger?->info('Lore document indexed successfully', [
             'document_id' => $document->getId()->toRfc4122(),
             'chunk_count' => count($chunks),
+            'vector_store' => $this->vectorStore->getProviderName(),
         ]);
     }
 
@@ -174,14 +219,16 @@ class EmbeddingService
         $this->logger?->info('Starting LARP reindex', [
             'larp_id' => $larp->getId()->toRfc4122(),
             'total_objects' => $total,
+            'vector_store' => $this->vectorStore->getProviderName(),
         ]);
 
         foreach ($storyObjects as $index => $storyObject) {
             try {
                 $serializedContent = $this->serializer->serialize($storyObject);
+                $contentHash = hash('sha256', $serializedContent);
                 $existingEmbedding = $this->embeddingRepository->findByStoryObject($storyObject);
 
-                if ($existingEmbedding && !$existingEmbedding->hasContentChanged($serializedContent)) {
+                if ($existingEmbedding && $existingEmbedding->getContentHash() === $contentHash) {
                     $stats['skipped']++;
                 } else {
                     $this->indexStoryObject($storyObject);
@@ -213,6 +260,10 @@ class EmbeddingService
      */
     public function deleteStoryObjectEmbedding(StoryObject $storyObject): void
     {
+        // Delete from external vector store
+        $this->vectorStore->delete($storyObject->getId());
+
+        // Delete local tracking entity
         $embedding = $this->embeddingRepository->findByStoryObject($storyObject);
         if ($embedding) {
             $this->entityManager->remove($embedding);
@@ -220,6 +271,7 @@ class EmbeddingService
 
             $this->logger?->debug('Embedding deleted', [
                 'story_object_id' => $storyObject->getId()->toRfc4122(),
+                'vector_store' => $this->vectorStore->getProviderName(),
             ]);
         }
     }
@@ -232,6 +284,22 @@ class EmbeddingService
     public function generateQueryEmbedding(string $query): array
     {
         return $this->embeddingProvider->embed($query);
+    }
+
+    /**
+     * Check if vector store is available.
+     */
+    public function isVectorStoreAvailable(): bool
+    {
+        return $this->vectorStore->isAvailable();
+    }
+
+    /**
+     * Get the vector store provider name.
+     */
+    public function getVectorStoreProvider(): string
+    {
+        return $this->vectorStore->getProviderName();
     }
 
     /**

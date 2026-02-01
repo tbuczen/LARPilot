@@ -6,23 +6,23 @@ namespace App\Domain\StoryAI\Service\Query;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\StoryAI\DTO\SearchResult;
-use App\Domain\StoryAI\Entity\LoreDocumentChunk;
-use App\Domain\StoryAI\Entity\StoryObjectEmbedding;
-use App\Domain\StoryAI\Repository\LoreDocumentChunkRepository;
-use App\Domain\StoryAI\Repository\StoryObjectEmbeddingRepository;
+use App\Domain\StoryAI\DTO\VectorDocument;
+use App\Domain\StoryAI\DTO\VectorSearchResult;
 use App\Domain\StoryAI\Service\Embedding\EmbeddingService;
+use App\Domain\StoryAI\Service\VectorStore\VectorStoreInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Service for performing vector similarity searches across indexed content.
+ *
+ * This service follows CQRS principles by reading from the external vector store.
  */
 readonly class VectorSearchService
 {
     public function __construct(
-        private EmbeddingService               $embeddingService,
-        private StoryObjectEmbeddingRepository $storyObjectEmbeddingRepository,
-        private LoreDocumentChunkRepository    $loreDocumentChunkRepository,
-        private ?LoggerInterface               $logger = null,
+        private EmbeddingService $embeddingService,
+        private VectorStoreInterface $vectorStore,
+        private ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -43,20 +43,20 @@ readonly class VectorSearchService
             'query' => $query,
             'larp_id' => $larp->getId()->toRfc4122(),
             'limit' => $limit,
+            'vector_store' => $this->vectorStore->getProviderName(),
         ]);
 
-        // Search story objects
-        $storyResults = $this->searchStoryObjects($queryEmbedding, $larp, $limit, $minSimilarity);
+        $results = $this->vectorStore->search(
+            embedding: $queryEmbedding,
+            larpId: $larp->getId(),
+            limit: $limit,
+            minSimilarity: $minSimilarity,
+        );
 
-        // Search lore documents
-        $loreResults = $this->searchLoreDocuments($queryEmbedding, $larp, $limit, $minSimilarity);
-
-        // Merge and sort by similarity
-        $allResults = array_merge($storyResults, $loreResults);
-        usort($allResults, fn (SearchResult $a, SearchResult $b) => $b->similarity <=> $a->similarity);
-
-        // Return top results up to the limit
-        return array_slice($allResults, 0, $limit);
+        return array_map(
+            fn (VectorSearchResult $result) => $result->toSearchResult(),
+            $results
+        );
     }
 
     /**
@@ -65,20 +65,23 @@ readonly class VectorSearchService
      * @return SearchResult[]
      */
     public function searchStoryObjects(
-        array $queryEmbedding,
+        string $query,
         Larp $larp,
         int $limit = 10,
         float $minSimilarity = 0.5,
     ): array {
-        $results = $this->storyObjectEmbeddingRepository->findSimilar(
-            $queryEmbedding,
-            $larp,
-            $limit,
-            $minSimilarity
+        $queryEmbedding = $this->embeddingService->generateQueryEmbedding($query);
+
+        $results = $this->vectorStore->search(
+            embedding: $queryEmbedding,
+            larpId: $larp->getId(),
+            limit: $limit,
+            minSimilarity: $minSimilarity,
+            filters: ['type' => VectorDocument::TYPE_STORY_OBJECT],
         );
 
         return array_map(
-            fn (array $row) => $this->createStoryObjectResult($row['embedding'], $row['similarity']),
+            fn (VectorSearchResult $result) => $result->toSearchResult(),
             $results
         );
     }
@@ -89,26 +92,29 @@ readonly class VectorSearchService
      * @return SearchResult[]
      */
     public function searchLoreDocuments(
-        array $queryEmbedding,
+        string $query,
         Larp $larp,
         int $limit = 10,
         float $minSimilarity = 0.5,
     ): array {
-        $results = $this->loreDocumentChunkRepository->findSimilar(
-            $queryEmbedding,
-            $larp,
-            $limit,
-            $minSimilarity
+        $queryEmbedding = $this->embeddingService->generateQueryEmbedding($query);
+
+        $results = $this->vectorStore->search(
+            embedding: $queryEmbedding,
+            larpId: $larp->getId(),
+            limit: $limit,
+            minSimilarity: $minSimilarity,
+            filters: ['type' => VectorDocument::TYPE_LORE_CHUNK],
         );
 
         return array_map(
-            fn (array $row) => $this->createLoreChunkResult($row['chunk'], $row['similarity']),
+            fn (VectorSearchResult $result) => $result->toSearchResult(),
             $results
         );
     }
 
     /**
-     * Search by query string (generates embedding internally).
+     * Search with custom options.
      *
      * @return SearchResult[]
      */
@@ -119,62 +125,78 @@ readonly class VectorSearchService
         float $minSimilarity = 0.5,
         bool $includeStoryObjects = true,
         bool $includeLoreDocuments = true,
+        ?string $entityType = null,
     ): array {
         $queryEmbedding = $this->embeddingService->generateQueryEmbedding($query);
 
-        $results = [];
+        $filters = [];
 
-        if ($includeStoryObjects) {
-            $results = array_merge(
-                $results,
-                $this->searchStoryObjects($queryEmbedding, $larp, $limit, $minSimilarity)
-            );
+        // Filter by document type
+        if ($includeStoryObjects && !$includeLoreDocuments) {
+            $filters['type'] = VectorDocument::TYPE_STORY_OBJECT;
+        } elseif (!$includeStoryObjects && $includeLoreDocuments) {
+            $filters['type'] = VectorDocument::TYPE_LORE_CHUNK;
         }
 
-        if ($includeLoreDocuments) {
-            $results = array_merge(
-                $results,
-                $this->searchLoreDocuments($queryEmbedding, $larp, $limit, $minSimilarity)
-            );
+        // Filter by entity type (Character, Thread, Quest, etc.)
+        if ($entityType) {
+            $filters['entity_type'] = $entityType;
         }
 
-        // Sort by similarity
-        usort($results, fn (SearchResult $a, SearchResult $b) => $b->similarity <=> $a->similarity);
+        $results = $this->vectorStore->search(
+            embedding: $queryEmbedding,
+            larpId: $larp->getId(),
+            limit: $limit,
+            minSimilarity: $minSimilarity,
+            filters: $filters,
+        );
 
-        return array_slice($results, 0, $limit);
-    }
-
-    private function createStoryObjectResult(StoryObjectEmbedding $embedding, float $similarity): SearchResult
-    {
-        $storyObject = $embedding->getStoryObject();
-
-        return new SearchResult(
-            type: SearchResult::TYPE_STORY_OBJECT,
-            id: $embedding->getId()->toRfc4122(),
-            title: $storyObject?->getTitle() ?? 'Unknown',
-            content: $embedding->getSerializedContent(),
-            similarity: $similarity,
-            entityId: $storyObject?->getId()->toRfc4122(),
-            entityType: $storyObject ? (new \ReflectionClass($storyObject))->getShortName() : null,
+        return array_map(
+            fn (VectorSearchResult $result) => $result->toSearchResult(),
+            $results
         );
     }
 
-    private function createLoreChunkResult(LoreDocumentChunk $chunk, float $similarity): SearchResult
-    {
-        $document = $chunk->getDocument();
-
-        return new SearchResult(
-            type: SearchResult::TYPE_LORE_DOCUMENT,
-            id: $chunk->getId()->toRfc4122(),
-            title: $document?->getTitle() ?? 'Unknown Document',
-            content: $chunk->getContent(),
-            similarity: $similarity,
-            entityId: $document?->getId()->toRfc4122(),
-            entityType: $document?->getType()->getLabel(),
-            metadata: [
-                'chunk_index' => $chunk->getChunkIndex(),
-                'document_type' => $document?->getType()->value,
-            ],
+    /**
+     * Search with a pre-computed embedding vector.
+     *
+     * @param array<int, float> $embedding
+     * @return SearchResult[]
+     */
+    public function searchByEmbedding(
+        array $embedding,
+        Larp $larp,
+        int $limit = 10,
+        float $minSimilarity = 0.5,
+        array $filters = [],
+    ): array {
+        $results = $this->vectorStore->search(
+            embedding: $embedding,
+            larpId: $larp->getId(),
+            limit: $limit,
+            minSimilarity: $minSimilarity,
+            filters: $filters,
         );
+
+        return array_map(
+            fn (VectorSearchResult $result) => $result->toSearchResult(),
+            $results
+        );
+    }
+
+    /**
+     * Check if the vector store is available for searches.
+     */
+    public function isAvailable(): bool
+    {
+        return $this->vectorStore->isAvailable();
+    }
+
+    /**
+     * Get the vector store provider name.
+     */
+    public function getProviderName(): string
+    {
+        return $this->vectorStore->getProviderName();
     }
 }

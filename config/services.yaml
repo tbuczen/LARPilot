@@ -12,6 +12,8 @@ parameters:
     openai.api_key: '%env(OPENAI_API_KEY)%'
     openai.embedding_model: '%env(OPENAI_EMBEDDING_MODEL)%'
     openai.completion_model: '%env(OPENAI_COMPLETION_MODEL)%'
+    # Vector Store configuration (CQRS - external vector database)
+    vector_store.dsn: '%env(default::VECTOR_STORE_DSN)%'
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -73,3 +75,13 @@ services:
 
     App\Domain\StoryAI\Service\Provider\LLMProviderInterface:
         alias: App\Domain\StoryAI\Service\Provider\OpenAIProvider
+
+    # Vector Store (CQRS - external vector database for AI embeddings)
+    App\Domain\StoryAI\Service\VectorStore\VectorStoreFactory:
+        arguments:
+            $httpClient: '@http_client'
+
+    App\Domain\StoryAI\Service\VectorStore\VectorStoreInterface:
+        factory: ['@App\Domain\StoryAI\Service\VectorStore\VectorStoreFactory', 'create']
+        arguments:
+            $dsn: '%vector_store.dsn%'
