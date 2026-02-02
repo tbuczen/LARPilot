@@ -6,10 +6,13 @@ namespace App\Domain\StoryAI\Service\Query;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\StoryAI\DTO\SearchResult;
-use App\Domain\StoryAI\Repository\LarpLoreDocumentRepository;
 
 /**
- * Builds context for LLM prompts from search results and lore documents.
+ * Builds context for LLM prompts from search results.
+ *
+ * Note: Lore document support has been removed pending migration to Supabase.
+ * Once lore documents are stored in Supabase, this class can query them
+ * via VectorStoreInterface.
  */
 class ContextBuilder
 {
@@ -18,13 +21,8 @@ class ContextBuilder
     // Approximate characters per token
     private const CHARS_PER_TOKEN = 4;
 
-    public function __construct(
-        private readonly LarpLoreDocumentRepository $loreDocumentRepository,
-    ) {
-    }
-
     /**
-     * Build context string from search results and always-include documents.
+     * Build context string from search results.
      *
      * @param SearchResult[] $searchResults
      * @param int $maxTokens Maximum tokens for context
@@ -37,19 +35,6 @@ class ContextBuilder
         $availableChars = ($maxTokens - self::RESERVED_TOKENS) * self::CHARS_PER_TOKEN;
         $context = [];
         $usedChars = 0;
-
-        // First, add always-include lore documents
-        $alwaysIncludeDocs = $this->loreDocumentRepository->findAlwaysInclude($larp);
-
-        foreach ($alwaysIncludeDocs as $doc) {
-            $docContext = $this->formatLoreDocument($doc);
-            $docChars = strlen($docContext);
-
-            if ($usedChars + $docChars <= $availableChars) {
-                $context[] = $docContext;
-                $usedChars += $docChars;
-            }
-        }
 
         // Add search results
         foreach ($searchResults as $result) {
@@ -101,19 +86,6 @@ Guidelines:
 The context below contains relevant information from the LARP's story database.
 Use this information to provide informed, contextual suggestions.
 PROMPT;
-    }
-
-    private function formatLoreDocument($document): string
-    {
-        $type = $document->getType()->getLabel();
-        $title = $document->getTitle();
-        $content = $document->getContent();
-
-        return <<<CONTENT
-[LORE: {$type}] {$title}
-
-{$content}
-CONTENT;
     }
 
     private function formatSearchResult(SearchResult $result): string

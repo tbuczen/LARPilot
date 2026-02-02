@@ -48,9 +48,7 @@ class StoryObjectSerializer
         }
 
         // Type and gender
-        if ($character->getCharacterType()) {
-            $parts[] = sprintf('Type: %s', $character->getCharacterType()->value);
-        }
+        $parts[] = sprintf('Type: %s', $character->getCharacterType()->value);
         if ($character->getGender()) {
             $parts[] = sprintf('Gender: %s', $character->getGender()->value);
         }
@@ -132,7 +130,7 @@ class StoryObjectSerializer
 
         foreach ($relationsFrom as $relation) {
             $target = $relation->getTo();
-            $type = $relation->getRelationType()?->value ?? 'Related';
+            $type = $relation->getRelationType()->value;
             if ($target) {
                 $relationStrings[] = sprintf('%s of %s', $type, $target->getTitle());
             }
@@ -140,7 +138,7 @@ class StoryObjectSerializer
 
         foreach ($relationsTo as $relation) {
             $source = $relation->getFrom();
-            $type = $relation->getRelationType()?->value ?? 'Related';
+            $type = $relation->getRelationType()->value;
             if ($source) {
                 $relationStrings[] = sprintf('%s with %s', $type, $source->getTitle());
             }
@@ -376,13 +374,12 @@ class StoryObjectSerializer
 
         $from = $relation->getFrom();
         $to = $relation->getTo();
-        $type = $relation->getRelationType()?->getLabel() ?? 'Related';
 
         if ($from && $to) {
             $parts[] = sprintf(
                 'Relation: %s is %s to %s',
                 $from->getTitle(),
-                $type,
+                $relation->getRelationType()->value,
                 $to->getTitle()
             );
         } else {
@@ -429,11 +426,12 @@ class StoryObjectSerializer
     /**
      * Summarize a decision tree for embedding.
      *
-     * @param array<mixed>|null $decisionTree
+     * @param array|null $decisionTree
+     * @return string|null
      */
     private function summarizeDecisionTree(?array $decisionTree): ?string
     {
-        if (!$decisionTree || empty($decisionTree)) {
+        if (empty($decisionTree)) {
             return null;
         }
 

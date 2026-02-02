@@ -28,4 +28,3 @@ framework:
             # StoryAI embedding messages
             App\Domain\StoryAI\Message\IndexStoryObjectMessage: async
             App\Domain\StoryAI\Message\ReindexLarpMessage: async
-            App\Domain\StoryAI\Message\IndexLoreDocumentMessage: async

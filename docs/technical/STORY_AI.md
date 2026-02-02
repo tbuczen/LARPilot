@@ -5,28 +5,52 @@ AI-powered assistant for LARP story management using RAG (Retrieval-Augmented Ge
 ## Overview
 
 StoryAI provides intelligent querying and analysis of LARP story content by:
-1. **Indexing** story objects and lore documents into vector embeddings
+1. **Indexing** story objects into vector embeddings (stored in Supabase)
 2. **Searching** content using semantic similarity
 3. **Generating** AI responses with relevant context
 
 ## Architecture
 
 ```
+┌─────────────────────────┐              ┌─────────────────────────┐
+│    Main PostgreSQL      │              │        Supabase         │
+├─────────────────────────┤              ├─────────────────────────┤
+│ • LARPs                 │              │ larpilot_embeddings     │
+│ • StoryObjects          │──── index ──▶│ ├─ entity_id            │
+│ • Users                 │              │ ├─ larp_id              │
+│ • Participants          │              │ ├─ embedding (vector)   │
+│ • ...                   │              │ ├─ serialized_content   │
+└─────────────────────────┘              │ ├─ content_hash         │
+                                         │ └─ metadata             │
+                                         └─────────────────────────┘
+```
+
+**Key principle:** All AI/embedding data lives in Supabase. The main application database has no knowledge of AI features.
+
+### Directory Structure
+
+```
 src/Domain/StoryAI/
-├── Entity/
-│   ├── StoryObjectEmbedding.php    # Vector embedding for story objects
-│   ├── LarpLoreDocument.php        # Custom lore/setting documents
-│   └── LoreDocumentChunk.php       # Chunked document for embeddings
+├── DTO/
+│   ├── VectorDocument.php        # Document for vector store
+│   ├── VectorSearchResult.php    # Search result from vector store
+│   ├── SearchResult.php          # Unified search result
+│   └── AIQueryResult.php         # RAG query response
 ├── Service/
 │   ├── Embedding/
-│   │   ├── EmbeddingService.php    # Indexing logic
-│   │   └── StoryObjectSerializer.php
+│   │   ├── EmbeddingService.php       # Indexing logic
+│   │   └── StoryObjectSerializer.php  # Converts StoryObjects to text
 │   ├── Query/
-│   │   ├── RAGQueryService.php     # Main query service
-│   │   ├── VectorSearchService.php # Similarity search
-│   │   └── ContextBuilder.php      # Context assembly
+│   │   ├── RAGQueryService.php        # Main query service
+│   │   ├── VectorSearchService.php    # Similarity search
+│   │   └── ContextBuilder.php         # Context assembly for LLM
+│   ├── VectorStore/
+│   │   ├── VectorStoreInterface.php   # Vector store abstraction
+│   │   ├── SupabaseVectorStore.php    # Supabase implementation
+│   │   ├── NullVectorStore.php        # No-op for testing/disabled
+│   │   └── VectorStoreFactory.php     # Creates appropriate store
 │   └── Provider/
-│       ├── OpenAIProvider.php      # LLM/embedding provider
+│       ├── OpenAIProvider.php             # LLM/embedding provider
 │       ├── LLMProviderInterface.php
 │       └── EmbeddingProviderInterface.php
 ├── Controller/API/
@@ -52,7 +76,7 @@ All endpoints are under `/api/larp/{larp}/ai/`:
 ### Example: Query
 
 ```bash
-curl -X POST /api/larp/123/ai/query \
+curl -X POST /api/larp/{larp-uuid}/ai/query \
   -H "Content-Type: application/json" \
   -d '{"query": "What is the history of the Northern Kingdom?"}'
 ```
@@ -62,8 +86,8 @@ Response:
 {
   "answer": "The Northern Kingdom was founded in...",
   "sources": [
-    {"type": "character", "id": 1, "title": "King Aldric"},
-    {"type": "lore_document", "id": 5, "title": "World History"}
+    {"type": "Character", "id": "uuid", "title": "King Aldric"},
+    {"type": "Thread", "id": "uuid", "title": "The Northern Wars"}
   ]
 }
 ```
@@ -77,113 +101,60 @@ Story objects are automatically indexed when created/updated via `StoryObjectInd
 ### Manual Reindex
 
 ```bash
-# Reindex all LARPs (async via Messenger)
-php bin/console app:story-ai:reindex
+# Reindex a specific LARP (synchronous)
+php bin/console app:story-ai:reindex <LARP-UUID>
 
-# Reindex specific LARP synchronously
-php bin/console app:story-ai:reindex --larp=123 --sync
+# Force reindex (even if content unchanged)
+php bin/console app:story-ai:reindex <LARP-UUID> --force
+
+# Async via Messenger
+php bin/console app:story-ai:reindex <LARP-UUID> --async
 ```
-
-## Lore Documents
-
-Upload custom setting/lore content that AI uses for context.
-
-**Document Types:**
-- Setting Overview
-- World History
-- Magic Rules
-- Culture Notes
-- Geography
-- Politics
-- Religion
-- Economics
-- General
-
-Documents are chunked (500 chars, 100 overlap) and embedded for retrieval.
 
 ## Setup Guide
 
 ### Prerequisites
 
-- PostgreSQL 15+ with **pgvector** extension
 - OpenAI API key
+- Supabase project with pgvector extension
 - Symfony Messenger configured (for async indexing)
 
 ---
 
-### Step 1: Install pgvector Extension
+### Step 1: Set Up Supabase
 
-**Production (managed PostgreSQL):**
-
-Most managed PostgreSQL services (AWS RDS, Supabase, Neon) support pgvector. Enable it via their dashboard or run:
-
-```sql
-CREATE EXTENSION IF NOT EXISTS vector;
-```
-
-**Local/Docker:**
-
-The project's Docker setup includes pgvector. If using a custom setup:
-
-```bash
-# Ubuntu/Debian
-sudo apt install postgresql-15-pgvector
-
-# Or build from source
-git clone https://github.com/pgvector/pgvector.git
-cd pgvector && make && sudo make install
-```
+See [VECTOR_STORE_SETUP.md](VECTOR_STORE_SETUP.md) for detailed instructions on:
+- Creating the `larpilot_embeddings` table
+- Setting up the `search_embeddings` RPC function
+- Configuring pgvector indexes
 
 ---
 
 ### Step 2: Configure Environment Variables
 
-Add to `.env.local` (local) or your production secrets:
+Add to `.env.local`:
 
 ```env
-# Required: OpenAI API key
+# OpenAI
 OPENAI_API_KEY=sk-your-api-key-here
-
-# Optional: Model configuration (defaults shown)
 OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 OPENAI_COMPLETION_MODEL=gpt-4o-mini
+
+# Supabase Vector Store
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your-service-role-key
+
+# Vector store provider (supabase or null)
+VECTOR_STORE_PROVIDER=supabase
 ```
-
-**Model Options:**
-
-| Model | Use Case | Cost |
-|-------|----------|------|
-| `text-embedding-3-small` | Embeddings (default) | Low |
-| `text-embedding-3-large` | Higher quality embeddings | Medium |
-| `gpt-4o-mini` | Completions (default) | Low |
-| `gpt-4o` | Higher quality responses | High |
 
 ---
 
-### Step 3: Run Database Migrations
+### Step 3: Configure Message Queue
 
-```bash
-# Local (Docker)
-make migrate
-
-# Production
-php bin/console doctrine:migrations:migrate --no-interaction
-```
-
-This creates:
-- `story_object_embedding` - Vector embeddings for story objects
-- `larp_lore_document` - Lore document metadata
-- `lore_document_chunk` - Chunked document embeddings with HNSW index
-
----
-
-### Step 4: Configure Message Queue
-
-StoryAI uses Symfony Messenger for async indexing. The routing is pre-configured in `config/packages/messenger.yaml`.
+StoryAI uses Symfony Messenger for async indexing.
 
 **Local Development:**
-
-Use Doctrine transport (default in `.env`):
 
 ```env
 MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
@@ -192,57 +163,36 @@ MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
 Run the worker:
 
 ```bash
-# In a separate terminal
 docker compose exec php php bin/console messenger:consume async -vv
 ```
 
 **Production:**
 
-Use a dedicated message broker:
-
 ```env
 # Redis
 MESSENGER_TRANSPORT_DSN=redis://localhost:6379/messages
-
-# RabbitMQ
-MESSENGER_TRANSPORT_DSN=amqp://guest:guest@localhost:5672/%2f/messages
-```
-
-Run workers via supervisor:
-
-```ini
-[program:messenger-worker]
-command=php /var/www/bin/console messenger:consume async --time-limit=3600
-numprocs=2
-autostart=true
-autorestart=true
 ```
 
 ---
 
-### Step 5: Initial Indexing
+### Step 4: Initial Indexing
 
-Index existing story objects for a LARP:
+Index existing story objects:
 
 ```bash
-# Async (recommended for large LARPs)
-php bin/console app:story-ai:reindex --larp=<LARP_ID>
+# Get your LARP UUID
+php bin/console doctrine:query:sql "SELECT id, title FROM larp LIMIT 5"
 
-# Sync (for testing/small datasets)
-php bin/console app:story-ai:reindex --larp=<LARP_ID> --sync
-
-# Reindex all LARPs
-php bin/console app:story-ai:reindex
+# Index the LARP
+php bin/console app:story-ai:reindex <LARP-UUID>
 ```
 
 ---
 
-### Step 6: Verify Setup
-
-Test the API:
+### Step 5: Verify Setup
 
 ```bash
-curl -X POST http://localhost/api/larp/<LARP_ID>/ai/search \
+curl -X POST http://localhost/api/larp/<LARP-UUID>/ai/search \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <TOKEN>" \
   -d '{"query": "test"}'
@@ -250,52 +200,40 @@ curl -X POST http://localhost/api/larp/<LARP_ID>/ai/search \
 
 ---
 
-### Local/Test Environment Notes
+## Key Services
 
-**Test environment** (`.env.test`):
+### EmbeddingService
 
-```env
-# Use sync transport for tests (no worker needed)
-MESSENGER_TRANSPORT_DSN=sync://
-
-# Use test API key or mock
-OPENAI_API_KEY=test-key
-```
-
-**Disable AI in tests:**
-
-For unit/functional tests that don't need AI, mock the services:
+Handles indexing of story objects:
 
 ```php
-$ragQueryService = $this->createMock(RAGQueryService::class);
-$ragQueryService->method('query')->willReturn(new AIQueryResult('Mock answer', []));
+// Index a single story object
+$embeddingService->indexStoryObject($character);
+
+// Reindex all story objects in a LARP
+$stats = $embeddingService->reindexLarp($larp);
+// Returns: ['indexed' => 42, 'skipped' => 10, 'errors' => 0]
+
+// Delete embedding when story object is deleted
+$embeddingService->deleteStoryObjectEmbedding($character);
+
+// Generate embedding for a query
+$vector = $embeddingService->generateQueryEmbedding("Who is the king?");
 ```
 
-**Cost considerations:**
+### VectorSearchService
 
-- Embedding calls: ~$0.02 per 1M tokens (text-embedding-3-small)
-- Completion calls: ~$0.15 per 1M input tokens (gpt-4o-mini)
-- Use `--sync` flag sparingly in development to control costs
+Performs similarity search:
 
----
-
-## Configuration Reference
-
-Full environment variables:
-
-```env
-# Required
-OPENAI_API_KEY=sk-...
-
-# Optional (with defaults)
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-OPENAI_COMPLETION_MODEL=gpt-4o-mini
-
-# Message queue
-MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
+```php
+$results = $vectorSearchService->search(
+    larp: $larp,
+    query: "characters involved in the rebellion",
+    limit: 10,
+    minSimilarity: 0.5
+);
+// Returns SearchResult[] with similarity scores
 ```
-
-## Key Services
 
 ### RAGQueryService
 
@@ -306,21 +244,38 @@ $result = $ragQueryService->query($larp, "Who are the main antagonists?");
 // Returns AIQueryResult with answer and sources
 ```
 
-### EmbeddingService
+### ContextBuilder
 
-Handles indexing:
-
-```php
-$embeddingService->indexStoryObject($character);
-$embeddingService->indexLoreDocument($document);
-$embeddingService->reindexLarp($larp);
-```
-
-### VectorSearchService
-
-Performs similarity search:
+Assembles context for LLM prompts:
 
 ```php
-$results = $vectorSearchService->search($larp, $queryEmbedding, limit: 10);
-// Returns SearchResult[] with scores
+$context = $contextBuilder->buildContext($searchResults, $larp, maxTokens: 12000);
+$systemPrompt = $contextBuilder->buildSystemPrompt($larp);
 ```
+
+---
+
+## Cost Considerations
+
+| Operation | Model | Cost (approx) |
+|-----------|-------|---------------|
+| Embedding | text-embedding-3-small | $0.02 / 1M tokens |
+| Embedding | text-embedding-3-large | $0.13 / 1M tokens |
+| Completion | gpt-4o-mini | $0.15 / 1M input tokens |
+| Completion | gpt-4o | $2.50 / 1M input tokens |
+
+**Tips:**
+- Use `--force` flag sparingly (avoids unnecessary re-embeddings)
+- Content hash comparison prevents redundant API calls
+- Supabase free tier: 500MB database, sufficient for most LARPs
+
+---
+
+## Future: Lore Documents
+
+Custom lore/setting documents (world history, magic rules, etc.) can be added later by:
+1. Uploading text content via a simple form
+2. Chunking the content (the chunking logic exists in git history)
+3. Storing chunks directly in Supabase as `type: 'lore_chunk'`
+
+No additional database tables needed - the `larpilot_embeddings` table handles both story objects and lore chunks via the `type` field.

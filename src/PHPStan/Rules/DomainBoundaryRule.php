@@ -43,6 +43,7 @@ final class DomainBoundaryRule implements Rule
         'Public' => ['Infrastructure', 'Core', 'Account', 'Larp', 'StoryObject', 'Application'],
         'Larp' => ['Infrastructure', 'Core', 'Account'],
         'StoryObject' => ['Infrastructure', 'Core', 'Larp', 'Integrations', 'Account', 'StoryMarketplace', 'Application'],
+        'StoryAI' => ['StoryObject', 'Infrastructure', 'Core', 'Larp', 'Integrations', 'Account', 'StoryMarketplace', 'Application'],
         'Application' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Participant', 'Account'],
         'Participant' => ['Infrastructure', 'Core', 'Account', 'Larp'],
         'StoryMarketplace' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account', 'Application'],

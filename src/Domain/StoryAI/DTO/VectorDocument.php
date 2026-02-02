@@ -16,7 +16,7 @@ final readonly class VectorDocument
     public const TYPE_LORE_CHUNK = 'lore_chunk';
 
     /**
-     * @param Uuid $entityId The ID of the source entity (StoryObject or LoreDocumentChunk)
+     * @param Uuid $entityId The ID of the source entity (StoryObject UUID or generated UUID for lore chunks)
      * @param Uuid $larpId The LARP this document belongs to
      * @param string $entityType The type of entity (Character, Thread, Quest, etc.)
      * @param string $type Document type (story_object or lore_chunk)
