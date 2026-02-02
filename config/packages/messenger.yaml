@@ -25,5 +25,6 @@ framework:
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
 
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            # StoryAI embedding messages
+            App\Domain\StoryAI\Message\IndexStoryObjectMessage: async
+            App\Domain\StoryAI\Message\ReindexLarpMessage: async
