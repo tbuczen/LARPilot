@@ -13,6 +13,7 @@ import SortableCharacterChoicesController from "./controllers/sortable_character
 import TimelineController from "./controllers/timeline_controller.js";
 import DeleteConfirmController from "./controllers/delete-confirm_controller.js";
 import GooglePlacesAutocompleteController from "./controllers/google-places-autocomplete_controller.js";
+import AIAssistantController from "./controllers/ai_assistant_controller.js";
 
 const app = startStimulusApp();
 app.register('live', LiveController);
@@ -28,3 +29,4 @@ app.register("sortable-character-choices", SortableCharacterChoicesController);
 app.register("timeline", TimelineController);
 app.register("delete-confirm", DeleteConfirmController);
 app.register("google-places-autocomplete", GooglePlacesAutocompleteController);
+app.register("ai-assistant", AIAssistantController);

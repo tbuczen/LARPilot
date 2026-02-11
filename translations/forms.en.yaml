@@ -531,6 +531,23 @@ location_form:
   is_active: "Active"
   is_active_help: "Is this location currently available for events?"
 
+# Lore Documents
+lore:
+  title: "Document Title"
+  category: "Category"
+  content: "Content"
+  summary: "Summary"
+  summary_placeholder: "Brief overview of this document (shown in lists)"
+  summary_help: "A short summary helps identify this document quickly and improves AI search accuracy"
+  priority: "Priority"
+  priority_help: "Higher priority documents (0-100) are included first in AI context"
+  always_include: "Always Include in AI Context"
+  always_include_help: "Use sparingly - forces this document to be included in all AI queries"
+  active: "Active"
+
+all_categories: "All Categories"
+search_by_title: "Search by title..."
+
 # Common form actions
 save: "Save"
 cancel: "Cancel"

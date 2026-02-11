@@ -25,18 +25,27 @@ final readonly class VectorStoreFactory
 
     public function create(string $dsn): VectorStoreInterface
     {
+        $dsn = trim($dsn);
+
         if (empty($dsn) || $dsn === 'null://') {
             $this->logger?->info('Vector store disabled (DSN not configured)');
             return new NullVectorStore($this->logger);
         }
 
         $parsed = $this->parseDsn($dsn);
+        $scheme = $parsed['scheme'] ?? '';
 
-        return match ($parsed['scheme']) {
+        // Empty scheme means invalid/missing DSN - default to null store
+        if (empty($scheme)) {
+            $this->logger?->info('Vector store disabled (invalid DSN, no scheme)');
+            return new NullVectorStore($this->logger);
+        }
+
+        return match ($scheme) {
             'supabase' => $this->createSupabase($parsed),
             'null' => new NullVectorStore($this->logger),
             default => throw new \InvalidArgumentException(
-                sprintf('Unknown vector store provider: %s', $parsed['scheme'])
+                sprintf('Unknown vector store provider: %s', $scheme)
             ),
         };
     }

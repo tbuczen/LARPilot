@@ -8,6 +8,7 @@ use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\Item;
+use App\Domain\StoryObject\Entity\LoreDocument;
 use App\Domain\StoryObject\Entity\Place;
 use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\Relation;
@@ -33,6 +34,7 @@ class StoryObjectSerializer
             $storyObject instanceof Place => $this->serializePlace($storyObject),
             $storyObject instanceof Item => $this->serializeItem($storyObject),
             $storyObject instanceof Relation => $this->serializeRelation($storyObject),
+            $storyObject instanceof LoreDocument => $this->serializeLoreDocument($storyObject),
             default => $this->serializeGeneric($storyObject),
         };
     }
@@ -62,6 +64,9 @@ class StoryObjectSerializer
         if ($character->getNotes()) {
             $parts[] = sprintf('Story notes: %s', $this->cleanHtml($character->getNotes()));
         }
+
+        $parts[] = sprintf('Amount of threads: %s', $this->cleanHtml($character->getDescription()));
+
 
         // Factions
         $factions = $character->getFactions();
@@ -388,6 +393,45 @@ class StoryObjectSerializer
 
         if ($relation->getDescription()) {
             $parts[] = sprintf('Description: %s', $this->cleanHtml($relation->getDescription()));
+        }
+
+        return implode("\n", $parts);
+    }
+
+    private function serializeLoreDocument(LoreDocument $loreDocument): string
+    {
+        $parts = [];
+
+        // Header with category
+        $parts[] = sprintf(
+            'Lore Document [%s]: %s',
+            $loreDocument->getCategory()->getLabel(),
+            $loreDocument->getTitle()
+        );
+
+        // Summary if available
+        if ($loreDocument->getSummary()) {
+            $parts[] = sprintf('Summary: %s', $this->cleanHtml($loreDocument->getSummary()));
+        }
+
+        // Full description/content
+        if ($loreDocument->getDescription()) {
+            $parts[] = sprintf('Content: %s', $this->cleanHtml($loreDocument->getDescription()));
+        }
+
+        // Tags
+        $tags = $loreDocument->getTags();
+        if (!$tags->isEmpty()) {
+            $tagNames = [];
+            foreach ($tags as $tag) {
+                $tagNames[] = $tag->getTitle();
+            }
+            $parts[] = sprintf('Tags: %s', implode(', ', $tagNames));
+        }
+
+        // Priority indicator for AI context
+        if ($loreDocument->isAlwaysIncludeInContext()) {
+            $parts[] = 'Note: This is core world-building information.';
         }
 
         return implode("\n", $parts);
