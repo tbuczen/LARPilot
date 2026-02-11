@@ -136,3 +136,14 @@ mailing_backoffice:
   resource: '../src/Domain/Mailing/Controller/Backoffice/'
   type: attribute
   prefix: /backoffice
+
+# StoryAI Domain
+story_ai_api:
+  resource: '../src/Domain/StoryAI/Controller/API/'
+  type: attribute
+  prefix: /api
+
+story_ai_backoffice:
+  resource: '../src/Domain/StoryAI/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice

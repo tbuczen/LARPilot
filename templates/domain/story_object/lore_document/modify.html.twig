@@ -1,0 +1,46 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_content %}
+    {# Header showing story object type and title (only for existing objects) #}
+    {% if loreDocument.exists %}
+        {% include 'includes/story_object_header.html.twig' with {
+            storyObject: loreDocument,
+            storyObjectType: 'lore.document.singular',
+        } %}
+
+        {# Tabs navigation #}
+        {{ tabs_macro.tabs('details', loreDocument, 'lore_document', larp, null, false) }}
+    {% endif %}
+
+    <div class="tab-pane border border-top-0 p-3">
+        {{ form_start(form) }}
+
+        <div class="row">
+            <div class="col-md-8">
+                {{ form_row(form.title) }}
+                {{ form_row(form.summary) }}
+                {{ form_row(form.description) }}
+            </div>
+            <div class="col-md-4">
+                {{ form_row(form.category) }}
+                {{ form_row(form.priority) }}
+                {{ form_row(form.alwaysIncludeInContext) }}
+                {{ form_row(form.active) }}
+                {{ form_row(form.tags) }}
+            </div>
+        </div>
+
+        {{ ui.form_actions(
+            loreDocument.exists ? 'save' : 'create',
+            'bi-check-circle',
+            path('backoffice_larp_story_lore_document_list', { larp: larp.id })
+        ) }}
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block larp_title %}{{ (loreDocument.exists ? 'lore.document.modify' : 'lore.document.create')|trans }} - {{ larp.title }}{% endblock %}

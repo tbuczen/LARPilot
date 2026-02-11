@@ -32,6 +32,7 @@ use Symfony\Component\Uid\Uuid;
     TargetType::Faction->value => Faction::class,
     TargetType::Item->value => Item::class,
     TargetType::Place->value => Place::class,
+    TargetType::LoreDocument->value => LoreDocument::class,
 ])]
 #[Gedmo\Loggable(logEntryClass: StoryObjectLogEntry::class)]
 abstract class StoryObject implements CreatorAwareInterface, Timestampable, \App\Domain\Core\Entity\TargetableInterface, LarpAwareInterface
@@ -53,7 +54,6 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, \App
     #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description = null;
 
-    #[Gedmo\Versioned]
     #[ORM\ManyToOne(targetEntity: Larp::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected ?Larp $larp = null;
@@ -127,5 +127,15 @@ abstract class StoryObject implements CreatorAwareInterface, Timestampable, \App
     public function getRelationsTo(): Collection
     {
         return $this->relationsTo;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->createdAt === null;
+    }
+
+    public function exists(): bool
+    {
+        return $this->createdAt !== null;
     }
 }
