@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Public\Controller;
 
-use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Repository\LarpRepository;
 use App\Domain\Public\Form\Filter\CharacterGalleryFilterType;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Enum\CharacterType;
@@ -26,15 +26,16 @@ class CharacterGalleryController extends AbstractController
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(
         Request $request,
-        Larp $larp,
+        string $slug,
+        LarpRepository $larpRepository,
         CharacterRepository $characterRepository
     ): Response {
-        // Check if characters are published publicly
+        $larp = $larpRepository->findOneBy(['slug' => $slug]) ?? throw $this->createNotFoundException();
+
         if (!$larp->getPublishCharactersPublicly()) {
             throw $this->createAccessDeniedException('Characters are not publicly available for this LARP.');
         }
 
-        // Check LARP is visible
         if (!$larp->getStatus()?->isVisibleForEveryone()) {
             throw $this->createAccessDeniedException('This LARP is not publicly visible.');
         }
@@ -63,25 +64,24 @@ class CharacterGalleryController extends AbstractController
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(
-        Larp $larp,
+        string $slug,
+        LarpRepository $larpRepository,
         Character $character
     ): Response {
-        // Check if characters are published publicly
+        $larp = $larpRepository->findOneBy(['slug' => $slug]) ?? throw $this->createNotFoundException();
+
         if (!$larp->getPublishCharactersPublicly()) {
             throw $this->createAccessDeniedException('Characters are not publicly available for this LARP.');
         }
 
-        // Check LARP is visible
         if (!$larp->getStatus()?->isVisibleForEveryone()) {
             throw $this->createAccessDeniedException('This LARP is not publicly visible.');
         }
 
-        // Verify character belongs to this LARP
         if ($character->getLarp() !== $larp) {
             throw $this->createNotFoundException('Character not found for this LARP.');
         }
 
-        // Verify character is eligible for public viewing
         if ($character->getCharacterType() !== CharacterType::Player) {
             throw $this->createAccessDeniedException('This character is not publicly available.');
         }

@@ -46,6 +46,7 @@ class CharacterGalleryFilterType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
+                'choice_label' => 'title',
                 'query_builder' => fn ($repo) => $repo->createQueryBuilder('t')
                     ->where('t.larp = :larp')
                     ->setParameter('larp', $larp)

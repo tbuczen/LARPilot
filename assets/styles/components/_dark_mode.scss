@@ -1,9 +1,14 @@
 // Apply dark mode styles to various components
 html.dark-mode {
-    .larp-backoffice-header{
-      background: var(--bg-tertiary);
-      border-bottom: 2px solid #0d6efd;
-    }
+
+  .form-text{
+    color: var(--text-secondary);
+  }
+
+  .larp-backoffice-header{
+    background: var(--bg-tertiary);
+    border-bottom: 2px solid #0d6efd;
+  }
 
   .larp-header-title {
     border-bottom: 1px solid var(--bo-header-border);
@@ -142,7 +147,6 @@ html.dark-mode {
         background-color: var(--bg-secondary);
         border-color: var(--border-color);
         color: var(--text-primary);
-        background: var(--bs-primary-rgb);
     }
 
     .card-body {
@@ -163,11 +167,46 @@ html.dark-mode {
         --bs-table-color: var(--text-primary);
         --bs-table-border-color: var(--border-color);
         color: var(--text-primary);
+
+        // Ensure all table cells use proper text color
+        th,
+        td {
+            color: var(--text-primary);
+        }
+
+        // Striped rows - ensure text stays readable
+        &.table-striped > tbody > tr:nth-of-type(odd) > * {
+            --bs-table-color-state: var(--text-primary);
+            color: var(--text-primary);
+        }
+
+        &.table-striped > tbody > tr:nth-of-type(even) > * {
+            --bs-table-color-state: var(--text-primary);
+            color: var(--text-primary);
+        }
+
+        // Hover rows
+        &.table-hover > tbody > tr:hover > * {
+            --bs-table-color-state: var(--text-primary);
+            color: var(--text-primary);
+        }
+
+        // Secondary text within tables
+        .text-muted,
+        .text-secondary,
+        small {
+            color: var(--text-secondary) !important;
+        }
     }
 
     .table-light {
         --bs-table-bg: var(--bg-secondary);
         --bs-table-color: var(--text-primary);
+
+        th,
+        td {
+            color: var(--text-primary);
+        }
     }
 
     // Modals
@@ -333,17 +372,13 @@ html.dark-mode {
     }
 }
 
-.card {
-
-
-  .card-header {
-    border-bottom: 1px solid rgba(var(--bo-black), 0.08);
-    background: linear-gradient(180deg, #2d2d2d 0%, var(--bo-gray-50) 100%);
-  }
-}
-
 // Google Maps dark mode styling
 html.dark-mode {
+    // Card header gradient (dark mode only)
+    .card .card-header {
+        border-bottom: 1px solid var(--border-color);
+        background: linear-gradient(180deg, var(--card-bg) 0%, var(--bg-secondary) 100%);
+    }
     // Invert map colors for dark mode effect
     #map,
     .google-map,
@@ -386,17 +421,53 @@ html.dark-mode {
         filter: invert(100%);
     }
 
-  .card-header-tabs .nav-link.active {
-    background: var(--bo-nav-bg-active);
-    border-color: var(--input-border);
-    border-bottom: 1px solid var(--card-bg);
-    font-weight: normal;
-    color: var(--text-primary);
-  }
+    // Generic nav-tabs styling (for story_object_tabs and other standalone tabs)
+    .nav-tabs {
+        border-bottom-color: var(--border-color);
 
-  .card-header-tabs {
-    border-bottom: 1px solid var(--input-border);;
+        .nav-link {
+            color: var(--text-secondary);
 
-  }
+            &:hover,
+            &:focus {
+                border-color: var(--border-color);
+                color: var(--text-primary);
+            }
 
+            &.active {
+                background-color: var(--card-bg);
+                border-color: var(--border-color);
+                border-bottom-color: var(--card-bg);
+                color: var(--text-primary);
+            }
+        }
+    }
+
+    // Card header tabs (more specific styling)
+    .card-header-tabs .nav-link.active {
+        background: var(--bo-nav-bg-active);
+        border-color: var(--input-border);
+        border-bottom: 1px solid var(--card-bg);
+        font-weight: normal;
+        color: var(--text-primary);
+    }
+
+    .card-header-tabs {
+        border-bottom: 1px solid var(--input-border);
+    }
+
+    // Quill mentions dropdown
+    .ql-mention-list-container {
+        background-color: var(--card-bg);
+        border-color: var(--input-border);
+    }
+
+    .ql-mention-list-item {
+        color: var(--text-primary);
+
+        &:hover,
+        &.selected {
+            background-color: var(--bg-secondary);
+        }
+    }
 }

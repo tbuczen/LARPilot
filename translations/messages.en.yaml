@@ -130,6 +130,10 @@ details: 'Details'
 start_date: 'Start Date'
 end_date: 'End Date'
 status: 'Status'
+priority: 'Priority'
+category: 'Category'
+active: 'Active'
+inactive: 'Inactive'
 user: 'User'
 view_all: 'View all'
 title: 'Title'
@@ -981,6 +985,13 @@ lore:
     character: 'Character-specific (visible to specific characters)'
   view_timeline: 'View Lore Timeline'
   backoffice_timeline: 'Timeline View'
+  document:
+    singular: 'Lore Document'
+    plural: 'Lore Documents'
+    list: 'Lore Documents'
+    create: 'Create Lore Document'
+    modify: 'Edit Lore Document'
+    view: 'Lore Document Details'
 
 feedback:
   modal:
@@ -1417,6 +1428,13 @@ larp_type:
   other: 'Other'
 
 # Common UI Elements
+ai_assistant:
+  title: 'AI Assistant'
+  welcome_message: 'Hello! I am the AI Assistant for "%larp%". Ask me anything about the story, characters, events, quests, or lore.'
+  input_placeholder: 'Ask about your LARP story...'
+  new_conversation: 'New Conversation'
+  sources: 'Sources Referenced'
+
 ui:
   loading: 'Loading...'
   saving: 'Saving...'
