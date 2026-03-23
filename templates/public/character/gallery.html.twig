@@ -12,7 +12,7 @@
                 {% endembed %}
 
                 {# Page Header #}
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4 mt-4">
                     <div class="card-header bg-primary text-white">
                         <h2 class="mb-0">
                             <i class="bi bi-people me-2"></i>{{ 'public.characters.gallery'|trans }}
@@ -39,10 +39,10 @@
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-funnel me-1"></i>{{ 'common.filter'|trans }}
+                                    <i class="bi bi-funnel me-1"></i>{{ 'filter'|trans }}
                                 </button>
                                 <a href="{{ path('public_larp_characters_list', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-x-circle me-1"></i>{{ 'common.clear'|trans }}
+                                    <i class="bi bi-x-circle me-1"></i>{{ 'clear'|trans }}
                                 </a>
                             </div>
                         {{ form_end(filterForm) }}
@@ -55,13 +55,9 @@
                         {% for character in characters %}
                             <div class="col">
                                 <div class="card h-100 shadow-sm character-card" data-controller="character-gallery-card">
-                                    {% if character.imageUrl %}
-                                        <img src="{{ character.imageUrl }}" class="card-img-top" alt="{{ character.title }}" style="height: 200px; object-fit: cover;">
-                                    {% else %}
-                                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
-                                            <i class="bi bi-person-circle text-white" style="font-size: 5rem;"></i>
-                                        </div>
-                                    {% endif %}
+                                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="bi bi-person-circle text-white" style="font-size: 5rem;"></i>
+                                    </div>
 
                                     <div class="card-body">
                                         <h5 class="card-title">
@@ -98,10 +94,10 @@
                                         {# Character metadata #}
                                         <div class="d-flex justify-content-between align-items-center text-muted small">
                                             {% if character.gender %}
-                                                <span><i class="bi bi-gender-ambiguous me-1"></i>{{ character.gender.label }}</span>
+                                                <span><i class="bi bi-gender-ambiguous me-1"></i>{{ character.gender.value }}</span>
                                             {% endif %}
                                             {% if character.factions|length > 0 %}
-                                                <span><i class="bi bi-shield me-1"></i>{{ character.factions|length }} {{ 'common.faction'|trans }}</span>
+                                                <span><i class="bi bi-shield me-1"></i>{{ character.factions|length }} {{ 'faction'|trans }}</span>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -111,7 +107,7 @@
                                             slug: larp.slug,
                                             id: character.id
                                         }) }}" class="btn btn-outline-primary w-100">
-                                            <i class="bi bi-eye me-1"></i>{{ 'common.view_details'|trans }}
+                                            <i class="bi bi-eye me-1"></i>{{ 'show_details'|trans }}
                                         </a>
                                     </div>
                                 </div>
@@ -122,7 +118,7 @@
                     {# Back to LARP button #}
                     <div class="text-center mt-4">
                         <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>{{ 'common.back_to_larp'|trans }}
+                            <i class="bi bi-arrow-left me-1"></i>{{ 'back'|trans }}
                         </a>
                     </div>
                 {% else %}
@@ -131,7 +127,7 @@
                             <i class="bi bi-inbox display-1 text-muted"></i>
                             <p class="mt-3 text-muted">{{ 'public.characters.no_characters'|trans }}</p>
                             <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>{{ 'common.back_to_larp'|trans }}
+                                <i class="bi bi-arrow-left me-1"></i>{{ 'back'|trans }}
                             </a>
                         </div>
                     </div>

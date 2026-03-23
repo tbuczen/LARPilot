@@ -109,6 +109,12 @@ story_marketplace_backoffice:
   type: attribute
   prefix: /backoffice
 
+# Public Domain
+public_controllers:
+  resource: '../src/Domain/Public/Controller/'
+  type: attribute
+  prefix: /
+
 # StoryObject Domain
 story_object_public:
   resource: '../src/Domain/StoryObject/Controller/Public/'

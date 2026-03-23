@@ -77,10 +77,10 @@ class LoreDocumentController extends BaseController
         }
 
         // Get mentions only for existing documents
-//        $mentions = [];
-//        if (!$new) {
-//            $mentions = $mentionService->findMentions($loreDocument);
-//        }
+        //        $mentions = [];
+        //        if (!$new) {
+        //            $mentions = $mentionService->findMentions($loreDocument);
+        //        }
 
         return $this->render('domain/story_object/lore_document/modify.html.twig', [
             'form' => $form->createView(),

@@ -1,5 +1,7 @@
 common:
   name: Name
+  view_details: "Show details"
+
 submit: "Submit"
 choose: "Choose..."
 character_lbl: 'Character'
