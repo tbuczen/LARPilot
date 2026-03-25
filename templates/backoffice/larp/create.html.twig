@@ -2,9 +2,158 @@
 
 {% block larp_title %}{{ 'larp.create'|trans }}{% endblock %}
 
-{% block larp_content  %}
-    <h1>{{ 'larp.create'|trans() }}</h1>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+{% block larp_content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="bi bi-magic me-2"></i>{{ 'larp.create'|trans }}</h2>
+                </div>
+                <div class="card-body">
+                    <div data-controller="larp-wizard">
+
+                    {# Progress indicator #}
+                    <div class="d-flex justify-content-between align-items-center mb-4 position-relative">
+                        <div class="position-absolute" style="height: 2px; background: #dee2e6; top: 17px; left: 17px; right: 17px; z-index: 0;">
+                            <div data-larp-wizard-target="progressBar" style="height: 100%; background: var(--bs-primary); width: 0%; transition: width .3s;"></div>
+                        </div>
+                        {% set steps = [
+                            'wizard.step_basics'|trans({}, 'forms'),
+                            'wizard.step_workflow'|trans({}, 'forms'),
+                            'wizard.step_modules'|trans({}, 'forms')
+                        ] %}
+                        {% for label in steps %}
+                            <div class="d-flex flex-column align-items-center position-relative" style="z-index: 1;"
+                                 data-larp-wizard-target="progressStep">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                     style="width: 34px; height: 34px; background: #dee2e6; border: 2px solid #dee2e6; color: #495057; transition: all .2s;"
+                                     data-wizard-circle>
+                                    {{ loop.index }}
+                                </div>
+                                <small class="mt-1 text-muted">{{ label }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+                    {# Step 1: Basics #}
+                    <div data-larp-wizard-target="step">
+                        <h5 class="mb-3">{{ 'wizard.step_basics'|trans({}, 'forms') }}</h5>
+                        <div class="mb-3">
+                            {{ form_label(form.title) }}
+                            {{ form_widget(form.title) }}
+                            {{ form_errors(form.title) }}
+                        </div>
+                        <div class="row" data-controller="date-range"
+                             data-date-range-error-message-value="{{ 'larp.error.end_date_before_start_date'|trans({}, 'validators') }}">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.startDate) }}
+                                {{ form_widget(form.startDate) }}
+                                {{ form_errors(form.startDate) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.endDate) }}
+                                {{ form_widget(form.endDate) }}
+                                {{ form_errors(form.endDate) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Step 2: Workflow #}
+                    <div data-larp-wizard-target="step" class="d-none">
+                        <h5 class="mb-3">{{ 'wizard.step_workflow'|trans({}, 'forms') }}</h5>
+
+                        <div class="mb-3 form-check">
+                            {{ form_widget(form.enableWipStage) }}
+                            {{ form_label(form.enableWipStage) }}
+                            <div class="form-text">{{ 'wizard.enable_wip_stage_help'|trans({}, 'forms') }}</div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            {{ form_label(form.applicationMode) }}
+                            {{ form_widget(form.applicationMode) }}
+                            {{ form_errors(form.applicationMode) }}
+                        </div>
+
+                        <div class="mb-3" data-larp-wizard-target="maxChoicesField">
+                            {{ form_label(form.maxCharacterChoices) }}
+                            {{ form_widget(form.maxCharacterChoices) }}
+                            {{ form_errors(form.maxCharacterChoices) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.applicationTurns) }}
+                            {{ form_widget(form.applicationTurns) }}
+                            {{ form_errors(form.applicationTurns) }}
+                            <div class="form-text">{{ 'wizard.application_turns_help'|trans({}, 'forms') }}</div>
+                        </div>
+
+                        <hr>
+
+                        <p class="fw-semibold mb-2">{{ 'wizard.optional_stages'|trans({}, 'forms') }}</p>
+
+                        <div class="mb-3 form-check">
+                            {{ form_widget(form.enableNegotiationStage) }}
+                            {{ form_label(form.enableNegotiationStage) }}
+                            <div class="form-text">{{ 'wizard.enable_negotiation_stage_help'|trans({}, 'forms') }}</div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            {{ form_widget(form.enableCostumeCheckStage) }}
+                            {{ form_label(form.enableCostumeCheckStage) }}
+                            <div class="form-text">{{ 'wizard.enable_costume_check_stage_help'|trans({}, 'forms') }}</div>
+                        </div>
+                    </div>
+
+                    {# Step 3: Modules #}
+                    <div data-larp-wizard-target="step" class="d-none">
+                        <h5 class="mb-3">{{ 'wizard.step_modules'|trans({}, 'forms') }}</h5>
+                        <p class="text-muted small mb-3">{{ 'wizard.modules_help'|trans({}, 'forms') }}</p>
+                        <div class="row row-cols-1 row-cols-md-2 g-2">
+                            {% for child in form.enabledModules %}
+                                {% set moduleValue = child.vars.value %}
+                                <div class="col">
+                                    <div class="form-check border rounded p-3 h-100"
+                                         {% if moduleValue == 'application_matcher' %}data-larp-wizard-target="applicationMatcherField"{% endif %}>
+                                        {{ form_widget(child, {attr: {
+                                            'class': 'form-check-input',
+                                            'data-larp-wizard-target': moduleValue == 'application_matcher' ? 'applicationMatcherField' : ''
+                                        }}) }}
+                                        {{ form_label(child, null, {label_attr: {class: 'form-check-label fw-semibold'}}) }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {# Navigation #}
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-outline-secondary d-none"
+                                data-larp-wizard-target="prevBtn"
+                                data-action="larp-wizard#prev">
+                            <i class="bi bi-arrow-left me-1"></i>{{ 'wizard.prev'|trans({}, 'forms') }}
+                        </button>
+                        <div class="ms-auto d-flex gap-2">
+                            <button type="button" class="btn btn-primary"
+                                    data-larp-wizard-target="nextBtn"
+                                    data-action="larp-wizard#next">
+                                {{ 'wizard.next'|trans({}, 'forms') }}<i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                            <button type="submit" class="btn btn-success d-none"
+                                    data-larp-wizard-target="submitBtn">
+                                <i class="bi bi-check-lg me-1"></i>{{ 'larp.create'|trans }}
+                            </button>
+                        </div>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                    </div>{# /larp-wizard #}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

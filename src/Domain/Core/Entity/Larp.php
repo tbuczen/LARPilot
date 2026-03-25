@@ -10,6 +10,7 @@ use App\Domain\Core\Entity\Trait\CreatorAwareInterface;
 use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
 use App\Domain\Core\Repository\LarpRepository;
+use App\Domain\Core\Validator\EndDateAfterStartDate;
 use App\Domain\Mailing\Entity\MailTemplate;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Event;
@@ -26,6 +27,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LarpRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
+#[EndDateAfterStartDate]
 class Larp implements Timestampable, CreatorAwareInterface, \Stringable
 {
     use UuidTraitEntity;
@@ -86,6 +88,22 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $publishCharactersPublicly = false;
 
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $enableWipStage = false;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $enableNegotiationStage = false;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $enableCostumeCheckStage = false;
+
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
+    private int $applicationTurns = 1;
+
+    /** @var string[] */
+    #[ORM\Column(type: Types::JSON, options: ['default' => '[]'])]
+    private array $enabledModules = [];
+
     #[ORM\OneToOne(targetEntity: \App\Domain\Survey\Entity\Survey::class, mappedBy: 'larp', cascade: ['persist', 'remove'])]
     private ?\App\Domain\Survey\Entity\Survey $survey = null;
 
@@ -128,6 +146,7 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
     public function __construct()
     {
         $this->id = Uuid::v4();
+        $this->description = '';
         $this->characters = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->larpParticipants = new ArrayCollection();
@@ -529,6 +548,71 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
         $this->publishCharactersPublicly = $publishCharactersPublicly;
 
         return $this;
+    }
+
+    public function isEnableWipStage(): bool
+    {
+        return $this->enableWipStage;
+    }
+
+    public function setEnableWipStage(bool $enableWipStage): static
+    {
+        $this->enableWipStage = $enableWipStage;
+
+        return $this;
+    }
+
+    public function isEnableNegotiationStage(): bool
+    {
+        return $this->enableNegotiationStage;
+    }
+
+    public function setEnableNegotiationStage(bool $enableNegotiationStage): static
+    {
+        $this->enableNegotiationStage = $enableNegotiationStage;
+
+        return $this;
+    }
+
+    public function isEnableCostumeCheckStage(): bool
+    {
+        return $this->enableCostumeCheckStage;
+    }
+
+    public function setEnableCostumeCheckStage(bool $enableCostumeCheckStage): static
+    {
+        $this->enableCostumeCheckStage = $enableCostumeCheckStage;
+
+        return $this;
+    }
+
+    public function getApplicationTurns(): int
+    {
+        return $this->applicationTurns;
+    }
+
+    public function setApplicationTurns(int $applicationTurns): static
+    {
+        $this->applicationTurns = $applicationTurns;
+
+        return $this;
+    }
+
+    public function getEnabledModules(): array
+    {
+        return $this->enabledModules;
+    }
+
+    public function setEnabledModules(array $enabledModules): static
+    {
+        $this->enabledModules = $enabledModules;
+
+        return $this;
+    }
+
+    public function hasModule(Enum\LarpModule $module): bool
+    {
+        return in_array($module->value, $this->enabledModules, true);
     }
 
     public function getSurvey(): ?\App\Domain\Survey\Entity\Survey

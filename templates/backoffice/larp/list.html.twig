@@ -55,9 +55,16 @@
                                         <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}">
                                             {{ larp.title }}
                                         </a>
+                                        {% if larp.enabledModules|length > 0 %}
+                                            <div class="mt-1">
+                                                {% for module in larp.enabledModules %}
+                                                    <span class="badge bg-light text-dark border small">{{ module }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
                                     </td>
                                     <td>
-                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
+                                        <span class="badge bg-{{ larp.status.badgeClass }}">{{ larp.status.value }}</span>
                                     </td>
                                     <td>{{ larp.location|default('-') }}</td>
                                     <td>{{ larp.startDate|date('Y-m-d') }}</td>

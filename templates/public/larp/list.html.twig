@@ -31,7 +31,7 @@
 
                                 <div class="mb-2">
                                     <strong>Status:</strong>
-                                    <span class="badge bg-{{ larp.status.value == 'PUBLISHED' ? 'primary' : (larp.status.value == 'CONFIRMED' ? 'success' : 'secondary') }}">
+                                    <span class="badge bg-{{ larp.status.badgeClass }}">
                                         {{ larp.status.value|title }}
                                     </span>
                                 </div>

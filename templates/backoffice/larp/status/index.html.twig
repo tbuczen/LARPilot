@@ -4,16 +4,17 @@
 
 {% block larp_content %}
 <div class="row">
+    {# Left column: transitions + properties form #}
     <div class="col-md-8">
+
+        {# Current status + transitions #}
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">{{ 'larp.status.current'|trans }}</h5>
             </div>
             <div class="card-body">
                 <div class="d-flex align-items-center mb-3">
-                    <span class="badge badge-{{ currentStatus.value == 'DRAFT' ? 'secondary' : (currentStatus.value == 'CONFIRMED' ? 'success' : 'primary') }} fs-5 me-3">
-                        {{ currentStatus.value }}
-                    </span>
+                    <span class="badge bg-primary fs-5 me-3">{{ currentStatus.value }}</span>
                     <div>
                         <h6 class="mb-0">{{ ('larp.status.' ~ currentStatus.value|lower)|trans }}</h6>
                         <small class="text-muted">{{ ('larp.status.' ~ currentStatus.value|lower ~ '.description')|trans }}</small>
@@ -21,54 +22,89 @@
                 </div>
 
                 {% if availableTransitions|length > 0 %}
-                <div class="mt-4">
-                    <h6>{{ 'larp.status.available_transitions'|trans }}</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        {% for transition in availableTransitions %}
-                        {% if transition.canExecute %}
-                        <form method="post" action="{{ path('backoffice_larp_status_transition', {larp: larp.id, transitionName: transition.name}) }}" class="d-inline">
-                            <input type="hidden" name="_token" value="{{ csrf_token('larp_transition_' ~ larp.id) }}">
-                            <button type="submit" 
-                                    class="btn btn-sm btn-outline-primary"
-                                    onclick="return confirm('{{ 'larp.status.confirm_transition'|trans({'%transition%': transition.label}) }}')">
-                                {{ transition.label }}
-                                {% if transition.to %}
-                                    <i class="fas fa-arrow-right"></i>
-                                    <span class="badge badge-light">{{ transition.to }}</span>
-                                {% endif %}
-                            </button>
-                        </form>
-                        {% else %}
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
-                                {{ transition.label }}
-                                {% if transition.to %}
-                                    <i class="fas fa-arrow-right"></i>
-                                    <span class="badge badge-light">{{ transition.to }}</span>
-                                {% endif %}
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="visually-hidden">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><h6 class="dropdown-header">Requirements:</h6></li>
-                                {% for error in transition.validationErrors %}
-                                <li><span class="dropdown-item-text text-danger"><i class="fas fa-exclamation-circle"></i> {{ error }}</span></li>
+                    <div class="mt-4">
+                        <h6>{{ 'larp.status.available_transitions'|trans }}</h6>
+
+                        {# Primary transition first, prominent #}
+                        {% set primaryTransitions = availableTransitions|filter(t => t.isPrimary) %}
+                        {% set otherTransitions = availableTransitions|filter(t => not t.isPrimary) %}
+
+                        {% if primaryTransitions|length > 0 %}
+                            <div class="mb-3">
+                                {% for transition in primaryTransitions %}
+                                    {% if transition.canExecute %}
+                                        <form method="post"
+                                              action="{{ path('backoffice_larp_status_transition', {larp: larp.id, transitionName: transition.name}) }}"
+                                              class="d-inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('larp_transition_' ~ larp.id) }}">
+                                            <button type="submit" class="btn btn-primary"
+                                                    onclick="return confirm('{{ 'larp.status.confirm_transition'|trans({'%transition%': transition.label}) }}')">
+                                                <i class="bi bi-arrow-right-circle me-1"></i>{{ transition.label }}
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary" disabled>
+                                                <i class="bi bi-arrow-right-circle me-1"></i>{{ transition.label }}
+                                            </button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><h6 class="dropdown-header">Requirements not met:</h6></li>
+                                                {% for error in transition.validationErrors %}
+                                                    <li><span class="dropdown-item-text text-danger"><i class="bi bi-x-circle me-1"></i>{{ error }}</span></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
-                            </ul>
-                        </div>
+                            </div>
                         {% endif %}
-                        {% endfor %}
+
+                        {# Other available transitions — secondary #}
+                        {% if otherTransitions|length > 0 %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for transition in otherTransitions %}
+                                    {% if transition.canExecute %}
+                                        <form method="post"
+                                              action="{{ path('backoffice_larp_status_transition', {larp: larp.id, transitionName: transition.name}) }}"
+                                              class="d-inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('larp_transition_' ~ larp.id) }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary"
+                                                    onclick="return confirm('{{ 'larp.status.confirm_transition'|trans({'%transition%': transition.label}) }}')">
+                                                {{ transition.label }}
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
+                                                {{ transition.label }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><h6 class="dropdown-header">Requirements:</h6></li>
+                                                {% for error in transition.validationErrors %}
+                                                    <li><span class="dropdown-item-text text-danger"><i class="bi bi-x-circle me-1"></i>{{ error }}</span></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
                 {% else %}
-                <div class="alert alert-info">
-                    {{ 'larp.status.no_transitions'|trans }}
-                </div>
+                    <div class="alert alert-info">{{ 'larp.status.no_transitions'|trans }}</div>
                 {% endif %}
             </div>
         </div>
 
+        {# Properties form #}
         <div class="card mt-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">{{ 'larp.properties'|trans }}</h5>
@@ -78,39 +114,52 @@
 
                 {{ form_row(propertiesForm.title) }}
 
-                <div class="row">
-                    <div class="col-md-6">
-                        {{ form_row(propertiesForm.startDate) }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ form_row(propertiesForm.endDate) }}
-                    </div>
+                <div class="row" data-controller="date-range">
+                    <div class="col-md-6">{{ form_row(propertiesForm.startDate) }}</div>
+                    <div class="col-md-6">{{ form_row(propertiesForm.endDate) }}</div>
                 </div>
 
                 {{ form_row(propertiesForm.location) }}
 
                 <div class="row">
-                    <div class="col-md-6">
-                        {{ form_row(propertiesForm.maxCharacterChoices) }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ form_row(propertiesForm.setting) }}
-                    </div>
+                    <div class="col-md-6">{{ form_row(propertiesForm.maxCharacterChoices) }}</div>
+                    <div class="col-md-6">{{ form_row(propertiesForm.setting) }}</div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        {{ form_row(propertiesForm.type) }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ form_row(propertiesForm.characterSystem) }}
-                    </div>
+                    <div class="col-md-6">{{ form_row(propertiesForm.type) }}</div>
+                    <div class="col-md-6">{{ form_row(propertiesForm.characterSystem) }}</div>
                 </div>
+
+                {{ form_row(propertiesForm.applicationMode) }}
+                {{ form_row(propertiesForm.publishCharactersPublicly) }}
 
                 {{ form_row(propertiesForm.description) }}
 
                 <hr class="my-4">
-                <h6 class="mb-3">Social & Visual Settings</h6>
+                <h6 class="mb-3">{{ 'larp.workflow_config'|trans }}</h6>
+
+                {{ form_row(propertiesForm.enableWipStage) }}
+                {{ form_row(propertiesForm.applicationTurns) }}
+                {{ form_row(propertiesForm.enableNegotiationStage) }}
+                {{ form_row(propertiesForm.enableCostumeCheckStage) }}
+
+                <hr class="my-4">
+                <h6 class="mb-3">{{ 'larp.enabled_modules'|trans }}</h6>
+
+                <div class="row row-cols-1 row-cols-md-2 g-2 mb-3">
+                    {% for child in propertiesForm.enabledModules %}
+                        <div class="col">
+                            <div class="form-check border rounded p-3 h-100">
+                                {{ form_widget(child, {attr: {class: 'form-check-input'}}) }}
+                                {{ form_label(child, null, {label_attr: {class: 'form-check-label fw-semibold'}}) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <hr class="my-4">
+                <h6 class="mb-3">Social &amp; Visual</h6>
 
                 {{ form_row(propertiesForm.headerImageFile) }}
 
@@ -133,25 +182,31 @@
         </div>
     </div>
 
+    {# Right column: configured workflow + visibility #}
     <div class="col-md-4">
+
         <div class="card">
             <div class="card-header">
                 <h6 class="card-title mb-0">{{ 'larp.status.workflow'|trans }}</h6>
             </div>
-            <div class="card-body">
-                <div class="workflow-diagram">
-                    {% for status in allStatuses %}
-                    <div class="workflow-step {{ status == currentStatus ? 'active' : '' }}">
-                        <span class="badge badge-{{ status.value == currentStatus.value ? 'primary' : 'light' }}">
-                            {{ status.value }}
-                        </span>
-                        <small class="d-block mt-1">{{ ('larp.status.' ~ status.value|lower)|trans }}</small>
-                    </div>
-                    {% if not loop.last %}
-                    <div class="workflow-arrow">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
-                    {% endif %}
+            <div class="card-body p-3">
+                <div class="d-flex flex-column align-items-center gap-1">
+                    {% for stage in configuredStages %}
+                        {% set isActive = stage == currentStatus %}
+                        {% set isPast = configuredStages|slice(0, loop.index0)|filter(s => s == currentStatus)|length > 0 or (loop.first and not isActive) %}
+                        <div class="d-flex align-items-center w-100 rounded px-3 py-2
+                            {{ isActive ? 'bg-primary text-white' : (stage.value == 'CANCELLED' or stage.value == 'COMPLETED' ? 'bg-light text-muted' : 'bg-light') }}"
+                            style="border: 2px solid {{ isActive ? 'var(--bs-primary)' : '#dee2e6' }};">
+                            {% if isActive %}
+                                <i class="bi bi-circle-fill me-2 text-white"></i>
+                            {% else %}
+                                <i class="bi bi-circle me-2 text-muted"></i>
+                            {% endif %}
+                            <span class="fw-semibold small">{{ stage.value }}</span>
+                        </div>
+                        {% if not loop.last %}
+                            <i class="bi bi-arrow-down text-muted"></i>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
@@ -164,14 +219,14 @@
             <div class="card-body">
                 <div class="mb-2">
                     <strong>{{ 'larp.status.visible_everyone'|trans }}:</strong>
-                    <span class="badge badge-{{ currentStatus.isVisibleForEveryone() ? 'success' : 'secondary' }}">
-                        {{ currentStatus.isVisibleForEveryone() ? 'yes'|trans : 'no'|trans }}
+                    <span class="badge bg-{{ currentStatus.isVisibleForEveryone() ? 'success' : 'secondary' }}">
+                        {{ currentStatus.isVisibleForEveryone() ? 'boolean.yes'|trans : 'boolean.no'|trans }}
                     </span>
                 </div>
                 <div>
                     <strong>{{ 'larp.status.visible_organizers'|trans }}:</strong>
-                    <span class="badge badge-{{ currentStatus.isVisibleForOrganizers() ? 'success' : 'secondary' }}">
-                        {{ currentStatus.isVisibleForOrganizers() ? 'yes'|trans : 'no'|trans }}
+                    <span class="badge bg-{{ currentStatus.isVisibleForOrganizers() ? 'success' : 'secondary' }}">
+                        {{ currentStatus.isVisibleForOrganizers() ? 'boolean.yes'|trans : 'boolean.no'|trans }}
                     </span>
                 </div>
             </div>
@@ -183,14 +238,11 @@
             </div>
             <div class="card-body">
                 <div class="accordion" id="requirementsAccordion">
-                    {# To Publish Requirements #}
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button {{ currentStatus.value in ['DRAFT', 'WIP'] ? '' : 'collapsed' }}"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#publishRequirements">
-                                <i class="fas fa-upload me-2"></i> Publish Requirements
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#publishRequirements">
+                                <i class="bi bi-upload me-2"></i>Publish Requirements
                             </button>
                         </h2>
                         <div id="publishRequirements"
@@ -199,84 +251,47 @@
                             <div class="accordion-body">
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.location ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        Location
+                                        <i class="bi bi-{{ larp.location ? 'check-circle-fill text-success' : 'x-circle-fill text-danger' }} me-1"></i>Location
                                     </li>
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.description ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        Description
+                                        <i class="bi bi-{{ larp.description ? 'check-circle-fill text-success' : 'x-circle-fill text-danger' }} me-1"></i>Description
                                     </li>
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.startDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        Start Date
+                                        <i class="bi bi-{{ larp.startDate ? 'check-circle-fill text-success' : 'x-circle-fill text-danger' }} me-1"></i>Start Date
                                     </li>
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.endDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        End Date
+                                        <i class="bi bi-{{ larp.endDate ? 'check-circle-fill text-success' : 'x-circle-fill text-danger' }} me-1"></i>End Date
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    {# Open for Inquiries Requirements #}
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#inquiriesRequirements">
-                                <i class="fas fa-users me-2"></i> Open for Inquiries Requirements
+                            <button class="accordion-button collapsed" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#inquiriesRequirements">
+                                <i class="bi bi-people me-2"></i>Open for Inquiries Requirements
                             </button>
                         </h2>
-                        <div id="inquiriesRequirements"
-                             class="accordion-collapse collapse"
+                        <div id="inquiriesRequirements" class="accordion-collapse collapse"
                              data-bs-parent="#requirementsAccordion">
                             <div class="accordion-body">
                                 <p class="text-muted small mb-2">All publish requirements plus:</p>
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi bi-{{ larp.characters|length > 0 ? 'check-circle-fill text-success' : 'x-circle-fill text-danger' }} me-1"></i>
                                         At least one character
                                         {% if larp.characters|length > 0 %}
                                             <span class="badge bg-secondary ms-1">{{ larp.characters|length }}</span>
                                         {% endif %}
                                     </li>
                                     <li class="mb-2">
-                                        {% set charactersWithoutDesc = larp.characters|filter(c => not c.description) %}
-                                        <i class="fas {{ charactersWithoutDesc|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        {% set charsWithoutDesc = larp.characters|filter(c => not c.description) %}
+                                        <i class="bi bi-{{ charsWithoutDesc|length == 0 and larp.characters|length > 0 ? 'check-circle-fill text-success' : 'x-circle-fill text-danger' }} me-1"></i>
                                         All characters have descriptions
-                                        {% if charactersWithoutDesc|length > 0 %}
-                                            <span class="badge bg-warning ms-1">{{ charactersWithoutDesc|length }} missing</span>
-                                        {% endif %}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# Confirm Event Requirements #}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#confirmRequirements">
-                                <i class="fas fa-check-double me-2"></i> Confirm Event Requirements
-                            </button>
-                        </h2>
-                        <div id="confirmRequirements"
-                             class="accordion-collapse collapse"
-                             data-bs-parent="#requirementsAccordion">
-                            <div class="accordion-body">
-                                <p class="text-muted small mb-2">All inquiry requirements plus:</p>
-                                <ul class="list-unstyled mb-0">
-                                    <li class="mb-2">
-                                        {% set unassignedChars = larp.characters|filter(c => c.larpParticipant is null) %}
-                                        <i class="fas {{ unassignedChars|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        All characters assigned to participants
-                                        {% if unassignedChars|length > 0 %}
-                                            <span class="badge bg-warning ms-1">{{ unassignedChars|length }} unassigned</span>
+                                        {% if charsWithoutDesc|length > 0 %}
+                                            <span class="badge bg-warning ms-1">{{ charsWithoutDesc|length }} missing</span>
                                         {% endif %}
                                     </li>
                                 </ul>
@@ -288,31 +303,4 @@
         </div>
     </div>
 </div>
-
-<style>
-.workflow-diagram {
-    text-align: center;
-}
-
-.workflow-step {
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.workflow-step.active {
-    background-color: #e3f2fd;
-    border: 2px solid #2196f3;
-}
-
-.workflow-arrow {
-    color: #666;
-    margin: 5px 0;
-}
-
-.btn-group .dropdown-menu {
-    min-width: 300px;
-}
-</style>
 {% endblock %}

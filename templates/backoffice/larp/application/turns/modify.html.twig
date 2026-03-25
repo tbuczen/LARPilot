@@ -1,0 +1,47 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_title %}
+    {% if turn.id is defined and turn.id %}
+        {{ 'application_turn.edit'|trans }}
+    {% else %}
+        {{ 'application_turn.create'|trans }}
+    {% endif %}
+{% endblock %}
+
+{% block larp_content %}
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        {% if turn.id is defined and turn.id %}
+                            {{ 'application_turn.edit'|trans }} — {{ 'application_turn.round'|trans }} {{ turn.roundNumber }}
+                        {% else %}
+                            {{ 'application_turn.create'|trans }}
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+
+                    {{ form_row(form.roundNumber) }}
+
+                    <div class="row">
+                        <div class="col-md-6">{{ form_row(form.opensAt) }}</div>
+                        <div class="col-md-6">{{ form_row(form.closesAt) }}</div>
+                    </div>
+
+                    {{ form_row(form.price) }}
+
+                    <div class="d-flex gap-2 mt-3">
+                        {{ form_widget(form.submit) }}
+                        <a href="{{ path('backoffice_larp_application_turns_list', {larp: larp.id}) }}"
+                           class="btn btn-outline-secondary">{{ 'cancel'|trans }}</a>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

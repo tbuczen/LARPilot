@@ -153,3 +153,4 @@ Error: Error
 larp.character.error.unique_name: 'A character with the name "{{ name }}" already exists in this LARP.'
 'A character with this title already exists in this LARP.': '__A character with this title already exists in this LARP.'
 game_map.image_file_invalid: __game_map.image_file_invalid
+larp.error.end_date_before_start_date: 'End date must be after start date.'

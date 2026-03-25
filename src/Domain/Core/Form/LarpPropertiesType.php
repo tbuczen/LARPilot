@@ -3,6 +3,7 @@
 namespace App\Domain\Core\Form;
 
 use App\Domain\Core\Entity\Enum\LarpCharacterSystem;
+use App\Domain\Core\Entity\Enum\LarpModule;
 use App\Domain\Core\Entity\Enum\LarpSetting;
 use App\Domain\Core\Entity\Enum\LarpType;
 use App\Domain\Core\Entity\Larp;
@@ -11,6 +12,7 @@ use App\Domain\Survey\Entity\Enum\ApplicationMode;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -136,6 +138,42 @@ class LarpPropertiesType extends AbstractType
                 'constraints' => [
                     new Url(),
                 ],
+            ])
+            ->add('enableWipStage', CheckboxType::class, [
+                'label' => 'wizard.enable_wip_stage',
+                'required' => false,
+                'help' => 'wizard.enable_wip_stage_help',
+                'attr' => ['class' => 'form-check-input'],
+            ])
+            ->add('enableNegotiationStage', CheckboxType::class, [
+                'label' => 'wizard.enable_negotiation_stage',
+                'required' => false,
+                'help' => 'wizard.enable_negotiation_stage_help',
+                'attr' => ['class' => 'form-check-input'],
+            ])
+            ->add('enableCostumeCheckStage', CheckboxType::class, [
+                'label' => 'wizard.enable_costume_check_stage',
+                'required' => false,
+                'help' => 'wizard.enable_costume_check_stage_help',
+                'attr' => ['class' => 'form-check-input'],
+            ])
+            ->add('applicationTurns', IntegerType::class, [
+                'label' => 'wizard.application_turns',
+                'required' => true,
+                'help' => 'wizard.application_turns_help',
+                'attr' => ['class' => 'form-control', 'min' => 1],
+            ])
+            ->add('enabledModules', ChoiceType::class, [
+                'label' => 'larp.enabled_modules',
+                'choices' => array_combine(
+                    array_map(fn (LarpModule $m) => $m->getLabel(), LarpModule::cases()),
+                    array_map(fn (LarpModule $m) => $m->value, LarpModule::cases()),
+                ),
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+                'label_attr' => ['class' => 'form-check-label'],
+                'attr' => ['class' => 'form-check-input'],
             ])
             ->add('headerImageFile', FileType::class, [
                 'label' => 'larp.header_image',

@@ -78,10 +78,19 @@ event:
   days_until: 'Dni do wydarzenia'
   duration: 'Czas trwania'
   dates: 'Daty wydarzenia'
+application_turn:
+  list: 'Rundy zgłoszeń'
+  list_help: 'Zarządzaj rundami zgłoszeń dla tego LARPa. Każda runda może mieć własne daty otwarcia/zamknięcia i opcjonalną cenę biletu.'
+  create: 'Utwórz rundę zgłoszeń'
+  edit: 'Edytuj rundę zgłoszeń'
+  round: 'Runda'
+  status_open: 'Otwarta'
+  status_closed: 'Zamknięta'
 applications:
   total: 'Wszystkie zgłoszenia'
   pending: 'Zgłoszenia oczekujące'
   review: 'Przejrzyj zgłoszenia'
+  turns: 'Rundy zgłoszeń'
 participant: 'Uczestnik'
 participants:
   list: 'Uczestnicy'
@@ -478,14 +487,21 @@ larp:
     cancelled: "Anulowany"
     completed: "Zakończony"
 
+    negotiation: "Negocjacje postaci"
+    costume_check: "Kontrola kostiumów"
+    in_progress: "W trakcie"
     draft.description: "Stan początkowy, widoczny tylko dla administratorów"
     wip.description: "Prace w toku, widoczny dla organizatorów"
     published.description: "Opublikowany i widoczny dla wszystkich"
     inquiries.description: "Zbieranie zgłoszeń graczy"
+    negotiation.description: "Dyskusje dot. dostosowania postaci po zakończeniu zgłoszeń"
+    costume_check.description: "Weryfikacja lub zamawianie kostiumów graczy"
+    in_progress.description: "Wydarzenie trwa"
     confirmed.description: "Wydarzenie potwierdzone i odbędzie się"
     cancelled.description: "Wydarzenie zostało anulowane"
     completed.description: "Wydarzenie zostało zakończone"
   properties: 'Właściwości'
+  workflow_config: 'Konfiguracja przebiegu'
 
 marketplace:
   singular: "Marketplace"

@@ -32,7 +32,7 @@ class StatusController extends AbstractController
 
         $availableTransitions = $this->workflowService->getAvailableTransitionsWithLabels($larp);
         $currentStatus = $larp->getStatus();
-        $allStatuses = $this->workflowService->getAllStatuses();
+        $configuredStages = $this->workflowService->getConfiguredWorkflowStages($larp);
 
         $propertiesForm = $this->createForm(LarpPropertiesType::class, $larp);
 
@@ -40,7 +40,7 @@ class StatusController extends AbstractController
             'larp' => $larp,
             'currentStatus' => $currentStatus,
             'availableTransitions' => $availableTransitions,
-            'allStatuses' => $allStatuses,
+            'configuredStages' => $configuredStages,
             'propertiesForm' => $propertiesForm->createView(),
         ]);
     }

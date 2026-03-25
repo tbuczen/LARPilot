@@ -57,17 +57,7 @@
                                 <i class="bi bi-info-circle text-muted me-2"></i>
                                 <strong>{{ 'status'|trans }}:</strong><br>
                                 <span class="ms-3">
-                                    {% if larp.status.value == 'INQUIRIES' %}
-                                        <span class="badge bg-success">{{ larp.status.value }}</span>
-                                    {% elseif larp.status.value == 'PUBLISHED' %}
-                                        <span class="badge bg-info">{{ larp.status.value }}</span>
-                                    {% elseif larp.status.value == 'CONFIRMED' %}
-                                        <span class="badge bg-primary">{{ larp.status.value }}</span>
-                                    {% elseif larp.status.value == 'COMPLETED' %}
-                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
-                                    {% else %}
-                                        <span class="badge bg-warning">{{ larp.status.value }}</span>
-                                    {% endif %}
+                                    <span class="badge bg-{{ larp.status.badgeClass }}">{{ larp.status.value }}</span>
                                 </span>
                             </li>
                         </ul>

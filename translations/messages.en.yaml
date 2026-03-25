@@ -99,10 +99,19 @@ event:
   days_until: 'Days Until Event'
   duration: 'Duration'
   dates: 'Event Dates'
+application_turn:
+  list: 'Application Rounds'
+  list_help: 'Manage the application rounds for this LARP. Each round can have its own opening/closing dates and optional ticket price.'
+  create: 'Create Application Round'
+  edit: 'Edit Application Round'
+  round: 'Round'
+  status_open: 'Open'
+  status_closed: 'Closed'
 applications:
   total: 'Total Applications'
   pending: 'Pending Applications'
   review: 'Review Applications'
+  turns: 'Application Rounds'
 participant: 'Participant'
 participants:
   list: 'Participants'
@@ -554,6 +563,9 @@ larp:
     wip: "Work in Progress"
     published: "Published"
     inquiries: "Open for Inquiries"
+    negotiation: "Character Negotiation"
+    costume_check: "Costume Check"
+    in_progress: "In Progress"
     confirmed: "Confirmed"
     cancelled: "Cancelled"
     completed: "Completed"
@@ -562,10 +574,14 @@ larp:
     wip.description: "Work in progress, visible to organizers"
     published.description: "Published and visible to everyone"
     inquiries.description: "Collecting player applications"
+    negotiation.description: "Post-application character customization discussions"
+    costume_check.description: "Verifying or commissioning player costumes"
+    in_progress.description: "The event is currently running"
     confirmed.description: "Event confirmed and will happen"
     cancelled.description: "Event has been cancelled"
     completed.description: "Event has been completed"
   properties: 'Properties'
+  workflow_config: 'Workflow Configuration'
 
 marketplace:
   singular: "Marketplace"

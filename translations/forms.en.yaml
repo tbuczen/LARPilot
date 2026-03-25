@@ -49,8 +49,37 @@ mapping:
     starting_paragraph:
   directory:
     group_by_faction: "Group by Faction"
+application_turn:
+  round_number: "Round number"
+  opens_at: "Opens at"
+  closes_at: "Closes at"
+  price: "Ticket price"
+  price_placeholder: "e.g. 150.00"
+  price_help: "Leave empty if this round has no ticket fee."
+
+wizard:
+  step_basics: "Basics"
+  step_workflow: "Workflow"
+  step_modules: "Modules"
+  enable_wip_stage: "Include a WIP / design phase"
+  enable_wip_stage_help: "Adds a Work-In-Progress stage between Draft and Published — useful when your story team needs time before the LARP goes public."
+  application_mode: "Application method"
+  max_character_choices: "Max character choices per player"
+  application_turns: "Number of application rounds"
+  application_turns_help: "How many rounds of applications will be open. More rounds allow late or replacement applications."
+  optional_stages: "Optional stages after applications close"
+  enable_negotiation_stage: "Character negotiation stage"
+  enable_negotiation_stage_help: "Opens a discussion phase where organizers can tailor characters with individual players before confirming assignments."
+  enable_costume_check_stage: "Costume check / commission stage"
+  enable_costume_check_stage_help: "Adds a stage to verify or commission player costumes before the event begins."
+  modules_help: "Choose which features to enable for this LARP. You can change these later in LARP settings."
+  prev: "Back"
+  next: "Next"
+
 larp:
-  create: "Create new DRAFT Core"
+  create: "Create new LARP"
+  title: "LARP Name"
+  title_placeholder: "e.g. The Last Kingdom"
   name: "Name"
   description: "Description"
   location: "Location"
@@ -75,6 +104,7 @@ larp:
   character_system: "Character System"
   select_character_system: "Select a character system"
   update_properties: "Update LARP Properties"
+  enabled_modules: "Enabled modules"
   integrations: "Integrations"
   invitations: "Invitations"
   story: "Story"

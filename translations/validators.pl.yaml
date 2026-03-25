@@ -153,3 +153,4 @@ Error: Błąd
 larp.character.error.unique_name: 'Postać o nazwie "{{ name }}" już istnieje w tym LARPie.'
 'A character with this title already exists in this LARP.': 'Postać o tym tytule już istnieje w tym LARPie.'
 game_map.image_file_invalid: 'Proszę przesłać prawidłowy plik obrazu'
+larp.error.end_date_before_start_date: 'Data zakończenia musi być późniejsza niż data rozpoczęcia.'

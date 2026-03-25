@@ -217,4 +217,11 @@ return [
         'version' => '2.4.3',
         'type' => 'css',
     ],
+    'flatpickr' => [
+        'version' => '4.6.13',
+    ],
+    'flatpickr/dist/flatpickr.min.css' => [
+        'version' => '4.6.13',
+        'type' => 'css',
+    ],
 ];
