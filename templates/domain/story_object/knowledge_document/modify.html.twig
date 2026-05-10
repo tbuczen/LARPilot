@@ -1,0 +1,55 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ (document is defined and document.id ? 'knowledge_document.modify' : 'knowledge_document.create')|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h2 class="mb-0">
+                {{ (document is defined and document.id ? 'knowledge_document.modify' : 'knowledge_document.create')|trans }}
+            </h2>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-md-8">
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.content) }}
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-header">
+                                <h5 class="mb-0">{{ 'knowledge_document.settings'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                {{ form_row(form.category) }}
+                                {{ form_row(form.isPublic) }}
+                            </div>
+                        </div>
+
+                        <div class="card bg-light mt-3">
+                            <div class="card-header">
+                                <h5 class="mb-0">{{ 'knowledge_document.visibility_settings'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">
+                                    {{ 'knowledge_document.visibility_help'|trans }}
+                                </p>
+                                {{ form_row(form.visibleToCharacters) }}
+                                {{ form_row(form.visibleToFactions) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Form actions with consistent styling #}
+                {{ ui.form_actions(
+                    document is defined and document.id ? 'save' : 'create',
+                    'bi-check-circle',
+                    path('backoffice_larp_knowledge_list', { larp: larp.id })
+                ) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
