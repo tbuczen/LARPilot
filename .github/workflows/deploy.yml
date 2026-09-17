@@ -1,0 +1,159 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, ctype, iconv, intl, pdo_pgsql, pgsql, json, dom, filter, gd, zip, opcache
+          coverage: none
+
+      - name: Install Composer dependencies
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      - name: Build frontend assets
+        env:
+          APP_ENV: ${{ secrets.APP_ENV }}
+        run: |
+          php bin/console importmap:install
+          php bin/console sass:build || true
+          php bin/console asset-map:compile
+
+      - name: Build deploy archive
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/.deploy-out"
+          tar czf "$GITHUB_WORKSPACE/.deploy-out/deploy.tar.gz" \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.deploy-out' \
+            --exclude='var/cache/*' \
+            --exclude='var/log/*' \
+            --exclude='tests' \
+            --exclude='docker' \
+            -C "$GITHUB_WORKSPACE" .
+
+      - name: Upload archive to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: '.deploy-out/deploy.tar.gz'
+          target: '/tmp/'
+          strip_components: 1
+
+      - name: Extract, configure and migrate on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          envs: PROJECT_DIR,APP_ENV,APP_SECRET,DATABASE_HOST,DATABASE_PORT,DATABASE_NAME,DATABASE_USER,DATABASE_PASSWORD,DATABASE_SERVER_VERSION,MAILER_DSN,OAUTH_GOOGLE_CLIENT_ID,OAUTH_GOOGLE_CLIENT_SECRET,OAUTH_FACEBOOK_CLIENT_ID,OAUTH_FACEBOOK_CLIENT_SECRET,OAUTH_DISCORD_CLIENT_ID,OAUTH_DISCORD_CLIENT_SECRET,GOOGLE_RECAPTCHA_SITE_KEY,GOOGLE_RECAPTCHA_SECRET,GOOGLE_API_KEY,GOOGLE_MAPS_API_KEY,GOOGLE_APP_ID,GOOGLE_SERVICE_EMAIL,GOOGLE_SERVICE_ACCOUNT_JSON,GH_TOKEN,GH_REPO,GH_DISCUSSION_CATEGORY_ID,OPENAI_API_KEY,OPENAI_EMBEDDING_MODEL,OPENAI_COMPLETION_MODEL,STORY_AI_AUTO_INDEX,VECTOR_STORE_DSN
+          script: |
+            set -e
+
+            if [ -z "$PROJECT_DIR" ]; then
+              echo "PROJECT_DIR is not set. Add a 'PROJECT_DIR' variable (repo or 'prod' environment) with the deploy path on the server." >&2
+              exit 1
+            fi
+
+            mkdir -p "$PROJECT_DIR"
+            tar xzf /tmp/deploy.tar.gz -C "$PROJECT_DIR"
+            rm -f /tmp/deploy.tar.gz
+            cd "$PROJECT_DIR"
+
+            DB_PORT="${DATABASE_PORT:-5432}"
+            DB_SERVER_VERSION="${DATABASE_SERVER_VERSION:-16}"
+
+            if [ -n "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
+              cat > google-service-account.json <<SERVICEACCOUNTJSON
+            $GOOGLE_SERVICE_ACCOUNT_JSON
+            SERVICEACCOUNTJSON
+              SERVICE_ACCOUNT_PATH="$PROJECT_DIR/google-service-account.json"
+            fi
+
+            cat > .env.local <<ENVLOCAL
+            APP_ENV=${APP_ENV:-prod}
+            DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DB_PORT}/${DATABASE_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8"
+            MAILER_DSN=${MAILER_DSN:-null://null}
+            OAUTH_GOOGLE_CLIENT_ID=$OAUTH_GOOGLE_CLIENT_ID
+            OAUTH_GOOGLE_CLIENT_SECRET=$OAUTH_GOOGLE_CLIENT_SECRET
+            OAUTH_FACEBOOK_CLIENT_ID=$OAUTH_FACEBOOK_CLIENT_ID
+            OAUTH_FACEBOOK_CLIENT_SECRET=$OAUTH_FACEBOOK_CLIENT_SECRET
+            OAUTH_DISCORD_CLIENT_ID=$OAUTH_DISCORD_CLIENT_ID
+            OAUTH_DISCORD_CLIENT_SECRET=$OAUTH_DISCORD_CLIENT_SECRET
+            GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY
+            GOOGLE_RECAPTCHA_SECRET=$GOOGLE_RECAPTCHA_SECRET
+            GOOGLE_API_KEY=$GOOGLE_API_KEY
+            GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY
+            GOOGLE_APP_ID=$GOOGLE_APP_ID
+            GOOGLE_SERVICE_EMAIL=$GOOGLE_SERVICE_EMAIL
+            GOOGLE_SERVICE_ACCOUNT_JSON=${SERVICE_ACCOUNT_PATH:-%kernel.project_dir%/google-service-account.json}
+            GITHUB_TOKEN=$GH_TOKEN
+            GITHUB_REPO=${GH_REPO:-tbuczen/LARPilot}
+            GITHUB_DISCUSSION_CATEGORY_ID=$GH_DISCUSSION_CATEGORY_ID
+            OPENAI_API_KEY=$OPENAI_API_KEY
+            OPENAI_EMBEDDING_MODEL=${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+            OPENAI_COMPLETION_MODEL=${OPENAI_COMPLETION_MODEL:-gpt-4o-mini}
+            STORY_AI_AUTO_INDEX=${STORY_AI_AUTO_INDEX:-false}
+            VECTOR_STORE_DSN=$VECTOR_STORE_DSN
+            ENVLOCAL
+
+            if [ -n "$APP_SECRET" ]; then
+              echo "APP_SECRET=$APP_SECRET" >> .env.local
+            fi
+
+            mkdir -p var/cache var/log public/uploads
+            chmod -R 775 var public/uploads
+
+            php bin/console doctrine:migrations:migrate --no-interaction
+            php bin/console cache:clear --env=prod --no-warmup
+            php bin/console cache:warmup --env=prod
+        env:
+          PROJECT_DIR: ${{ vars.PROJECT_DIR }}
+          APP_ENV: ${{ secrets.APP_ENV }}
+          APP_SECRET: ${{ secrets.APP_SECRET }}
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_SERVER_VERSION: ${{ vars.DATABASE_SERVER_VERSION }}
+          MAILER_DSN: ${{ secrets.MAILER_DSN }}
+          OAUTH_GOOGLE_CLIENT_ID: ${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}
+          OAUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
+          OAUTH_FACEBOOK_CLIENT_ID: ${{ secrets.OAUTH_FACEBOOK_CLIENT_ID }}
+          OAUTH_FACEBOOK_CLIENT_SECRET: ${{ secrets.OAUTH_FACEBOOK_CLIENT_SECRET }}
+          OAUTH_DISCORD_CLIENT_ID: ${{ secrets.OAUTH_DISCORD_CLIENT_ID }}
+          OAUTH_DISCORD_CLIENT_SECRET: ${{ secrets.OAUTH_DISCORD_CLIENT_SECRET }}
+          GOOGLE_RECAPTCHA_SITE_KEY: ${{ secrets.GOOGLE_RECAPTCHA_SITE_KEY }}
+          GOOGLE_RECAPTCHA_SECRET: ${{ secrets.GOOGLE_RECAPTCHA_SECRET }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          GOOGLE_APP_ID: ${{ secrets.GOOGLE_APP_ID }}
+          GOOGLE_SERVICE_EMAIL: ${{ secrets.GOOGLE_SERVICE_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_REPO: ${{ secrets.GH_REPO }}
+          GH_DISCUSSION_CATEGORY_ID: ${{ secrets.GH_DISCUSSION_CATEGORY_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_EMBEDDING_MODEL: ${{ secrets.OPENAI_EMBEDDING_MODEL }}
+          OPENAI_COMPLETION_MODEL: ${{ secrets.OPENAI_COMPLETION_MODEL }}
+          STORY_AI_AUTO_INDEX: ${{ secrets.STORY_AI_AUTO_INDEX }}
+          VECTOR_STORE_DSN: ${{ secrets.VECTOR_STORE_DSN }}
