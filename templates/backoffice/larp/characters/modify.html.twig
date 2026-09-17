@@ -18,7 +18,28 @@
     {% set detailsContent %}
         <div class="tab-pane border border-top-0 p-3 rounded-bottom">
         {{ form_start(form) }}
-            {{ form_widget(form) }}
+            {# Render fields before description #}
+            {{ form_row(form.title) }}
+            {{ form_row(form.inGameName) }}
+            {{ form_row(form.gender) }}
+            {{ form_row(form.preferredGender) }}
+            {{ form_row(form.tags) }}
+
+            {# Description field with dictation button #}
+            <div class="mb-3">
+                {{ form_label(form.description) }}
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    {{ ui.dictation_button('#' ~ form.description.vars.id, 'pl-PL', true, 'sm') }}
+                </div>
+                {{ form_widget(form.description) }}
+                {{ form_help(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            {# Remaining fields #}
+            {{ form_row(form.availableForRecruitment) }}
+            {{ form_row(form.factions) }}
+            {{ form_row(form.storyWriter) }}
 
             {# Form actions with consistent styling #}
             {{ ui.form_actions(

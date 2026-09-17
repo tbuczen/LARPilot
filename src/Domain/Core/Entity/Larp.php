@@ -19,16 +19,19 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LarpRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 class Larp implements Timestampable, CreatorAwareInterface, \Stringable
 {
     use UuidTraitEntity;
     use TimestampableEntity;
     use CreatorAwareTrait;
+    use SoftDeleteableEntity;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;

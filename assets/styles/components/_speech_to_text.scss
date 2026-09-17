@@ -1,0 +1,102 @@
+// Speech-to-Text / Dictation Button Styles
+
+.dictation-controls {
+    // Recording state animation
+    .btn.recording {
+        animation: pulse-recording 1.5s infinite;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            transform: translate(-50%, -50%);
+            animation: ripple-recording 1.5s infinite;
+            background-color: rgba(220, 53, 69, 0.3);
+            pointer-events: none;
+        }
+    }
+
+    // Status text styling
+    [data-speech-to-text-target="status"] {
+        font-size: 0.75rem;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &:not(.d-none) {
+            animation: fade-in 0.2s ease-in;
+        }
+    }
+}
+
+// Pulse animation for recording button
+@keyframes pulse-recording {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+// Ripple animation for recording indicator
+@keyframes ripple-recording {
+    0% {
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+    }
+    100% {
+        width: 150%;
+        height: 150%;
+        opacity: 0;
+    }
+}
+
+// Fade in for status text
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+// Integration with WYSIWYG editor - dictation button above editor
+.wysiwyg-with-dictation {
+    .dictation-controls {
+        margin-bottom: 0.5rem;
+    }
+}
+
+// Browser support warning (shown when speech API not available)
+.dictation-unsupported-warning {
+    font-size: 0.75rem;
+    color: var(--bs-warning);
+}
+
+// Disabled state styling
+.dictation-controls .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &::after {
+        display: none;
+    }
+}
+
+// Dark mode support
+[data-bs-theme="dark"] {
+    .dictation-controls {
+        .btn.recording::after {
+            background-color: rgba(220, 53, 69, 0.2);
+        }
+    }
+}

@@ -1,0 +1,80 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% block larp_title %}{{ 'ai_assistant.title'|trans }}{% endblock %}
+
+{% block larp_content %}
+    <div class="card mt-4"
+         data-controller="ai-assistant"
+         data-ai-assistant-query-url-value="{{ path('api_larp_ai_query', {'larp': larp.id}) }}"
+         data-ai-assistant-larp-title-value="{{ larp.title }}">
+
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">
+                    <i class="bi bi-robot"></i> {{ 'ai_assistant.title'|trans }}
+                </h2>
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                        data-action="ai-assistant#clearHistory">
+                    <i class="bi bi-arrow-counterclockwise"></i> {{ 'ai_assistant.new_conversation'|trans }}
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            {# Messages area #}
+            <div class="ai-chat-messages" data-ai-assistant-target="messagesContainer">
+                {# Welcome message #}
+                <div class="ai-chat-message ai-chat-message--assistant" data-welcome-message>
+                    <div class="ai-chat-avatar">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <div class="ai-chat-bubble">
+                        {{ 'ai_assistant.welcome_message'|trans({'%larp%': larp.title}) }}
+                    </div>
+                </div>
+            </div>
+
+            {# Typing indicator #}
+            <div class="ai-chat-typing" data-ai-assistant-target="typingIndicator" style="display: none;">
+                <div class="ai-chat-avatar">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <div class="ai-chat-bubble">
+                    <div class="ai-typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            </div>
+
+            {# Error display #}
+            <div class="ai-chat-error alert alert-danger mx-3 mt-2" data-ai-assistant-target="errorDisplay" style="display: none;">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span data-ai-assistant-target="errorMessage"></span>
+            </div>
+
+            {# Sources panel #}
+            <div class="ai-chat-sources" data-ai-assistant-target="sourcesPanel" style="display: none;">
+                <div class="ai-chat-sources-header px-3 py-2">
+                    <small class="text-muted fw-bold">
+                        <i class="bi bi-journal-bookmark"></i> {{ 'ai_assistant.sources'|trans }}
+                    </small>
+                </div>
+                <div class="ai-chat-sources-list px-3 pb-2" data-ai-assistant-target="sourcesList"></div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <form data-action="ai-assistant#sendMessage" class="d-flex gap-2">
+                <textarea class="form-control"
+                          data-ai-assistant-target="messageInput"
+                          data-action="keydown->ai-assistant#handleKeyDown"
+                          placeholder="{{ 'ai_assistant.input_placeholder'|trans }}"
+                          rows="1"></textarea>
+                <button type="submit" class="btn btn-primary"
+                        data-ai-assistant-target="sendButton">
+                    <i class="bi bi-send"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

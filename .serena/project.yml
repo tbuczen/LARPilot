@@ -119,6 +119,12 @@ ignored_memory_patterns: []
 # Have a look at the docstring of the constructors of the LS implementations within solidlsp (e.g., for C# or PHP) to see which options are available.
 # No documentation on options means no options are available.
 ls_specific_settings: {}
+# list of tools to include that would otherwise be disabled (particularly optional tools that are disabled by default)
+included_optional_tools: []
+
+# fixed set of tools to use as the base tool set (if non-empty), replacing Serena's default set of tools.
+# This cannot be combined with non-empty excluded_tools or included_optional_tools.
+fixed_tools: []
 
 # the encoding used by text files in the project
 # For a list of possible encodings, see https://docs.python.org/3.11/library/codecs.html#standard-encodings
@@ -135,6 +141,10 @@ encoding: utf-8
 #   rego                ruby                ruby_solargraph     rust                scala
 #   swift               terraform           toml                typescript          typescript_vts
 #   vue                 yaml                zig
+#   powershell          python              python_jedi         r                   rego
+#   ruby                ruby_solargraph     rust                scala               swift
+#   terraform           toml                typescript          typescript_vts      vue
+#   yaml                zig
 #   (This list may be outdated. For the current list, see values of Language enum here:
 #   https://github.com/oraios/serena/blob/main/src/solidlsp/ls_config.py
 #   For some languages, there are alternative language servers, e.g. csharp_omnisharp, ruby_solargraph.)

@@ -23,6 +23,14 @@ class CharacterListColumnMappingType extends AbstractType
             ])
             ->add('description', TextType::class, [
                 'label' => 'character.description',
+            ])
+            ->add('storyWriter', TextType::class, [
+                'label' => 'character.story_writer',
+                'required' => false,
+            ])
+            ->add('tags', TextType::class, [
+                'label' => 'character.tag',
+                'required' => false,
             ]);
     }
 
@@ -30,6 +38,7 @@ class CharacterListColumnMappingType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'forms',
+            'label' => 'mappings',
         ]);
     }
 }

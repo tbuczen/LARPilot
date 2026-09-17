@@ -18,23 +18,23 @@ class AccountSettingsType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'Username',
+                'label' => 'account.username',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('preferredLocale', ChoiceType::class, [
-                'label' => 'Language',
+                'label' => 'account.language',
                 'choices' => Locale::cases(),
                 'choice_label' => fn (Locale $locale) => $locale->name,
                 'choice_value' => fn (?Locale $locale) => $locale?->value,
                 'required' => true,
             ])
             ->add('contactEmail', EmailType::class, [
-                'label' => 'Email',
+                'label' => 'account.email',
                 'disabled' => true,
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'submit',
+                'label' => 'account.save',
             ])
         ;
         // profile picture, 2fa

@@ -7,6 +7,7 @@ use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Event;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\Item;
+use App\Domain\StoryObject\Entity\LoreDocument;
 use App\Domain\StoryObject\Entity\Place;
 use App\Domain\StoryObject\Entity\Quest;
 use App\Domain\StoryObject\Entity\Relation;
@@ -37,6 +38,7 @@ enum TargetType: string
     case Relation = 'relation'; // describes relation between players/factions, can be anything starting from friendship, family to rivalry
     case Tag = 'tag';
     case MapLocation = 'map_location'; // a location on a game map, used for tagging map markers
+    case LoreDocument = 'lore_document'; // general lore/world-building document (religion, timeline, setting, etc.)
 
     //Both storyline -> threads -> events and quests can have a decision tree
     public function getEntityClass(): string
@@ -51,6 +53,7 @@ enum TargetType: string
             self::Item => Item::class,
             self::Place => Place::class,
             self::Tag => Tag::class,
+            self::LoreDocument => LoreDocument::class,
             // Use FQCN string to avoid cross-domain import
             self::MapLocation => 'App\\Domain\\Map\\Entity\\MapLocation',
         };

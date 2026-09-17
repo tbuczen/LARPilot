@@ -30,42 +30,43 @@ class LarpPropertiesType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'LARP Name',
+                'label' => 'larp.name',
                 'required' => true,
                 'attr' => ['class' => 'form-control']
             ])
             ->add('startDate', DateTimeType::class, [
-                'label' => 'Start Date',
+                'label' => 'larp.start_date',
                 'widget' => 'single_text',
                 'required' => false,
                 'attr' => ['class' => 'form-control']
             ])
             ->add('endDate', DateTimeType::class, [
-                'label' => 'End Date',
+                'label' => 'larp.end_date',
                 'widget' => 'single_text',
                 'required' => false,
                 'attr' => ['class' => 'form-control']
             ])
             ->add('location', EntityType::class, [
+                'label' => 'larp.location',
                 'class' => Location::class,
                 'choice_label' => 'title',
-                'placeholder' => 'Select a location',
+                'placeholder' => 'larp.select_location',
                 'required' => false,
                 'autocomplete' => true,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('maxCharacterChoices', IntegerType::class, [
-                'label' => 'Max Character Choices',
+                'label' => 'larp.max_character_choices',
                 'required' => true,
                 'attr' => ['class' => 'form-control', 'min' => 1],
-                'help' => 'How many characters can players select when applying (only for Character Selection mode)'
+                'help' => 'larp.max_character_choices_help'
             ])
             ->add('applicationMode', EnumType::class, [
                 'class' => ApplicationMode::class,
                 'choice_label' => fn (ApplicationMode $mode): string => $mode->getLabel(),
                 'expanded' => true,
-                'label' => 'Application Mode',
-                'help' => 'How players apply for this LARP',
+                'label' => 'larp.application_mode',
+                'help' => 'larp.application_mode_help',
                 'attr' => [
                     'class' => 'form-check',
                     'data-controller' => 'application-mode-toggle',
@@ -73,9 +74,9 @@ class LarpPropertiesType extends AbstractType
                 ]
             ])
             ->add('publishCharactersPublicly', CheckboxType::class, [
-                'label' => 'Publish Character Gallery',
+                'label' => 'larp.publish_characters_publicly',
                 'required' => false,
-                'help' => 'Show characters publicly on the LARP page (only available in Character Selection mode)',
+                'help' => 'larp.publish_characters_publicly_help',
                 'attr' => [
                     'class' => 'form-check-input',
                     'data-application-mode-toggle-target' => 'publishCheckbox'
@@ -84,26 +85,29 @@ class LarpPropertiesType extends AbstractType
             ->add('setting', EnumType::class, [
                 'class' => LarpSetting::class,
                 'choice_label' => fn (LarpSetting $setting): string => $setting->getLabel(),
-                'placeholder' => 'Select a setting',
+                'label' => 'larp.setting',
+                'placeholder' => 'larp.select_setting',
                 'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('type', EnumType::class, [
                 'class' => LarpType::class,
                 'choice_label' => fn (LarpType $type): string => $type->getLabel(),
-                'placeholder' => 'Select a type',
+                'label' => 'larp.type',
+                'placeholder' => 'larp.select_type',
                 'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('characterSystem', EnumType::class, [
                 'class' => LarpCharacterSystem::class,
                 'choice_label' => fn (LarpCharacterSystem $system): string => $system->getLabel(),
-                'placeholder' => 'Select a character system',
+                'label' => 'larp.character_system',
+                'placeholder' => 'larp.select_character_system',
                 'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description',
+                'label' => 'larp.description',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
@@ -112,7 +116,7 @@ class LarpPropertiesType extends AbstractType
                 ],
             ])
             ->add('discordServerUrl', UrlType::class, [
-                'label' => 'Discord Server URL',
+                'label' => 'larp.discord_server_url',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
@@ -123,7 +127,7 @@ class LarpPropertiesType extends AbstractType
                 ],
             ])
             ->add('facebookEventUrl', UrlType::class, [
-                'label' => 'Facebook Event URL',
+                'label' => 'larp.facebook_event_url',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
@@ -134,10 +138,10 @@ class LarpPropertiesType extends AbstractType
                 ],
             ])
             ->add('headerImageFile', FileType::class, [
-                'label' => 'Header Image',
+                'label' => 'larp.header_image',
                 'required' => false,
                 'mapped' => false,
-                'help' => 'Upload a background image for your LARP (like a Facebook event cover). Max 5MB. Accepted formats: JPG, PNG, GIF, WebP.',
+                'help' => 'larp.header_image_help',
                 'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new File([
@@ -148,12 +152,12 @@ class LarpPropertiesType extends AbstractType
                             'image/gif',
                             'image/webp',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid image file (JPG, PNG, GIF, or WebP)',
+                        'mimeTypesMessage' => 'larp.header_image_invalid',
                     ]),
                 ],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Update LARP Properties',
+                'label' => 'larp.update_properties',
                 'attr' => ['class' => 'btn btn-primary']
             ]);
     }
@@ -162,6 +166,7 @@ class LarpPropertiesType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Larp::class,
+            'translation_domain' => 'forms',
         ]);
     }
 }

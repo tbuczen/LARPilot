@@ -22,6 +22,7 @@
         </li>
 
         {# Mentions Tab #}
+        {% if mentionsCount != false %}
         <li class="nav-item" role="presentation">
             <a class="nav-link {{ currentTab == 'mentions' ? 'active' : '' }}"
                href="{{ path(mentionsRoute, {larp: larp.id, (storyObjectType): storyObject.id}) }}">
@@ -29,6 +30,7 @@
                 <span class="badge bg-secondary ms-1">{{ mentionsCount }}</span>
             </a>
         </li>
+        {% endif %}
 
         {# Decision Tree Tab (only for Quest and Thread) #}
         {% if storyObjectType == 'quest' or storyObjectType == 'thread' %}
@@ -52,6 +54,7 @@
         {% endif %}
 
         {# Discussions Tab #}
+        {% if storyObject.exists %}
         <li class="nav-item" role="presentation">
             <a class="nav-link {{ currentTab == 'discussions' ? 'active' : '' }}"
                href="{{ path('backoffice_larp_story_comment_discussions', {larp: larp.id, storyObject: storyObject.id}) }}">
@@ -60,5 +63,6 @@
                 <span class="badge bg-secondary ms-1">{{ commentsCount }}</span>
             </a>
         </li>
+        {% endif %}
     </ul>
 {% endmacro %}

@@ -22,32 +22,32 @@ class SurveyQuestionType extends AbstractType
     {
         $builder
             ->add('questionText', TextareaType::class, [
-                'label' => 'Question',
+                'label' => 'survey.question.text',
                 'attr' => [
                     'class' => 'form-control',
                     'rows' => 2,
-                    'placeholder' => 'Enter your question here...',
+                    'placeholder' => 'survey.question.text_placeholder',
                 ],
             ])
             ->add('helpText', TextType::class, [
-                'label' => 'Help Text',
+                'label' => 'survey.question.help_text',
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Optional guidance for the applicant',
+                    'placeholder' => 'survey.question.help_text_placeholder',
                 ],
             ])
             ->add('questionType', EnumType::class, [
                 'class' => SurveyQuestionTypeEnum::class,
                 'choice_label' => fn (SurveyQuestionTypeEnum $type): string => $type->getLabel(),
-                'label' => 'Question Type',
+                'label' => 'survey.question.type',
                 'attr' => [
                     'class' => 'form-select',
                     'data-action' => 'change->survey-builder#onQuestionTypeChange',
                 ],
             ])
             ->add('isRequired', CheckboxType::class, [
-                'label' => 'Required',
+                'label' => 'survey.question.required',
                 'required' => false,
                 'attr' => ['class' => 'form-check-input'],
             ])
@@ -60,7 +60,7 @@ class SurveyQuestionType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'label' => 'Options',
+                'label' => 'survey.question.options',
                 'attr' => [
                     'class' => 'question-options-container',
                 ],

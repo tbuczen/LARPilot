@@ -17,10 +17,10 @@ class SurveyQuestionOptionType extends AbstractType
     {
         $builder
             ->add('optionText', TextType::class, [
-                'label' => 'Option',
+                'label' => 'survey.question.option_text',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Enter option text...',
+                    'placeholder' => 'survey.question.option_text_placeholder',
                 ],
             ])
             ->add('orderPosition', HiddenType::class, [

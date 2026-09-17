@@ -62,6 +62,9 @@ return [
     './controllers/google-places-autocomplete_controller.js' => [
         'path' => './assets/controllers/google-places-autocomplete_controller.js',
     ],
+    './controllers/ai_assistant_controller.js' => [
+        'path' => './assets/controllers/ai_assistant_controller.js',
+    ],
     './utils/factionGroupLayout.js' => [
         'path' => './assets/utils/factionGroupLayout.js',
     ],

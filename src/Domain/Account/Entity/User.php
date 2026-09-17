@@ -189,6 +189,11 @@ class User implements UserInterface
      */
     public function canCreateMoreLarps(int $currentLarpCount): bool
     {
+        // Super admins can always create more LARPs
+        if (in_array('ROLE_SUPER_ADMIN', $this->getRoles(), true)) {
+            return true;
+        }
+
         // If no plan assigned, use free tier default (1 LARP)
         if ($this->plan === null) {
             return $currentLarpCount < 1;
@@ -207,9 +212,15 @@ class User implements UserInterface
 
     /**
      * Get remaining LARP slots based on current plan.
+     * Returns null for unlimited (SUPER_ADMIN or unlimited plan).
      */
     public function getRemainingLarpSlots(int $currentLarpCount): ?int
     {
+        // Super admins have unlimited slots
+        if (in_array('ROLE_SUPER_ADMIN', $this->getRoles(), true)) {
+            return null;
+        }
+
         // If no plan, use free tier default
         if ($this->plan === null) {
             return max(0, 1 - $currentLarpCount);
@@ -227,9 +238,15 @@ class User implements UserInterface
 
     /**
      * Get the max LARPs allowed for this user's plan.
+     * Returns null for unlimited (SUPER_ADMIN or unlimited plan).
      */
     public function getMaxLarpsAllowed(): ?int
     {
+        // Super admins have unlimited LARPs
+        if (in_array('ROLE_SUPER_ADMIN', $this->getRoles(), true)) {
+            return null;
+        }
+
         if ($this->plan === null) {
             return 1; // Free tier default
         }

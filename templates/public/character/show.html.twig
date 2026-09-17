@@ -29,30 +29,19 @@
                         {% endif %}
                     </div>
 
-                    {% if character.imageUrl %}
-                        <img src="{{ character.imageUrl }}" class="card-img-top" alt="{{ character.title }}" style="max-height: 400px; object-fit: cover;">
-                    {% endif %}
-
                     <div class="card-body">
                         {# Character metadata #}
                         <div class="row mb-4">
                             {% if character.gender %}
                                 <div class="col-md-4">
-                                    <h6 class="text-muted">{{ 'common.gender'|trans }}</h6>
-                                    <p><i class="bi bi-gender-ambiguous me-2"></i>{{ character.gender.label }}</p>
-                                </div>
-                            {% endif %}
-
-                            {% if character.characterType %}
-                                <div class="col-md-4">
-                                    <h6 class="text-muted">{{ 'character.type'|trans }}</h6>
-                                    <p><i class="bi bi-person-badge me-2"></i>{{ character.characterType.label }}</p>
+                                    <h6 class="text-muted">{{ 'gender.singular'|trans }}</h6>
+                                    <p><i class="bi bi-gender-ambiguous me-2"></i>{{ character.gender.value }}</p>
                                 </div>
                             {% endif %}
 
                             {% if character.factions|length > 0 %}
                                 <div class="col-md-4">
-                                    <h6 class="text-muted">{{ 'character.factions'|trans }}</h6>
+                                    <h6 class="text-muted">{{ 'faction'|trans }}</h6>
                                     <p>
                                         <i class="bi bi-shield me-2"></i>
                                         {% for faction in character.factions %}
@@ -63,20 +52,9 @@
                             {% endif %}
                         </div>
 
-                        <hr>
-
-                        {# Description #}
-                        <div class="mb-4">
-                            <h4>{{ 'character.description'|trans }}</h4>
-                            <div class="character-description">
-                                {{ character.description|sanitize_html|raw }}
-                            </div>
-                        </div>
-
-                        {# Tags #}
                         {% if character.tags|length > 0 %}
                             <div class="mb-4">
-                                <h5>{{ 'character.themes'|trans }}</h5>
+                                <h5>{{ 'tags'|trans }}</h5>
                                 <div class="d-flex flex-wrap gap-2">
                                     {% for tag in character.tags %}
                                         <span class="badge bg-info text-dark">{{ tag.title }}</span>
@@ -85,10 +63,16 @@
                             </div>
                         {% endif %}
 
-                        {# Threads #}
+                        <div class="mb-4">
+                            <h4>{{ 'description'|trans }}</h4>
+                            <div class="character-description">
+                                {{ character.description|sanitize_html|raw }}
+                            </div>
+                        </div>
+
                         {% if character.threads|length > 0 %}
                             <div class="mb-4">
-                                <h5>{{ 'character.threads'|trans }}</h5>
+                                <h5>{{ 'larp.thread.plural'|trans }}</h5>
                                 <div class="list-group">
                                     {% for thread in character.threads %}
                                         <div class="list-group-item">
@@ -104,10 +88,9 @@
                             </div>
                         {% endif %}
 
-                        {# Skills (if visible) #}
                         {% if character.skills|length > 0 %}
                             <div class="mb-4">
-                                <h5>{{ 'character.skills'|trans }}</h5>
+                                <h5>{{ 'skills.plural'|trans }}</h5>
                                 <div class="row">
                                     {% for skill in character.skills %}
                                         <div class="col-md-6 mb-2">
@@ -123,7 +106,7 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between">
                             <a href="{{ path('public_larp_characters_list', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>{{ 'common.back'|trans }}
+                                <i class="bi bi-arrow-left me-1"></i>{{ 'back'|trans }}
                             </a>
 
                             {% if larp.applicationMode.value == 'character_selection' and larp.status.value == 'INQUIRIES' %}
