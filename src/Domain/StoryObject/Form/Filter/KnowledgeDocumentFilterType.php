@@ -65,7 +65,7 @@ class KnowledgeDocumentFilterType extends AbstractType
                             return null;
                         }
                         $qb = $filterQuery->getQueryBuilder();
-                        $qb->join('kd.visibleToCharacters', 'filterChar')
+                        $qb->join('kd.visibleTo', 'filterChar')
                             ->andWhere('filterChar IN (:filterCharacters)')
                             ->setParameter('filterCharacters', $values['value']);
                         return null;
@@ -88,7 +88,7 @@ class KnowledgeDocumentFilterType extends AbstractType
                             return null;
                         }
                         $qb = $filterQuery->getQueryBuilder();
-                        $qb->join('kd.visibleToFactions', 'filterFaction')
+                        $qb->join('kd.visibleTo', 'filterFaction')
                             ->andWhere('filterFaction IN (:filterFactions)')
                             ->setParameter('filterFactions', $values['value']);
                         return null;

@@ -43,13 +43,13 @@
                                     {% if document.isPublic %}
                                         <span class="badge bg-success">{{ 'knowledge_document.public'|trans }}</span>
                                     {% else %}
-                                        {% set charCount = document.visibleToCharacters|length %}
-                                        {% set factionCount = document.visibleToFactions|length %}
-                                        {% if charCount > 0 or factionCount > 0 %}
+                                        {% set ownerCount = document.owners|length %}
+                                        {% set visibleToCount = document.visibleTo|length %}
+                                        {% if ownerCount > 0 or visibleToCount > 0 %}
                                             <small class="text-muted">
-                                                {% if charCount > 0 %}{{ charCount }} {{ 'knowledge_document.characters'|trans }}{% endif %}
-                                                {% if charCount > 0 and factionCount > 0 %}, {% endif %}
-                                                {% if factionCount > 0 %}{{ factionCount }} {{ 'knowledge_document.factions'|trans }}{% endif %}
+                                                {% if ownerCount > 0 %}{{ ownerCount }} {{ 'knowledge_document.owners'|trans }}{% endif %}
+                                                {% if ownerCount > 0 and visibleToCount > 0 %}, {% endif %}
+                                                {% if visibleToCount > 0 %}{{ visibleToCount }} {{ 'knowledge_document.visible_to'|trans }}{% endif %}
                                             </small>
                                         {% else %}
                                             <span class="badge bg-warning">{{ 'knowledge_document.restricted'|trans }}</span>

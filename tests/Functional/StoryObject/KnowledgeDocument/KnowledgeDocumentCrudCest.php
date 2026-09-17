@@ -277,7 +277,7 @@ class KnowledgeDocumentCrudCest
             'knowledge_document[title]' => 'Character-Specific Lore',
             'knowledge_document[content]' => 'Secret information',
             'knowledge_document[isPublic]' => '0',
-            'knowledge_document[visibleToCharacters]' => [$character1->getId()->toRfc4122()],
+            'knowledge_document[visibleTo]' => [$character1->getId()->toRfc4122()],
         ]);
 
         $I->seeResponseCodeIsRedirection();
@@ -304,7 +304,7 @@ class KnowledgeDocumentCrudCest
             'knowledge_document[title]' => 'Faction Secret History',
             'knowledge_document[content]' => 'The true history of the Order',
             'knowledge_document[isPublic]' => '0',
-            'knowledge_document[visibleToFactions]' => [$faction->getId()->toRfc4122()],
+            'knowledge_document[visibleTo]' => [$faction->getId()->toRfc4122()],
         ]);
 
         $I->seeResponseCodeIsRedirection();
