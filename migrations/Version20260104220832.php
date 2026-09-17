@@ -23,7 +23,7 @@ final class Version20260104220832 extends AbstractMigration
         $this->addSql('CREATE TABLE knowledge_document (
             id UUID NOT NULL,
             larp_id UUID NOT NULL,
-            creator_id UUID DEFAULT NULL,
+            created_by_id UUID NOT NULL,
             title VARCHAR(255) NOT NULL,
             content TEXT DEFAULT NULL,
             is_public BOOLEAN DEFAULT false NOT NULL,
@@ -36,13 +36,14 @@ final class Version20260104220832 extends AbstractMigration
         // Indexes for performance
         $this->addSql('CREATE INDEX IDX_knowledge_document_title ON knowledge_document (title)');
         $this->addSql('CREATE INDEX IDX_knowledge_document_larp_id ON knowledge_document (larp_id)');
+        $this->addSql('CREATE INDEX IDX_knowledge_document_created_by_id ON knowledge_document (created_by_id)');
 
         // Foreign key constraints
         $this->addSql('ALTER TABLE knowledge_document ADD CONSTRAINT FK_knowledge_document_larp
             FOREIGN KEY (larp_id) REFERENCES larp (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
 
-        $this->addSql('ALTER TABLE knowledge_document ADD CONSTRAINT FK_knowledge_document_creator
-            FOREIGN KEY (creator_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE knowledge_document ADD CONSTRAINT FK_knowledge_document_created_by
+            FOREIGN KEY (created_by_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
 
         // Create join table for knowledge_document <-> story_object ownership
         $this->addSql('CREATE TABLE knowledge_document_owner (

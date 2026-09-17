@@ -2,6 +2,7 @@
 
 namespace App\Domain\StoryObject\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\StoryObject\Entity\KnowledgeDocument;
@@ -61,7 +62,10 @@ class KnowledgeDocumentController extends BaseController
         if (!$document instanceof KnowledgeDocument) {
             $document = new KnowledgeDocument();
             $document->setLarp($larp);
-            $document->setCreator($this->getUser());
+            $currentUser = $this->getUser();
+            if ($currentUser instanceof User) {
+                $document->setCreatedBy($currentUser);
+            }
         }
 
         $form = $this->createForm(KnowledgeDocumentType::class, $document, ['larp' => $larp]);

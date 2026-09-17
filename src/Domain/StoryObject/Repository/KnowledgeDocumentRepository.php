@@ -8,6 +8,7 @@ use App\Domain\Core\Repository\ListableRepositoryInterface;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Entity\KnowledgeDocument;
+use App\Domain\StoryObject\Entity\StoryObject;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
