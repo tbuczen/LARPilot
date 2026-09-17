@@ -662,7 +662,7 @@ class KnowledgeDocumentVisibilityCest
             ->create();
 
         $repository = $I->getEntityManager()->getRepository(KnowledgeDocument::class);
-        $larpDocs = $repository->findLarpDocuments($larp);
+        $larpDocs = $repository->findLarpDocuments($larp->_real());
 
         $I->assertCount(2, $larpDocs, 'Should find only LARP-wide documents (without specific owners)');
 

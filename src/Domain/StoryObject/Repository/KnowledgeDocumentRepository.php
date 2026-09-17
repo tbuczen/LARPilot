@@ -100,11 +100,11 @@ class KnowledgeDocumentRepository extends BaseRepository implements ListableRepo
                     // Owned by this character
                     'owners.id = :characterId',
                     // Owned by character's faction(s)
-                    'owners IN (SELECT IDENTITY(fm.faction) FROM ' . Character::class . ' c JOIN c.factions fm WHERE c.id = :characterId)',
+                    'owners.id IN (SELECT fm.id FROM ' . Character::class . ' c JOIN c.factions fm WHERE c.id = :characterId)',
                     // Explicit visibility to this character
                     'visibleTo.id = :characterId',
                     // Explicit visibility to character's faction(s)
-                    'visibleTo IN (SELECT IDENTITY(fm2.faction) FROM ' . Character::class . ' c2 JOIN c2.factions fm2 WHERE c2.id = :characterId)'
+                    'visibleTo.id IN (SELECT fm2.id FROM ' . Character::class . ' c2 JOIN c2.factions fm2 WHERE c2.id = :characterId)'
                 )
             )
             ->setParameter('larp', $character->getLarp())
