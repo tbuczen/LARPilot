@@ -135,9 +135,13 @@ jobs:
             # for these commands so it is the one PHP actually sees.
             export DATABASE_SERVER_VERSION="$DB_SERVER_VERSION"
 
-            php bin/console doctrine:migrations:migrate --no-interaction
-            php bin/console cache:clear --env=prod --no-warmup
-            php bin/console cache:warmup --env=prod
+            # This host's default PHP memory_limit (128M) isn't enough to
+            # compile all Twig templates during cache:warmup; -1 matches the
+            # same override the Makefile already uses locally for
+            # memory-hungry console commands.
+            php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
+            php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
+            php -d memory_limit=-1 bin/console cache:warmup --env=prod
         env:
           PROJECT_DIR: ${{ vars.PROJECT_DIR }}
           APP_ENV: ${{ secrets.APP_ENV }}
