@@ -134,7 +134,7 @@ class KnowledgeDocumentCrudCest
         $I->amLoggedInAs($creator);
         $I->amOnRoute('backoffice_larp_knowledge_modify', ['larp' => $larp->getId()]);
 
-        $I->submitForm('form', [
+        $I->submitForm('form[name="knowledge_document"]', [
             'knowledge_document[title]' => 'World Creation Myth',
             'knowledge_document[category]' => 'lore',
             'knowledge_document[content]' => 'In the beginning, there was chaos...',
@@ -190,7 +190,7 @@ class KnowledgeDocumentCrudCest
             'document' => $document->getId(),
         ]);
 
-        $I->submitForm('form', [
+        $I->submitForm('form[name="knowledge_document"]', [
             'knowledge_document[title]' => 'Updated Title',
             'knowledge_document[content]' => 'Updated content',
         ]);
@@ -273,7 +273,7 @@ class KnowledgeDocumentCrudCest
         $I->amLoggedInAs($creator);
         $I->amOnRoute('backoffice_larp_knowledge_modify', ['larp' => $larp->getId()]);
 
-        $I->submitForm('form', [
+        $I->submitForm('form[name="knowledge_document"]', [
             'knowledge_document[title]' => 'Character-Specific Lore',
             'knowledge_document[content]' => 'Secret information',
             'knowledge_document[isPublic]' => '0',
@@ -300,7 +300,7 @@ class KnowledgeDocumentCrudCest
         $I->amLoggedInAs($creator);
         $I->amOnRoute('backoffice_larp_knowledge_modify', ['larp' => $larp->getId()]);
 
-        $I->submitForm('form', [
+        $I->submitForm('form[name="knowledge_document"]', [
             'knowledge_document[title]' => 'Faction Secret History',
             'knowledge_document[content]' => 'The true history of the Order',
             'knowledge_document[isPublic]' => '0',
