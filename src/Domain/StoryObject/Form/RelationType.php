@@ -59,15 +59,7 @@ class RelationType extends AbstractType
                 'disabled' => $disableFrom
             ])
             ->addDependent('from', 'fromType', $this->getClosure($larp, $disableFrom, $contextOwner))
-            ->add('toType', ChoiceType::class, [
-                'label' => 'relation.toType',
-                'choices' => TargetType::getAvailableForRelations(),
-                'choice_label' => fn (TargetType $type) => $type->name,
-                'choice_value' => fn (?TargetType $type) => $type?->value,
-                'required' => true,
-                'placeholder' => 'choose',
-                'disabled' => $disableTo
-            ])
+            ->addDependent('toType', ['relationType', 'fromType'], $this->getToTypeClosure($disableTo))
             ->addDependent('to', 'toType', $this->getClosure($larp, $disableTo, $contextOwner))
             ->add('submit', SubmitType::class, [
                 'label' => 'submit',
@@ -120,6 +112,25 @@ class RelationType extends AbstractType
                 'attr' => [
                     'data-loading-class' => 'is-loading',
                 ],
+            ]);
+        };
+    }
+
+    private function getToTypeClosure(bool $disableTo): \Closure
+    {
+        return function (DependentField $field, ?RelationKind $relationType, ?TargetType $fromType) use ($disableTo): void {
+            $choices = $relationType instanceof RelationKind && $fromType instanceof TargetType
+                ? $relationType->getCompatibleTargetTypesFor($fromType)
+                : TargetType::getAvailableForRelations();
+
+            $field->add(ChoiceType::class, [
+                'label' => 'relation.toType',
+                'choices' => $choices,
+                'choice_label' => fn (TargetType $type) => $type->name,
+                'choice_value' => fn (?TargetType $type) => $type?->value,
+                'required' => true,
+                'placeholder' => 'choose',
+                'disabled' => $disableTo,
             ]);
         };
     }
