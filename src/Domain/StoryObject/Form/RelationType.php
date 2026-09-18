@@ -140,20 +140,22 @@ class RelationType extends AbstractType
      */
     private function getDisabledFieldList(FormBuilderInterface $builder, ?StoryObject $contextOwner): array
     {
+        if (!$contextOwner instanceof StoryObject) {
+            return [false, false];
+        }
+
         /** @var Relation|null $relation */
         $relation = $builder->getData();
-
         $isEditing = $relation && null !== $relation->getCreatedAt();
-        $disableFrom = false;
-        $disableTo = false;
 
-        if ($isEditing && $contextOwner instanceof StoryObject) {
-            if ($relation->getFrom() === $contextOwner) {
-                $disableFrom = true;
-            } elseif ($relation->getTo() === $contextOwner) {
-                $disableTo = true;
-            }
+        if (!$isEditing || $relation->getFrom() === $contextOwner) {
+            return [true, false];
         }
-        return [$disableFrom, $disableTo];
+
+        if ($relation->getTo() === $contextOwner) {
+            return [false, true];
+        }
+
+        return [false, false];
     }
 }
