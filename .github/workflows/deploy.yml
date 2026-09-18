@@ -88,9 +88,15 @@ jobs:
               SERVICE_ACCOUNT_PATH="$PROJECT_DIR/google-service-account.json"
             fi
 
+            # Symfony's doctrine.yaml reads DATABASE_SERVER_VERSION as its own
+            # standalone env var (not parsed out of DATABASE_URL), so it must
+            # be written here explicitly or it resolves to an empty string.
+            rm -f .env.local.php
+
             cat > .env.local <<ENVLOCAL
             APP_ENV=${APP_ENV:-prod}
             DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DB_PORT}/${DATABASE_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8"
+            DATABASE_SERVER_VERSION=${DB_SERVER_VERSION}
             MAILER_DSN=${MAILER_DSN:-null://null}
             OAUTH_GOOGLE_CLIENT_ID=$OAUTH_GOOGLE_CLIENT_ID
             OAUTH_GOOGLE_CLIENT_SECRET=$OAUTH_GOOGLE_CLIENT_SECRET
