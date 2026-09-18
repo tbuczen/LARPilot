@@ -128,6 +128,13 @@ jobs:
             mkdir -p var/cache var/log public/uploads
             chmod -R 775 var public/uploads
 
+            # Symfony's Dotenv defaults to overrideExistingVars=false, so a
+            # real (even empty) DATABASE_SERVER_VERSION already present in
+            # this shell's environment would win over .env.local's value
+            # unconditionally. Export our resolved value as the real env var
+            # for these commands so it is the one PHP actually sees.
+            export DATABASE_SERVER_VERSION="$DB_SERVER_VERSION"
+
             php bin/console doctrine:migrations:migrate --no-interaction
             php bin/console cache:clear --env=prod --no-warmup
             php bin/console cache:warmup --env=prod
