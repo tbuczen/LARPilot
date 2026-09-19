@@ -26,6 +26,7 @@
         "phpdocumentor/reflection-docblock": "^5.6.3",
         "phpstan/phpdoc-parser": "^2.3",
         "scienta/doctrine-json-functions": "^6.3",
+        "sentry/sentry-symfony": "^5.13",
         "shipmonk/doctrine-entity-preloader": "^1.2",
         "spiriitlabs/form-filter-bundle": "^11.1.2",
         "stof/doctrine-extensions-bundle": "^1.14",
