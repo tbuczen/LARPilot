@@ -10,72 +10,34 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, ctype, iconv, intl, pdo_pgsql, pgsql, json, dom, filter, gd, zip, opcache
-          coverage: none
-
-      - name: Install Composer dependencies
-        env:
-          APP_ENV: ${{ secrets.APP_ENV }}
-        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-
-      - name: Build frontend assets
-        env:
-          APP_ENV: ${{ secrets.APP_ENV }}
-        run: |
-          php bin/console importmap:install
-          php bin/console sass:build || true
-          php bin/console asset-map:compile
-
-      - name: Build deploy archive
-        run: |
-          mkdir -p "$GITHUB_WORKSPACE/.deploy-out"
-          tar czf "$GITHUB_WORKSPACE/.deploy-out/deploy.tar.gz" \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='.deploy-out' \
-            --exclude='var/cache/*' \
-            --exclude='var/log/*' \
-            --exclude='tests' \
-            --exclude='docker' \
-            -C "$GITHUB_WORKSPACE" .
-
-      - name: Upload archive to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          source: '.deploy-out/deploy.tar.gz'
-          target: '/tmp/'
-          strip_components: 1
-
-      - name: Extract, configure and migrate on server
+      - name: Write .env.local and run make deploy on the server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
+          command_timeout: 20m
           envs: PROJECT_DIR,APP_ENV,APP_SECRET,DATABASE_HOST,DATABASE_PORT,DATABASE_NAME,DATABASE_USER,DATABASE_PASSWORD,DATABASE_SERVER_VERSION,MAILER_DSN,OAUTH_GOOGLE_CLIENT_ID,OAUTH_GOOGLE_CLIENT_SECRET,OAUTH_FACEBOOK_CLIENT_ID,OAUTH_FACEBOOK_CLIENT_SECRET,OAUTH_DISCORD_CLIENT_ID,OAUTH_DISCORD_CLIENT_SECRET,GOOGLE_RECAPTCHA_SITE_KEY,GOOGLE_RECAPTCHA_SECRET,GOOGLE_API_KEY,GOOGLE_MAPS_API_KEY,GOOGLE_APP_ID,GOOGLE_SERVICE_EMAIL,GOOGLE_SERVICE_ACCOUNT_JSON,GH_TOKEN,GH_REPO,GH_DISCUSSION_CATEGORY_ID,OPENAI_API_KEY,OPENAI_EMBEDDING_MODEL,OPENAI_COMPLETION_MODEL,STORY_AI_AUTO_INDEX,VECTOR_STORE_DSN,SENTRY_DSN,SENTRY_RELEASE
           script: |
             set -e
 
+            # A value pasted into a GitHub variable from a Windows editor
+            # keeps its trailing carriage return, which then becomes part of
+            # the path and makes cd fail with a confusing "No such file or
+            # directory". Strip it rather than depend on how it was entered.
+            PROJECT_DIR="$(printf '%s' "$PROJECT_DIR" | tr -d '\r')"
+
             if [ -z "$PROJECT_DIR" ]; then
-              echo "PROJECT_DIR is not set. Add a 'PROJECT_DIR' variable (repo or 'prod' environment) with the deploy path on the server." >&2
+              echo "PROJECT_DIR is not set. Add a 'PROJECT_DIR' variable (repo or 'prod' environment) pointing at the repository checkout on the server." >&2
               exit 1
             fi
 
-            mkdir -p "$PROJECT_DIR"
-            tar xzf /tmp/deploy.tar.gz -C "$PROJECT_DIR"
-            rm -f /tmp/deploy.tar.gz
+            if [ ! -d "$PROJECT_DIR/.git" ]; then
+              echo "PROJECT_DIR ($PROJECT_DIR) is not a git checkout. 'make deploy' starts with 'git pull', so the deploy directory has to be a clone of this repository." >&2
+              exit 1
+            fi
+
             cd "$PROJECT_DIR"
 
             DB_PORT="${DATABASE_PORT:-5432}"
@@ -88,9 +50,8 @@ jobs:
               SERVICE_ACCOUNT_PATH="$PROJECT_DIR/google-service-account.json"
             fi
 
-            # Symfony's doctrine.yaml reads DATABASE_SERVER_VERSION as its own
-            # standalone env var (not parsed out of DATABASE_URL), so it must
-            # be written here explicitly or it resolves to an empty string.
+            # A dumped .env.local.php takes precedence over .env.local, so a
+            # stale one would silently shadow everything written below.
             rm -f .env.local.php
 
             cat > .env.local <<ENVLOCAL
@@ -131,25 +92,15 @@ jobs:
             chmod -R 775 var public/uploads
 
             # Symfony's Dotenv defaults to overrideExistingVars=false, so a
-            # real (even empty) DATABASE_SERVER_VERSION already present in
-            # this shell's environment would win over .env.local's value
-            # unconditionally. Export our resolved value as the real env var
-            # for these commands so it is the one PHP actually sees.
+            # real (even empty) env var already present in this shell wins
+            # over .env.local unconditionally — and this SSH session has all
+            # of them injected. Export the resolved values so the console
+            # commands make deploy runs see the same thing .env.local says.
             export DATABASE_SERVER_VERSION="$DB_SERVER_VERSION"
-
-            # Same reason as above: Dotenv will not override a real env
-            # var, and the console commands below warm the prod cache with
-            # Sentry compiled in, so these must be the values PHP sees.
             export SENTRY_DSN="$SENTRY_DSN"
             export SENTRY_RELEASE="$SENTRY_RELEASE"
 
-            # This host's default PHP memory_limit (128M) isn't enough to
-            # compile all Twig templates during cache:warmup; -1 matches the
-            # same override the Makefile already uses locally for
-            # memory-hungry console commands.
-            php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
-            php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
-            php -d memory_limit=-1 bin/console cache:warmup --env=prod
+            make deploy
         env:
           PROJECT_DIR: ${{ vars.PROJECT_DIR }}
           APP_ENV: ${{ secrets.APP_ENV }}
