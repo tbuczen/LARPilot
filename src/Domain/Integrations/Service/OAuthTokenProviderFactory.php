@@ -15,10 +15,21 @@ readonly class OAuthTokenProviderFactory
 
     public function getProviderForIntegration(LarpIntegration $integration): OAuthTokenProviderInterface
     {
+        $tokenProvider = $this->findProviderForIntegration($integration);
+
+        if (!$tokenProvider instanceof OAuthTokenProviderInterface) {
+            throw new \LogicException("No OAuth provider found for integration:" . $integration->getId()->toRfc4122());
+        }
+
+        return $tokenProvider;
+    }
+
+    public function findProviderForIntegration(LarpIntegration $integration): ?OAuthTokenProviderInterface
+    {
         if ($integration->getProvider() === LarpIntegrationProvider::Google) {
             return $this->googleOAuthTokenProvider;
         }
 
-        throw new \LogicException("No OAuth provider found for integration:" . $integration->getId()->toRfc4122());
+        return null;
     }
 }

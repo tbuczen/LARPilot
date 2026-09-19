@@ -13,7 +13,7 @@
         {{ 'larp.integration.expired'|trans }}
     </div>
     <a
-            href="{{ path('backoffice_larp_connect_integration', { id: larp.id, provider: provider.value }) }}"
+            href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: provider.value }) }}"
             target="_blank"
             class="btn btn-primary"
     >
