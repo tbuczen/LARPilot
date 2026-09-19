@@ -158,7 +158,9 @@ deploy-no-pull: deploy-deps deploy-cache deploy-assets
 # Install/update PHP dependencies (production mode)
 deploy-deps:
 	@echo "📦 Installing PHP dependencies..."
-	php -d memory_limit=-1 $$(which composer) install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+	php -d memory_limit=-1 $$(which composer) install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
+	@echo "🧹 Clearing stale cache before migrating..."
+	php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
 	@echo "🗄️  Running database migrations..."
 	php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
 
@@ -166,6 +168,7 @@ deploy-deps:
 deploy-assets:
 	@echo "🎨 Building frontend assets..."
 	rm -rf public/assets/*
+	php -d memory_limit=-1 bin/console assets:install public
 	php -d memory_limit=-1 bin/console importmap:install
 	php -d memory_limit=-1 bin/console sass:build || true
 	php -d memory_limit=-1 bin/console asset-map:compile
