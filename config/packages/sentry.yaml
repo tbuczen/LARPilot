@@ -1,0 +1,22 @@
+when@prod:
+    sentry:
+        dsn: '%env(default::SENTRY_DSN)%'
+        options:
+            environment: '%kernel.environment%'
+            release: '%env(default::SENTRY_RELEASE)%'
+            send_default_pii: false
+            traces_sample_rate: 0.0
+            ignore_exceptions:
+                - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+                - Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException
+                - Symfony\Component\Security\Core\Exception\AccessDeniedException
+                - Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+
+    monolog:
+        handlers:
+            sentry:
+                type: sentry
+                level: error
+                hub_id: Sentry\State\HubInterface
+                fill_extra_context: true
+                process_psr_3_messages: false
