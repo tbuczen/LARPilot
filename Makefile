@@ -160,21 +160,21 @@ deploy-deps:
 	@echo "📦 Installing PHP dependencies..."
 	php -d memory_limit=-1 $$(which composer) install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 	@echo "🗄️  Running database migrations..."
-	php -d memory_limit=512M bin/console doctrine:migrations:migrate --no-interaction
+	php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
 
 # Compile and update frontend assets
 deploy-assets:
 	@echo "🎨 Building frontend assets..."
 	rm -rf public/assets/*
-	php -d memory_limit=512M bin/console importmap:install
-	php -d memory_limit=512M bin/console sass:build || true
-	php -d memory_limit=512M bin/console asset-map:compile
+	php -d memory_limit=-1 bin/console importmap:install
+	php -d memory_limit=-1 bin/console sass:build || true
+	php -d memory_limit=-1 bin/console asset-map:compile
 	php -d memory_limit=-1 $$(which composer) dump-autoload --optimize
 
 # Clear and warm up cache
 deploy-cache:
 	@echo "🧹 Clearing cache..."
-	php -d memory_limit=512M bin/console cache:clear --env=prod --no-warmup
-	php -d memory_limit=512M bin/console cache:warmup --env=prod
+	php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
+	php -d memory_limit=-1 bin/console cache:warmup --env=prod
 	@echo "🔧 Setting permissions..."
 	chmod -R 775 var/cache var/log || true
