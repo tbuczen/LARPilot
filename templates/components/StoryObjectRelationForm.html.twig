@@ -11,13 +11,27 @@
             {{ form_row(form.title, { attr: { 'data-model': 'norender|form.title' } }) }}
             {{ form_row(form.description, { attr: { 'data-model': 'norender|form.description' } }) }}
             {{ form_row(form.relationType, { attr: { 'data-model': 'form.relationType' } }) }}
-            {{ form_row(form.fromType, { attr: { 'data-model': 'form.fromType' } }) }}
-            {% if form.from is defined %}
-                {{ form_row(form.from, { attr: { 'data-model': 'norender|form.from' } }) }}
+            {% if form.fromType.vars.disabled %}
+                {% do form.fromType.setRendered %}
+                {% if form.from is defined %}
+                    {% do form.from.setRendered %}
+                {% endif %}
+            {% else %}
+                {{ form_row(form.fromType, { attr: { 'data-model': 'form.fromType' } }) }}
+                {% if form.from is defined %}
+                    {{ form_row(form.from, { attr: { 'data-model': 'norender|form.from' } }) }}
+                {% endif %}
             {% endif %}
-            {{ form_row(form.toType, { attr: { 'data-model': 'form.toType' } }) }}
-            {% if form.to is defined %}
-                {{ form_row(form.to, { attr: { 'data-model': 'norender|form.to' }}) }}
+            {% if form.toType.vars.disabled %}
+                {% do form.toType.setRendered %}
+                {% if form.to is defined %}
+                    {% do form.to.setRendered %}
+                {% endif %}
+            {% else %}
+                {{ form_row(form.toType, { attr: { 'data-model': 'form.toType' } }) }}
+                {% if form.to is defined %}
+                    {{ form_row(form.to, { attr: { 'data-model': 'norender|form.to' }}) }}
+                {% endif %}
             {% endif %}
             {{ form_row(form.submit) }}
             {{ form_end(form) }}
