@@ -26,7 +26,12 @@ final readonly class IntegrationManager
     {
         /** @var LarpIntegration $integration */
         foreach ($integrations as $integration) {
-            $tokenProvider = $this->oauthTokenProviderFactory->getProviderForIntegration($integration);
+            $tokenProvider = $this->oauthTokenProviderFactory->findProviderForIntegration($integration);
+
+            if (!$tokenProvider instanceof OAuthTokenProviderInterface) {
+                continue;
+            }
+
             $accessToken = $tokenProvider->getTokenForIntegration($integration->getId());
             $oauthClient = $this->clientRegistry->getClient($integration->getProvider()->value);
             $integration->setClient($oauthClient);
