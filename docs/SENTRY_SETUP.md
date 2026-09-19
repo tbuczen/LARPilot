@@ -15,14 +15,20 @@ development and the test suite never send anything.
    far more than this app produces.
 2. Copy the project's DSN — it looks like
    `https://<key>@o<org>.ingest.sentry.io/<project>`.
-3. Add it to the repository as a secret named `SENTRY_DSN`, under the `prod`
-   environment (Settings → Environments → prod → Add secret), next to
-   `DATABASE_PASSWORD` and the others.
+3. Add it to `.env.local` **on the server**, in the deploy directory, next to
+   `DATABASE_URL` and the other production settings:
 
-That is all. The next deploy writes the DSN into `.env.local` on the server and
-exports it for the cache warmup, so Sentry is active from that release onward.
+   ```dotenv
+   SENTRY_DSN=https://<key>@o<org>.ingest.sentry.io/<project>
+   ```
 
-To try it locally first, put the DSN in `.env.local` and run with `APP_ENV=prod`.
+Deployment runs `make deploy` over SSH and does not write `.env.local`, so the
+server's copy is the source of truth for every secret — nothing needs to be
+added to GitHub. Sentry is active from the next `cache:clear`/`cache:warmup`,
+which `make deploy` runs for you.
+
+To try it locally first, put the DSN in your own `.env.local` and run with
+`APP_ENV=prod`.
 
 ## What gets reported
 
@@ -42,9 +48,19 @@ turns out to be noise.
 
 ## Releases
 
-The deploy workflow passes the deployed commit SHA as `SENTRY_RELEASE`, so every
-event in Sentry is tagged with the exact commit it came from and you can jump
-from an error straight to the code that shipped it.
+`SENTRY_RELEASE` tags every event with a version string, so an error can be
+traced back to the code that shipped it. It is optional and currently unset.
+
+Since `make deploy` runs `git pull` on the server, the checkout already knows
+its own commit — the simplest way to populate it is a line in the server's
+`.env.local`, refreshed by hand or by a `deploy` hook:
+
+```dotenv
+SENTRY_RELEASE=<commit sha>
+```
+
+Leaving it unset costs only the commit link on each event; everything else in
+the report is unaffected.
 
 ## Privacy
 
