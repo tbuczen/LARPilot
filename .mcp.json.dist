@@ -1,7 +1,6 @@
 {
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-  ],
+  "enabledMcpjsonServers": [],
   "mcpServers": {
     "filesystem": {
       "command": "npx",
@@ -60,6 +59,18 @@
       "url": "http://localhost:64342/sse",
       "headers": {
         "IJ_MCP_SERVER_PROJECT_PATH": "/home/your/path/to/project"
+      }
+    },
+    "sentry": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@sentry/mcp-server@latest"
+      ],
+      "env": {
+        "SENTRY_ACCESS_TOKEN": "${SENTRY_ACCESS_TOKEN}",
+        "SENTRY_HOST": "${SENTRY_HOST:-sentry.io}"
       }
     }
   }

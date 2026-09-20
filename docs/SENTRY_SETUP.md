@@ -46,6 +46,61 @@ The deploy workflow passes the deployed commit SHA as `SENTRY_RELEASE`, so every
 event in Sentry is tagged with the exact commit it came from and you can jump
 from an error straight to the code that shipped it.
 
+## Investigating errors from Claude Code (Sentry MCP)
+
+Once events are flowing, Claude Code can read them directly instead of being told
+about them second-hand. `.mcp.json.dist` and `.claude/settings.json.dist` both
+declare a `sentry` MCP server:
+
+```json
+"sentry": {
+  "type": "stdio",
+  "command": "npx",
+  "args": ["-y", "@sentry/mcp-server@latest"],
+  "env": {
+    "SENTRY_ACCESS_TOKEN": "${SENTRY_ACCESS_TOKEN}",
+    "SENTRY_HOST": "${SENTRY_HOST:-sentry.io}"
+  }
+}
+```
+
+It reads the token from the environment rather than storing it in the file,
+because both templates are committed. Never paste the token in directly.
+
+To enable it:
+
+1. Copy the template if you have not already: `cp .mcp.json.dist .mcp.json`
+   (`.mcp.json` is gitignored, so local edits stay local).
+2. Create a **User Auth Token** in Sentry under *Settings → Account → User Auth
+   Tokens*, with at least `event:read`, `project:read` and `org:read`.
+3. Export it in the shell you start Claude Code from:
+
+   ```bash
+   export SENTRY_ACCESS_TOKEN=sntryu_...
+   ```
+
+4. Start a **new** Claude Code session — MCP servers are read at session start, so
+   an already-running session will not pick it up.
+
+Self-hosted Sentry: set `SENTRY_HOST` to your hostname (no scheme), e.g.
+`SENTRY_HOST=sentry.example.com`.
+
+### Remote alternative (OAuth)
+
+Sentry also hosts the same server at `https://mcp.sentry.dev/mcp`, optionally
+scoped as `/mcp/{organizationSlug}` or `/mcp/{organizationSlug}/{projectSlug}`.
+It authenticates with OAuth rather than a token, which means an interactive
+browser flow on first connect — fine on a workstation, awkward in a headless or
+cloud session. The stdio server above is configured as the default for that
+reason.
+
+### Order of operations
+
+The MCP server is only as useful as the data behind it. Until `SENTRY_DSN` is set
+on the server (see *One-time setup* above) the project has no events, and the MCP
+connection will authenticate successfully into an empty project. Set the DSN
+first, confirm an event arrives, then wire up the MCP.
+
 ## Privacy
 
 `send_default_pii` is **off**, which is the conservative default: request
