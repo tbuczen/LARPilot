@@ -32,9 +32,17 @@ class CharacterFilterType extends AbstractType
         $builder
             ->add('title', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
+                'label' => 'filter.character.title',
+                'attr' => [
+                    'placeholder' => 'filter.character.title_placeholder',
+                ],
             ])
             ->add('inGameName', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
+                'label' => 'filter.character.in_game_name',
+                'attr' => [
+                    'placeholder' => 'filter.character.in_game_name_placeholder',
+                ],
             ])
             ->add('gender', Filters\EnumFilterType::class, [
                 'class' => Gender::class,
@@ -42,6 +50,7 @@ class CharacterFilterType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'choose',
+                'label' => 'filter.character.gender',
             ])
             ->add('characterType', Filters\EnumFilterType::class, [
                 'class' => CharacterType::class,
@@ -49,6 +58,7 @@ class CharacterFilterType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'placeholder' => 'choose',
+                'label' => 'filter.character.character_type',
             ])
             ->add('factions', EntityType::class, [
                 'class' => Faction::class,
@@ -57,6 +67,7 @@ class CharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
+                'label' => 'filter.character.factions',
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
@@ -71,6 +82,7 @@ class CharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
+                'label' => 'filter.character.story_writer',
                 'query_builder' => function (LarpParticipantRepository $repo) use ($larp): \Doctrine\ORM\QueryBuilder {
                     $qb = $repo->createQueryBuilder('p')
                         ->join('p.user', 'u')
@@ -97,6 +109,7 @@ class CharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default', // potrzebne przez FilterBundle
+                'label' => 'filter.character.tags',
             ])
             ->add('threads', EntityType::class, [
                 'class' => Thread::class,
@@ -105,6 +118,7 @@ class CharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default',
+                'label' => 'filter.character.threads',
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],
@@ -120,6 +134,7 @@ class CharacterFilterType extends AbstractType
                 'required' => false,
                 'autocomplete' => true,
                 'data_extraction_method' => 'default',
+                'label' => 'filter.character.quests',
                 'tom_select_options' => [
                     'hideSelected' => false
                 ],

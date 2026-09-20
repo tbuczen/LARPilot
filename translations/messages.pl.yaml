@@ -13,6 +13,7 @@ incidents: Incydenty
 tags: Tagi
 menu:
   toggle: 'Menu'
+  navigation: Nawigacja
 dark_mode:
   toggle: 'Przełącz tryb ciemny'
 dictation:
@@ -224,6 +225,24 @@ larp:
     delete_title: "Usunąć postać \"%name%\"?"
     delete_only_larpilot: "Usuń tylko w LARPilot"
     delete_larpilot_and_integrations: "Usuń w LARPilot i wszystkich połączonych integracjach"
+    applicants:
+      applicant: Zgłaszający się
+      applied: Zgłoszono
+      justification: Uzasadnienie gracza
+      list: Zgłaszający się na tę postać
+      no_applicants: Nikt jeszcze nie zgłosił się na tę postać
+      priority: Priorytet
+      status: Status zgłoszenia
+      title: Zgłaszający się
+      view_application: Zobacz zgłoszenie
+      visual: Opis wizualny
+      votes: Głosy
+    export:
+      button: Eksportuj do Google Docs
+      configure: Konfiguruj ustawienia integracji
+      description: Wygeneruj dokument Google z pełnymi informacjami o postaci na podstawie skonfigurowanego szablonu
+      not_configured: Aby eksportować karty postaci, musisz skonfigurować szablon karty postaci i katalog dokumentów postaci w ustawieniach integracji.
+      title: Eksportuj dane postaci do Google Docs
   quest:
     title: 'Zadanie'
     name: 'Zadanie'
@@ -234,6 +253,8 @@ larp:
     delete_only_larpilot: "Usuń tylko w LARPilot"
     tree: 'Drzewo decyzji'
     tree_editor: 'Edytor drzewa decyzji zadania'
+    add: Dodaj zadanie
+    singular: Zadanie
   relations: 'Relacje fabularne'
   events: 'Wydarzenia'
   integrations: 'Integracje'
@@ -362,6 +383,7 @@ larp:
     view: 'Szczegóły wątku'
     tree: 'Drzewo decyzji'
     tree_editor: 'Edytor drzewa decyzji wątku'
+    add: Dodaj wątek
   reference:
     list: 'Referencje zewnętrzne'
     add: 'Dodaj referencję zewnętrzną'
@@ -389,6 +411,16 @@ larp:
     create: 'Stwórz tag'
     modify: 'Edytuj tag'
     view: 'Szczegóły tagu'
+    file_select:
+      heading: Wybierz arkusz do importu tagów
+      no_files: Brak plików dostępnych do importu.
+      title: Wybierz plik importu tagów
+    import:
+      description: Wybierz integrację, aby zaimportować tagi z arkusza kalkulacyjnego.
+      heading: Importuj tagi ze źródeł zewnętrznych
+      no_integrations: Brak skonfigurowanych integracji.
+      success: Tagi zostały zaimportowane pomyślnie.
+      title: Importuj tagi
   participant:
     singular: 'Uczestnik'
     plural: 'Uczestnicy'
@@ -430,6 +462,21 @@ larp:
     locations: 'Lokalizacje mapy'
     location_select_help: 'Kliknij na komórki siatki, aby wybrać obszar dla tej lokalizacji'
 
+    center_marker: Wyśrodkuj znacznik
+    click_to_place_marker: Kliknij na mapie, aby umieścić znacznik. Przeciągnij, aby zmienić jego położenie.
+    fit_image: Dopasuj do widoku
+    location_info: Informacje o lokalizacji
+    marker_position: Pozycja znacznika
+    no_image_uploaded: Nie przesłano jeszcze obrazu mapy. Najpierw prześlij obraz.
+    tag:
+      create: Utwórz tag mapy
+      default_shape: Domyślny kształt
+      edit: Edytuj tag mapy
+      list: Tagi mapy
+      locations_count: Lokalizacje
+      plural: Tagi mapy
+      preview: Podgląd tagu
+      singular: Tag mapy
   google_drive_folders:
     title: "Foldery Google Drive"
     heading: "Foldery Google Drive"
@@ -485,8 +532,19 @@ larp:
     confirmed.description: "Wydarzenie potwierdzone i odbędzie się"
     cancelled.description: "Wydarzenie zostało anulowane"
     completed.description: "Wydarzenie zostało zakończone"
+    requirements: Wymagania statusu
   properties: 'Właściwości'
 
+  browse_characters: Przeglądaj dostępne postacie
+  browse_characters_description: Przeglądaj galerię postaci i zgłaszaj się na postacie, które Cię interesują
+  community_links: Linki społeczności
+  facebook_event: Wydarzenie na Facebooku
+  fill_out_survey: Wypełnij ankietę
+  import_tags: Importuj tagi
+  join_discord: Dołącz do serwera Discord
+  survey_application: Wypełnij ankietę zgłoszeniową
+  survey_application_description: Wypełnij naszą ankietę, aby pomóc nam dopasować do Ciebie idealną postać
+  view_character_gallery: Zobacz galerię postaci
 marketplace:
   singular: "Marketplace"
   title: "Marketplace fabularny"
@@ -535,6 +593,12 @@ backoffice:
     view: 'Szczegóły lokalizacji'
 
 #Tłumaczenia związane z kontem dla graczy i organizatorów
+    no_locations: Nie znaleziono lokalizacji
+    section:
+      additional: Dodatkowe informacje
+      address: Informacje adresowe
+      contact: Informacje kontaktowe
+      online: Obecność online
 account:
   singular: 'Konto'
   larp:
@@ -556,6 +620,11 @@ account:
   manage:
     subtitle: "Zarządzaj swoimi preferencjami konta"
 
+  status: Status konta
+  status.approved_message: Twoje konto zostało zatwierdzone i masz pełny dostęp do wszystkich funkcji, w tym tworzenia lokalizacji.
+  status.pending_message: Twoje konto oczekuje na zatwierdzenie. Niektóre funkcje mogą być ograniczone do czasu zatwierdzenia konta przez administratora.
+  status.suspended_message: Twoje konto zostało zawieszone. Skontaktuj się z administratorem, aby uzyskać więcej informacji.
+  status.banned_message: Twoje konto zostało zbanowane. Skontaktuj się z administratorem, aby uzyskać więcej informacji.
 integration:
   singular: 'Integracja'
   plural: 'Integracje'
@@ -569,6 +638,8 @@ integration:
     use_mapping: 'Importuj używając tego mapowania'
     no_folders: 'Brak zasobów'
 
+  configure: Konfiguruj integracje
+  owner: Właściciel
 login_page:
   info: "Jeśli już jesteś zarejestrowany i chcesz połączyć konta, najpierw zaloguj się i połącz je w ustawieniach konta."
   title: 'Rejestracja / Logowanie'
@@ -586,6 +657,14 @@ public:
       view_public_page: 'Zobacz stronę publiczną'
       no_characters: 'Brak przypisanych postaci.'
 
+  character:
+    apply_for_larp: Zgłoś się na ten LARP
+    available: Dostępna do rekrutacji
+  characters:
+    gallery: Galeria postaci
+    gallery_description: Przeglądaj dostępne postacie dla tego LARPa
+    no_characters: Obecnie brak dostępnych postaci
+  login_to_apply: Zaloguj się, aby się zgłosić
 character_type:
   player: "Gracz"
   long_npc: "NPC długoterminowy"
@@ -613,6 +692,8 @@ event_planner:
     linked_entities: 'Powiązane encje'
     linked_entities_help: 'Opcjonalne powiązania z postaciami, przedmiotami lub uczestnikami'
     empty_list: 'Nie znaleziono zasobów. Stwórz swój pierwszy zasób, aby rozpocząć.'
+    add: Dodaj zasób
+    save_first: Najpierw zapisz wydarzenie, zanim dodasz rezerwacje zasobów.
   event:
     list: 'Zaplanowane wydarzenia'
     create: 'Stwórz wydarzenie'
@@ -671,6 +752,21 @@ enum:
   ROLE_GASTRO: 'Gastronomia'
 
 # Tłumaczenia drzewa decyzji
+  marker_shape:
+    arrow_down: Strzałka w dół
+    arrow_left: Strzałka w lewo
+    arrow_right: Strzałka w prawo
+    arrow_up: Strzałka w górę
+    circle: Koło
+    cross: Krzyżyk
+    diamond: Romb
+    dot: Kropka
+    flag: Flaga
+    house: Dom
+    pin: Pinezka
+    square: Kwadrat
+    star: Gwiazda
+    triangle: Trójkąt
 decision_tree:
   node_types:
     start: 'Węzeł startowy'
@@ -884,14 +980,25 @@ feedback:
     capture: 'Zrób zrzut ekranu'
     remove: 'Usuń'
     preview: 'Podgląd zrzutu ekranu'
+    captured: Zrzut ekranu zapisany
+    failed: Nie udało się wykonać zrzutu ekranu. Możesz nadal wysłać zgłoszenie bez niego.
   context:
     title: 'Informacje techniczne'
+    browser: Przeglądarka
+    larp: LARP
+    page: Strona
+    route: Trasa
+    screen: Ekran
+    timestamp: Znacznik czasu
+    user: Użytkownik
+    viewport: Widok
   submit: 'Wyślij opinię'
   submitting: 'Wysyłanie...'
   success: 'Dziękujemy! Twoja opinia została wysłana pomyślnie.'
   error: 'Nie udało się wysłać opinii. Spróbuj ponownie.'
 
 # Status Zgłoszenia
+  github_redirect: Otwieranie GitHub w celu dokończenia zgłoszenia...
 submission_status:
   new: 'Nowe'
   consider: 'W rozpatrzeniu'
@@ -1090,3 +1197,248 @@ staff_position:
   show_on_map: 'Show Staff Positions'
   update_position: 'Update Position'
   my_position: 'My Position'
+ai_assistant:
+  input_placeholder: Zapytaj o fabułę swojego LARPa...
+  new_conversation: Nowa rozmowa
+  sources: Wykorzystane źródła
+  title: Asystent AI
+  welcome_message: Witaj! Jestem Asystentem AI dla "%larp%". Zapytaj mnie o cokolwiek związane z fabułą, postaciami, wydarzeniami, zadaniami lub lore.
+comment:
+  add_detailed: Dodaj szczegółowy komentarz
+  add_new: Dodaj komentarz
+  add_new_placeholder: Dodaj komentarz lub rozpocznij dyskusję...
+  clear: Wyczyść
+  confirm_delete: Czy na pewno chcesz usunąć ten komentarz?
+  content: Komentarz
+  content_placeholder: Napisz swój komentarz lub temat dyskusji...
+  create: Nowy komentarz
+  created_successfully: Komentarz został dodany pomyślnie
+  delete: Usuń
+  delete_confirmation: Usuń komentarz
+  delete_warning: Czy na pewno chcesz usunąć ten komentarz? Tej operacji nie można cofnąć.
+  deleted_successfully: Komentarz został usunięty
+  discussions: Dyskusje
+  edit: Edytuj komentarz
+  edited: edytowano
+  hide_resolved: Ukryj rozwiązane
+  is_resolved: Oznacz jako rozwiązany
+  live: NA ŻYWO
+  mark_resolved: Oznacz jako rozwiązany
+  mark_unresolved: Oznacz jako nierozwiązany
+  marked_as_resolved: Komentarz oznaczono jako rozwiązany
+  marked_as_unresolved: Komentarz oznaczono jako nierozwiązany
+  max_5000_chars: Maksymalnie 5000 znaków
+  no_comments_yet: Brak komentarzy. Rozpocznij dyskusję!
+  post: Opublikuj komentarz
+  press_enter_to_send: Naciśnij Enter, aby wysłać, Shift+Enter dla nowej linii
+  reply: Odpowiedz na komentarz
+  reply_created_successfully: Odpowiedź została dodana pomyślnie
+  replying_to: 'Odpowiadasz na:'
+  resolve: Rozwiąż
+  resolved: Rozwiązany
+  send: Wyślij
+  show_resolved: Pokaż rozwiązane
+  start_discussion: Rozpocznij dyskusję
+  total_comments: Liczba komentarzy
+  type_below_to_start: Wpisz wiadomość poniżej, aby rozpocząć rozmowę
+  type_message: Wpisz swoją wiadomość tutaj...
+  unresolve: Cofnij rozwiązanie
+  unresolved: nierozwiązany
+  unresolved_comments: Nierozwiązane
+  updated_successfully: Komentarz został zaktualizowany
+  view_all: Zobacz wszystkie dyskusje
+  view_all_count: Zobacz wszystkie komentarze (%count%)
+  write_reply: Napisz odpowiedź...
+error:
+  '403':
+    description: Nie masz uprawnień, aby uzyskać dostęp do tego zasobu. Może to wynikać z tego, że nie jesteś organizatorem tego LARPa lub status Twojego konta nie pozwala na tę akcję.
+    help: Dlaczego mogło się to zdarzyć?
+    reason1: Nie jesteś organizatorem ani uczestnikiem tego LARPa
+    reason2: Twoje konto oczekuje na zatwierdzenie
+    reason3: Ten zasób wymaga specjalnych uprawnień
+    title: Brak dostępu
+  '404':
+    browse_larps: Przeglądaj LARPy
+    browse_locations: Przeglądaj lokalizacje
+    description: Strona, której szukasz, nie istnieje lub została przeniesiona. Nie martw się, pomożemy Ci znaleźć to, czego potrzebujesz!
+    my_larps: Moje LARPy
+    suggestions: 'Oto kilka przydatnych linków:'
+    title: Nie znaleziono strony
+  go_back: Wróć
+  go_home: Przejdź do strony głównej
+flash:
+  account_not_approved: Twoje konto nie zostało jeszcze zatwierdzone. Poczekaj na zatwierdzenie przed utworzeniem LARPów.
+  larp_created_draft: LARP utworzony jako SZKIC.
+  larp_limit_reached: Osiągnięto limit tworzenia LARPów (%current%/%max%). Przejdź na wyższy plan, aby tworzyć więcej LARPów.
+  larp_upload_failed: 'Nie udało się przesłać obrazu nagłówkowego: %reason%'
+  validation_error: Wystąpił błąd walidacji
+import:
+  tags:
+    skipped: 'Pominięto {count} tagów (mają już opisy): {tags}'
+    success: Tagi zostały zaimportowane pomyślnie
+lore:
+  all_events: Wszystkie wydarzenia
+  backoffice_timeline: Widok osi czasu
+  document:
+    create: Utwórz dokument lore
+    list: Dokumenty lore
+    modify: Edytuj dokument lore
+    plural: Dokumenty lore
+    singular: Dokument lore
+    view: Szczegóły dokumentu lore
+  filter_by_category: Filtruj według kategorii
+  filter_by_character: Filtruj według postaci
+  filter_by_faction: Filtruj według frakcji
+  my_events: Moje wydarzenia
+  no_events: Brak wydarzeń do wyświetlenia
+  public_events: Wydarzenia publiczne
+  timeline: Oś czasu
+  title: Oś czasu lore
+  view_timeline: Zobacz oś czasu lore
+  visibility:
+    character: Dla konkretnej postaci (widoczne dla wybranych postaci)
+    faction: Dla konkretnej frakcji (widoczne dla członków frakcji)
+    public: Publiczne (widoczne dla wszystkich)
+relation:
+  character_continuation: Kontynuacja postaci
+  character_previous: Poprzednia postać
+  faction_member: Członek frakcji
+  family: Rodzina
+  friend: Przyjaciel
+  involved_in_event: Zaangażowany w wydarzenie
+  involved_in_quest: Zaangażowany w zadanie
+  involved_in_thread: Zaangażowany w wątek
+story_object:
+  mention:
+    type:
+      character_continuation: Kontynuacja postaci
+      character_item: Przedmiot postaci
+      character_member: Członek - postać
+      character_previous: Poprzednia postać
+      character_quest: Zadanie postaci
+      character_thread: Wątek postaci
+      event_place: Miejsce wydarzenia
+      event_thread: Wątek wydarzenia
+      faction_member: Członek frakcji
+      faction_quest: Zadanie frakcji
+      faction_thread: Wątek frakcji
+      involved_in_event: Zaangażowany w wydarzenie
+      involved_in_quest: Zaangażowany w zadanie
+      involved_in_thread: Zaangażowany w wątek
+      quest_thread: Wątek zadania
+      relation: Relacja
+      thread_event: Wydarzenie wątku
+      thread_quest: Zadanie wątku
+  mentions:
+    context: Kontekst
+    count: wzmianek
+    empty: Ten obiekt fabularny nie został jeszcze nigdzie wspomniany.
+    source: Wspomniano w
+    title: Wzmianki
+    type: Typ
+survey:
+  active: Aktywna
+  add_option: Dodaj opcję
+  add_question: Dodaj pytanie
+  already_submitted: Wysłałeś już odpowiedź na ankietę dla tego LARPa
+  builder: Kreator ankiety
+  edit: Edytuj ankietę
+  help:
+    drag_reorder: Przeciągnij i upuść pytania za pomocą uchwytu, aby zmienić ich kolejność
+    preview: Użyj przycisku podglądu, aby zobaczyć, jak gracze będą widzieć ankietę
+    question_types: 'Użyj różnych typów pytań: tekst, dłuższy tekst, jednokrotny wybór, wielokrotny wybór, ocena (1-5) oraz wybór tagów'
+    tag_selection: Pytania z wyborem tagów pozwalają graczom wybierać spośród tagów specyficznych dla LARPa
+    title: Pomoc do kreatora ankiety
+  inactive: Nieaktywna
+  no_questions: Nie dodano jeszcze żadnych pytań
+  not_accepting_responses: Ten LARP obecnie nie przyjmuje odpowiedzi na ankietę
+  not_available: Ankieta jest obecnie niedostępna
+  not_in_survey_mode: Ten LARP nie korzysta ze zgłoszeń opartych na ankiecie
+  options: Opcje
+  preview:
+    long_text: Dłuższy tekst odpowiedzi...
+    short_text: Krótki tekst odpowiedzi...
+    submit_button: Wyślij ankietę (tylko podgląd)
+    tag_selection_info: Gracze będą mogli wybierać tagi z tego LARPa
+    title: Podgląd ankiety
+  question: Pytanie
+  questions: Pytania
+  required_fields_notice: Pola oznaczone * są wymagane
+  response:
+    answers: Odpowiedzi ankiety
+    assign: Przypisz postać
+    assign_confirm: Czy na pewno chcesz przypisać %character% do tego gracza?
+    assigned_character: Przypisana postać
+    details: Szczegóły odpowiedzi ankiety
+    match_suggestions: Sugestie dopasowania postaci
+    no_answers: Brak zarejestrowanych odpowiedzi
+    no_matches: Nie znaleziono dopasowań postaci. Może to wynikać z tego, że wszystkie odpowiednie postacie są już przypisane, lub preferencje gracza nie pasują do żadnej dostępnej postaci.
+    no_notes: Brak notatek
+    organizer_notes: Notatki organizatora
+    points: punktów
+    regenerate_matches: Wygeneruj ponownie sugestie dopasowania
+  responses:
+    assigned: Przypisano
+    assigned_character: Przypisana postać
+    confirmed: Potwierdzono
+    empty: Brak jeszcze odpowiedzi ankiety
+    list: Odpowiedzi ankiety
+    match_score: Wynik dopasowania
+    pending: Oczekuje na przypisanie
+    regenerate_all: Wygeneruj ponownie wszystkie dopasowania
+    regenerate_all_confirm: To spowoduje ponowne wygenerowanie sugestii dopasowania dla wszystkich odpowiedzi. Może to chwilę potrwać. Kontynuować?
+    total: Łączna liczba odpowiedzi
+  submission_process_explanation: Po wysłaniu ankiety nasi organizatorzy przejrzą Twoje odpowiedzi i dopasują do Ciebie odpowiednią postać. Zostaniesz powiadomiony, gdy postać zostanie Ci przypisana.
+  submitted_successfully: Dziękujemy! Twoja ankieta została wysłana pomyślnie
+  what_happens_next: Co dzieje się dalej?
+active: Aktywny
+address: Adres
+category: Kategoria
+confirm_delete: Potwierdź usunięcie
+creator: Utworzone przez
+delete_confirmation: Czy na pewno chcesz usunąć ten element? Tej operacji nie można cofnąć.
+inactive: Nieaktywny
+list_view: Widok listy
+priority: Priorytet
+saved: Zapisano
+search: Szukaj
+warning: Ostrzeżenie
+incident.create: Utwórz zgłoszenie incydentu
+incident.list: Incydenty
+incident.plural: Incydenty
+incident.report: Zgłoś incydent
+incident.singular: Incydent
+location.title: Lokalizacja
+location.address: Adres
+location.city: Miasto
+location.list: Lokalizacje
+location.singular: Lokalizacja
+location.status: Status
+location.approval: Zatwierdzenie
+location.website: Adres strony
+location.details: Szczegóły lokalizacji
+location.about: O tej lokalizacji
+location.contact: Informacje kontaktowe
+location.facilities: Udogodnienia
+location.facilities_info: Udogodnienia i informacje
+location.accessibility: Dostępność
+location.parking: Informacje o parkingu
+location.public_transport: Transport publiczny
+location.capacity: Pojemność
+location.people: osób
+location.max_capacity: Maksymalna pojemność
+location.larps_hosted: Zorganizowane LARPy
+location.larp_history: Historia wydarzeń
+location.quick_stats: Szybkie statystyki
+location.get_directions: Wyznacz trasę
+location.visit_website: Odwiedź stronę
+location.approval_status: Status
+location.pending_message: Ta lokalizacja wciąż oczekuje na zatwierdzenie
+location.pending_locations: Lokalizacje oczekujące
+location.no_pending_locations: Brak lokalizacji oczekujących na zatwierdzenie
+location.approve: Zatwierdź
+location.reject: Odrzuć
+location.approve_confirm: Czy na pewno chcesz zatwierdzić tę lokalizację?
+location.reject_location: Odrzuć lokalizację
+location.reject_warning: Zamierzasz odrzucić lokalizację '%location%'. Twórca zobaczy powód odrzucenia i będzie mógł ponownie zgłosić lokalizację po wprowadzeniu zmian.
+location.rejection_reason: Powód odrzucenia
