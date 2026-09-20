@@ -43,6 +43,18 @@ jobs:
             DB_PORT="${DATABASE_PORT:-5432}"
             DB_SERVER_VERSION="${DATABASE_SERVER_VERSION:-16}"
 
+            # The committed .env ships the Docker development defaults
+            # (DATABASE_HOST=postgres). Anything not written to .env.local below
+            # silently falls back to them, and the site then 500s on every page
+            # that touches the database. Fail loudly instead.
+            for required in DATABASE_HOST DATABASE_NAME DATABASE_USER DATABASE_PASSWORD; do
+              eval "value=\$$required"
+              if [ -z "$value" ]; then
+                echo "$required is empty. Set it as a secret on the 'prod' environment, otherwise the deploy falls back to the development database settings in .env." >&2
+                exit 1
+              fi
+            done
+
             if [ -n "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
               cat > google-service-account.json <<SERVICEACCOUNTJSON
             $GOOGLE_SERVICE_ACCOUNT_JSON
@@ -56,8 +68,13 @@ jobs:
 
             cat > .env.local <<ENVLOCAL
             APP_ENV=${APP_ENV:-prod}
-            DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DB_PORT}/${DATABASE_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8"
+            DATABASE_HOST=${DATABASE_HOST}
+            DATABASE_PORT=${DB_PORT}
+            DATABASE_NAME=${DATABASE_NAME}
+            DATABASE_USER=${DATABASE_USER}
+            DATABASE_PASSWORD=${DATABASE_PASSWORD}
             DATABASE_SERVER_VERSION=${DB_SERVER_VERSION}
+            DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DB_PORT}/${DATABASE_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8"
             MAILER_DSN=${MAILER_DSN:-null://null}
             OAUTH_GOOGLE_CLIENT_ID=$OAUTH_GOOGLE_CLIENT_ID
             OAUTH_GOOGLE_CLIENT_SECRET=$OAUTH_GOOGLE_CLIENT_SECRET
