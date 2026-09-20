@@ -22,7 +22,7 @@
 
     {% include 'includes/page_header.html.twig' with {
         title: larp.title,
-        subtitle: larp.startDate|date('F j, Y') ~ ' - ' ~ larp.endDate|date('F j, Y') ~ ' • ' ~ larp.location,
+        subtitle: larp.startDate|date('Y-m-d H:i') ~ ' - ' ~ larp.endDate|date('Y-m-d H:i') ~ ' • ' ~ larp.location,
         icon: 'bi bi-calendar-event',
         breadcrumbs: [
             { label: 'LARPs', url: path('public_larp_list') },

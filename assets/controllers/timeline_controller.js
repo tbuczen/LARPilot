@@ -321,6 +321,11 @@ export default class extends Controller {
         }
     }
 
+    formatDateTime(date) {
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
     async showCreateModal(clickedDate) {
         return new Promise((resolve) => {
             // Create modal
@@ -351,7 +356,7 @@ export default class extends Controller {
                                         <textarea class="form-control" id="eventDescription" rows="3"></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Time: ${clickedDate.toLocaleString()}</label>
+                                        <label class="form-label">Time: ${this.formatDateTime(clickedDate)}</label>
                                         <input type="hidden" id="eventStartTime" value="${clickedDate.toISOString()}">
                                     </div>
                                 </form>

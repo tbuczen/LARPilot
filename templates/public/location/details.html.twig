@@ -207,7 +207,7 @@
                                             </div>
                                             <div class="text-end ms-3">
                                                 <span class="badge bg-secondary">
-                                                    {{ larp.startDate|date('M Y') }}
+                                                    {{ larp.startDate|date('Y-m-d H:i') }}
                                                 </span>
                                                 {% if larp.status %}
                                                     <span class="badge bg-{{ larp.status.value == 'COMPLETED' ? 'success' : 'primary' }} d-block mt-1">

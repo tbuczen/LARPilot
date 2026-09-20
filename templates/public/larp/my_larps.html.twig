@@ -33,13 +33,13 @@
                                     <div class="text-muted small">
                                         <i class="bi bi-calendar3 me-1"></i>
                                         {% if participant.larp.startDate %}
-                                            {{ participant.larp.startDate|date('F j, Y') }}
+                                            {{ participant.larp.startDate|date('Y-m-d H:i') }}
                                         {% else %}
                                             &mdash;
                                         {% endif %}
                                         {% if participant.larp.endDate %}
                                             <span class="mx-1">&bull;</span>
-                                            {{ participant.larp.endDate|date('F j, Y') }}
+                                            {{ participant.larp.endDate|date('Y-m-d H:i') }}
                                         {% endif %}
                                         {% if participant.larp.location %}
                                             <span class="mx-1">&bull;</span>

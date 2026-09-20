@@ -177,9 +177,9 @@
                     <h6 class="card-title">{{ 'event.dates'|trans }}</h6>
                     <small class="text-muted">
                         {% if larp.startDate %}
-                            {{ larp.startDate|date('M d, Y') }}
+                            {{ larp.startDate|date('Y-m-d H:i') }}
                             {% if larp.endDate and larp.endDate != larp.startDate %}
-                                - {{ larp.endDate|date('M d, Y') }}
+                                - {{ larp.endDate|date('Y-m-d H:i') }}
                             {% endif %}
                         {% else %}
                             {{ 'not_set'|trans }}
