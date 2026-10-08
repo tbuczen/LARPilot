@@ -9,7 +9,7 @@
     <div class="card mt-4">
         {% set actions %}
             {% if not staffPositionsMode %}
-                {{ ui.primary_button('create', path('backoffice_larp_map_modify', { larp: larp.id }), 'bi-plus-circle') }}
+                {{ ui.create_button(path('backoffice_larp_map_modify', { larp: larp.id })) }}
             {% endif %}
         {% endset %}
         {{ ui.card_header(staffPositionsMode ? 'staff_position.select_map' : 'larp.map.plural', actions) }}
@@ -43,7 +43,7 @@
                             <td>{{ map.locations|length }}</td>
                             <td>
                                 <a href="{{ path('backoffice_larp_map_modify', { larp: larp.id, map: map.id }) }}"
-                                   class="btn btn-sm btn-primary">
+                                   class="btn btn-sm btn-outline-primary">
                                     {{ 'edit'|trans }}
                                 </a>
                                 {{ ui.delete_button(map.id, map.name, path('backoffice_larp_map_delete', { larp: larp.id, map: map.id })) }}

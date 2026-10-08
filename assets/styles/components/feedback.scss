@@ -151,49 +151,11 @@ $feedback-shadow-hover: rgba(13, 110, 253, 0.4);
         min-height: 100px;
     }
 
-    // Modal footer with gradient buttons
+    // Modal footer
     .modal-footer {
         border-top: 1px solid var(--border-color);
         padding: 1rem 1.25rem;
         background-color: var(--bg-secondary);
-
-        .btn-secondary {
-            border-radius: 8px;
-            transition: all 0.2s ease;
-
-            &:hover {
-                transform: translateY(-2px);
-            }
-        }
-
-        .btn-primary {
-            background: var(--bg-sidebar-header);
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px $feedback-shadow;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
-
-            &:hover {
-                filter: brightness(1.1);
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px $feedback-shadow-hover;
-            }
-
-            &:active {
-                transform: translateY(0);
-                box-shadow: 0 2px 8px $feedback-shadow;
-            }
-
-            &:focus {
-                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-            }
-
-            &:disabled {
-                filter: brightness(0.7);
-                cursor: not-allowed;
-            }
-        }
     }
 
     // Button group spacing

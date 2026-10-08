@@ -10,7 +10,7 @@
                     <h5 class="card-title mb-0">
                         <i class="bi bi-file-text"></i> {{ 'larp.applications.view_application'|trans }}
                     </h5>
-                    <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-secondary">
+                    <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
                     </a>
                 </div>
@@ -237,7 +237,7 @@
                                                 <form method="post"
                                                       action="{{ path('backoffice_larp_applications_accept_choice', {larp: larp.id, application: application.id, choice: choice.id}) }}"
                                                       onsubmit="return confirm('{{ 'larp.applications.confirm_accept_choice'|trans({'character': choice.character.title, 'applicant': application.contactEmail}) }}');">
-                                                    <button type="submit" class="btn btn-success w-100"
+                                                    <button type="submit" class="btn btn-primary w-100"
                                                             {% if application.status.value in ['offered', 'confirmed', 'declined'] %}disabled{% endif %}>
                                                         <i class="bi bi-send"></i> {{ 'larp.applications.accept_and_send'|trans }}
                                                     </button>
@@ -261,7 +261,7 @@
 
     <div class="row mb-4">
         <div class="col-12 text-center">
-            <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-secondary">
+            <a href="{{ path('backoffice_larp_applications_list', {larp: larp.id}) }}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
             </a>
         </div>

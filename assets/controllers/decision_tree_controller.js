@@ -940,7 +940,7 @@ export default class extends Controller {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-action="close">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" data-action="close">Cancel</button>
                         <button type="button" class="btn btn-primary" data-action="save">Save References</button>
                     </div>
                 </div>
@@ -977,7 +977,7 @@ export default class extends Controller {
                     <span class="badge bg-secondary ms-2">${this.escapeHtml(ref.type || 'unknown')}</span>
                     ${ref.role ? `<span class="badge bg-info ms-1">${this.escapeHtml(ref.role)}</span>` : ''}
                 </div>
-                <button type="button" class="btn btn-sm btn-danger" data-remove-index="${index}">
+                <button type="button" class="btn btn-sm btn-outline-danger" data-remove-index="${index}">
                     <i class="bi bi-trash"></i> Remove
                 </button>
             </div>

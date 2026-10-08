@@ -225,16 +225,16 @@
                 <div class="card-body">
                     <div class="btn-group" role="group">
                         {% if dashboard.applications.pending > 0 %}
-                        <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-warning">
+                        <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-outline-primary">
                             {{ 'applications.review'|trans }} ({{ dashboard.applications.pending }})
                         </a>
                         {% endif %}
                         {% if dashboard.characters.unassigned > 0 %}
-                        <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-info">
+                        <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-outline-primary">
                             {{ 'characters.assign'|trans }} ({{ dashboard.characters.unassigned }})
                         </a>
                         {% endif %}
-                        <a href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}" class="btn btn-primary">{{ 'participants.manage'|trans }}</a>
+                        <a href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}" class="btn btn-outline-primary">{{ 'participants.manage'|trans }}</a>
 {#                        <a href="#" class="btn btn-success">{{ 'send_announcement'|trans }}</a>#}
 {#                        <a href="#" class="btn btn-outline-secondary">{{ 'generate_reports'|trans }}</a>#}
                     </div>

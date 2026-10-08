@@ -8,12 +8,12 @@
             </div>
             <div class="btn-group">
                 {% if configureMappingPath %}
-                    <a href="{{ path(configureMappingPath, { larp: larp.id, sharedFile: file.id, provider: file.integration.provider.value }) }}" class="btn btn-primary btn-sm">
+                    <a href="{{ path(configureMappingPath, { larp: larp.id, sharedFile: file.id, provider: file.integration.provider.value }) }}" class="btn btn-outline-primary btn-sm">
                         {{ 'integration.file_select.configure_mapping'|trans }}
                     </a>
                 {% endif %}
                 {% if openFilePath %}
-                    <a href="{{ path(openFilePath, { larp: larp.id, provider: file.integration.provider.value, externalFileId: file.fileId }) }}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ path(openFilePath, { larp: larp.id, provider: file.integration.provider.value, externalFileId: file.fileId }) }}" target="_blank" class="btn btn-outline-info btn-sm">
                         {{ 'open'|trans }}
                     </a>
                 {% endif %}
@@ -29,17 +29,17 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <span class="badge bg-secondary">{{ mapping.fileType.value|capitalize }}</span>
-                                    <a href="{{ path(configureMappingPath, { larp: larp.id, sharedFile: file.id, provider: file.integration.provider.value, mapping: mapping.id }) }}" class="btn btn-link btn-sm p-0 ms-2">
+                                    <a href="{{ path(configureMappingPath, { larp: larp.id, sharedFile: file.id, provider: file.integration.provider.value, mapping: mapping.id }) }}" class="btn btn-outline-primary btn-sm ms-2">
                                         {{ 'edit'|trans }}
                                     </a>
                                 </div>
                                 {% if useMappingPath %}
-                                    <a href="{{ path(useMappingPath, { larp: larp.id, sharedFile: file.id, mapping: mapping.id, provider: file.integration.provider.value }) }}" class="btn btn-outline-success btn-sm">
+                                    <a href="{{ path(useMappingPath, { larp: larp.id, sharedFile: file.id, mapping: mapping.id, provider: file.integration.provider.value }) }}" class="btn btn-primary btn-sm">
                                         {{ 'integration.file_select.use_mapping'|trans }}
                                     </a>
                                 {% endif %}
                             </div>
-                            <button class="btn btn-sm btn-link mt-1 ps-0" type="button" data-bs-toggle="collapse"
+                            <button class="btn btn-sm btn-outline-info mt-1" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#config-{{ mapping.id }}">
                                 {{ 'show_details'|trans }}
                             </button>

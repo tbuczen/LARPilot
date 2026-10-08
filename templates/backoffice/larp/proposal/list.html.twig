@@ -7,7 +7,7 @@
     <div class="card mt-4">
         {% if create_route is defined %}
             {% set actions %}
-                {{ ui.primary_button('create', path(create_route, { larp: larp.id, recruitment: recruitment.id }), 'bi-plus-circle') }}
+                {{ ui.create_button(path(create_route, { larp: larp.id, recruitment: recruitment.id })) }}
             {% endset %}
             {{ ui.card_header('proposal.list', actions) }}
         {% else %}
@@ -39,13 +39,13 @@
                             <td>
                                 <form method="post" action="{{ path(accept_route, {larp: larp.id, id: proposal.id}) }}"
                                       style="display:inline">
-                                    <button class="btn btn-sm btn-success" type="submit">
+                                    <button class="btn btn-sm btn-primary" type="submit">
                                         {{ 'proposal.accept'|trans }}
                                     </button>
                                 </form>
                                 <form method="post" action="{{ path(reject_route, {larp: larp.id, id: proposal.id}) }}"
                                       style="display:inline">
-                                    <button class="btn btn-sm btn-danger" type="submit">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">
                                         {{ 'proposal.reject'|trans }}
                                     </button>
                                 </form>

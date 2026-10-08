@@ -7,7 +7,7 @@
     <div class="card mt-4">
         {% set actions %}
             {% if canCreateMore %}
-                {{ ui.primary_button('create', path('backoffice_larp_create'), 'bi-plus-circle') }}
+                {{ ui.create_button(path('backoffice_larp_create')) }}
             {% endif %}
         {% endset %}
         {{ ui.card_header('larp.list', actions) }}
@@ -29,7 +29,7 @@
                         <div>
                             <strong class="text-danger">{{ 'larp.plan.limit_reached'|trans }}</strong>
                             <button class="btn btn-sm btn-warning ms-2" disabled>
-                                <i class="bi bi-star me-1"></i>{{ 'larp.plan.upgrade'|trans }}
+                                <i class="bi bi-star"></i>{{ 'larp.plan.upgrade'|trans }}
                             </button>
                         </div>
                     {% endif %}

@@ -37,7 +37,7 @@
     >
         <p>{{ 'larp.file_select.open_picker_desc'|trans }}</p>
         <button
-                class="btn btn-success"
+                class="btn btn-outline-info"
                 data-action="click->google-file-picker#openPicker"
         >
             {{ 'open'|trans }}
@@ -60,7 +60,7 @@
             >
                 {{ 'save'|trans }}
             </button>
-            <a href="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id}) }}" class="btn btn-secondary">
+            <a href="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id}) }}" class="btn btn-outline-secondary">
                 {{ 'larp.mapping.title'|trans }}
             </a>
 

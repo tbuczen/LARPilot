@@ -24,44 +24,59 @@
 {% endmacro %}
 
 {#
+    Button macros follow the button system in docs/UI_BUTTONS.md:
+    create = btn-success, primary (save/submit) = btn-primary, edit = btn-outline-primary,
+    view/info = btn-outline-info, alert = btn-warning, delete = btn-outline-danger (btn-danger only
+    for the final confirm inside a modal), neutral (back/cancel/close) = btn-outline-secondary.
+    Size is decided by the group: default in page headers, form and modal footers; 'sm' in table rows and toolbars.
+#}
+
+{#
+    Create Button
+    Starts creating a new entity (green)
+
+    Usage:
+        {{ ui.create_button(path('...')) }}
+        {{ ui.create_button(path('...'), 'larp.character.add') }}
+#}
+{% macro create_button(url, label = 'create', icon = 'bi-plus-lg', size = null, additionalClasses = '') %}
+    <a href="{{ url }}" class="btn btn-success {% if size %}btn-{{ size }}{% endif %} {{ additionalClasses }}">
+        {% if icon %}<i class="bi {{ icon }}"></i>{% endif %}
+        {{ label|trans }}
+    </a>
+{% endmacro %}
+
+{#
     Primary Action Button
-    Standardized button for main actions (Create, Save, etc.)
+    Commits the current form or main step: Save, Submit, Accept (blue)
 
     Parameters:
         - label: Button text or translation key
         - url: Link URL (if null, renders as button instead of link)
-        - icon: Bootstrap icon class (optional, e.g., 'bi-plus-circle')
+        - icon: Bootstrap icon class (optional, e.g., 'bi-check-lg')
         - type: Button type if not a link (default: 'button')
         - additionalClasses: Additional CSS classes (optional)
 
     Usage:
-        {{ ui.primary_button('create', path('...')) }}
-        {{ ui.primary_button('save', null, 'bi-check-circle', 'submit') }}
+        {{ ui.primary_button('save', null, 'bi-check-lg', 'submit') }}
 #}
 {% macro primary_button(label, url = null, icon = null, type = 'button', additionalClasses = '') %}
     {% if url %}
-        <a href="{{ url }}" class="btn btn-success {{ additionalClasses }}">
-            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+        <a href="{{ url }}" class="btn btn-primary {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }}"></i>{% endif %}
             {{ label|trans }}
         </a>
     {% else %}
-        <button type="{{ type }}" class="btn btn-success {{ additionalClasses }}">
-            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+        <button type="{{ type }}" class="btn btn-primary {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }}"></i>{% endif %}
             {{ label|trans }}
         </button>
     {% endif %}
 {% endmacro %}
 
 {#
-    Secondary Action Button
-    Standardized button for secondary actions (Cancel, Back, etc.)
-
-    Parameters:
-        - label: Button text or translation key
-        - url: Link URL (if null, renders as button instead of link)
-        - icon: Bootstrap icon class (optional)
-        - type: Button type if not a link (default: 'button')
-        - additionalClasses: Additional CSS classes (optional)
+    Secondary (Neutral) Action Button
+    Leaves without changing anything: Cancel, Back, Close (grey outline)
 
     Usage:
         {{ ui.secondary_button('cancel', path('...')) }}
@@ -69,21 +84,35 @@
 #}
 {% macro secondary_button(label, url = null, icon = null, type = 'button', additionalClasses = '') %}
     {% if url %}
-        <a href="{{ url }}" class="btn btn-secondary {{ additionalClasses }}">
-            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+        <a href="{{ url }}" class="btn btn-outline-secondary {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }}"></i>{% endif %}
             {{ label|trans }}
         </a>
     {% else %}
-        <button type="{{ type }}" class="btn btn-secondary {{ additionalClasses }}">
-            {% if icon %}<i class="bi {{ icon }} me-2"></i>{% endif %}
+        <button type="{{ type }}" class="btn btn-outline-secondary {{ additionalClasses }}">
+            {% if icon %}<i class="bi {{ icon }}"></i>{% endif %}
             {{ label|trans }}
         </button>
     {% endif %}
 {% endmacro %}
 
 {#
+    Back Button
+    Neutral navigation back to the previous page
+
+    Usage:
+        {{ ui.back_button(path('...')) }}
+#}
+{% macro back_button(url, label = 'back', size = null, additionalClasses = '') %}
+    <a href="{{ url }}" class="btn btn-outline-secondary {% if size %}btn-{{ size }}{% endif %} {{ additionalClasses }}">
+        <i class="bi bi-arrow-left"></i>
+        {{ label|trans }}
+    </a>
+{% endmacro %}
+
+{#
     Delete Action Button
-    Standardized button for delete actions (triggers modal)
+    Opens the shared delete confirmation modal (red outline; the modal holds the solid confirm)
 
     Parameters:
         - itemId: Entity ID
@@ -99,34 +128,44 @@
 #}
 {% macro delete_button(itemId, itemName, deleteUrl, label = 'delete', size = 'sm', additionalClasses = '') %}
     <button type="button"
-            class="btn {% if size %}btn-{{ size }}{% endif %} btn-danger {{ additionalClasses }}"
+            class="btn {% if size %}btn-{{ size }}{% endif %} btn-outline-danger {{ additionalClasses }}"
             data-bs-toggle="modal"
             data-bs-target="#deleteModal"
             data-item-id="{{ itemId }}"
             data-item-name="{{ itemName }}"
             data-delete-url="{{ deleteUrl }}">
+        <i class="bi bi-trash"></i>
         {{ label|trans }}
     </button>
 {% endmacro %}
 
 {#
     Edit Action Button
-    Standardized button for edit actions
-
-    Parameters:
-        - url: Edit URL
-        - label: Button text (default: 'edit')
-        - size: Button size ('sm' for small, leave empty for normal)
-        - outline: Use outline variant (default: true)
-        - additionalClasses: Additional CSS classes (optional)
+    Opens an entity for changing (blue outline)
 
     Usage:
         {{ ui.edit_button(path('...')) }}
-        {{ ui.edit_button(path('...'), 'modify', 'sm', false) }}
+        {{ ui.edit_button(path('...'), 'modify', null) }}
 #}
-{% macro edit_button(url, label = 'edit', size = 'sm', outline = true, additionalClasses = '') %}
-    <a href="{{ url }}" class="btn {% if size %}btn-{{ size }}{% endif %} {% if outline %}btn-outline-primary{% else %}btn-primary{% endif %} {{ additionalClasses }}">
-        <i class="bi bi-pencil me-1"></i>{{ label|trans }}
+{% macro edit_button(url, label = 'edit', size = 'sm', additionalClasses = '') %}
+    <a href="{{ url }}" class="btn {% if size %}btn-{{ size }}{% endif %} btn-outline-primary {{ additionalClasses }}">
+        <i class="bi bi-pencil"></i>
+        {{ label|trans }}
+    </a>
+{% endmacro %}
+
+{#
+    View Action Button
+    Read-only look at an entity: View, Details, Preview (teal outline)
+
+    Usage:
+        {{ ui.view_button(path('...')) }}
+        {{ ui.view_button(path('...'), 'show_details', null) }}
+#}
+{% macro view_button(url, label = 'view', size = 'sm', additionalClasses = '') %}
+    <a href="{{ url }}" class="btn {% if size %}btn-{{ size }}{% endif %} btn-outline-info {{ additionalClasses }}">
+        <i class="bi bi-eye"></i>
+        {{ label|trans }}
     </a>
 {% endmacro %}
 
@@ -142,7 +181,7 @@
 
     Usage:
         {% set actions %}
-            {{ ui.primary_button('create', path('...')) }}
+            {{ ui.create_button(path('...')) }}
         {% endset %}
         {{ ui.page_header('larp.tag.list', actions) }}
 #}
@@ -173,7 +212,7 @@
 
     Usage:
         {% set actions %}
-            {{ ui.primary_button('create', path('...')) }}
+            {{ ui.create_button(path('...')) }}
         {% endset %}
         {{ ui.card_header('larp.tag.list', actions) }}
 #}
@@ -234,7 +273,7 @@
         {{ ui.form_actions('save', 'bi-check-circle', path('...')) }}
         {{ ui.form_actions('create', null, path('...'), 'back') }}
 #}
-{% macro form_actions(submitLabel = 'save', submitIcon = null, cancelUrl = null, cancelLabel = 'cancel', additionalButtons = null, alignment = 'end') %}
+{% macro form_actions(submitLabel = 'save', submitIcon = 'bi-check-lg', cancelUrl = null, cancelLabel = 'cancel', additionalButtons = null, alignment = 'end') %}
     <div class="d-flex justify-content-{{ alignment }} gap-2 mt-4">
         {% if cancelUrl %}
             {{ _self.secondary_button(cancelLabel, cancelUrl) }}

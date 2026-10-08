@@ -10,7 +10,7 @@
                 <div class="d-flex gap-2">
                     <form method="post" action="{{ path('backoffice_larp_survey_responses_regenerate_all', { larp: larp.id }) }}" class="d-inline">
                         <button type="submit" class="btn btn-outline-primary" onclick="return confirm('{{ 'survey.responses.regenerate_all_confirm'|trans }}')">
-                            <i class="bi bi-arrow-repeat me-1"></i>{{ 'survey.responses.regenerate_all'|trans }}
+                            <i class="bi bi-arrow-repeat"></i>{{ 'survey.responses.regenerate_all'|trans }}
                         </button>
                     </form>
                 </div>
@@ -82,7 +82,7 @@
                                         <a href="{{ path('backoffice_larp_survey_responses_show', {
                                             larp: larp.id,
                                             response: response.id
-                                        }) }}" class="btn btn-sm btn-outline-primary">
+                                        }) }}" class="btn btn-sm btn-outline-info">
                                             <i class="bi bi-eye"></i> {{ 'common.view'|trans }}
                                         </a>
                                     </td>

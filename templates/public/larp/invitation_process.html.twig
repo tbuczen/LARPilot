@@ -25,7 +25,7 @@
 
                 {% if app.user %}
                     <form method="post" action="{{ path('public_larp_accept_invitation', { slug: larp.slug, code: invitation.code }) }}">
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-primary">
                             {{ 'accept'|trans }}
                         </button>
                     </form>

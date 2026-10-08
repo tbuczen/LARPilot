@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-sm btn-outline-light" data-action="click->cookie-consent#showPreferences">
                     <i class="bi bi-gear"></i> {{ 'cookie.banner.customize'|trans({}, 'messages') }}
                 </button>
-                <button type="button" class="btn btn-sm btn-secondary" data-action="click->cookie-consent#acceptNecessary">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-action="click->cookie-consent#acceptNecessary">
                     {{ 'cookie.banner.necessary_only'|trans({}, 'messages') }}
                 </button>
                 <button type="button" class="btn btn-sm btn-primary" data-action="click->cookie-consent#acceptAll">
@@ -139,7 +139,7 @@
                     </div>
 
                     <div class="cookie-preferences-footer">
-                        <button type="button" class="btn btn-secondary" data-action="click->cookie-consent#acceptNecessary">
+                        <button type="button" class="btn btn-outline-secondary" data-action="click->cookie-consent#acceptNecessary">
                             {{ 'cookie.preferences.necessary_only'|trans({}, 'messages') }}
                         </button>
                         <button type="button" class="btn btn-primary" data-action="click->cookie-consent#savePreferences">

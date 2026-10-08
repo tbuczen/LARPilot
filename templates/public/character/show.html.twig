@@ -106,17 +106,17 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between">
                             <a href="{{ path('public_larp_characters_list', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>{{ 'back'|trans }}
+                                <i class="bi bi-arrow-left"></i>{{ 'back'|trans }}
                             </a>
 
                             {% if larp.applicationMode.value == 'character_selection' and larp.status.value == 'INQUIRIES' %}
                                 {% if app.user %}
-                                    <a href="{{ path('public_larp_application_create', {larp: larp.id}) }}" class="btn btn-success">
-                                        <i class="bi bi-send me-1"></i>{{ 'public.character.apply_for_larp'|trans }}
+                                    <a href="{{ path('public_larp_application_create', {larp: larp.id}) }}" class="btn btn-primary">
+                                        <i class="bi bi-send"></i>{{ 'public.character.apply_for_larp'|trans }}
                                     </a>
                                 {% else %}
                                     <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary">
-                                        <i class="bi bi-box-arrow-in-right me-1"></i>{{ 'public.login_to_apply'|trans }}
+                                        <i class="bi bi-box-arrow-in-right"></i>{{ 'public.login_to_apply'|trans }}
                                     </a>
                                 {% endif %}
                             {% endif %}

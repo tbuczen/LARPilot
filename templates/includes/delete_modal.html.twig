@@ -8,7 +8,7 @@
     1. Include this template once in your page
     2. Add delete button with data attributes:
        <button type="button"
-               class="btn btn-sm btn-danger"
+               class="btn btn-sm btn-outline-danger"
                data-bs-toggle="modal"
                data-bs-target="#deleteModal"
                data-item-id="{{ item.id }}"
@@ -46,14 +46,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button"
-                        class="btn btn-secondary"
+                        class="btn btn-outline-secondary"
                         data-bs-dismiss="modal">
-                    <i class="bi bi-x-circle me-2"></i>{{ 'cancel'|trans }}
+                    <i class="bi bi-x-circle"></i>{{ 'cancel'|trans }}
                 </button>
                 <form method="POST" data-delete-confirm-target="form">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-2"></i>{{ 'delete'|trans }}
+                        <i class="bi bi-trash"></i>{{ 'delete'|trans }}
                     </button>
                 </form>
             </div>

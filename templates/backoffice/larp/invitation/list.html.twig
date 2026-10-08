@@ -6,7 +6,7 @@
 {% block larp_content %}
     <div class="card mt-4">
         {% set actions %}
-            {{ ui.primary_button('create', path('backoffice_larp_invitations_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {{ ui.create_button(path('backoffice_larp_invitations_modify', { larp: larp.id })) }}
         {% endset %}
         {{ ui.card_header('larp.invitation.plural', actions) }}
 
@@ -33,12 +33,12 @@
                                            id="invitation-link-{{ invitation.id }}"
                                            value="{{ app.request.schemeAndHttpHost }}{{ path('public_larp_process_invitation', { slug: larp.slug, code: invitation.code }) }}">
                                     <button type="button"
-                                            class="btn btn-sm btn-secondary"
+                                            class="btn btn-sm btn-outline-secondary"
                                             onclick="copyInvitationLink('{{ invitation.id }}')">
                                         {{ 'copy_link'|trans }}
                                     </button>
                                     <a href="{{ path('backoffice_larp_invitations_modify', { larp: larp.id, invitation: invitation.id }) }}"
-                                       class="btn btn-sm btn-primary">
+                                       class="btn btn-sm btn-outline-primary">
                                         {{ 'edit'|trans }}
                                     </a>
                                     {{ ui.delete_button(invitation.id, ('user_role.' ~ invitation.invitedRole.value)|trans, path('backoffice_larp_invitations_delete', { larp: larp.id, invitation: invitation.id })) }}

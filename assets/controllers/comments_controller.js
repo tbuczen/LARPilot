@@ -205,13 +205,13 @@ export default class extends Controller {
                                 </div>
                                 <div class="d-flex gap-2 flex-wrap">
                                     <button type="button" 
-                                            class="btn btn-sm btn-link text-decoration-none p-0"
+                                            class="btn btn-sm btn-outline-secondary"
                                             data-action="click->comments#toggleReplyForm"
                                             data-comment-id="${comment.id}">
                                         <i class="bi bi-reply"></i> Reply
                                     </button>
                                     <button type="button" 
-                                            class="btn btn-sm btn-link text-decoration-none p-0"
+                                            class="btn btn-sm btn-outline-secondary"
                                             data-action="click->comments#toggleResolve"
                                             data-comment-id="${comment.id}"
                                             data-is-resolved="${comment.isResolved}">
