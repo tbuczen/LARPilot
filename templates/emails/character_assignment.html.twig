@@ -77,7 +77,7 @@
             <h2 style="margin-top: 0;">{{ characterTitle }}</h2>
             <p><strong>{{ 'email.character_assignment.larp'|trans }}:</strong> {{ larp.title }}</p>
             {% if larp.startDate %}
-                <p><strong>{{ 'email.character_assignment.date'|trans }}:</strong> {{ larp.startDate|date('d-m-Y') }}</p>
+                <p><strong>{{ 'email.character_assignment.date'|trans }}:</strong> {{ larp.startDate|display_date }}</p>
             {% endif %}
             {% if larp.location %}
                 <p><strong>{{ 'email.character_assignment.location'|trans }}:</strong> {{ larp.location.title }}</p>

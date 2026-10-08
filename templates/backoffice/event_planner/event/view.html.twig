@@ -36,10 +36,10 @@
                     <h5>{{ 'event_planner.event.details'|trans }}</h5>
                     <dl class="row">
                         <dt class="col-sm-4">{{ 'event_planner.event.start_time'|trans }}</dt>
-                        <dd class="col-sm-8">{{ event.startTime|date('d-m-Y H:i') }}</dd>
+                        <dd class="col-sm-8">{{ event.startTime|display_datetime }}</dd>
 
                         <dt class="col-sm-4">{{ 'event_planner.event.end_time'|trans }}</dt>
-                        <dd class="col-sm-8">{{ event.endTime|date('d-m-Y H:i') }}</dd>
+                        <dd class="col-sm-8">{{ event.endTime|display_datetime }}</dd>
 
                         <dt class="col-sm-4">{{ 'event_planner.event.duration'|trans }}</dt>
                         <dd class="col-sm-8">{{ event.durationMinutes }} {{ 'minutes'|trans }}</dd>

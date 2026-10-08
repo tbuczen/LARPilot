@@ -2,6 +2,7 @@
 
 Full spec: `docs/UI_DATES.md`. Visual reference: `docs/ui/ui-guide.html` ("Dates & time"). Read the spec before showing or entering a date.
 
+- All format strings live in `App\Domain\Core\Service\Helper\DateFormat`; never write a literal like `'d-m-Y'` or `'Y-m-d H:i'` elsewhere. Twig: `|display_date`, `|display_datetime`, `|display_time` (never `|date('…')` with a literal). PHP: `->format(DateFormat::DATETIME)` etc.
 - Show dates as `d-m-Y`, date-times as `d-m-Y H:i`, ranges as `start → end` (both ends in full). Never seconds, never browser-locale formats (`toLocale*String`), never ISO or month names to people.
 - Machine values stay ISO: form posts, JSON parsed by code, stored data, exports.
 - Every `DateType`/`DateTimeType` gets the Air Datepicker-based picker via `DatePickerExtension`/`DateTimePickerExtension`; don't set `widget`/`html5`/`format` yourself.

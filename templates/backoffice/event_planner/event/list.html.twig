@@ -46,7 +46,7 @@
                                             </span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ event.startTime|date('d-m-Y H:i') }}</td>
+                                    <td>{{ event.startTime|display_datetime }}</td>
                                     <td>{{ event.durationMinutes }} {{ 'minutes'|trans }}</td>
                                     <td>{{ event.location ? event.location.name : '-' }}</td>
                                     <td>

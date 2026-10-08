@@ -49,7 +49,7 @@
                                             <div>
                                                 <strong>{{ user.username ?? application.contactEmail }}</strong>
                                                 <br>
-                                                <small class="text-muted">{{ 'larp.character.applicants.applied'|trans }}: {{ application.createdAt|date('d-m-Y H:i') }}</small>
+                                                <small class="text-muted">{{ 'larp.character.applicants.applied'|trans }}: {{ application.createdAt|display_datetime }}</small>
                                             </div>
                                         </td>
                                         <td>

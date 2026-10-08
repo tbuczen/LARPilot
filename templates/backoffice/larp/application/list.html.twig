@@ -241,7 +241,7 @@
                                                     </span>
                                                 {% endfor %}
                                             </td>
-                                            <td>{{ application.createdAt|date('d-m-Y H:i') }}</td>
+                                            <td>{{ application.createdAt|display_datetime }}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>

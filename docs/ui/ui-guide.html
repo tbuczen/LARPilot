@@ -426,6 +426,7 @@ td.actions { text-align: right; white-space: nowrap; }
     <h3>Rules</h3>
     <ul class="rules">
       <li><span class="do">Do</span> show every date as <code>d-m-Y</code> and every date-time as <code>d-m-Y H:i</code>. Never show seconds, never show month names in tables, never use the browser's locale format.</li>
+      <li><span class="do">Do</span> take formats from <code>DateFormat</code> (<code>App\Domain\Core\Service\Helper</code>): <code>|display_date</code>, <code>|display_datetime</code> and <code>|display_time</code> in Twig, <code>-&gt;format(DateFormat::DATETIME)</code> in PHP, <code>formatDisplayDateTime()</code> in JavaScript. Never type <code>'d-m-Y'</code> or <code>'Y-m-d H:i'</code> anywhere else.</li>
       <li><span class="do">Do</span> let the form type extension wire the picker: any <code>DateType</code> or <code>DateTimeType</code> gets it automatically. Mark a pair with <code>'range_end' =&gt; 'endDate'</code> on the start field.</li>
       <li><span class="do">Do</span> keep posted values ISO (<code>Y-m-d</code> / <code>Y-m-d H:i</code>). The picker only changes what people see.</li>
       <li><span class="do">Do</span> pick times on a 5-minute step. A one-day range is allowed: pick the same day twice or press Done after one click.</li>
@@ -439,6 +440,8 @@ td.actions { text-align: right; white-space: nowrap; }
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.6.0/air-datepicker.js"></script>
 <script>
 // BEGIN date picker code (generated from assets/utils/larpDatePicker.js and datePickerLocales.js)
+const PICKER_DATE_FORMAT = 'dd-MM-yyyy';
+
 const pad = (value) => String(value).padStart(2, '0');
 
 const formatDisplayDate = (date) => `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()}`;
@@ -578,7 +581,7 @@ class LarpDatePicker {
             dynamicRange: true,
             toggleSelected: false,
             multipleDatesSeparator: ' → ',
-            dateFormat: 'dd-MM-yyyy',
+            dateFormat: PICKER_DATE_FORMAT,
             selectedDates,
             startDate: this.start ?? new Date(),
             isMobile: this.isMobile,
@@ -792,8 +795,6 @@ const datePickerLocales = {
         monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         today: 'Today',
         clear: 'Clear',
-        dateFormat: 'dd-MM-yyyy',
-        timeFormat: 'HH:mm',
         firstDay: 1,
     },
     pl: {
@@ -804,8 +805,6 @@ const datePickerLocales = {
         monthsShort: ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru'],
         today: 'Dzisiaj',
         clear: 'Wyczyść',
-        dateFormat: 'dd-MM-yyyy',
-        timeFormat: 'HH:mm',
         firstDay: 1,
     },
 };

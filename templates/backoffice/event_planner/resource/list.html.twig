@@ -60,10 +60,10 @@
                                         {% if resource.availableFrom or resource.availableUntil %}
                                             <small>
                                                 {% if resource.availableFrom %}
-                                                    {{ 'event_planner.resource.from'|trans }}: {{ resource.availableFrom|date('d-m-Y H:i') }}<br>
+                                                    {{ 'event_planner.resource.from'|trans }}: {{ resource.availableFrom|display_datetime }}<br>
                                                 {% endif %}
                                                 {% if resource.availableUntil %}
-                                                    {{ 'event_planner.resource.until'|trans }}: {{ resource.availableUntil|date('d-m-Y H:i') }}
+                                                    {{ 'event_planner.resource.until'|trans }}: {{ resource.availableUntil|display_datetime }}
                                                 {% endif %}
                                             </small>
                                         {% else %}

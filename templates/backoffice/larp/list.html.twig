@@ -60,7 +60,7 @@
                                         <span class="badge bg-secondary">{{ larp.status.value }}</span>
                                     </td>
                                     <td>{{ larp.location|default('-') }}</td>
-                                    <td>{{ larp.startDate|date('d-m-Y') }}</td>
+                                    <td>{{ larp.startDate|display_date }}</td>
                                     <td>
                                         {% if is_granted('DELETE_LARP', larp) %}
                                             {{ ui.delete_button(larp.id, larp.title, path('backoffice_larp_delete', {'larp': larp.id})) }}

@@ -15,6 +15,7 @@ use App\Domain\Application\Service\ApplicationMatchService;
 use App\Domain\Application\Service\CharacterAllocationService;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Service\Helper\DateFormat;
 use App\Domain\Core\Service\LarpApplicationDashboardService;
 use App\Domain\Core\Service\SubmissionStatsService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -205,7 +206,7 @@ class CharacterApplicationsController extends BaseController
                 'user' => $vote->getUser()->getUsername() ?? $vote->getUser()->getContactEmail(),
                 'vote' => $vote->getVote(),
                 'justification' => $vote->getJustification(),
-                'createdAt' => $vote->getCreatedAt()->format('d-m-Y H:i'),
+                'createdAt' => $vote->getCreatedAt()->format(DateFormat::DATETIME),
                 'isUpvote' => $vote->isUpvote()
             ];
         }

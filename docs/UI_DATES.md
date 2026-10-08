@@ -8,6 +8,16 @@ Every date shown or entered in LARPilot follows this guide.
 - **Form wiring**: `App\Domain\Core\Form\Extension\DatePickerExtension` (DateType) and `DateTimePickerExtension` (DateTimeType).
 - **Styles**: `assets/styles/components/_date_picker.scss`.
 - **Range filters**: `App\Domain\Core\Form\Filter\DateRangeFilter`.
+- **Format constants (single source)**: `App\Domain\Core\Service\Helper\DateFormat`. Never type a format string like `'d-m-Y'` or `'Y-m-d H:i'` anywhere else.
+
+| Constant | Value | Use |
+|---|---|---|
+| `DateFormat::DATE` | `d-m-Y` | dates shown to people |
+| `DateFormat::DATETIME` | `d-m-Y H:i` | date-times shown to people |
+| `DateFormat::TIME` | `H:i` | times shown to people |
+| `DateFormat::ISO_DATE` / `ISO_DATETIME` | `Y-m-d` / `Y-m-d H:i` | machine values |
+| `DateFormat::ISO_DATETIME_SECONDS` | `Y-m-d H:i:s` | stored timestamps (e.g. activity logs) |
+| `DateFormat::FORM_DATE` / `FORM_DATETIME` | `yyyy-MM-dd` / `yyyy-MM-dd HH:mm` | ICU patterns the form extensions parse |
 
 ## 1. Display formats
 
@@ -19,9 +29,9 @@ Every date shown or entered in LARPilot follows this guide.
 | One-day date range | single date | `12-06-2026` |
 | Time only | `H:i` | `18:00` |
 
-- Twig: `{{ value|date('d-m-Y') }}` / `{{ value|date('d-m-Y H:i') }}`. Twig's default (`|date` with no argument) is set to `d-m-Y H:i` in `config/packages/twig.yaml`.
-- JavaScript: `formatDisplayDate()` / `formatDisplayDateTime()` from `assets/utils/larpDatePicker.js`. Never `toLocaleString()` / `toLocaleDateString()` / `toLocaleTimeString()`.
-- PHP values sent to JSON only to be shown to people (comment timestamps, vote times, staff position times): `->format('d-m-Y H:i')`.
+- Twig: `{{ value|display_date }}`, `{{ value|display_datetime }}`, `{{ value|display_time }}` (`App\Twig\DateFormatExtension`). Never `|date('…')` with a literal format. Twig's default `|date` format reads `DateFormat::DATETIME` in `config/packages/twig.yaml` (`!php/const`).
+- JavaScript: `formatDisplayDate()` / `formatDisplayDateTime()` from `assets/utils/larpDatePicker.js`, the one JS module that knows the format (it also exports `PICKER_DATE_FORMAT` for Air Datepicker). It mirrors `DateFormat`; change both together. Never `toLocaleString()` / `toLocaleDateString()` / `toLocaleTimeString()`.
+- PHP values sent to JSON only to be shown to people (comment timestamps, vote times, staff position times): `->format(DateFormat::DATETIME)`.
 - **Machine values stay ISO**: form posts (`Y-m-d`, `Y-m-d H:i`), API payloads parsed by code, stored JSON, logs, CSV/exports, `format('c')`.
 
 ## 2. Entering dates
@@ -35,7 +45,7 @@ $builder->add('dueDate', DateTimeType::class, [
 ]);
 ```
 
-- The real input becomes a hidden field holding ISO (`2026-06-12 18:00`); Symfony parses it with `yyyy-MM-dd HH:mm` (`yyyy-MM-dd` for `DateType`). A read-only display input shows `12-06-2026 18:00`.
+- The real input becomes a hidden field holding ISO (`2026-06-12 18:00`); Symfony parses it with `DateFormat::FORM_DATETIME` (`DateFormat::FORM_DATE` for `DateType`). A read-only display input shows `12-06-2026 18:00`.
 - Times are picked with hour and minute selects on a **5-minute step** (native scroll wheels on phones).
 - On phones (≤ 575px or touch) the calendar opens as a centred dialog. Inside a Bootstrap modal it opens as a dropdown inside the modal.
 - Optional fields get a clear (×) button; required ones do not.

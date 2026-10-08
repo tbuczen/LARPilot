@@ -44,7 +44,7 @@
                                 </dd>
 
                                 <dt class="col-sm-4">{{ 'larp.applications.applied'|trans }}:</dt>
-                                <dd class="col-sm-8">{{ application.createdAt|date('d-m-Y H:i') }}</dd>
+                                <dd class="col-sm-8">{{ application.createdAt|display_datetime }}</dd>
                             </dl>
                         </div>
                         <div class="col-md-6">
@@ -180,7 +180,7 @@
                                                                         {% endif %}
                                                                     </td>
                                                                     <td>{{ vote.justification ?: '-' }}</td>
-                                                                    <td>{{ vote.createdAt|date('d-m-Y H:i') }}</td>
+                                                                    <td>{{ vote.createdAt|display_datetime }}</td>
                                                                 </tr>
                                                             {% endfor %}
                                                         </tbody>

@@ -1,3 +1,5 @@
+export const PICKER_DATE_FORMAT = 'dd-MM-yyyy';
+
 const pad = (value) => String(value).padStart(2, '0');
 
 export const formatDisplayDate = (date) => `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()}`;
@@ -137,7 +139,7 @@ export class LarpDatePicker {
             dynamicRange: true,
             toggleSelected: false,
             multipleDatesSeparator: ' → ',
-            dateFormat: 'dd-MM-yyyy',
+            dateFormat: PICKER_DATE_FORMAT,
             selectedDates,
             startDate: this.start ?? new Date(),
             isMobile: this.isMobile,

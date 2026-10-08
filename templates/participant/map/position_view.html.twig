@@ -89,7 +89,7 @@
                                                     </td>
                                                     <td><strong>{{ position.gridCell }}</strong></td>
                                                     <td>{{ position.statusNote ?? '-' }}</td>
-                                                    <td>{{ position.positionUpdatedAt|date('H:i') }}</td>
+                                                    <td>{{ position.positionUpdatedAt|display_time }}</td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>

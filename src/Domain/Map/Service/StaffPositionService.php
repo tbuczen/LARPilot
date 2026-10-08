@@ -6,6 +6,7 @@ namespace App\Domain\Map\Service;
 
 use App\Domain\Core\Entity\Enum\ParticipantRole;
 use App\Domain\Core\Entity\LarpParticipant;
+use App\Domain\Core\Service\Helper\DateFormat;
 use App\Domain\Map\Entity\GameMap;
 use App\Domain\Map\Entity\StaffPosition;
 use App\Domain\Map\Repository\StaffPositionRepository;
@@ -224,7 +225,7 @@ class StaffPositionService
             'centerX' => $centerPosition['x'],
             'centerY' => $centerPosition['y'],
             'statusNote' => $position->getStatusNote(),
-            'updatedAt' => $position->getPositionUpdatedAt()->format('d-m-Y H:i'),
+            'updatedAt' => $position->getPositionUpdatedAt()->format(DateFormat::DATETIME),
         ];
     }
 }

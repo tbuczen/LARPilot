@@ -25,8 +25,8 @@
                  data-event-calendar-larp-id-value="{{ larp.id.toRfc4122 }}"
                  data-event-calendar-events-url-value="{{ path('backoffice_event_planner_calendar_events_api', { larp: larp.id }) }}"
                  data-event-calendar-create-event-url-value="{{ path('backoffice_event_planner_calendar_create_event_api', { larp: larp.id }) }}"
-                 data-event-calendar-initial-start-value="{{ defaultStart|date('d-m-Y') }}"
-                 data-event-calendar-initial-end-value="{{ defaultEnd|date('d-m-Y') }}">
+                 data-event-calendar-initial-start-value="{{ defaultStart|display_date }}"
+                 data-event-calendar-initial-end-value="{{ defaultEnd|display_date }}">
             </div>
             </div>
         </div>

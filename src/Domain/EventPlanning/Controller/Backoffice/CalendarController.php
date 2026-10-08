@@ -24,7 +24,7 @@ class CalendarController extends BaseController
     {
         // Calculate default calendar view: week of LARP
         $defaultStart = $larp->getStartDate() ?? new \DateTime();
-        $defaultEnd = $larp->getEndDate() ?? (new \DateTime($defaultStart->format('Y-m-d H:i:s')))->modify('+7 days');
+        $defaultEnd = $larp->getEndDate() ?? \DateTime::createFromInterface($defaultStart)->modify('+7 days');
 
         // Create filter form
         $filterForm = $this->createForm(ScheduledEventFilterType::class, null, ['larp' => $larp]);

@@ -7,8 +7,6 @@ export const datePickerLocales = {
         monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         today: 'Today',
         clear: 'Clear',
-        dateFormat: 'dd-MM-yyyy',
-        timeFormat: 'HH:mm',
         firstDay: 1,
     },
     pl: {
@@ -19,8 +17,6 @@ export const datePickerLocales = {
         monthsShort: ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru'],
         today: 'Dzisiaj',
         clear: 'Wyczyść',
-        dateFormat: 'dd-MM-yyyy',
-        timeFormat: 'HH:mm',
         firstDay: 1,
     },
 };

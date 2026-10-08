@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Functional\Form;
 
+use App\Domain\Core\Service\Helper\DateFormat;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -29,7 +30,7 @@ class DatePickerExtensionCest
         $form->submit(['dueDate' => '2026-06-12 18:05']);
 
         $I->assertTrue($form->isValid());
-        $I->assertSame('2026-06-12 18:05', $form->get('dueDate')->getData()->format('Y-m-d H:i'));
+        $I->assertSame('2026-06-12 18:05', $form->get('dueDate')->getData()->format(DateFormat::ISO_DATETIME));
     }
 
     public function dateFieldUsesPickerWithoutTime(FunctionalTester $I): void
@@ -48,7 +49,7 @@ class DatePickerExtensionCest
         $form->submit(['day' => '2026-06-12']);
 
         $I->assertTrue($form->isValid());
-        $I->assertSame('2026-06-12', $form->get('day')->getData()->format('Y-m-d'));
+        $I->assertSame('2026-06-12', $form->get('day')->getData()->format(DateFormat::ISO_DATE));
     }
 
     public function rangeStartPointsToEndAndEndHasNoOwnPicker(FunctionalTester $I): void
@@ -72,7 +73,7 @@ class DatePickerExtensionCest
         $form->submit(['startDate' => '2026-06-12 18:00', 'endDate' => '2026-06-14 16:00']);
 
         $I->assertTrue($form->isValid());
-        $I->assertSame('2026-06-14 16:00', $form->get('endDate')->getData()->format('Y-m-d H:i'));
+        $I->assertSame('2026-06-14 16:00', $form->get('endDate')->getData()->format(DateFormat::ISO_DATETIME));
     }
 
     public function pickerCanBeTurnedOff(FunctionalTester $I): void
