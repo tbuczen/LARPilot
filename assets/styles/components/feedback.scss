@@ -217,24 +217,6 @@ $feedback-shadow-hover: rgba(13, 110, 253, 0.4);
     }
 }
 
-// Capture/Remove screenshot buttons
-#captureScreenshot,
-#removeScreenshot {
-    transition: all 0.2s ease;
-
-    &:hover {
-        transform: translateY(-2px);
-    }
-}
-
-#captureScreenshot {
-    &:hover {
-        background: var(--sidebar-link-hover-bg);
-        border-color: var(--bo-primary);
-        color: var(--bo-primary);
-    }
-}
-
 // Alert message animations
 #feedbackError,
 #feedbackSuccess {
