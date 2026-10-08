@@ -33,7 +33,6 @@ class InvitationType extends AbstractType
             ])
             ->add('validTo', DateTimeType::class, [
                 'label' => 'invitation.valid_to',
-                'widget' => 'single_text',
             ])
             ->add('isReusable', CheckboxType::class, [
                 'label' => 'invitation.is_reusable',

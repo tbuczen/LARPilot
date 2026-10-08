@@ -217,4 +217,11 @@ return [
         'version' => '2.4.3',
         'type' => 'css',
     ],
+    'air-datepicker' => [
+        'version' => '3.6.0',
+    ],
+    'air-datepicker/air-datepicker.css' => [
+        'version' => '3.6.0',
+        'type' => 'css',
+    ],
 ];

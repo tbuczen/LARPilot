@@ -4,6 +4,7 @@ namespace App\Domain\StoryObject\Controller\API;
 
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Service\Helper\DateFormat;
 use App\Domain\StoryObject\Entity\Comment;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Repository\CommentRepository;
@@ -176,8 +177,8 @@ class CommentApiController extends BaseController
             'content' => $parsedContent,
             'authorName' => $authorUsername,
             'authorInitial' => strtoupper(substr($authorUsername, 0, 1)),
-            'createdAt' => $createdAt ? $createdAt->format('Y-m-d H:i') : '',
-            'updatedAt' => $updatedAt ? $updatedAt->format('Y-m-d H:i') : '',
+            'createdAt' => $createdAt ? $createdAt->format(DateFormat::DATETIME) : '',
+            'updatedAt' => $updatedAt ? $updatedAt->format(DateFormat::DATETIME) : '',
             'isEdited' => $updatedAt && $createdAt && $updatedAt > $createdAt,
             'isResolved' => $comment->isResolved(),
             'parentId' => $comment->getParent() ? (string) $comment->getParent()->getId() : null,

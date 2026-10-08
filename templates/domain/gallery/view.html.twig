@@ -94,9 +94,9 @@
 
             <div class="mt-4">
                 <small class="text-muted">
-                    {{ 'created_at'|trans }}: {{ gallery.createdAt|date('Y-m-d H:i') }}
+                    {{ 'created_at'|trans }}: {{ gallery.createdAt|display_datetime }}
                     {% if gallery.updatedAt %}
-                        | {{ 'updated_at'|trans }}: {{ gallery.updatedAt|date('Y-m-d H:i') }}
+                        | {{ 'updated_at'|trans }}: {{ gallery.updatedAt|display_datetime }}
                     {% endif %}
                 </small>
             </div>

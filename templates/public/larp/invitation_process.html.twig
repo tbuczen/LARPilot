@@ -19,7 +19,7 @@
                         </li>
                     {% endif %}
                     <li class="list-group-item">
-                        <strong>{{ 'valid_until'|trans }}:</strong> {{ invitation.validTo|date('Y-m-d H:i') }}
+                        <strong>{{ 'valid_until'|trans }}:</strong> {{ invitation.validTo|display_datetime }}
                     </li>
                 </ul>
 

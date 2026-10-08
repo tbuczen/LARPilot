@@ -50,14 +50,13 @@ class PlanningResourceType extends AbstractType
                 'help' => 'planning_resource.shareable_help',
             ])
             ->add('availableFrom', DateTimeType::class, [
-                'label' => 'planning_resource.available_from',
+                'label' => 'planning_resource.availability',
                 'required' => false,
-                'widget' => 'single_text',
+                'range_end' => 'availableUntil',
             ])
             ->add('availableUntil', DateTimeType::class, [
                 'label' => 'planning_resource.available_until',
                 'required' => false,
-                'widget' => 'single_text',
             ])
             ->add('item', EntityType::class, [
                 'class' => Item::class,

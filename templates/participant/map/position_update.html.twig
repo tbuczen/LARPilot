@@ -37,7 +37,7 @@
                                 {% endif %}
                                 <small class="text-muted d-block">
                                     {{ 'staff_position.updated_at'|trans }}:
-                                    {{ currentPosition.positionUpdatedAt|date('H:i') }}
+                                    {{ currentPosition.positionUpdatedAt|display_time }}
                                 </small>
                             </div>
                         {% endif %}

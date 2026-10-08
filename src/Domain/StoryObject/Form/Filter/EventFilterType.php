@@ -4,6 +4,7 @@ namespace App\Domain\StoryObject\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Tag;
+use App\Domain\Core\Form\Filter\DateRangeFilter;
 use App\Domain\Core\Repository\TagRepository;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Entity\Faction;
@@ -33,11 +34,13 @@ class EventFilterType extends AbstractType
             ->add('description', Filters\TextFilterType::class, [
                 'condition_pattern' => FilterOperands::STRING_CONTAINS,
             ])
-            ->add('startTime', Filters\DateTimeFilterType::class, [
-                'widget' => 'single_text',
+            ->add('startTime', Filters\DateFilterType::class, [
+                'label' => 'filter.event.dates',
+                'range_end' => 'endTime',
+                'apply_filter' => DateRangeFilter::from('startTime'),
             ])
-            ->add('endTime', Filters\DateTimeFilterType::class, [
-                'widget' => 'single_text',
+            ->add('endTime', Filters\DateFilterType::class, [
+                'apply_filter' => DateRangeFilter::to('startTime', 'endTime'),
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,

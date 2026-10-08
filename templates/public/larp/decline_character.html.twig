@@ -16,7 +16,7 @@
                         <div class="alert alert-info">
                             <h5>{{ larp.title }}</h5>
                             {% if larp.startDate %}
-                                <p><strong>{{ 'date'|trans }}:</strong> {{ larp.startDate|date('Y-m-d') }}</p>
+                                <p><strong>{{ 'date'|trans }}:</strong> {{ larp.startDate|display_date }}</p>
                             {% endif %}
                             {% if larp.location %}
                                 <p><strong>{{ 'location'|trans }}:</strong> {{ larp.location.name }}</p>

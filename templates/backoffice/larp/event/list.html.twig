@@ -68,8 +68,8 @@
                             {{ event.title }}
                             </a>
                             </td>
-                        <td>{{ event.startTime ? event.startTime|date('Y-m-d H:i') : '-' }}</td>
-                        <td>{{ event.endTime ? event.endTime|date('Y-m-d H:i') : '-' }}</td>
+                        <td>{{ event.startTime ? event.startTime|display_datetime : '-' }}</td>
+                        <td>{{ event.endTime ? event.endTime|display_datetime : '-' }}</td>
                         <td>{{ event.description|truncate_words(10) }}</td>
                         <td>
                             {{ ui.delete_button(event.id, event.title, path('backoffice_larp_story_event_delete', { larp: larp.id, event: event.id })) }}

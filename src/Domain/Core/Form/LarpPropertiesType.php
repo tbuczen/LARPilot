@@ -35,16 +35,13 @@ class LarpPropertiesType extends AbstractType
                 'attr' => ['class' => 'form-control']
             ])
             ->add('startDate', DateTimeType::class, [
-                'label' => 'larp.start_date',
-                'widget' => 'single_text',
+                'label' => 'larp.dates',
                 'required' => false,
-                'attr' => ['class' => 'form-control']
+                'range_end' => 'endDate',
             ])
             ->add('endDate', DateTimeType::class, [
                 'label' => 'larp.end_date',
-                'widget' => 'single_text',
                 'required' => false,
-                'attr' => ['class' => 'form-control']
             ])
             ->add('location', EntityType::class, [
                 'label' => 'larp.location',

@@ -244,7 +244,7 @@ export default class extends Controller {
             // Update status display
             if (this.hasStatusTarget) {
                 const now = new Date();
-                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
                 this.statusTarget.innerHTML = `<i class="bi bi-check-circle text-success me-1"></i> Updated: ${timeString}`;
             }
 

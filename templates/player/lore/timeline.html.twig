@@ -41,7 +41,7 @@
                                             {% if event.storyTime is not null %}
                                                 {{ event.storyTime }} {{ event.storyTimeUnit ? event.storyTimeUnit.value : '' }}
                                             {% elseif event.startTime %}
-                                                {{ event.startTime|date('Y-m-d H:i') }}
+                                                {{ event.startTime|display_datetime }}
                                             {% endif %}
                                         </small>
                                     </div>

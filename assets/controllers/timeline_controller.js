@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { Timeline } from 'vis-timeline';
+import { formatDisplayDateTime } from '../utils/larpDatePicker.js';
 
 /**
  * Interactive timeline controller using vis-timeline
@@ -322,8 +323,7 @@ export default class extends Controller {
     }
 
     formatDateTime(date) {
-        const pad = (n) => String(n).padStart(2, '0');
-        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        return formatDisplayDateTime(date);
     }
 
     async showCreateModal(clickedDate) {

@@ -56,6 +56,7 @@ larp:
   location: "Location"
   select_location: "Select a location"
   start_date: "Start Date"
+  dates: "Dates"
   end_date: "End Date"
   discord_server_url: "Discord Server URL"
   facebook_event_url: "Facebook Event URL"
@@ -175,6 +176,7 @@ event:
   characters: "Characters involved in event"
   tags: "Tags"
   start_time: 'Start Time'
+  time_range: 'Time'
   end_time: 'End Time'
   choose_faction: 'Choose a faction...'
   known_publicly: 'Known Publicly'
@@ -281,6 +283,7 @@ planning_resource:
   shareable: 'Shareable Resource'
   shareable_help: 'Allow multiple simultaneous bookings'
   available_from: 'Available From'
+  availability: 'Availability'
   available_until: 'Available Until'
   character: 'Linked Character'
   character_placeholder: 'Select character (optional)'
@@ -293,6 +296,7 @@ scheduled_event:
   title_placeholder: 'e.g., Tavern Brawl Scene'
   description: 'Description'
   start_time: 'Start Time'
+  time_range: 'Time'
   end_time: 'End Time'
   setup_minutes: 'Setup Time (minutes)'
   setup_minutes_help: 'Preparation time before event'
@@ -335,6 +339,7 @@ filter:
     status: 'Status'
     location: 'Location'
     start_date: 'Start Date'
+    dates: 'Dates'
     end_date: 'End Date'
     resource: 'Resource'
     character: 'Character/NPC'
