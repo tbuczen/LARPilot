@@ -13,11 +13,11 @@
                         {{ 'larp.map.add_location'|trans }}
                     </a>
                     <a href="{{ path('backoffice_larp_map_modify', { larp: larp.id, map: map.id }) }}"
-                       class="btn btn-primary">
+                       class="btn btn-outline-primary">
                         {{ 'edit'|trans }}
                     </a>
                     <a href="{{ path('backoffice_larp_map_list', { larp: larp.id }) }}"
-                       class="btn btn-secondary">
+                       class="btn btn-outline-secondary">
                         {{ 'back'|trans }}
                     </a>
                 </div>
@@ -129,14 +129,14 @@
                                     <button type="button" class="btn btn-primary w-100 mb-2"
                                             data-staff-position-update-target="saveButton"
                                             data-action="click->staff-position-update#save">
-                                        <i class="bi bi-check-circle me-1"></i>
+                                        <i class="bi bi-check-circle"></i>
                                         {{ 'staff_position.save_position'|trans }}
                                     </button>
 
                                     {% if myPosition %}
                                         <button type="button" class="btn btn-outline-danger w-100"
                                                 data-action="click->staff-position-update#remove">
-                                            <i class="bi bi-x-circle me-1"></i>
+                                            <i class="bi bi-x-circle"></i>
                                             {{ 'staff_position.remove_position'|trans }}
                                         </button>
                                     {% endif %}
@@ -188,10 +188,10 @@
                                 <td>
                                     <a href="{{ path('backoffice_larp_map_location_modify', {
                                         larp: larp.id, map: map.id, location: location.id
-                                    }) }}" class="btn btn-sm btn-primary">
+                                    }) }}" class="btn btn-sm btn-outline-primary">
                                         {{ 'edit'|trans }}
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-danger"
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
                                             data-bs-toggle="modal"
                                             data-bs-target="#deleteLocationModal"
                                             data-item-id="{{ location.id }}"
@@ -222,7 +222,7 @@
                     {{ 'confirmation'|trans }}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         {{ 'cancel'|trans }}
                     </button>
                     <form id="deleteLocationForm" method="POST">

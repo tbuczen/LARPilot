@@ -6,7 +6,7 @@
 {% block larp_content %}
     <div class="card mt-4">
         {% set actions %}
-            {{ ui.primary_button('create', path('backoffice_event_planner_resource_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {{ ui.create_button(path('backoffice_event_planner_resource_modify', { larp: larp.id })) }}
         {% endset %}
         {{ ui.card_header('event_planner.resource.list', actions) }}
         <div class="card-body p-0">

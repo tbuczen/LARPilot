@@ -39,10 +39,10 @@
 
                         <form method="post" id="declineForm">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
-                                <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-secondary btn-lg">
+                                <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-outline-secondary btn-lg">
                                     <i class="bi bi-arrow-left"></i> {{ 'cancel'|trans }}
                                 </a>
-                                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#declineModal">
+                                <button type="button" class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#declineModal">
                                     <i class="bi bi-x-circle"></i> {{ 'public.application.yes_decline'|trans }}
                                 </button>
                             </div>
@@ -67,7 +67,7 @@
                     <p>{{ 'public.application.decline_modal_info'|trans }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         {{ 'cancel'|trans }}
                     </button>
                     <button type="submit" form="declineForm" class="btn btn-danger">

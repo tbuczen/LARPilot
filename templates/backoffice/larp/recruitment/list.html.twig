@@ -31,7 +31,7 @@
                             <td>{{ recruitment.notes|default('-') }}</td>
                             <td>
                                 <a href="{{ path(modify_route, {larp: larp.id, id: recruitment.id}) }}"
-                                   class="btn btn-sm btn-primary">
+                                   class="btn btn-sm btn-outline-primary">
                                     {{ 'edit'|trans }}
                                 </a>
                                 {% if proposal_route is defined %}

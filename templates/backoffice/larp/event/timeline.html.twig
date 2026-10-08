@@ -8,11 +8,11 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="mb-0">{{ 'lore.backoffice_timeline'|trans }}</h2>
                 <div class="d-flex gap-2">
-                    <a href="{{ path('backoffice_larp_story_event_list', {larp: larp.id}) }}" class="btn btn-secondary">
+                    <a href="{{ path('backoffice_larp_story_event_list', {larp: larp.id}) }}" class="btn btn-outline-secondary">
                         <i class="bi bi-list"></i> {{ 'list_view'|trans }}
                     </a>
                     <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id}) }}" class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> {{ 'create'|trans }}
+                        <i class="bi bi-plus-lg"></i> {{ 'create'|trans }}
                     </a>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                                             </td>
                                             <td>
                                                 <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id, event: event.id}) }}"
-                                                   class="btn btn-sm btn-primary">
+                                                   class="btn btn-sm btn-outline-primary">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
                                             </td>
@@ -97,7 +97,7 @@
             {% else %}
                 <div class="p-3">
                     <p class="text-muted">{{ 'lore.no_events'|trans }}</p>
-                    <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id}) }}" class="btn btn-primary">
+                    <a href="{{ path('backoffice_larp_story_event_modify', {larp: larp.id}) }}" class="btn btn-success">
                         {{ 'create_first'|trans }}
                     </a>
                 </div>

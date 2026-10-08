@@ -39,10 +39,10 @@
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-funnel me-1"></i>{{ 'filter'|trans }}
+                                    <i class="bi bi-funnel"></i>{{ 'filter'|trans }}
                                 </button>
                                 <a href="{{ path('public_larp_characters_list', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                                    <i class="bi bi-x-circle me-1"></i>{{ 'clear'|trans }}
+                                    <i class="bi bi-x-circle"></i>{{ 'clear'|trans }}
                                 </a>
                             </div>
                         {{ form_end(filterForm) }}
@@ -106,8 +106,8 @@
                                         <a href="{{ path('public_larp_characters_show', {
                                             slug: larp.slug,
                                             id: character.id
-                                        }) }}" class="btn btn-outline-primary w-100">
-                                            <i class="bi bi-eye me-1"></i>{{ 'show_details'|trans }}
+                                        }) }}" class="btn btn-outline-info w-100">
+                                            <i class="bi bi-eye"></i>{{ 'show_details'|trans }}
                                         </a>
                                     </div>
                                 </div>
@@ -118,7 +118,7 @@
                     {# Back to LARP button #}
                     <div class="text-center mt-4">
                         <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left me-1"></i>{{ 'back'|trans }}
+                            <i class="bi bi-arrow-left"></i>{{ 'back'|trans }}
                         </a>
                     </div>
                 {% else %}
@@ -127,7 +127,7 @@
                             <i class="bi bi-inbox display-1 text-muted"></i>
                             <p class="mt-3 text-muted">{{ 'public.characters.no_characters'|trans }}</p>
                             <a href="{{ path('public_larp_details', {slug: larp.slug}) }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>{{ 'back'|trans }}
+                                <i class="bi bi-arrow-left"></i>{{ 'back'|trans }}
                             </a>
                         </div>
                     </div>

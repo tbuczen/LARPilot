@@ -180,7 +180,7 @@ export default class extends Controller {
             <a 
               href="${openUrl}" 
               target="_blank" 
-              class="btn btn-outline-secondary btn-sm"
+              class="btn btn-outline-info btn-sm"
             >
               Open
             </a>
@@ -192,7 +192,7 @@ export default class extends Controller {
             </a>
             <button 
               type="button" 
-              class="btn btn-sm btn-danger"
+              class="btn btn-sm btn-outline-danger"
               data-index="${index}"
               data-action="click->google-file-picker#removeFile"
             >

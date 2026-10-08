@@ -15,12 +15,12 @@
                 </div>
                 <div class="modal-body">
                     <a href="{{ path('backoffice_larp_story_thread_import_file', {'larp': larp.id}) }}"
-                       class="btn btn-secondary">
+                       class="btn btn-outline-primary">
                         {{ 'larp.import_file'|trans }}
                     </a>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light"
+                    <button type="button" class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
@@ -29,7 +29,7 @@
 
     <div class="card mt-4">
         {% set actions %}
-            {{ ui.primary_button('create', path('backoffice_larp_story_thread_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {{ ui.create_button(path('backoffice_larp_story_thread_modify', { larp: larp.id })) }}
         {% endset %}
         {{ ui.card_header('larp.thread.list', actions) }}
 

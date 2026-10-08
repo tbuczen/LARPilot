@@ -45,14 +45,14 @@
                     {# Action buttons #}
                     <div class="d-flex gap-2 flex-wrap">
                         <button type="button" 
-                                class="btn btn-sm btn-link text-decoration-none p-0"
+                                class="btn btn-sm btn-outline-secondary"
                                 data-action="click->comments#toggleReplyForm"
                                 data-comment-id="{{ comment.id }}">
                             <i class="bi bi-reply"></i> {{ 'comment.reply'|trans }}
                         </button>
 
                         <button type="button" 
-                                class="btn btn-sm btn-link text-decoration-none p-0"
+                                class="btn btn-sm btn-outline-secondary"
                                 data-action="click->comments#toggleResolve"
                                 data-comment-id="{{ comment.id }}"
                                 data-is-resolved="{{ comment.isResolved ? 'true' : 'false' }}">
@@ -65,12 +65,12 @@
                                 larp: larp.id,
                                 storyObject: storyObject.id,
                                 comment: comment.id
-                            }) }}" class="btn btn-sm btn-link text-decoration-none p-0">
+                            }) }}" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-pencil"></i> {{ 'comment.edit'|trans }}
                             </a>
 
                             <button type="button" 
-                                    class="btn btn-sm btn-link text-danger text-decoration-none p-0"
+                                    class="btn btn-sm btn-outline-danger"
                                     data-bs-toggle="modal"
                                     data-bs-target="#deleteCommentModal"
                                     data-comment-id="{{ comment.id }}"
@@ -156,12 +156,12 @@
                                             larp: larp.id,
                                             storyObject: storyObject.id,
                                             comment: reply.id
-                                        }) }}" class="btn btn-sm btn-link text-decoration-none p-0">
+                                        }) }}" class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-pencil"></i> {{ 'comment.edit'|trans }}
                                         </a>
 
                                         <button type="button" 
-                                                class="btn btn-sm btn-link text-danger text-decoration-none p-0"
+                                                class="btn btn-sm btn-outline-danger"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#deleteCommentModal"
                                                 data-comment-id="{{ reply.id }}"
@@ -195,7 +195,7 @@
                 {{ 'comment.delete_warning'|trans }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
                 <form id="deleteCommentForm" method="post" style="display: inline;">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_comment') }}">
                     <button type="submit" class="btn btn-danger">{{ 'comment.delete'|trans }}</button>
@@ -229,15 +229,6 @@
 
 .reply-item:last-child {
     border-bottom: none !important;
-}
-
-.btn-link {
-    font-size: 0.875rem;
-    color: #6c757d;
-}
-
-.btn-link:hover {
-    color: #495057;
 }
 
 .mention-link {

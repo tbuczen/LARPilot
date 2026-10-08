@@ -17,11 +17,11 @@
                                 <a href="{{ path('participant_staff_position_view', {
                                     larp: larp.id,
                                     map: map.id
-                                }) }}" class="btn btn-info btn-sm">
+                                }) }}" class="btn btn-outline-info btn-sm">
                                     <i class="bi bi-eye"></i> {{ 'staff_position.view_positions'|trans }}
                                 </a>
                                 <a href="{{ path('participant_staff_position_index', { larp: larp.id }) }}"
-                                   class="btn btn-secondary btn-sm">
+                                   class="btn btn-outline-secondary btn-sm">
                                     <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
                                 </a>
                             </div>
@@ -84,7 +84,7 @@
                                             {{ 'staff_position.save_position'|trans }}
                                         </button>
                                         {% if currentPosition %}
-                                            <button type="button" class="btn btn-outline-danger"
+                                            <button type="button" class="btn btn-outline-danger btn-lg"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#removePositionModal">
                                                 <i class="bi bi-x-circle"></i>
@@ -116,7 +116,7 @@
                         {{ 'staff_position.remove_confirm'|trans }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             {{ 'cancel'|trans }}
                         </button>
                         <form action="{{ path('participant_staff_position_remove', {

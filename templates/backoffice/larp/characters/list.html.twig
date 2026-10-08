@@ -18,18 +18,18 @@
                         {% for integration in integrations %}
                             <!-- Option for Google Spreadsheet import -->
                             <a href="{{ path('backoffice_larp_story_character_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}"
-                               class="btn btn-primary">
+                               class="btn btn-outline-primary">
                                 {{ 'larp.import_google'|trans }}
                             </a>
                         {% endfor %}
                     {% endif %}
                     <a href="{{ path('backoffice_larp_story_character_import_file', {'larp': larp.id}) }}"
-                       class="btn btn-secondary">
+                       class="btn btn-outline-primary">
                         {{ 'larp.import_file'|trans }}
                     </a>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light"
+                    <button type="button" class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
@@ -41,7 +41,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
                 {{ 'larp.import_characters'|trans }}
             </button>
-            {{ ui.primary_button('create', path('backoffice_larp_story_character_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {{ ui.create_button(path('backoffice_larp_story_character_modify', { larp: larp.id })) }}
         {% endset %}
         {{ ui.card_header('larp.character.list', actions) }}
 

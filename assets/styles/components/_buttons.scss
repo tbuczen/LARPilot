@@ -1,0 +1,140 @@
+// LARPilot button system — see docs/UI_BUTTONS.md (visual preview: docs/ui/button-guide.html)
+//
+// Roles:
+//   create   .btn-success            solid green, bi-plus-lg
+//   primary  .btn-primary            solid blue,  bi-check-lg (save / submit / accept)
+//   edit     .btn-outline-primary    bi-pencil
+//   info     .btn-outline-info       bi-eye / bi-info-circle (view / details / preview)
+//   alert    .btn-warning            bi-exclamation-triangle (archive / unpublish / suspend)
+//   delete   .btn-outline-danger     opens confirmation; .btn-danger only for the final confirm
+//   neutral  .btn-outline-secondary  back / cancel / close / clear / secondary tools
+//
+// Sizes are chosen per group: default for page headers, form footers and modal footers,
+// .btn-sm for table rows, toolbars and filter bars, .btn-lg only on public landing pages.
+
+:root {
+    --bo-btn-info: #0a7d96;
+    --bo-btn-info-hover-bg: #e3f6fa;
+    --bo-btn-neutral: #5c6670;
+    --bo-btn-neutral-border: var(--bo-gray-300);
+    --bo-btn-neutral-hover-bg: var(--bo-gray-100);
+}
+
+html.dark-mode {
+    --bo-btn-info: #3fc3dd;
+    --bo-btn-info-hover-bg: rgba(63, 195, 221, 0.15);
+    --bo-btn-neutral: #aab4be;
+    --bo-btn-neutral-border: #3a444f;
+    --bo-btn-neutral-hover-bg: rgba(170, 180, 190, 0.15);
+}
+
+.btn {
+    --bs-btn-font-weight: 500;
+    --bs-btn-border-radius: var(--bo-border-radius);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover,
+    &:active {
+        transform: none;
+    }
+
+    > .bi {
+        line-height: 1;
+    }
+}
+
+.btn-sm {
+    --bs-btn-border-radius: var(--bo-border-radius);
+    gap: 0.25rem;
+}
+
+.btn-lg {
+    --bs-btn-border-radius: var(--bo-border-radius-lg);
+    gap: 0.5rem;
+}
+
+.btn-outline-primary {
+    --bs-btn-hover-bg: var(--bo-primary-light);
+    --bs-btn-hover-color: var(--bo-primary-active);
+    --bs-btn-hover-border-color: var(--bo-primary);
+}
+
+.btn-outline-info {
+    --bs-btn-color: var(--bo-btn-info);
+    --bs-btn-border-color: var(--bo-btn-info);
+    --bs-btn-hover-color: var(--bo-btn-info);
+    --bs-btn-hover-bg: var(--bo-btn-info-hover-bg);
+    --bs-btn-hover-border-color: var(--bo-btn-info);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bo-btn-info);
+    --bs-btn-active-border-color: var(--bo-btn-info);
+    --bs-btn-disabled-color: var(--bo-btn-info);
+    --bs-btn-disabled-border-color: var(--bo-btn-info);
+    --bs-btn-focus-shadow-rgb: 10, 125, 150;
+}
+
+.btn-outline-danger {
+    --bs-btn-hover-bg: var(--bo-danger-light);
+    --bs-btn-hover-color: var(--bo-danger-active);
+    --bs-btn-hover-border-color: var(--bo-danger);
+}
+
+.btn-outline-success {
+    --bs-btn-hover-bg: var(--bo-success-light);
+    --bs-btn-hover-color: var(--bo-success-active);
+    --bs-btn-hover-border-color: var(--bo-success);
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--bo-btn-neutral);
+    --bs-btn-border-color: var(--bo-btn-neutral-border);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--bo-btn-neutral-hover-bg);
+    --bs-btn-hover-border-color: var(--bo-btn-neutral-border);
+    --bs-btn-active-color: var(--bs-body-color);
+    --bs-btn-active-bg: var(--bo-btn-neutral-hover-bg);
+    --bs-btn-active-border-color: var(--bo-btn-neutral);
+    --bs-btn-disabled-color: var(--bo-btn-neutral);
+    --bs-btn-disabled-border-color: var(--bo-btn-neutral-border);
+}
+
+.btn-warning {
+    --bs-btn-color: #212529;
+    --bs-btn-hover-color: #212529;
+    --bs-btn-active-color: #212529;
+}
+
+.btn-group > .btn,
+.btn-group-sm > .btn {
+    gap: 0.25rem;
+}
+
+html.dark-mode {
+    .btn-outline-primary {
+        --bs-btn-color: #6ea8fe;
+        --bs-btn-border-color: #6ea8fe;
+        --bs-btn-hover-color: #9ec5fe;
+        --bs-btn-hover-bg: rgba(110, 168, 254, 0.15);
+        --bs-btn-hover-border-color: #6ea8fe;
+    }
+
+    .btn-outline-danger {
+        --bs-btn-color: #ea868f;
+        --bs-btn-border-color: #ea868f;
+        --bs-btn-hover-color: #f1aeb5;
+        --bs-btn-hover-bg: rgba(234, 134, 143, 0.15);
+        --bs-btn-hover-border-color: #ea868f;
+    }
+
+    .btn-outline-success {
+        --bs-btn-color: #75b798;
+        --bs-btn-border-color: #75b798;
+        --bs-btn-hover-color: #a3cfbb;
+        --bs-btn-hover-bg: rgba(117, 183, 152, 0.15);
+        --bs-btn-hover-border-color: #75b798;
+    }
+}

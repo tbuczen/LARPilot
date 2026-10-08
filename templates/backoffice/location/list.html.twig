@@ -12,7 +12,7 @@
 {#                        <i class="bi bi-hourglass-split"></i> {{ 'location.pending_locations'|trans }}#}
 {#                    </a>#}
                 {% endif %}
-                {{ ui.primary_button('create', path('backoffice_location_modify_global'), 'bi-plus-circle') }}
+                {{ ui.create_button(path('backoffice_location_modify_global')) }}
             {% endset %}
             {{ ui.card_header('backoffice.location.list', actions) }}
 
@@ -68,12 +68,12 @@
                                                               class="d-inline"
                                                               onsubmit="return confirm('{{ 'location.approve_confirm'|trans }}');">
                                                             <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ location.id) }}">
-                                                            <button type="submit" class="btn btn-sm btn-success">
+                                                            <button type="submit" class="btn btn-sm btn-primary">
                                                                 {{ 'location.approve'|trans }}
                                                             </button>
                                                         </form>
                                                         <a href="{{ path('backoffice_location_reject', { id: location.id }) }}"
-                                                           class="btn btn-sm btn-danger">
+                                                           class="btn btn-sm btn-outline-danger">
                                                             {{ 'location.reject'|trans }}
                                                         </a>
                                                 {% endif %}

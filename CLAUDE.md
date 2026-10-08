@@ -193,6 +193,8 @@ LARP entities use Symfony Workflow for status management (`larp_stage_status` st
   - `story_graph_controller.js`: Cytoscape graph visualization
   - `google-places-autocomplete_controller.js`: Google Places address autocomplete
 
+**Button System**: All buttons and `a.btn` links follow one role → color → size scheme (create = `btn-success`, save/submit = `btn-primary`, edit = `btn-outline-primary`, view = `btn-outline-info`, alert = `btn-warning`, delete = `btn-outline-danger`, back/cancel = `btn-outline-secondary`; `btn-sm` in table rows and toolbars). See [`docs/UI_BUTTONS.md`](docs/UI_BUTTONS.md) and the visual reference `docs/ui/button-guide.html`; styles live in `assets/styles/components/_buttons.scss`.
+
 **Key Frontend Libraries**:
 - Bootstrap 5.3 for UI
 - TomSelect for autocomplete fields
@@ -446,7 +448,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
                                 <td>{{ tag.description|sanitize_html|default('-') }}</td>
                                 <td>
                                     {# Delete button with modal #}
-                                    <button type="button" class="btn btn-sm btn-danger"
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
                                             data-bs-toggle="modal"
                                             data-bs-target="#deleteModal"
                                             data-item-id="{{ tag.id }}"

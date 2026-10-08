@@ -7,7 +7,7 @@
     <div class="card mt-4">
         {% set actions %}
             {% if is_granted('CREATE_GALLERY', larp) %}
-                {{ ui.primary_button('create', path('backoffice_larp_gallery_create', { larp: larp.id }), 'bi-plus-circle') }}
+                {{ ui.create_button(path('backoffice_larp_gallery_create', { larp: larp.id })) }}
             {% endif %}
         {% endset %}
         {{ ui.card_header('gallery.list', actions) }}
@@ -52,7 +52,7 @@
                                 </td>
                                 <td>
                                     {% if gallery.externalAlbumUrl %}
-                                        <a href="{{ gallery.externalAlbumUrl }}" target="_blank" class="btn btn-sm btn-outline-primary" title="{{ 'gallery.view_album'|trans }}">
+                                        <a href="{{ gallery.externalAlbumUrl }}" target="_blank" class="btn btn-sm btn-outline-info" title="{{ 'gallery.view_album'|trans }}">
                                             <i class="bi bi-images"></i>
                                         </a>
                                     {% endif %}
@@ -62,14 +62,14 @@
                                         </a>
                                     {% endif %}
                                     {% if gallery.zipFile %}
-                                        <a href="{{ gallery.zipFilePath }}" download class="btn btn-sm btn-outline-info" title="{{ 'gallery.download_zip'|trans }}">
+                                        <a href="{{ gallery.zipFilePath }}" download class="btn btn-sm btn-outline-secondary" title="{{ 'gallery.download_zip'|trans }}">
                                             <i class="bi bi-file-earmark-zip"></i>
                                         </a>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if is_granted('EDIT_GALLERY', gallery) %}
-                                        <a href="{{ path('backoffice_larp_gallery_edit', { larp: larp.id, gallery: gallery.id }) }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ path('backoffice_larp_gallery_edit', { larp: larp.id, gallery: gallery.id }) }}" class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     {% endif %}

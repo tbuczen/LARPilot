@@ -6,7 +6,7 @@
 {% block larp_content %}
     <div class="card mt-4">
         {% set actions %}
-            {{ ui.primary_button('create', path('backoffice_larp_knowledge_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {{ ui.create_button(path('backoffice_larp_knowledge_modify', { larp: larp.id })) }}
         {% endset %}
         {{ ui.card_header('knowledge_document.list', actions) }}
         <div class="card-body p-0">

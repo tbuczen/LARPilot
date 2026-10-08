@@ -14,11 +14,11 @@
                         response: response.id
                     }) }}" class="d-inline">
                         <button type="submit" class="btn btn-light btn-sm">
-                            <i class="bi bi-arrow-repeat me-1"></i>{{ 'survey.response.regenerate_matches'|trans }}
+                            <i class="bi bi-arrow-repeat"></i>{{ 'survey.response.regenerate_matches'|trans }}
                         </button>
                     </form>
                     <a href="{{ path('backoffice_larp_survey_responses_list', { larp: larp.id }) }}" class="btn btn-light btn-sm">
-                        <i class="bi bi-arrow-left me-1"></i>{{ 'common.back'|trans }}
+                        <i class="bi bi-arrow-left"></i>{{ 'common.back'|trans }}
                     </a>
                 </div>
             </div>
@@ -103,9 +103,9 @@
                                         character: suggestion.characterId
                                     }) }}" class="d-inline">
                                         <button type="submit"
-                                                class="btn btn-success"
+                                                class="btn btn-primary"
                                                 onclick="return confirm('{{ 'survey.response.assign_confirm'|trans({ '%character%': suggestion.characterTitle }) }}')">
-                                            <i class="bi bi-check-circle me-1"></i>{{ 'survey.response.assign'|trans }}
+                                            <i class="bi bi-check-circle"></i>{{ 'survey.response.assign'|trans }}
                                         </button>
                                     </form>
                                 </div>

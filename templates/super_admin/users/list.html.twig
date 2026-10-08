@@ -32,10 +32,10 @@
                         </div>
                         <div class="col-md-3 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2">
-                                <i class="bi bi-funnel me-1"></i>{{ 'filter'|trans }}
+                                <i class="bi bi-funnel"></i>{{ 'filter'|trans }}
                             </button>
-                            <a href="{{ path('super_admin_users_list') }}" class="btn btn-secondary">
-                                <i class="bi bi-x-circle me-1"></i>{{ 'clear'|trans }}
+                            <a href="{{ path('super_admin_users_list') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i>{{ 'clear'|trans }}
                             </a>
                         </div>
                     </form>
@@ -90,7 +90,7 @@
                                                     <form method="post"
                                                           action="{{ path('super_admin_users_approve', { id: user.id }) }}"
                                                           class="d-inline">
-                                                        <button type="submit" class="btn btn-sm btn-success">
+                                                        <button type="submit" class="btn btn-sm btn-primary">
                                                             <i class="bi bi-check-circle"></i> {{ 'super_admin.users.approve'|trans }}
                                                         </button>
                                                     </form>

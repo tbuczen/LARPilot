@@ -8,7 +8,7 @@
     {% set manageButton %}
         {% if is_granted('VIEW_BO_LARP_DETAILS', larp) %}
             <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}" class="btn btn-light">
-                <i class="bi bi-gear me-1"></i>{{ 'manage'|trans }}
+                <i class="bi bi-gear"></i>{{ 'manage'|trans }}
             </a>
         {% endif %}
     {% endset %}
@@ -98,12 +98,12 @@
                                             <div class="d-grid gap-2">
                                                 {% if larp.discordServerUrl %}
                                                     <a href="{{ larp.discordServerUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
-                                                        <i class="bi bi-discord me-2"></i>{{ 'larp.join_discord'|trans }}
+                                                        <i class="bi bi-discord"></i>{{ 'larp.join_discord'|trans }}
                                                     </a>
                                                 {% endif %}
                                                 {% if larp.facebookEventUrl %}
                                                     <a href="{{ larp.facebookEventUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
-                                                        <i class="bi bi-facebook me-2"></i>{{ 'larp.facebook_event'|trans }}
+                                                        <i class="bi bi-facebook"></i>{{ 'larp.facebook_event'|trans }}
                                                     </a>
                                                 {% endif %}
                                             </div>
@@ -131,7 +131,7 @@
                                         <p class="text-muted">{{ 'larp.login_required_description'|trans }}</p>
                                     </div>
                                     <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary btn-lg">
-                                        <i class="bi bi-box-arrow-in-right me-2"></i>{{ 'login'|trans }}
+                                        <i class="bi bi-box-arrow-in-right"></i>{{ 'login'|trans }}
                                     </a>
                                 </div>
                             {% elseif userIsParticipant %}
@@ -159,8 +159,8 @@
                                                 <h5 class="text-success">{{ 'larp.browse_characters'|trans }}</h5>
                                                 <p class="text-muted">{{ 'larp.browse_characters_description'|trans }}</p>
                                             </div>
-                                            <a href="{{ path('public_larp_characters_list', {'slug': larp.slug}) }}" class="btn btn-success btn-lg">
-                                                <i class="bi bi-people me-2"></i>{{ 'larp.view_character_gallery'|trans }}
+                                            <a href="{{ path('public_larp_characters_list', {'slug': larp.slug}) }}" class="btn btn-outline-info btn-lg">
+                                                <i class="bi bi-people"></i>{{ 'larp.view_character_gallery'|trans }}
                                             </a>
                                         </div>
                                     {% else %}
@@ -171,8 +171,8 @@
                                                 <h5 class="text-success">{{ 'larp.application_open'|trans }}</h5>
                                                 <p class="text-muted">{{ 'larp.application_open_description'|trans }}</p>
                                             </div>
-                                            <a href="{{ path('public_larp_application_create', {'larp': larp.id}) }}" class="btn btn-success btn-lg">
-                                                <i class="bi bi-send me-2"></i>{{ 'larp.apply_for_character'|trans }}
+                                            <a href="{{ path('public_larp_application_create', {'larp': larp.id}) }}" class="btn btn-primary btn-lg">
+                                                <i class="bi bi-send"></i>{{ 'larp.apply_for_character'|trans }}
                                             </a>
                                         </div>
                                     {% endif %}
@@ -184,8 +184,8 @@
                                             <h5 class="text-success">{{ 'larp.survey_application'|trans }}</h5>
                                             <p class="text-muted">{{ 'larp.survey_application_description'|trans }}</p>
                                         </div>
-                                        <a href="{{ path('public_larp_survey_show', {'slug': larp.slug}) }}" class="btn btn-success btn-lg">
-                                            <i class="bi bi-clipboard-check me-2"></i>{{ 'larp.fill_out_survey'|trans }}
+                                        <a href="{{ path('public_larp_survey_show', {'slug': larp.slug}) }}" class="btn btn-primary btn-lg">
+                                            <i class="bi bi-clipboard-check"></i>{{ 'larp.fill_out_survey'|trans }}
                                         </a>
                                     </div>
                                 {% endif %}
