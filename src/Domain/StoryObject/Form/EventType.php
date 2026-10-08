@@ -60,13 +60,12 @@ class EventType extends AbstractType
                     ->setParameter('larp', $larp)
             ])
             ->add('startTime', DateTimeType::class, [
-                'label' => 'event.start_time',
-                'widget' => 'single_text',
+                'label' => 'event.time_range',
                 'required' => false,
+                'range_end' => 'endTime',
             ])
             ->add('endTime', DateTimeType::class, [
                 'label' => 'event.end_time',
-                'widget' => 'single_text',
                 'required' => false,
             ])
             ->add('involvedFactions', EntityType::class, [

@@ -2,7 +2,7 @@
 
 Every `<button>`, `<a class="btn">` and `<label class="btn">` in Twig templates and Stimulus controllers follows this guide.
 
-- **Visual reference**: [`docs/ui/button-guide.html`](ui/button-guide.html) — open in a browser to see every role, size and real page context in light and dark.
+- **Visual reference**: [`docs/ui/ui-guide.html`](ui/ui-guide.html) — open in a browser to see every role, size and real page context in light and dark.
 - **Styles**: `assets/styles/components/_buttons.scss` (configures Bootstrap 5.3 `--bs-btn-*` variables; no per-page overrides).
 - **Macros**: `templates/macros/ui_components.html.twig` (`ui.create_button`, `ui.primary_button`, `ui.edit_button`, `ui.view_button`, `ui.delete_button`, `ui.back_button`, `ui.secondary_button`, `ui.form_actions`).
 

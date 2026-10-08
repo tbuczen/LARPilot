@@ -55,6 +55,7 @@ larp:
   location: "Lokalizacja"
   select_location: "Wybierz lokalizację"
   start_date: "Data rozpoczęcia"
+  dates: "Termin"
   end_date: "Data zakończenia"
   discord_server_url: "URL serwera Discord"
   facebook_event_url: "URL wydarzenia na Facebooku"
@@ -143,6 +144,7 @@ event:
   characters: "Postacie zaangażowane w wydarzenie"
   tags: "Tagi"
   start_time: 'Czas rozpoczęcia'
+  time_range: 'Czas'
   end_time: 'Czas zakończenia'
   choose_faction: 'Wybierz frakcję...'
   known_publicly: 'Publicznie znane'
@@ -254,6 +256,7 @@ planning_resource:
   shareable: 'Zasób współdzielony'
   shareable_help: 'Zezwól na wiele jednoczesnych rezerwacji'
   available_from: 'Dostępny od'
+  availability: 'Dostępność'
   available_until: 'Dostępny do'
   character: 'Powiązana postać'
   character_placeholder: 'Wybierz postać (opcjonalnie)'
@@ -266,6 +269,7 @@ scheduled_event:
   title_placeholder: 'np. Scena bójki w tawernie'
   description: 'Opis'
   start_time: 'Czas rozpoczęcia'
+  time_range: 'Czas'
   end_time: 'Czas zakończenia'
   setup_minutes: 'Czas przygotowania (minuty)'
   setup_minutes_help: 'Czas przygotowania przed wydarzeniem'
@@ -308,6 +312,7 @@ filter:
     status: 'Status'
     location: 'Lokalizacja'
     start_date: 'Data rozpoczęcia'
+    dates: 'Daty'
     end_date: 'Data zakończenia'
     resource: 'Zasób'
     character: 'Postać/NPC'

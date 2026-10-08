@@ -78,7 +78,7 @@
                                                 {{ user.status.label }}
                                             </span>
                                         </td>
-                                        <td>{{ user.createdAt|date('Y-m-d H:i') }}</td>
+                                        <td>{{ user.createdAt|date('d-m-Y H:i') }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ path('super_admin_users_edit', { id: user.id }) }}"

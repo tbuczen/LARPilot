@@ -193,7 +193,9 @@ LARP entities use Symfony Workflow for status management (`larp_stage_status` st
   - `story_graph_controller.js`: Cytoscape graph visualization
   - `google-places-autocomplete_controller.js`: Google Places address autocomplete
 
-**Button System**: All buttons and `a.btn` links follow one role → color → size scheme (create = `btn-success`, save/submit = `btn-primary`, edit = `btn-outline-primary`, view = `btn-outline-info`, alert = `btn-warning`, delete = `btn-outline-danger`, back/cancel = `btn-outline-secondary`; `btn-sm` in table rows and toolbars). See [`docs/UI_BUTTONS.md`](docs/UI_BUTTONS.md) and the visual reference `docs/ui/button-guide.html`; styles live in `assets/styles/components/_buttons.scss`.
+**Button System**: All buttons and `a.btn` links follow one role → color → size scheme (create = `btn-success`, save/submit = `btn-primary`, edit = `btn-outline-primary`, view = `btn-outline-info`, alert = `btn-warning`, delete = `btn-outline-danger`, back/cancel = `btn-outline-secondary`; `btn-sm` in table rows and toolbars). See [`docs/UI_BUTTONS.md`](docs/UI_BUTTONS.md) and the visual reference `docs/ui/ui-guide.html`; styles live in `assets/styles/components/_buttons.scss`.
+
+**Dates & Time**: Show dates as `d-m-Y` and date-times as `d-m-Y H:i` (no seconds); machine values stay ISO. Every `DateType`/`DateTimeType` gets the unified Air Datepicker-based picker automatically (form type extensions in `src/Domain/Core/Form/Extension/`); a from–to pair is one picker via `'range_end' => 'endField'` on the start field. See [`docs/UI_DATES.md`](docs/UI_DATES.md).
 
 **Key Frontend Libraries**:
 - Bootstrap 5.3 for UI
@@ -201,6 +203,7 @@ LARP entities use Symfony Workflow for status management (`larp_stage_status` st
 - Quill for WYSIWYG editing
 - Cytoscape for graph visualization (story graphs and decision trees)
 - SortableJS for drag-and-drop
+- Air Datepicker for every date/date-time field (wrapped by `assets/utils/larpDatePicker.js`)
 
 **Decision Tree Editor** (`decision_tree_controller.js`):
 - Visual editor for Quest and Thread branching narratives

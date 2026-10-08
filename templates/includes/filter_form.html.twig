@@ -9,7 +9,7 @@
 
         {% for child in form %}
             {% if child.vars.block_prefixes is not empty and child.vars.block_prefixes[1] != 'hidden' %}
-                <div class="col-md-3">
+                <div class="{{ child.vars.attr['data-date-picker-end-value'] is defined ? 'col-md-6' : 'col-md-3' }}">
                     {{ form_row(child) }}
                 </div>
             {% endif %}

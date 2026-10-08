@@ -42,12 +42,11 @@ class LarpType extends AbstractType
                 'attr' => ['class' => 'form-select']
             ])
             ->add('startDate', DateTimeType::class, [
-                'label' => 'larp.start_date',
-                'widget' => 'single_text',
+                'label' => 'larp.dates',
+                'range_end' => 'endDate',
             ])
             ->add('endDate', DateTimeType::class, [
                 'label' => 'larp.end_date',
-                'widget' => 'single_text',
             ])
             ->add('discordServerUrl', UrlType::class, [
                 'label' => 'larp.discord_server_url',

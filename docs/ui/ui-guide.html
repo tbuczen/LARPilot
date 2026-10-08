@@ -1,0 +1,880 @@
+<title>LARPilot UI Guide</title>
+<style>
+/* Layout: single reading column; role table, size matrix, then real LARPilot contexts. Values mirror assets/styles/components/_buttons.scss */
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-alt: #f8f9fa;
+  --fg: #212529;
+  --muted: #5c6670;
+  --line: #dee2e6;
+  --code-bg: #eef1f5;
+
+  --create: #198754;  --create-hover: #157347;  --create-ring: rgba(25,135,84,.28);
+  --primary: #0d6efd; --primary-hover: #0b5ed7; --primary-ring: rgba(13,110,253,.28);
+  --info: #0a7d96;    --info-soft: #e3f6fa;     --info-ring: rgba(10,125,150,.28);
+  --warning: #ffc107; --warning-hover: #e0a800; --warning-fg: #212529; --warning-ring: rgba(255,193,7,.4);
+  --danger: #dc3545;  --danger-hover: #bb2d3b;  --danger-soft: #fdecee; --danger-ring: rgba(220,53,69,.28);
+  --neutral: #5c6670; --neutral-soft: #eef0f2; --neutral-ring: rgba(92,102,112,.25);
+  --primary-soft: #e7f1ff;
+  --on-solid: #ffffff;
+
+  --radius: 6px;
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161b; --surface: #1b2128; --surface-alt: #222a32; --fg: #e6e9ec; --muted: #9aa5b1; --line: #2f3842; --code-bg: #232b34;
+    --create: #2fa36b; --create-hover: #3bb87b;
+    --primary: #3d8bfd; --primary-hover: #5c9dfd;
+    --info: #3fc3dd; --info-soft: #12313a;
+    --warning: #ffcd39; --warning-hover: #ffd75e;
+    --danger: #ea5866; --danger-hover: #ef7480; --danger-soft: #3a1d22;
+    --neutral: #aab4be; --neutral-soft: #2a323b;
+    --primary-soft: #16294a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161b; --surface: #1b2128; --surface-alt: #222a32; --fg: #e6e9ec; --muted: #9aa5b1; --line: #2f3842; --code-bg: #232b34;
+  --create: #2fa36b; --create-hover: #3bb87b;
+  --primary: #3d8bfd; --primary-hover: #5c9dfd;
+  --info: #3fc3dd; --info-soft: #12313a;
+  --warning: #ffcd39; --warning-hover: #ffd75e;
+  --danger: #ea5866; --danger-hover: #ef7480; --danger-soft: #3a1d22;
+  --neutral: #aab4be; --neutral-soft: #2a323b;
+  --primary-soft: #16294a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-ui); font-size: 15px; line-height: 1.55; }
+.page { max-width: 980px; margin: 0 auto; padding-inline: 16px; padding-block: 32px 64px; display: grid; gap: 28px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.25; }
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.2rem; }
+h3 { font-size: .95rem; }
+p { margin: 0; max-width: 68ch; }
+.lead { color: var(--muted); }
+.eyebrow { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+section { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
+code, .mono { font-family: var(--font-mono); font-size: .82em; background: var(--code-bg); padding: .1em .35em; border-radius: 4px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--surface-alt); }
+td.actions { text-align: right; white-space: nowrap; }
+
+/* ---- the proposed button system ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .375rem;
+  font: 500 1rem/1.5 var(--font-ui); padding: .375rem .75rem;
+  border: 1px solid transparent; border-radius: var(--radius);
+  background: transparent; color: var(--fg); cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.btn svg { width: 1em; height: 1em; flex: none; fill: currentColor; }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 .25rem var(--ring, var(--primary-ring)); }
+.btn-sm { font-size: .875rem; padding: .25rem .5rem; gap: .25rem; }
+.btn-lg { font-size: 1.125rem; padding: .5rem 1.25rem; gap: .5rem; }
+.btn-icon.btn-sm { padding: .25rem .4rem; }
+
+.btn-success { background: var(--create); border-color: var(--create); color: var(--on-solid); --ring: var(--create-ring); }
+.btn-success:hover { background: var(--create-hover); border-color: var(--create-hover); }
+.btn-primary { background: var(--primary); border-color: var(--primary); color: var(--on-solid); --ring: var(--primary-ring); }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-outline-primary { border-color: var(--primary); color: var(--primary); --ring: var(--primary-ring); }
+.btn-outline-primary:hover { background: var(--primary-soft); }
+.btn-outline-info { border-color: var(--info); color: var(--info); --ring: var(--info-ring); }
+.btn-outline-info:hover { background: var(--info-soft); }
+.btn-warning { background: var(--warning); border-color: var(--warning); color: var(--warning-fg); --ring: var(--warning-ring); }
+.btn-warning:hover { background: var(--warning-hover); border-color: var(--warning-hover); }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: var(--on-solid); --ring: var(--danger-ring); }
+.btn-danger:hover { background: var(--danger-hover); border-color: var(--danger-hover); }
+.btn-outline-danger { border-color: var(--danger); color: var(--danger); --ring: var(--danger-ring); }
+.btn-outline-danger:hover { background: var(--danger-soft); }
+.btn-outline-secondary { border-color: var(--line); color: var(--neutral); --ring: var(--neutral-ring); }
+.btn-outline-secondary:hover { background: var(--neutral-soft); color: var(--fg); }
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+
+.row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.row-sm { display: inline-flex; flex-wrap: wrap; gap: .25rem; align-items: center; }
+.roles { display: grid; gap: 10px; }
+.role { display: grid; grid-template-columns: 170px 1fr; gap: 6px 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.role:last-child { border-bottom: 0; }
+.role .demo { display: flex; gap: .5rem; flex-wrap: wrap; }
+.role .meta { display: grid; gap: 4px; min-width: 0; font-size: .9rem; }
+.role .meta strong { font-size: .95rem; }
+.role .meta .use { color: var(--muted); }
+.swatch { display: inline-block; width: .8em; height: .8em; border-radius: 2px; vertical-align: -1px; margin-right: 6px; border: 1px solid var(--line); }
+.mock { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.mock-head { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; padding: 14px 16px; background: var(--surface-alt); border-bottom: 1px solid var(--line); }
+.mock-body { padding: 16px; display: grid; gap: 12px; }
+.mock-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .5rem; padding: 12px 16px; border-top: 1px solid var(--line); background: var(--surface-alt); }
+.field { display: grid; gap: 4px; }
+.field label { font-size: .85rem; color: var(--muted); }
+.field .input { border: 1px solid var(--line); border-radius: var(--radius); padding: .4rem .65rem; background: var(--surface); color: var(--fg); font: inherit; width: 100%; }
+.filter { display: flex; flex-wrap: wrap; gap: .5rem; align-items: end; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.filter .field { flex: 1 1 160px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.rules { display: grid; gap: 8px; margin: 0; padding-left: 1.2rem; }
+.rules li { max-width: 72ch; }
+.do, .dont { font-weight: 600; }
+.do { color: var(--create); }
+.dont { color: var(--danger); }
+.hero { padding: 28px 20px; text-align: center; display: grid; gap: 14px; justify-items: center; background: var(--surface-alt); }
+.size-table td:first-child { width: 190px; }
+@media (max-width: 560px) {
+  .role { grid-template-columns: 1fr; }
+}
+/* BEGIN date picker styles (generated) */
+/* air-datepicker 3.6.0, MIT */
+.air-datepicker-cell.-year-.-other-decade-,.air-datepicker-cell.-day-.-other-month-{color:var(--adp-color-other-month)}.air-datepicker-cell.-year-.-other-decade-:hover,.air-datepicker-cell.-day-.-other-month-:hover{color:var(--adp-color-other-month-hover)}.-disabled-.-focus-.air-datepicker-cell.-year-.-other-decade-,.-disabled-.-focus-.air-datepicker-cell.-day-.-other-month-{color:var(--adp-color-other-month)}.-selected-.air-datepicker-cell.-year-.-other-decade-,.-selected-.air-datepicker-cell.-day-.-other-month-{color:#fff;background:var(--adp-background-color-selected-other-month)}.-selected-.-focus-.air-datepicker-cell.-year-.-other-decade-,.-selected-.-focus-.air-datepicker-cell.-day-.-other-month-{background:var(--adp-background-color-selected-other-month-focused)}.-in-range-.air-datepicker-cell.-year-.-other-decade-,.-in-range-.air-datepicker-cell.-day-.-other-month-{background-color:var(--adp-background-color-in-range);color:var(--adp-color)}.-in-range-.-focus-.air-datepicker-cell.-year-.-other-decade-,.-in-range-.-focus-.air-datepicker-cell.-day-.-other-month-{background-color:var(--adp-background-color-in-range-focused)}.air-datepicker-cell.-year-.-other-decade-:empty,.air-datepicker-cell.-day-.-other-month-:empty{background:none;border:none}.air-datepicker-cell{border-radius:var(--adp-cell-border-radius);box-sizing:border-box;cursor:pointer;display:flex;position:relative;align-items:center;justify-content:center;z-index:1}.air-datepicker-cell.-focus-{background:var(--adp-cell-background-color-hover)}.air-datepicker-cell.-current-{color:var(--adp-color-current-date)}.air-datepicker-cell.-current-.-focus-{color:var(--adp-color)}.air-datepicker-cell.-current-.-in-range-{color:var(--adp-color-current-date)}.air-datepicker-cell.-disabled-{cursor:default;color:var(--adp-color-disabled)}.air-datepicker-cell.-disabled-.-focus-{color:var(--adp-color-disabled)}.air-datepicker-cell.-disabled-.-in-range-{color:var(--adp-color-disabled-in-range)}.air-datepicker-cell.-disabled-.-current-.-focus-{color:var(--adp-color-disabled)}.air-datepicker-cell.-in-range-{background:var(--adp-cell-background-color-in-range);border-radius:0}.air-datepicker-cell.-in-range-:hover,.air-datepicker-cell.-in-range-.-focus-{background:var(--adp-cell-background-color-in-range-hover)}.air-datepicker-cell.-range-from-{border:1px solid var(--adp-cell-border-color-in-range);background-color:var(--adp-cell-background-color-in-range);border-radius:var(--adp-cell-border-radius) 0 0 var(--adp-cell-border-radius)}.air-datepicker-cell.-range-to-{border:1px solid var(--adp-cell-border-color-in-range);background-color:var(--adp-cell-background-color-in-range);border-radius:0 var(--adp-cell-border-radius) var(--adp-cell-border-radius) 0}.air-datepicker-cell.-range-to-.-range-from-{border-radius:var(--adp-cell-border-radius)}.air-datepicker-cell.-selected-{color:#fff;border:none;background:var(--adp-cell-background-color-selected)}.air-datepicker-cell.-selected-.-current-{color:#fff;background:var(--adp-cell-background-color-selected)}.air-datepicker-cell.-selected-.-focus-{background:var(--adp-cell-background-color-selected-hover)}
+.air-datepicker-body{transition:all var(--adp-transition-duration) var(--adp-transition-ease)}.air-datepicker-body.-hidden-{display:none}.air-datepicker-body--day-names{display:grid;grid-template-columns:repeat(7, var(--adp-day-cell-width));margin:8px 0 3px}.air-datepicker-body--day-name{color:var(--adp-day-name-color);display:flex;align-items:center;justify-content:center;flex:1;text-align:center;text-transform:uppercase;font-size:.8em}.air-datepicker-body--day-name.-clickable-{cursor:pointer}.air-datepicker-body--day-name.-clickable-:hover{color:var(--adp-day-name-color-hover)}.air-datepicker-body--cells{display:grid}.air-datepicker-body--cells.-days-{grid-template-columns:repeat(7, var(--adp-day-cell-width));grid-auto-rows:var(--adp-day-cell-height)}.air-datepicker-body--cells.-months-{grid-template-columns:repeat(3, 1fr);grid-auto-rows:var(--adp-month-cell-height)}.air-datepicker-body--cells.-years-{grid-template-columns:repeat(4, 1fr);grid-auto-rows:var(--adp-year-cell-height)}
+.air-datepicker-nav{display:flex;justify-content:space-between;border-bottom:1px solid var(--adp-border-color-inner);min-height:var(--adp-nav-height);padding:var(--adp-padding);box-sizing:content-box}.-only-timepicker- .air-datepicker-nav{display:none}.air-datepicker-nav--title,.air-datepicker-nav--action{display:flex;cursor:pointer;align-items:center;justify-content:center}.air-datepicker-nav--action{width:var(--adp-nav-action-size);border-radius:var(--adp-border-radius);-webkit-user-select:none;-moz-user-select:none;user-select:none}.air-datepicker-nav--action:hover{background:var(--adp-background-color-hover)}.air-datepicker-nav--action:active{background:var(--adp-background-color-active)}.air-datepicker-nav--action.-disabled-{visibility:hidden}.air-datepicker-nav--action svg{width:32px;height:32px}.air-datepicker-nav--action path{fill:none;stroke:var(--adp-nav-arrow-color);stroke-width:2px}.air-datepicker-nav--title{border-radius:var(--adp-border-radius);padding:0 8px}.air-datepicker-nav--title i{font-style:normal;color:var(--adp-nav-color-secondary);margin-left:.3em}.air-datepicker-nav--title:hover{background:var(--adp-background-color-hover)}.air-datepicker-nav--title:active{background:var(--adp-background-color-active)}.air-datepicker-nav--title.-disabled-{cursor:default;background:none}
+.air-datepicker-buttons{display:grid;grid-auto-columns:1fr;grid-auto-flow:column}.air-datepicker-button{display:inline-flex;color:var(--adp-btn-color);border-radius:var(--adp-btn-border-radius);cursor:pointer;height:var(--adp-btn-height);border:none;background:rgba(255,255,255,0)}.air-datepicker-button:hover{color:var(--adp-btn-color-hover);background:var(--adp-btn-background-color-hover)}.air-datepicker-button:focus{color:var(--adp-btn-color-hover);background:var(--adp-btn-background-color-hover);outline:none}.air-datepicker-button:active{background:var(--adp-btn-background-color-active)}.air-datepicker-button span{outline:none;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.air-datepicker-time{display:grid;grid-template-columns:max-content 1fr;grid-column-gap:12px;align-items:center;position:relative;padding:0 var(--adp-time-padding-inner)}.-only-timepicker- .air-datepicker-time{border-top:none}.air-datepicker-time--current{display:flex;align-items:center;flex:1;font-size:14px;text-align:center}.air-datepicker-time--current-colon{margin:0 2px 3px;line-height:1}.air-datepicker-time--current-hours,.air-datepicker-time--current-minutes{line-height:1;font-size:19px;font-family:"Century Gothic",CenturyGothic,AppleGothic,sans-serif;position:relative;z-index:1}.air-datepicker-time--current-hours:after,.air-datepicker-time--current-minutes:after{content:"";background:var(--adp-background-color-hover);border-radius:var(--adp-border-radius);position:absolute;left:-2px;top:-3px;right:-2px;bottom:-2px;z-index:-1;opacity:0}.air-datepicker-time--current-hours.-focus-:after,.air-datepicker-time--current-minutes.-focus-:after{opacity:1}.air-datepicker-time--current-ampm{text-transform:uppercase;align-self:flex-end;color:var(--adp-time-day-period-color);margin-left:6px;font-size:11px;margin-bottom:1px}.air-datepicker-time--row{display:flex;align-items:center;font-size:11px;height:17px;background:linear-gradient(to right, var(--adp-time-track-color), var(--adp-time-track-color)) left 50%/100% var(--adp-time-track-height) no-repeat}.air-datepicker-time--row:first-child{margin-bottom:4px}.air-datepicker-time--row input[type=range]{background:none;cursor:pointer;flex:1;height:100%;width:100%;padding:0;margin:0;-webkit-appearance:none}.air-datepicker-time--row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none}.air-datepicker-time--row input[type=range]::-ms-tooltip{display:none}.air-datepicker-time--row input[type=range]:hover::-webkit-slider-thumb{border-color:var(--adp-time-track-color-hover)}.air-datepicker-time--row input[type=range]:hover::-moz-range-thumb{border-color:var(--adp-time-track-color-hover)}.air-datepicker-time--row input[type=range]:hover::-ms-thumb{border-color:var(--adp-time-track-color-hover)}.air-datepicker-time--row input[type=range]:focus{outline:none}.air-datepicker-time--row input[type=range]:focus::-webkit-slider-thumb{background:var(--adp-cell-background-color-selected);border-color:var(--adp-cell-background-color-selected)}.air-datepicker-time--row input[type=range]:focus::-moz-range-thumb{background:var(--adp-cell-background-color-selected);border-color:var(--adp-cell-background-color-selected)}.air-datepicker-time--row input[type=range]:focus::-ms-thumb{background:var(--adp-cell-background-color-selected);border-color:var(--adp-cell-background-color-selected)}.air-datepicker-time--row input[type=range]::-webkit-slider-thumb{box-sizing:border-box;height:12px;width:12px;border-radius:3px;border:1px solid var(--adp-time-track-color);background:#fff;cursor:pointer;-webkit-transition:background var(--adp-transition-duration);transition:background var(--adp-transition-duration)}.air-datepicker-time--row input[type=range]::-moz-range-thumb{box-sizing:border-box;height:12px;width:12px;border-radius:3px;border:1px solid var(--adp-time-track-color);background:#fff;cursor:pointer;-moz-transition:background var(--adp-transition-duration);transition:background var(--adp-transition-duration)}.air-datepicker-time--row input[type=range]::-ms-thumb{box-sizing:border-box;height:12px;width:12px;border-radius:3px;border:1px solid var(--adp-time-track-color);background:#fff;cursor:pointer;-ms-transition:background var(--adp-transition-duration);transition:background var(--adp-transition-duration)}.air-datepicker-time--row input[type=range]::-webkit-slider-thumb{margin-top:calc(var(--adp-time-thumb-size)/2*-1)}.air-datepicker-time--row input[type=range]::-webkit-slider-runnable-track{border:none;height:var(--adp-time-track-height);cursor:pointer;color:rgba(0,0,0,0);background:rgba(0,0,0,0)}.air-datepicker-time--row input[type=range]::-moz-range-track{border:none;height:var(--adp-time-track-height);cursor:pointer;color:rgba(0,0,0,0);background:rgba(0,0,0,0)}.air-datepicker-time--row input[type=range]::-ms-track{border:none;height:var(--adp-time-track-height);cursor:pointer;color:rgba(0,0,0,0);background:rgba(0,0,0,0)}.air-datepicker-time--row input[type=range]::-ms-fill-lower{background:rgba(0,0,0,0)}.air-datepicker-time--row input[type=range]::-ms-fill-upper{background:rgba(0,0,0,0)}
+.air-datepicker{--adp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";--adp-font-size: 14px;--adp-width: 246px;--adp-z-index: 100;--adp-padding: 4px;--adp-grid-areas: "nav" "body" "timepicker" "buttons";--adp-transition-duration: .3s;--adp-transition-ease: ease-out;--adp-transition-offset: 8px;--adp-background-color: #fff;--adp-background-color-hover: #f0f0f0;--adp-background-color-active: #eaeaea;--adp-background-color-in-range: rgba(92, 196, 239, .1);--adp-background-color-in-range-focused: rgba(92, 196, 239, .2);--adp-background-color-selected-other-month-focused: #8ad5f4;--adp-background-color-selected-other-month: #a2ddf6;--adp-color: #4a4a4a;--adp-color-secondary: #9c9c9c;--adp-accent-color: #4eb5e6;--adp-color-current-date: var(--adp-accent-color);--adp-color-other-month: #dedede;--adp-color-disabled: #aeaeae;--adp-color-disabled-in-range: #939393;--adp-color-other-month-hover: #c5c5c5;--adp-border-color: #dbdbdb;--adp-border-color-inner: #efefef;--adp-border-radius: 4px;--adp-border-color-inline: #d7d7d7;--adp-nav-height: 32px;--adp-nav-arrow-color: var(--adp-color-secondary);--adp-nav-action-size: 32px;--adp-nav-color-secondary: var(--adp-color-secondary);--adp-day-name-color: #ff9a19;--adp-day-name-color-hover: #8ad5f4;--adp-day-cell-width: 1fr;--adp-day-cell-height: 32px;--adp-month-cell-height: 42px;--adp-year-cell-height: 56px;--adp-pointer-size: 10px;--adp-poiner-border-radius: 2px;--adp-pointer-offset: 14px;--adp-cell-border-radius: 4px;--adp-cell-background-color-hover: var(--adp-background-color-hover);--adp-cell-background-color-selected: #5cc4ef;--adp-cell-background-color-selected-hover: #45bced;--adp-cell-background-color-in-range: rgba(92, 196, 239, 0.1);--adp-cell-background-color-in-range-hover: rgba(92, 196, 239, 0.2);--adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);--adp-btn-height: 32px;--adp-btn-color: var(--adp-accent-color);--adp-btn-color-hover: var(--adp-color);--adp-btn-border-radius: var(--adp-border-radius);--adp-btn-background-color-hover: var(--adp-background-color-hover);--adp-btn-background-color-active: var(--adp-background-color-active);--adp-time-track-height: 1px;--adp-time-track-color: #dedede;--adp-time-track-color-hover: #b1b1b1;--adp-time-thumb-size: 12px;--adp-time-padding-inner: 10px;--adp-time-day-period-color: var(--adp-color-secondary);--adp-mobile-font-size: 16px;--adp-mobile-nav-height: 40px;--adp-mobile-width: 320px;--adp-mobile-day-cell-height: 38px;--adp-mobile-month-cell-height: 48px;--adp-mobile-year-cell-height: 64px}.air-datepicker-overlay{--adp-overlay-background-color: rgba(0, 0, 0, .3);--adp-overlay-transition-duration: .3s;--adp-overlay-transition-ease: ease-out;--adp-overlay-z-index: 99}
+.air-datepicker{background:var(--adp-background-color);border:1px solid var(--adp-border-color);box-shadow:0 4px 12px rgba(0,0,0,.15);border-radius:var(--adp-border-radius);box-sizing:content-box;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4, max-content);grid-template-areas:var(--adp-grid-areas);font-family:var(--adp-font-family),sans-serif;font-size:var(--adp-font-size);color:var(--adp-color);width:var(--adp-width);position:absolute;transition:opacity var(--adp-transition-duration) var(--adp-transition-ease),transform var(--adp-transition-duration) var(--adp-transition-ease);z-index:var(--adp-z-index)}.air-datepicker:not(.-custom-position-){opacity:0}.air-datepicker.-from-top-{transform:translateY(calc(var(--adp-transition-offset) * -1))}.air-datepicker.-from-right-{transform:translateX(var(--adp-transition-offset))}.air-datepicker.-from-bottom-{transform:translateY(var(--adp-transition-offset))}.air-datepicker.-from-left-{transform:translateX(calc(var(--adp-transition-offset) * -1))}.air-datepicker.-active-:not(.-custom-position-){transform:translate(0, 0);opacity:1}.air-datepicker.-active-.-custom-position-{transition:none}.air-datepicker.-inline-{border-color:var(--adp-border-color-inline);box-shadow:none;position:static;left:auto;right:auto;opacity:1;transform:none}.air-datepicker.-inline- .air-datepicker--pointer{display:none}.air-datepicker.-is-mobile-{--adp-font-size: var(--adp-mobile-font-size);--adp-day-cell-height: var(--adp-mobile-day-cell-height);--adp-month-cell-height: var(--adp-mobile-month-cell-height);--adp-year-cell-height: var(--adp-mobile-year-cell-height);--adp-nav-height: var(--adp-mobile-nav-height);--adp-nav-action-size: var(--adp-mobile-nav-height);position:fixed;width:var(--adp-mobile-width);border:none}.air-datepicker.-is-mobile- *{-webkit-tap-highlight-color:rgba(0,0,0,0)}.air-datepicker.-is-mobile- .air-datepicker--pointer{display:none}.air-datepicker.-is-mobile-:not(.-custom-position-){transform:translate(-50%, calc(-50% + var(--adp-transition-offset)))}.air-datepicker.-is-mobile-.-active-:not(.-custom-position-){transform:translate(-50%, -50%)}.air-datepicker.-custom-position-{transition:none}.air-datepicker-global-container{position:absolute;left:0;top:0}.air-datepicker--pointer{--pointer-half-size: calc(var(--adp-pointer-size) / 2);position:absolute;width:var(--adp-pointer-size);height:var(--adp-pointer-size);z-index:-1}.air-datepicker--pointer:after{content:"";position:absolute;background:#fff;border-top:1px solid var(--adp-border-color-inline);border-right:1px solid var(--adp-border-color-inline);border-top-right-radius:var(--adp-poiner-border-radius);width:var(--adp-pointer-size);height:var(--adp-pointer-size);box-sizing:border-box}.-top-left- .air-datepicker--pointer,.-top-center- .air-datepicker--pointer,.-top-right- .air-datepicker--pointer,[data-popper-placement^=top] .air-datepicker--pointer{top:calc(100% - var(--pointer-half-size) + 1px)}.-top-left- .air-datepicker--pointer:after,.-top-center- .air-datepicker--pointer:after,.-top-right- .air-datepicker--pointer:after,[data-popper-placement^=top] .air-datepicker--pointer:after{transform:rotate(135deg)}.-right-top- .air-datepicker--pointer,.-right-center- .air-datepicker--pointer,.-right-bottom- .air-datepicker--pointer,[data-popper-placement^=right] .air-datepicker--pointer{right:calc(100% - var(--pointer-half-size) + 1px)}.-right-top- .air-datepicker--pointer:after,.-right-center- .air-datepicker--pointer:after,.-right-bottom- .air-datepicker--pointer:after,[data-popper-placement^=right] .air-datepicker--pointer:after{transform:rotate(225deg)}.-bottom-left- .air-datepicker--pointer,.-bottom-center- .air-datepicker--pointer,.-bottom-right- .air-datepicker--pointer,[data-popper-placement^=bottom] .air-datepicker--pointer{bottom:calc(100% - var(--pointer-half-size) + 1px)}.-bottom-left- .air-datepicker--pointer:after,.-bottom-center- .air-datepicker--pointer:after,.-bottom-right- .air-datepicker--pointer:after,[data-popper-placement^=bottom] .air-datepicker--pointer:after{transform:rotate(315deg)}.-left-top- .air-datepicker--pointer,.-left-center- .air-datepicker--pointer,.-left-bottom- .air-datepicker--pointer,[data-popper-placement^=left] .air-datepicker--pointer{left:calc(100% - var(--pointer-half-size) + 1px)}.-left-top- .air-datepicker--pointer:after,.-left-center- .air-datepicker--pointer:after,.-left-bottom- .air-datepicker--pointer:after,[data-popper-placement^=left] .air-datepicker--pointer:after{transform:rotate(45deg)}.-top-left- .air-datepicker--pointer,.-bottom-left- .air-datepicker--pointer{left:var(--adp-pointer-offset)}.-top-right- .air-datepicker--pointer,.-bottom-right- .air-datepicker--pointer{right:var(--adp-pointer-offset)}.-top-center- .air-datepicker--pointer,.-bottom-center- .air-datepicker--pointer{left:calc(50% - var(--adp-pointer-size)/2)}.-left-top- .air-datepicker--pointer,.-right-top- .air-datepicker--pointer{top:var(--adp-pointer-offset)}.-left-bottom- .air-datepicker--pointer,.-right-bottom- .air-datepicker--pointer{bottom:var(--adp-pointer-offset)}.-left-center- .air-datepicker--pointer,.-right-center- .air-datepicker--pointer{top:calc(50% - var(--adp-pointer-size)/2)}.air-datepicker--navigation{grid-area:nav}.air-datepicker--content{box-sizing:content-box;padding:var(--adp-padding);grid-area:body}.-only-timepicker- .air-datepicker--content{display:none}.air-datepicker--time{grid-area:timepicker}.air-datepicker--buttons{grid-area:buttons}.air-datepicker--buttons,.air-datepicker--time{padding:var(--adp-padding);border-top:1px solid var(--adp-border-color-inner)}.air-datepicker-overlay{position:fixed;background:var(--adp-overlay-background-color);left:0;top:0;width:0;height:0;opacity:0;transition:opacity var(--adp-overlay-transition-duration) var(--adp-overlay-transition-ease),left 0s,height 0s,width 0s;transition-delay:0s,var(--adp-overlay-transition-duration),var(--adp-overlay-transition-duration),var(--adp-overlay-transition-duration);z-index:var(--adp-overlay-z-index)}.air-datepicker-overlay.-active-{opacity:1;width:100%;height:100%;transition:opacity var(--adp-overlay-transition-duration) var(--adp-overlay-transition-ease),height 0s,width 0s}
+
+/* assets/styles/components/_date_picker.scss */
+.air-datepicker.larp-dp,html .air-datepicker-overlay{--adp-font-family: inherit;--adp-font-size: 0.95rem;--adp-width: 300px;--adp-z-index: 1090;--adp-padding: 6px;--adp-border-radius: var(--bo-border-radius-lg, 8px);--adp-border-color: var(--bo-gray-200, #dee2e6);--adp-border-color-inner: var(--bo-gray-100, #e9ecef);--adp-background-color: var(--bs-body-bg, #fff);--adp-background-color-hover: var(--bo-gray-100, #e9ecef);--adp-background-color-active: var(--bo-gray-200, #dee2e6);--adp-background-color-in-range: rgba(13, 110, 253, 0.12);--adp-background-color-in-range-focused: rgba(13, 110, 253, 0.2);--adp-background-color-selected-other-month: #6ea8fe;--adp-background-color-selected-other-month-focused: #3d8bfd;--adp-color: var(--bs-body-color, #212529);--adp-color-secondary: var(--bo-gray-500, #6c757d);--adp-accent-color: var(--bo-primary, #0d6efd);--adp-color-current-date: var(--bo-primary, #0d6efd);--adp-color-other-month: var(--bo-gray-400, #adb5bd);--adp-color-disabled: var(--bo-gray-300, #ced4da);--adp-cell-border-radius: 6px;--adp-cell-background-color-selected: var(--bo-primary, #0d6efd);--adp-cell-background-color-selected-hover: var(--bo-primary-hover, #0b5ed7);--adp-cell-background-color-in-range: rgba(13, 110, 253, 0.12);--adp-cell-background-color-in-range-hover: rgba(13, 110, 253, 0.2);--adp-cell-border-color-in-range: var(--bo-primary, #0d6efd);--adp-day-name-color: var(--bo-gray-500, #6c757d);--adp-nav-arrow-color: var(--bo-gray-600, #495057);--adp-btn-height: 36px;--adp-btn-color: var(--bo-gray-600, #495057);--adp-btn-color-hover: var(--bs-body-color, #212529);--adp-btn-border-radius: var(--bo-border-radius, 6px);--adp-btn-background-color-hover: var(--bo-gray-100, #e9ecef);--adp-btn-background-color-active: var(--bo-gray-200, #dee2e6);--adp-overlay-background-color: rgba(18, 22, 27, 0.45);--adp-overlay-z-index: 1089;--adp-mobile-width: min(360px, calc(100vw - 32px));--adp-mobile-font-size: 1rem;--adp-mobile-day-cell-height: 44px;--adp-mobile-nav-height: 44px}html.dark-mode .air-datepicker.larp-dp,html.dark-mode .air-datepicker-overlay{--adp-border-color: #3a444f;--adp-border-color-inner: #2f3842;--adp-background-color: #1b2128;--adp-background-color-hover: #2a323b;--adp-background-color-active: #333c46;--adp-color: #e6e9ec;--adp-color-secondary: #9aa5b1;--adp-accent-color: #6ea8fe;--adp-color-current-date: #6ea8fe;--adp-color-other-month: #5c6670;--adp-color-disabled: #46505a;--adp-cell-background-color-selected: #3d8bfd;--adp-cell-background-color-selected-hover: #5c9dfd;--adp-background-color-in-range: rgba(110, 168, 254, 0.18);--adp-cell-background-color-in-range: rgba(110, 168, 254, 0.18);--adp-cell-background-color-in-range-hover: rgba(110, 168, 254, 0.28);--adp-day-name-color: #9aa5b1;--adp-nav-arrow-color: #aab4be;--adp-btn-color: #aab4be;--adp-btn-color-hover: #e6e9ec;--adp-btn-background-color-hover: #2a323b;--adp-btn-background-color-active: #333c46;--adp-overlay-background-color: rgba(0, 0, 0, 0.6)}.air-datepicker.larp-dp{box-shadow:0 8px 24px rgba(0,0,0,.15)}.air-datepicker.larp-dp .air-datepicker-cell.-current-{font-weight:600}.air-datepicker.larp-dp .air-datepicker--buttons{border-top:1px solid var(--adp-border-color-inner)}.air-datepicker.larp-dp .air-datepicker-button.larp-dp-button{font-weight:500}.air-datepicker.larp-dp .air-datepicker-button.larp-dp-button-primary{color:var(--adp-accent-color)}.larp-dp-time{display:grid;gap:6px;padding:8px 6px 10px;border-top:1px solid var(--adp-border-color-inner)}.larp-dp-time-row{display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;gap:6px}.larp-dp-time-row .form-select{width:auto;min-width:3.75rem;padding-right:1.75rem;background-position:right .4rem center;background-color:var(--adp-background-color);color:var(--adp-color);border-color:var(--adp-border-color)}.larp-dp-time-label{min-width:3rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--adp-color-secondary)}.larp-dp-time-date{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--adp-color)}.larp-dp-time-separator{color:var(--adp-color-secondary)}.larp-dp-warning{font-size:.85rem;color:var(--bo-danger, #dc3545)}.air-datepicker.-is-mobile-.larp-dp .larp-dp-time-row .form-select{min-height:40px;font-size:1rem}.larp-date-input .larp-date-display{width:1%;min-width:0;cursor:pointer;font-variant-numeric:tabular-nums;text-overflow:ellipsis;background-color:var(--bs-body-bg)}@media(max-width: 575.98px){.larp-date-input .larp-date-display{font-size:.875rem}}.larp-date-input .larp-date-clear[hidden]{display:none}
+
+/* guide-only helpers */
+.tag { font-size: .75rem; color: var(--muted); }
+.mono-cell { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc { display: flex; flex-wrap: wrap; gap: .5rem; }
+.dp-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.dp-toggle { display: inline-flex; gap: 6px; align-items: center; font-size: .9rem; color: var(--muted); }
+.btn.is-active { background: var(--neutral-soft); color: var(--fg); border-color: var(--neutral); }
+.posted { margin: 0; font-family: var(--font-mono); font-size: .78rem; color: var(--muted); background: var(--code-bg); padding: 8px 10px; border-radius: var(--radius); white-space: pre-wrap; word-break: break-all; }
+.input-group { display: flex; align-items: stretch; width: 100%; }
+.input-group > * { border-radius: 0; }
+.input-group > :first-child { border-top-left-radius: var(--radius); border-bottom-left-radius: var(--radius); }
+.input-group > :last-child:not([hidden]), .input-group > :nth-last-child(2):has(+ [hidden]) { border-top-right-radius: var(--radius); border-bottom-right-radius: var(--radius); }
+.input-group > :not(:first-child) { margin-left: -1px; }
+.input-group-text { display: flex; align-items: center; padding: .375rem .65rem; border: 1px solid var(--line); background: var(--surface-alt); color: var(--muted); }
+.input-group-text svg { width: 1em; height: 1em; fill: currentColor; }
+.form-control { flex: 1 1 auto; min-width: 0; border: 1px solid var(--line); padding: .375rem .65rem; font: inherit; color: var(--fg); background: var(--surface); }
+.form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 .2rem var(--primary-ring); position: relative; z-index: 1; }
+.form-select { font: inherit; border: 1px solid var(--line); border-radius: var(--radius); padding: .2rem 1.6rem .2rem .5rem; color: var(--fg); background: var(--surface); }
+.larp-date-input .btn { border-color: var(--line); }
+.air-datepicker.larp-dp, .air-datepicker-overlay {
+  --adp-background-color: var(--surface);
+  --adp-background-color-hover: var(--neutral-soft);
+  --adp-background-color-active: var(--line);
+  --adp-border-color: var(--line);
+  --adp-border-color-inner: var(--line);
+  --adp-color: var(--fg);
+  --adp-color-secondary: var(--muted);
+  --adp-accent-color: var(--primary);
+  --adp-color-current-date: var(--primary);
+  --adp-cell-background-color-selected: var(--primary);
+  --adp-cell-background-color-selected-hover: var(--primary-hover);
+  --adp-background-color-in-range: var(--primary-soft);
+  --adp-cell-background-color-in-range: var(--primary-soft);
+  --adp-cell-background-color-in-range-hover: var(--primary-soft);
+  --adp-day-name-color: var(--muted);
+  --adp-nav-arrow-color: var(--muted);
+  --adp-btn-color: var(--muted);
+  --adp-btn-color-hover: var(--fg);
+  --adp-btn-background-color-hover: var(--neutral-soft);
+  --adp-color-other-month: var(--muted);
+}
+.field > * { min-width: 0; }
+.larp-date-display { width: 1%; }
+.bi { display: inline-block; width: 1em; height: 1em; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+.bi-calendar-event, .bi-calendar3 { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 1a.5.5 0 0 1 .5.5V2h6v-.5a.5.5 0 0 1 1 0V2h1.5A1.5 1.5 0 0 1 15 3.5v10a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-10A1.5 1.5 0 0 1 2.5 2H4v-.5a.5.5 0 0 1 .5-.5zM2 6v7.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V6H2zm9 2h2v2h-2V8z'/%3E%3C/svg%3E"); }
+.bi-x-lg { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.15 2.15a.5.5 0 0 1 .7 0L8 7.29l5.15-5.14a.5.5 0 0 1 .7.7L8.71 8l5.14 5.15a.5.5 0 0 1-.7.7L8 8.71l-5.15 5.14a.5.5 0 0 1-.7-.7L7.29 8 2.15 2.85a.5.5 0 0 1 0-.7z'/%3E%3C/svg%3E"); }
+/* END date picker styles */
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M13.53 4.22a.75.75 0 0 1 0 1.06l-6.5 6.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 1 1 1.06-1.06L6.5 10.19l5.97-5.97a.75.75 0 0 1 1.06 0z"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 16 16"><path d="M11.06 1.94a1.5 1.5 0 0 1 2.12 0l.88.88a1.5 1.5 0 0 1 0 2.12l-8.5 8.5a.75.75 0 0 1-.35.2l-3.25.85a.5.5 0 0 1-.61-.61l.85-3.25a.75.75 0 0 1 .2-.35l8.66-8.34zM10.5 4.56 3.9 11.15l-.4 1.45 1.45-.4 6.6-6.58-1.05-1.06z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 16 16"><path d="M8 3c3.3 0 5.7 2.4 6.8 4.4a1.2 1.2 0 0 1 0 1.2C13.7 10.6 11.3 13 8 13S2.3 10.6 1.2 8.6a1.2 1.2 0 0 1 0-1.2C2.3 5.4 4.7 3 8 3zm0 1.5C5.5 4.5 3.6 6.3 2.7 8c.9 1.7 2.8 3.5 5.3 3.5s4.4-1.8 5.3-3.5C12.4 6.3 10.5 4.5 8 4.5zM8 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 16 16"><path d="M7.13 1.5a1 1 0 0 1 1.74 0l6.5 11.5A1 1 0 0 1 14.5 14.5h-13a1 1 0 0 1-.87-1.5l6.5-11.5zM8 5a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 8 5zm0 6a.9.9 0 1 0 0 1.8A.9.9 0 0 0 8 11z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 16 16"><path d="M6 1.5h4a1 1 0 0 1 1 1V3h3a.75.75 0 0 1 0 1.5h-.6l-.7 9.1A1.5 1.5 0 0 1 11.2 15H4.8a1.5 1.5 0 0 1-1.5-1.4L2.6 4.5H2A.75.75 0 0 1 2 3h3v-.5a1 1 0 0 1 1-1zM4.1 4.5l.7 9h6.4l.7-9H4.1zm2.15 1.75a.6.6 0 0 1 .6.6v4.8a.6.6 0 0 1-1.2 0v-4.8a.6.6 0 0 1 .6-.6zm3.5 0a.6.6 0 0 1 .6.6v4.8a.6.6 0 0 1-1.2 0v-4.8a.6.6 0 0 1 .6-.6z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 16 16"><path d="M7.28 3.22a.75.75 0 0 1 0 1.06L4.31 7.25h8.94a.75.75 0 0 1 0 1.5H4.31l2.97 2.97a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M3.97 3.97a.75.75 0 0 1 1.06 0L8 6.94l2.97-2.97a.75.75 0 1 1 1.06 1.06L9.06 8l2.97 2.97a.75.75 0 1 1-1.06 1.06L8 9.06l-2.97 2.97a.75.75 0 0 1-1.06-1.06L6.94 8 3.97 5.03a.75.75 0 0 1 0-1.06z"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 16 16"><path d="M2 2.5h12a1 1 0 0 1 1 1V5a1 1 0 0 1-1 1v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13V6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1zm1.5 3.5v7h9V6h-9zm-1-2v.5h11V4h-11zM6 7.5h4a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1 0-1.5z"/></symbol>
+</svg>
+
+<div class="page">
+  <header style="display:grid;gap:8px">
+    <span class="eyebrow">LARPilot UI · Specs: docs/UI_BUTTONS.md, docs/UI_DATES.md</span>
+    <h1>UI guide</h1>
+    <p class="lead">The shared rules for LARPilot's controls, shown as they render. Buttons: one meaning per color, one size per context. Dates: day first everywhere, one picker for every date field.</p>
+    <nav class="toc" aria-label="Sections"><a class="btn btn-sm btn-outline-secondary" href="#roles">Buttons</a><a class="btn btn-sm btn-outline-secondary" href="#dates">Dates &amp; time</a></nav>
+  </header>
+
+  <section aria-labelledby="roles-h" id="roles">
+    <span class="eyebrow">Part 1 · Spec: docs/UI_BUTTONS.md</span>
+    <h2 id="roles-h">1. Roles: what each color means</h2>
+    <p class="lead">Pick the class by what the action does, never by what looks nice next to its neighbours.</p>
+    <div class="roles">
+      <div class="role">
+        <div class="demo"><span class="btn btn-success"><svg><use href="#i-plus"/></svg>Create</span></div>
+        <div class="meta"><strong><span class="swatch" style="background:var(--create)"></span>Create — <code>btn-success</code> + <code>bi-plus-lg</code></strong><span class="use">Brings a new thing into existence: Create character, Add faction, New quest, Invite participant, Add booking.</span></div>
+      </div>
+      <div class="role">
+        <div class="demo"><span class="btn btn-primary"><svg><use href="#i-check"/></svg>Save</span></div>
+        <div class="meta"><strong><span class="swatch" style="background:var(--primary)"></span>Primary — <code>btn-primary</code> + <code>bi-check-lg</code></strong><span class="use">Commits the current form or the main step: Save, Submit application, Apply filter, Accept, Confirm (non-destructive), Import.</span></div>
+      </div>
+      <div class="role">
+        <div class="demo"><span class="btn btn-outline-primary"><svg><use href="#i-pencil"/></svg>Edit</span></div>
+        <div class="meta"><strong><span class="swatch" style="background:var(--primary)"></span>Edit — <code>btn-outline-primary</code> + <code>bi-pencil</code></strong><span class="use">Opens something for changing: Edit, Modify, Manage, Decision tree, Settings.</span></div>
+      </div>
+      <div class="role">
+        <div class="demo"><span class="btn btn-outline-info"><svg><use href="#i-eye"/></svg>View</span></div>
+        <div class="meta"><strong><span class="swatch" style="background:var(--info)"></span>Info — <code>btn-outline-info</code> + <code>bi-eye</code> / <code>bi-info-circle</code></strong><span class="use">Read-only look: View, Details, Preview, Character sheet, Version history, Help. Text color darkened from Bootstrap cyan so it passes contrast on white.</span></div>
+      </div>
+      <div class="role">
+        <div class="demo"><span class="btn btn-warning"><svg><use href="#i-warn"/></svg>Unpublish</span></div>
+        <div class="meta"><strong><span class="swatch" style="background:var(--warning)"></span>Alert — <code>btn-warning</code> + <code>bi-exclamation-triangle</code></strong><span class="use">Significant but reversible: Archive, Unpublish, Suspend user, Reset matching, Revoke invitation, Cancel LARP (workflow).</span></div>
+      </div>
+      <div class="role">
+        <div class="demo"><span class="btn btn-outline-danger"><svg><use href="#i-trash"/></svg>Delete</span><span class="btn btn-danger"><svg><use href="#i-trash"/></svg>Delete</span></div>
+        <div class="meta"><strong><span class="swatch" style="background:var(--danger)"></span>Delete — <code>btn-outline-danger</code> to open the confirm modal, <code>btn-danger</code> for the final confirm</strong><span class="use">Destroys or rejects: Delete, Remove, Reject application, Ban. Destructive actions always go through a confirmation; the solid red appears only at the point of no return.</span></div>
+      </div>
+      <div class="role">
+        <div class="demo"><span class="btn btn-outline-secondary"><svg><use href="#i-back"/></svg>Back</span><span class="btn btn-outline-secondary">Cancel</span></div>
+        <div class="meta"><strong><span class="swatch" style="background:var(--neutral)"></span>Neutral — <code>btn-outline-secondary</code></strong><span class="use">Leaves without changing anything: Back (<code>bi-arrow-left</code>), Cancel, Close, Clear filters, secondary tools (Copy, Fit image, Export).</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="sizes-h">
+    <h2 id="sizes-h">2. Sizes: decided by the group, not the button</h2>
+    <p class="lead">Every button in one group shares one size. Spacing comes from the wrapper's <code>gap</code>, never from <code>me-*</code>/<code>ms-*</code> on buttons.</p>
+    <div class="scroll">
+      <table class="size-table">
+        <thead><tr><th>Group</th><th>Size &amp; wrapper</th><th>Looks like</th></tr></thead>
+        <tbody>
+          <tr><td>Page / card header actions</td><td>default · <code>d-flex gap-2</code></td><td><div class="row"><span class="btn btn-outline-secondary"><svg><use href="#i-back"/></svg>Back</span><span class="btn btn-success"><svg><use href="#i-plus"/></svg>Create</span></div></td></tr>
+          <tr><td>Form footer</td><td>default · <code>d-flex justify-content-end gap-2</code></td><td><div class="row"><span class="btn btn-outline-secondary">Cancel</span><span class="btn btn-primary"><svg><use href="#i-check"/></svg>Save</span></div></td></tr>
+          <tr><td>Modal footer</td><td>default · Bootstrap <code>modal-footer</code></td><td><div class="row"><span class="btn btn-outline-secondary">Cancel</span><span class="btn btn-danger"><svg><use href="#i-trash"/></svg>Delete</span></div></td></tr>
+          <tr><td>Table row actions</td><td><code>btn-sm</code> · <code>d-flex gap-1 justify-content-end</code></td><td><div class="row-sm"><span class="btn btn-sm btn-outline-info"><svg><use href="#i-eye"/></svg>View</span><span class="btn btn-sm btn-outline-primary"><svg><use href="#i-pencil"/></svg>Edit</span><span class="btn btn-sm btn-outline-danger"><svg><use href="#i-trash"/></svg>Delete</span></div></td></tr>
+          <tr><td>Filter form</td><td>default · matches input height</td><td><div class="row"><span class="btn btn-primary">Filter</span><span class="btn btn-outline-secondary">Clear</span></div></td></tr>
+          <tr><td>Toolbars, inline card tools, comment actions</td><td><code>btn-sm</code> · <code>d-flex gap-1</code></td><td><div class="row-sm"><span class="btn btn-sm btn-outline-secondary">Reply</span><span class="btn btn-sm btn-outline-primary"><svg><use href="#i-pencil"/></svg>Edit</span></div></td></tr>
+          <tr><td>Public landing / hero CTA</td><td><code>btn-lg</code> · public pages only</td><td><div class="row"><span class="btn btn-lg btn-primary">Browse LARPs</span></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead">Icon-only buttons are allowed only in <code>btn-sm</code> groups, and must carry <code>title</code> and <code>aria-label</code>.</p>
+  </section>
+
+  <section aria-labelledby="ctx-h">
+    <h2 id="ctx-h">3. In context</h2>
+    <div class="grid2">
+      <div class="mock">
+        <div class="mock-head"><h3>Characters</h3><div class="row"><span class="btn btn-outline-secondary">Import file</span><span class="btn btn-success"><svg><use href="#i-plus"/></svg>Create</span></div></div>
+        <div class="filter">
+          <div class="field"><label for="f1">Faction</label><input id="f1" class="input" value="House Varn"></div>
+          <div class="row"><span class="btn btn-primary">Filter</span><span class="btn btn-outline-secondary">Clear</span></div>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Character</th><th style="text-align:right">Actions</th></tr></thead>
+            <tbody>
+              <tr><td>Ser Aldric Varn</td><td class="actions"><span class="row-sm"><span class="btn btn-sm btn-outline-primary"><svg><use href="#i-pencil"/></svg>Edit</span><span class="btn btn-sm btn-outline-danger"><svg><use href="#i-trash"/></svg>Delete</span></span></td></tr>
+              <tr><td>Mother Ilse</td><td class="actions"><span class="row-sm"><span class="btn btn-sm btn-outline-primary"><svg><use href="#i-pencil"/></svg>Edit</span><span class="btn btn-sm btn-outline-danger"><svg><use href="#i-trash"/></svg>Delete</span></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mock">
+        <div class="mock-head"><h3>Edit quest</h3><div class="row"><span class="btn btn-outline-info"><svg><use href="#i-eye"/></svg>Decision tree</span></div></div>
+        <div class="mock-body">
+          <div class="field"><label for="f2">Title</label><input id="f2" class="input" value="The Salt Road Ambush"></div>
+          <div class="field"><label for="f3">Status</label><input id="f3" class="input" value="In progress"></div>
+        </div>
+        <div class="mock-foot"><span class="btn btn-outline-secondary">Cancel</span><span class="btn btn-primary"><svg><use href="#i-check"/></svg>Save</span></div>
+      </div>
+
+      <div class="mock">
+        <div class="mock-head"><h3>Delete “Mother Ilse”?</h3><span class="btn btn-sm btn-outline-secondary btn-icon" title="Close" aria-label="Close"><svg><use href="#i-x"/></svg></span></div>
+        <div class="mock-body"><p>This removes the character from 3 threads and 1 faction. It cannot be undone.</p></div>
+        <div class="mock-foot"><span class="btn btn-outline-secondary">Cancel</span><span class="btn btn-danger"><svg><use href="#i-trash"/></svg>Delete</span></div>
+      </div>
+
+      <div class="mock">
+        <div class="mock-head"><h3>Application · Kasia N.</h3></div>
+        <div class="mock-body"><p>Preferred: Mother Ilse, Ser Aldric Varn. Status: pending.</p></div>
+        <div class="mock-foot"><span class="btn btn-warning"><svg><use href="#i-archive"/></svg>Archive</span><span class="btn btn-outline-danger">Reject</span><span class="btn btn-primary"><svg><use href="#i-check"/></svg>Accept</span></div>
+      </div>
+    </div>
+    <div class="mock">
+      <div class="hero"><h3 style="font-size:1.3rem">Find your next LARP</h3><p class="lead">Public landing pages are the only place for large buttons.</p><div class="row"><span class="btn btn-lg btn-primary">Browse LARPs</span><span class="btn btn-lg btn-outline-secondary">Organize a LARP</span></div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="matrix-h">
+    <h2 id="matrix-h">4. Full matrix</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Role</th><th>btn-sm</th><th>default</th><th>btn-lg</th></tr></thead>
+        <tbody>
+          <tr><td>Create</td><td><span class="btn btn-sm btn-success"><svg><use href="#i-plus"/></svg>Create</span></td><td><span class="btn btn-success"><svg><use href="#i-plus"/></svg>Create</span></td><td><span class="btn btn-lg btn-success"><svg><use href="#i-plus"/></svg>Create</span></td></tr>
+          <tr><td>Primary</td><td><span class="btn btn-sm btn-primary">Save</span></td><td><span class="btn btn-primary">Save</span></td><td><span class="btn btn-lg btn-primary">Save</span></td></tr>
+          <tr><td>Edit</td><td><span class="btn btn-sm btn-outline-primary"><svg><use href="#i-pencil"/></svg>Edit</span></td><td><span class="btn btn-outline-primary"><svg><use href="#i-pencil"/></svg>Edit</span></td><td>—</td></tr>
+          <tr><td>Info</td><td><span class="btn btn-sm btn-outline-info"><svg><use href="#i-eye"/></svg>View</span></td><td><span class="btn btn-outline-info"><svg><use href="#i-eye"/></svg>View</span></td><td>—</td></tr>
+          <tr><td>Alert</td><td><span class="btn btn-sm btn-warning">Archive</span></td><td><span class="btn btn-warning">Archive</span></td><td>—</td></tr>
+          <tr><td>Delete</td><td><span class="btn btn-sm btn-outline-danger"><svg><use href="#i-trash"/></svg>Delete</span></td><td><span class="btn btn-danger"><svg><use href="#i-trash"/></svg>Delete</span></td><td>—</td></tr>
+          <tr><td>Neutral</td><td><span class="btn btn-sm btn-outline-secondary">Cancel</span></td><td><span class="btn btn-outline-secondary">Cancel</span></td><td><span class="btn btn-lg btn-outline-secondary">Organize</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="rules-h">
+    <h2 id="rules-h">5. Rules</h2>
+    <ul class="rules">
+      <li><span class="do">Do</span> use <code>&lt;a class="btn …"&gt;</code> for navigation (GET) and <code>&lt;button type="…" class="btn …"&gt;</code> for submits and JS actions. Both take the same classes.</li>
+      <li><span class="do">Do</span> keep at most one solid button per group. Everything else in the group is outline.</li>
+      <li><span class="do">Do</span> order groups neutral → info/edit → alert → destructive → primary/create, with the primary action last (rightmost).</li>
+      <li><span class="do">Do</span> use the <code>ui.*</code> macros in <code>templates/macros/ui_components.html.twig</code> where one fits.</li>
+      <li><span class="dont">Don't</span> use <code>btn-secondary</code> (solid grey), <code>btn-info</code> (solid cyan), <code>btn-dark</code>, or <code>btn-link</code> for actions. Plain text links stay plain <code>&lt;a&gt;</code> without <code>btn</code>.</li>
+      <li><span class="dont">Don't</span> use <code>btn-light</code> / <code>btn-outline-light</code> except on dark or colored surfaces (photo headers, cookie banner).</li>
+      <li><span class="dont">Don't</span> add hover lifts, gradients or shadows per page. Hover only darkens the fill (solid) or tints the background (outline).</li>
+      <li><span class="dont">Don't</span> put <code>me-1</code>/<code>me-2</code> on icons inside buttons; the button's flex <code>gap</code> spaces them.</li>
+      <li><span class="do">Allowed exceptions:</span> decision tree toolbar (node-type colors as a legend), thumbs up/down vote toggles, SSO and social brand buttons, <code>btn-lg</code> groups on mobile staff pages.</li>
+    </ul>
+  </section>
+  <section aria-labelledby="dates-h" id="dates">
+    <span class="eyebrow">Part 2 · Spec: docs/UI_DATES.md</span>
+    <h2 id="dates-h">6. Dates &amp; time</h2>
+    <p class="lead">One way to show dates and one picker to enter them. Shown dates are always day first. Every date field uses the same picker, and a from–to pair is one picker, not two.</p>
+
+    <h3>Display formats</h3>
+    <div class="scroll">
+      <table class="size-table">
+        <thead><tr><th>What</th><th>Format</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Date</td><td><code>d-m-Y</code></td><td class="mono-cell">12-06-2026</td></tr>
+          <tr><td>Date and time</td><td><code>d-m-Y H:i</code> (24h, no seconds)</td><td class="mono-cell">12-06-2026 18:00</td></tr>
+          <tr><td>Range</td><td>both ends in full, joined by <code>→</code></td><td class="mono-cell">12-06-2026 18:00 → 14-06-2026 16:00</td></tr>
+          <tr><td>Time only</td><td><code>H:i</code></td><td class="mono-cell">18:00</td></tr>
+          <tr><td>Machine values (form posts, JSON, CSV)</td><td>ISO, unchanged</td><td class="mono-cell">2026-06-12 18:00</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="dp-controls" role="group" aria-label="Preview options">
+      <span class="eyebrow">Try it</span>
+      <div class="row-sm">
+        <button type="button" class="btn btn-sm btn-outline-secondary is-active" data-locale="en" aria-pressed="true">English</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-locale="pl" aria-pressed="false">Polski</button>
+      </div>
+      <label class="dp-toggle"><input type="checkbox" id="dp-mobile"> Phone layout</label>
+    </div>
+
+    <div class="grid2">
+      <div class="mock">
+        <div class="mock-head"><h3>LARP settings</h3><span class="tag">datetime range · required</span></div>
+        <div class="mock-body">
+          <div class="field">
+            <label for="larp_startDate">Dates</label>
+            <input id="larp_startDate" name="larp[startDate]" value="2026-06-12 18:00" data-dp-time data-dp-required data-dp-end="larp_endDate">
+            <input id="larp_endDate" name="larp[endDate]" value="2026-06-14 16:00">
+          </div>
+          <pre class="posted" data-posted="larp_startDate larp_endDate"></pre>
+        </div>
+      </div>
+
+      <div class="mock">
+        <div class="mock-head"><h3>Kanban task</h3><span class="tag">single datetime · optional</span></div>
+        <div class="mock-body">
+          <div class="field">
+            <label for="task_dueDate">Due</label>
+            <input id="task_dueDate" name="kanban_task[dueDate]" value="2026-06-05 20:00" data-dp-time>
+          </div>
+          <pre class="posted" data-posted="task_dueDate"></pre>
+        </div>
+      </div>
+
+      <div class="mock">
+        <div class="mock-head"><h3>Find a LARP</h3><span class="tag">date range filter · optional</span></div>
+        <div class="filter">
+          <div class="field">
+            <label for="filter_startDate">Dates</label>
+            <input id="filter_startDate" name="filter[startDate]" value="" data-dp-end="filter_endDate">
+            <input id="filter_endDate" name="filter[endDate]" value="">
+          </div>
+          <div class="row"><span class="btn btn-primary">Filter</span><span class="btn btn-outline-secondary">Clear</span></div>
+        </div>
+        <div class="mock-body"><pre class="posted" data-posted="filter_startDate filter_endDate"></pre></div>
+      </div>
+
+      <div class="mock">
+        <div class="mock-head"><h3>Characters</h3><span class="tag">dates in a table</span></div>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Character</th><th>Updated</th></tr></thead>
+            <tbody>
+              <tr><td>Ser Aldric Varn</td><td class="mono-cell">03-06-2026 21:47</td></tr>
+              <tr><td>Mother Ilse</td><td class="mono-cell">28-05-2026 09:05</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h3>Rules</h3>
+    <ul class="rules">
+      <li><span class="do">Do</span> show every date as <code>d-m-Y</code> and every date-time as <code>d-m-Y H:i</code>. Never show seconds, never show month names in tables, never use the browser's locale format.</li>
+      <li><span class="do">Do</span> let the form type extension wire the picker: any <code>DateType</code> or <code>DateTimeType</code> gets it automatically. Mark a pair with <code>'range_end' =&gt; 'endDate'</code> on the start field.</li>
+      <li><span class="do">Do</span> keep posted values ISO (<code>Y-m-d</code> / <code>Y-m-d H:i</code>). The picker only changes what people see.</li>
+      <li><span class="do">Do</span> pick times on a 5-minute step. A one-day range is allowed: pick the same day twice or press Done after one click.</li>
+      <li><span class="do">Do</span> make a date range filter mean "within the period": rows that start on or after the first day and end on or before the last day (<code>DateRangeFilter</code>).</li>
+      <li><span class="dont">Don't</span> use <code>&lt;input type="date"&gt;</code> or <code>datetime-local</code>, or a second picker library.</li>
+      <li><span class="dont">Don't</span> render a from–to pair as two separate pickers.</li>
+    </ul>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.6.0/air-datepicker.js"></script>
+<script>
+// BEGIN date picker code (generated from assets/utils/larpDatePicker.js and datePickerLocales.js)
+const pad = (value) => String(value).padStart(2, '0');
+
+const formatDisplayDate = (date) => `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()}`;
+
+const formatDisplayDateTime = (date) => `${formatDisplayDate(date)} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+
+const formatIsoDate = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+const formatIsoDateTime = (date) => `${formatIsoDate(date)} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+
+const parseIsoValue = (value) => {
+    if (!value) {
+        return null;
+    }
+    const match = String(value).trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/);
+    if (!match) {
+        return null;
+    }
+    const [, year, month, day, hours = '0', minutes = '0'] = match;
+    return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
+};
+
+const withTime = (date, time) => {
+    const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    result.setHours(time.hours, time.minutes, 0, 0);
+    return result;
+};
+
+const timeOf = (date, fallback) => (date ? { hours: date.getHours(), minutes: date.getMinutes() } : { ...fallback });
+
+const roundToStep = (minutes, step) => Math.min(60 - step, Math.round(minutes / step) * step);
+
+const createElement = (tag, className, text) => {
+    const element = document.createElement(tag);
+    if (className) {
+        element.className = className;
+    }
+    if (text !== undefined) {
+        element.textContent = text;
+    }
+    return element;
+};
+
+const DEFAULT_LABELS = {
+    start: 'Start',
+    end: 'End',
+    time: 'Time',
+    done: 'Done',
+    clear: 'Clear',
+    placeholderDate: 'dd-mm-yyyy',
+    placeholderDateTime: 'dd-mm-yyyy hh:mm',
+    endBeforeStart: 'End is before start',
+};
+
+class LarpDatePicker {
+    constructor(AirDatepicker, options) {
+        this.AirDatepicker = AirDatepicker;
+        this.startInput = options.startInput;
+        this.endInput = options.endInput ?? null;
+        this.withTime = Boolean(options.withTime);
+        this.required = Boolean(options.required);
+        this.minutesStep = options.minutesStep ?? 5;
+        this.locale = options.locale;
+        this.labels = { ...DEFAULT_LABELS, ...(options.labels ?? {}) };
+        this.isMobile = options.isMobile ?? window.matchMedia('(max-width: 575.98px), (pointer: coarse)').matches;
+        this.container = options.container ?? null;
+        this.defaultStartTime = options.defaultStartTime ?? { hours: 10, minutes: 0 };
+        this.defaultEndTime = options.defaultEndTime ?? { hours: 18, minutes: 0 };
+
+        this.start = parseIsoValue(this.startInput.value);
+        this.end = this.endInput ? parseIsoValue(this.endInput.value) : null;
+        this.startTime = timeOf(this.start, this.defaultStartTime);
+        this.endTime = timeOf(this.end, this.defaultEndTime);
+        this.timeSelects = {};
+
+        this.render();
+        this.initPicker();
+        this.sync();
+        this.refreshDisplay();
+    }
+
+    get isRange() {
+        return this.endInput !== null;
+    }
+
+    render() {
+        this.wrapper = createElement('div', 'input-group larp-date-input');
+        const icon = createElement('span', 'input-group-text');
+        icon.innerHTML = `<i class="bi ${this.withTime ? 'bi-calendar-event' : 'bi-calendar3'}" aria-hidden="true"></i>`;
+
+        this.display = createElement('input', 'form-control larp-date-display');
+        this.display.type = 'text';
+        this.display.readOnly = true;
+        this.display.inputMode = 'none';
+        this.display.autocomplete = 'off';
+        this.display.placeholder = this.withTime ? this.labels.placeholderDateTime : this.labels.placeholderDate;
+        if (this.startInput.id) {
+            this.display.id = `${this.startInput.id}_display`;
+            const label = document.querySelector(`label[for="${this.startInput.id}"]`);
+            if (label) {
+                label.htmlFor = this.display.id;
+            }
+        }
+        if (this.startInput.classList.contains('is-invalid') || this.endInput?.classList.contains('is-invalid')) {
+            this.display.classList.add('is-invalid');
+        }
+
+        this.wrapper.append(icon, this.display);
+
+        if (!this.required) {
+            this.clearButton = createElement('button', 'btn btn-outline-secondary larp-date-clear');
+            this.clearButton.type = 'button';
+            this.clearButton.title = this.labels.clear;
+            this.clearButton.setAttribute('aria-label', this.labels.clear);
+            this.clearButton.innerHTML = '<i class="bi bi-x-lg" aria-hidden="true"></i>';
+            this.clearButton.addEventListener('click', () => this.clear());
+            this.wrapper.append(this.clearButton);
+        }
+
+        this.startInput.insertAdjacentElement('beforebegin', this.wrapper);
+        this.startInput.type = 'hidden';
+        if (this.endInput) {
+            this.endInput.type = 'hidden';
+        }
+    }
+
+    initPicker() {
+        const selectedDates = [this.start, this.end].filter(Boolean);
+        const buttons = [
+            { content: this.labels.clear, className: 'larp-dp-button', onClick: () => this.clear() },
+            { content: this.labels.done, className: 'larp-dp-button larp-dp-button-primary', onClick: (picker) => this.finish(picker) },
+        ];
+
+        this.picker = new this.AirDatepicker(this.display, {
+            locale: this.locale,
+            range: this.isRange,
+            dynamicRange: true,
+            toggleSelected: false,
+            multipleDatesSeparator: ' → ',
+            dateFormat: 'dd-MM-yyyy',
+            selectedDates,
+            startDate: this.start ?? new Date(),
+            isMobile: this.isMobile,
+            autoClose: !this.withTime && !this.isRange,
+            keyboardNav: true,
+            position: 'bottom left',
+            classes: 'larp-dp',
+            container: this.container ?? '',
+            buttons: this.withTime || this.isRange ? buttons : false,
+            onSelect: ({ date }) => this.onSelect(date),
+            onShow: (isFinished) => {
+                if (!isFinished) {
+                    this.mountTimePanel();
+                }
+            },
+            onHide: (isFinished) => {
+                if (isFinished) {
+                    this.sync();
+                    this.refreshDisplay();
+                }
+            },
+        });
+    }
+
+    onSelect(date) {
+        const dates = Array.isArray(date) ? date : [date].filter(Boolean);
+        if (this.isRange) {
+            this.start = dates[0] ? withTime(dates[0], this.startTime) : null;
+            this.end = dates[1] ? withTime(dates[1], this.endTime) : null;
+        } else {
+            this.start = dates[0] ? withTime(dates[0], this.startTime) : null;
+        }
+        this.writeInputs();
+        this.updateTimePanel();
+        this.refreshDisplay();
+    }
+
+    mountTimePanel() {
+        if (!this.withTime || this.timePanel) {
+            return;
+        }
+        this.timePanel = createElement('div', 'larp-dp-time');
+        this.timePanel.append(this.buildTimeRow('start', this.isRange ? this.labels.start : this.labels.time, this.startTime));
+        if (this.isRange) {
+            this.timePanel.append(this.buildTimeRow('end', this.labels.end, this.endTime));
+        }
+        this.warning = createElement('div', 'larp-dp-warning', this.labels.endBeforeStart);
+        this.warning.hidden = true;
+        this.timePanel.append(this.warning);
+
+        const buttonsArea = this.picker.$datepicker.querySelector('.air-datepicker--buttons');
+        this.picker.$datepicker.insertBefore(this.timePanel, buttonsArea);
+        this.updateTimePanel();
+    }
+
+    buildTimeRow(key, labelText, time) {
+        const row = createElement('div', 'larp-dp-time-row');
+        const label = createElement('span', 'larp-dp-time-label', labelText);
+        const date = createElement('span', 'larp-dp-time-date');
+        const hours = createElement('select', 'form-select form-select-sm larp-dp-hours');
+        const minutes = createElement('select', 'form-select form-select-sm larp-dp-minutes');
+        hours.setAttribute('aria-label', `${labelText} – h`);
+        minutes.setAttribute('aria-label', `${labelText} – min`);
+
+        for (let hour = 0; hour < 24; hour++) {
+            hours.append(new Option(pad(hour), String(hour)));
+        }
+        for (let minute = 0; minute < 60; minute += this.minutesStep) {
+            minutes.append(new Option(pad(minute), String(minute)));
+        }
+        hours.value = String(time.hours);
+        minutes.value = String(roundToStep(time.minutes, this.minutesStep));
+
+        const onChange = () => this.onTimeChange(key, Number(hours.value), Number(minutes.value));
+        hours.addEventListener('change', onChange);
+        minutes.addEventListener('change', onChange);
+
+        const separator = createElement('span', 'larp-dp-time-separator', ':');
+        row.append(label, date, hours, separator, minutes);
+        this.timeSelects[key] = { hours, minutes, date };
+        return row;
+    }
+
+    onTimeChange(key, hours, minutes) {
+        const time = { hours, minutes };
+        if (key === 'start') {
+            this.startTime = time;
+            this.start = this.start ? withTime(this.start, time) : null;
+        } else {
+            this.endTime = time;
+            this.end = this.end ? withTime(this.end, time) : null;
+        }
+        this.writeInputs();
+        this.updateTimePanel();
+        this.updateDisplay();
+    }
+
+    updateTimePanel() {
+        if (!this.timePanel) {
+            return;
+        }
+        const startRow = this.timeSelects.start;
+        startRow.date.textContent = this.start ? formatDisplayDate(this.start) : '—';
+        if (this.timeSelects.end) {
+            const effectiveEnd = this.end ?? (this.start ? withTime(this.start, this.endTime) : null);
+            this.timeSelects.end.date.textContent = effectiveEnd ? formatDisplayDate(effectiveEnd) : '—';
+        }
+        this.warning.hidden = !this.isEndBeforeStart();
+    }
+
+    isEndBeforeStart() {
+        if (!this.isRange || !this.start) {
+            return false;
+        }
+        const effectiveEnd = this.end ?? withTime(this.start, this.endTime);
+        return effectiveEnd < this.start;
+    }
+
+    finish(picker) {
+        if (this.isRange && this.start && !this.end) {
+            this.end = withTime(this.start, this.endTime);
+            this.writeInputs();
+        }
+        this.updateDisplay();
+        picker.hide();
+    }
+
+    clear() {
+        this.start = null;
+        this.end = null;
+        this.picker.clear({ silent: true });
+        this.writeInputs();
+        this.updateTimePanel();
+        this.refreshDisplay();
+    }
+
+    sync() {
+        if (this.isRange && this.start && !this.end) {
+            this.end = withTime(this.start, this.endTime);
+            this.picker.selectDate([this.start, this.end], { silent: true });
+            this.writeInputs();
+        }
+        this.updateDisplay();
+    }
+
+    formatValue(date) {
+        return this.withTime ? formatDisplayDateTime(date) : formatDisplayDate(date);
+    }
+
+    refreshDisplay() {
+        this.updateDisplay();
+        window.setTimeout(() => this.updateDisplay(), 0);
+    }
+
+    displayText() {
+        if (!this.start) {
+            return '';
+        }
+        const startText = this.formatValue(this.start);
+        if (!this.isRange) {
+            return startText;
+        }
+        if (!this.end) {
+            return `${startText} → …`;
+        }
+        const endText = this.formatValue(this.end);
+        return startText === endText && !this.withTime ? startText : `${startText} → ${endText}`;
+    }
+
+    updateDisplay() {
+        const text = this.displayText();
+        this.display.value = text;
+        this.display.title = text;
+        if (this.clearButton) {
+            this.clearButton.hidden = !this.start;
+        }
+    }
+
+    writeInputs() {
+        const format = this.withTime ? formatIsoDateTime : formatIsoDate;
+        this.setInput(this.startInput, this.start ? format(this.start) : '');
+        if (this.endInput) {
+            this.setInput(this.endInput, this.end ? format(this.end) : '');
+        }
+    }
+
+    setInput(input, value) {
+        if (input.value === value) {
+            return;
+        }
+        input.value = value;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    destroy() {
+        this.picker?.destroy();
+        this.wrapper?.remove();
+        this.startInput.type = 'text';
+        if (this.endInput) {
+            this.endInput.type = 'text';
+        }
+    }
+}
+
+const datePickerLocales = {
+    en: {
+        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        today: 'Today',
+        clear: 'Clear',
+        dateFormat: 'dd-MM-yyyy',
+        timeFormat: 'HH:mm',
+        firstDay: 1,
+    },
+    pl: {
+        days: ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'],
+        daysShort: ['Nie', 'Pon', 'Wto', 'Śro', 'Czw', 'Pią', 'Sob'],
+        daysMin: ['Nd', 'Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So'],
+        months: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+        monthsShort: ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru'],
+        today: 'Dzisiaj',
+        clear: 'Wyczyść',
+        dateFormat: 'dd-MM-yyyy',
+        timeFormat: 'HH:mm',
+        firstDay: 1,
+    },
+};
+
+const datePickerLabels = {
+    en: {
+        start: 'Start',
+        end: 'End',
+        time: 'Time',
+        done: 'Done',
+        clear: 'Clear',
+        placeholderDate: 'dd-mm-yyyy',
+        placeholderDateTime: 'dd-mm-yyyy hh:mm',
+        endBeforeStart: 'End is before start',
+    },
+    pl: {
+        start: 'Początek',
+        end: 'Koniec',
+        time: 'Godzina',
+        done: 'Gotowe',
+        clear: 'Wyczyść',
+        placeholderDate: 'dd-mm-rrrr',
+        placeholderDateTime: 'dd-mm-rrrr gg:mm',
+        endBeforeStart: 'Koniec jest przed początkiem',
+    },
+};
+// END date picker code
+(function () {
+  const state = { locale: 'en', mobile: false, pickers: [] };
+  const fields = Array.from(document.querySelectorAll('input[data-dp-end], input[data-dp-time]'))
+    .filter((input, index, all) => all.indexOf(input) === index);
+  const showPosted = () => {
+    document.querySelectorAll('[data-posted]').forEach((pre) => {
+      pre.textContent = pre.dataset.posted.split(' ').map((id) => {
+        const input = document.getElementById(id);
+        return `${input.name} = ${input.value || '(empty)'}`;
+      }).join('\n');
+    });
+  };
+  const build = () => {
+    state.pickers.forEach((picker) => picker.destroy());
+    state.pickers = fields.map((startInput) => new LarpDatePicker(window.AirDatepicker, {
+      startInput,
+      endInput: startInput.dataset.dpEnd ? document.getElementById(startInput.dataset.dpEnd) : null,
+      withTime: startInput.hasAttribute('data-dp-time'),
+      required: startInput.hasAttribute('data-dp-required'),
+      locale: datePickerLocales[state.locale],
+      labels: datePickerLabels[state.locale],
+      isMobile: state.mobile,
+    }));
+    showPosted();
+  };
+  document.addEventListener('change', showPosted);
+  document.querySelectorAll('[data-locale]').forEach((button) => button.addEventListener('click', () => {
+    state.locale = button.dataset.locale;
+    document.querySelectorAll('[data-locale]').forEach((other) => {
+      other.classList.toggle('is-active', other === button);
+      other.setAttribute('aria-pressed', String(other === button));
+    });
+    build();
+  }));
+  document.getElementById('dp-mobile').addEventListener('change', (event) => {
+    state.mobile = event.target.checked;
+    build();
+  });
+  if (window.AirDatepicker) {
+    build();
+  } else {
+    showPosted();
+  }
+})();
+</script>

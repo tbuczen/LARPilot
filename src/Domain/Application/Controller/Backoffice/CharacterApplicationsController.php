@@ -205,7 +205,7 @@ class CharacterApplicationsController extends BaseController
                 'user' => $vote->getUser()->getUsername() ?? $vote->getUser()->getContactEmail(),
                 'vote' => $vote->getVote(),
                 'justification' => $vote->getJustification(),
-                'createdAt' => $vote->getCreatedAt()->format('Y-m-d H:i:s'),
+                'createdAt' => $vote->getCreatedAt()->format('d-m-Y H:i'),
                 'isUpvote' => $vote->isUpvote()
             ];
         }

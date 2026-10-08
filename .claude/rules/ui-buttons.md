@@ -1,6 +1,6 @@
 # Buttons (templates and Stimulus controllers)
 
-Full spec: `docs/UI_BUTTONS.md`. Visual reference: `docs/ui/button-guide.html`. Read the spec before adding or restyling any button or `a.btn`.
+Full spec: `docs/UI_BUTTONS.md`. Visual reference: `docs/ui/ui-guide.html`. Read the spec before adding or restyling any button or `a.btn`.
 
 Role → class (color always encodes the role, never the neighbours):
 - Create / Add / New / Invite → `btn-success` + `bi-plus-lg`

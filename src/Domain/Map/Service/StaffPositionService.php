@@ -224,7 +224,7 @@ class StaffPositionService
             'centerX' => $centerPosition['x'],
             'centerY' => $centerPosition['y'],
             'statusNote' => $position->getStatusNote(),
-            'updatedAt' => $position->getPositionUpdatedAt()->format('Y-m-d H:i:s'),
+            'updatedAt' => $position->getPositionUpdatedAt()->format('d-m-Y H:i'),
         ];
     }
 }

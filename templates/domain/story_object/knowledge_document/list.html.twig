@@ -56,7 +56,7 @@
                                         {% endif %}
                                     {% endif %}
                                 </td>
-                                <td>{{ document.updatedAt|date('Y-m-d H:i') }}</td>
+                                <td>{{ document.updatedAt|date('d-m-Y H:i') }}</td>
                                 <td>
                                     {{ ui.delete_button(document.id, document.title, path('backoffice_larp_knowledge_delete', { larp: larp.id, document: document.id })) }}
                                 </td>
