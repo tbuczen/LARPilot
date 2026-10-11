@@ -34,9 +34,12 @@
                                     </a>
                                 </div>
                                 {% if useMappingPath %}
-                                    <a href="{{ path(useMappingPath, { larp: larp.id, sharedFile: file.id, mapping: mapping.id, provider: file.integration.provider.value }) }}" class="btn btn-primary btn-sm">
-                                        {{ 'integration.file_select.use_mapping'|trans }}
-                                    </a>
+                                    <form method="post" action="{{ path(useMappingPath, { larp: larp.id, sharedFile: file.id, mapping: mapping.id, provider: file.integration.provider.value }) }}" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('import_from_mapping_' ~ mapping.id) }}">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            {{ 'integration.file_select.use_mapping'|trans }}
+                                        </button>
+                                    </form>
                                 {% endif %}
                             </div>
                             <button class="btn btn-sm btn-outline-info mt-1" type="button" data-bs-toggle="collapse"
