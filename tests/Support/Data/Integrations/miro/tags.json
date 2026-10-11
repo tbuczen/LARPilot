@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "id": "3458764600000009001",
+            "type": "tag",
+            "fillColor": "red",
+            "title": "Main plot"
+        },
+        {
+            "id": "3458764600000009002",
+            "type": "tag",
+            "fillColor": "blue",
+            "title": "Timeline"
+        }
+    ],
+    "total": 2,
+    "size": 2,
+    "offset": 0,
+    "limit": 20,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/tags?limit=20&offset=0"
+    },
+    "type": "list"
+}

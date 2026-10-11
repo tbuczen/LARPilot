@@ -10,7 +10,7 @@ readonly class GoogleOAuthTokenProvider implements OAuthTokenProviderInterface
 {
     public function __construct(
         private LarpIntegrationRepository $integrationRepository,
-        private GoogleClientManager       $googleClientManager
+        private GoogleClientFactoryInterface $googleClientManager
     ) {
     }
 

@@ -1,0 +1,10 @@
+{
+    "range": "Characters!A1:D4",
+    "majorDimension": "ROWS",
+    "values": [
+        ["Name", "Faction", "Player", "Notes"],
+        ["Lady Morwen", "House Morwen", "Anna", "Wants the seal back"],
+        ["Brother Aldric", "Smugglers' Guild", "", "Owes the guild"],
+        ["Cousin Elric", "House Morwen", "Piotr"]
+    ]
+}
