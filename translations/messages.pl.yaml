@@ -533,6 +533,25 @@ larp:
     cancelled.description: "Wydarzenie zostało anulowane"
     completed.description: "Wydarzenie zostało zakończone"
     requirements: Wymagania statusu
+    requirement:
+      label: "Wymagania:"
+      toggle_details: "Pokaż wymagania"
+      publish: "Wymagania publikacji"
+      inquiries: "Wymagania otwarcia zgłoszeń"
+      confirm: "Wymagania potwierdzenia wydarzenia"
+      all_publish_plus: "Wszystkie wymagania publikacji oraz:"
+      all_inquiries_plus: "Wszystkie wymagania otwarcia zgłoszeń oraz:"
+      location: "Lokalizacja"
+      description: "Opis"
+      start_date: "Data rozpoczęcia"
+      end_date: "Data zakończenia"
+      has_character: "Co najmniej jedna postać"
+      characters_described: "Wszystkie postacie mają opisy"
+      characters_assigned: "Wszystkie postacie przypisane do uczestników"
+      missing: "Brakuje: %count%"
+      unassigned: "Nieprzypisane: %count%"
+    social_visual_settings: "Ustawienia społecznościowe i wizualne"
+    current_header_image: "Obecny obraz nagłówka"
   properties: 'Właściwości'
 
   browse_characters: Przeglądaj dostępne postacie

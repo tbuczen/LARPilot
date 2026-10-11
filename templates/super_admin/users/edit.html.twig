@@ -17,28 +17,30 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <h5>{{ 'super_admin.users.user_details'|trans }}</h5>
-                            <table class="table table-sm">
-                                <tr>
-                                    <th style="width: 150px;">{{ 'super_admin.users.username'|trans }}:</th>
-                                    <td>{{ user.username }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ 'super_admin.users.email'|trans }}:</th>
-                                    <td>{{ user.contactEmail }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ 'super_admin.users.registered'|trans }}:</th>
-                                    <td>{{ user.createdAt|display_datetime }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ 'super_admin.users.current_status'|trans }}:</th>
-                                    <td>
-                                        <span class="badge bg-{{ user.status.badgeClass }}">
-                                            {{ user.status.label }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th style="width: 150px;">{{ 'super_admin.users.username'|trans }}:</th>
+                                        <td>{{ user.username }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ 'super_admin.users.email'|trans }}:</th>
+                                        <td>{{ user.contactEmail }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ 'super_admin.users.registered'|trans }}:</th>
+                                        <td>{{ user.createdAt|display_datetime }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ 'super_admin.users.current_status'|trans }}:</th>
+                                        <td>
+                                            <span class="badge bg-{{ user.status.badgeClass }}">
+                                                {{ user.status.label }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
 
                         <hr>

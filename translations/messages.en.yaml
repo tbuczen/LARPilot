@@ -565,6 +565,25 @@ larp:
     confirmed.description: "Event confirmed and will happen"
     cancelled.description: "Event has been cancelled"
     completed.description: "Event has been completed"
+    requirement:
+      label: "Requirements:"
+      toggle_details: "Show requirements"
+      publish: "Publish Requirements"
+      inquiries: "Open for Inquiries Requirements"
+      confirm: "Confirm Event Requirements"
+      all_publish_plus: "All publish requirements plus:"
+      all_inquiries_plus: "All inquiry requirements plus:"
+      location: "Location"
+      description: "Description"
+      start_date: "Start Date"
+      end_date: "End Date"
+      has_character: "At least one character"
+      characters_described: "All characters have descriptions"
+      characters_assigned: "All characters assigned to participants"
+      missing: "%count% missing"
+      unassigned: "%count% unassigned"
+    social_visual_settings: "Social & Visual Settings"
+    current_header_image: "Current Header Image"
   properties: 'Properties'
 
 marketplace:
