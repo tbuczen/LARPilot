@@ -15,6 +15,7 @@ final class FakeGoogleOAuthGateway implements GoogleOAuthGatewayInterface
     public const ACCOUNT_EMAIL = 'organizer@example.com';
     public const REJECTED_CODE = 'rejected-code';
     public const CODE_WITHOUT_REFRESH_TOKEN = 'code-without-refresh-token';
+    public const GRANTED_SCOPE = 'https://www.googleapis.com/auth/drive.file email';
 
     public static function accessTokenFor(string $authorizationCode): string
     {
@@ -47,7 +48,7 @@ final class FakeGoogleOAuthGateway implements GoogleOAuthGatewayInterface
             'access_token' => self::accessTokenFor($authorizationCode),
             'refresh_token' => self::refreshTokenFor($authorizationCode),
             'expires_in' => 3600,
-            'scope' => 'https://www.googleapis.com/auth/drive email',
+            'scope' => self::GRANTED_SCOPE,
         ];
         if ($authorizationCode === self::CODE_WITHOUT_REFRESH_TOKEN) {
             unset($tokenValues['refresh_token']);

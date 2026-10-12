@@ -2,6 +2,7 @@
 
 namespace App\Domain\Integrations\Form\Integrations;
 
+use App\Domain\Integrations\DTO\SpreadsheetPreview;
 use App\Domain\Integrations\Entity\Enum\ResourceType;
 use App\Domain\Integrations\Form\Models\ExternalResourceMappingModel;
 use Symfony\Component\Form\AbstractType;
@@ -14,12 +15,16 @@ use Symfonycasts\DynamicForms\DynamicFormBuilder;
 
 class FileMappingType extends AbstractType
 {
+    public const FORM_NAME = 'file_mapping';
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder = new DynamicFormBuilder($builder);
 
         /** @var string|null $mimeType */
         $mimeType = $options['mimeType'];
+        /** @var SpreadsheetPreview|null $spreadsheetPreview */
+        $spreadsheetPreview = $options['spreadsheet_preview'];
         $allowedTypes = $this->getAllowedResourceTypes($mimeType);
 
         $builder
@@ -28,25 +33,30 @@ class FileMappingType extends AbstractType
                 'label' => 'mapping_type',
                 'choices' => $allowedTypes,
             ])
-            ->addDependent('meta', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType): void {
+            ->addDependent('meta', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType, $spreadsheetPreview): void {
                 if (!$type instanceof ResourceType) {
                     return;
                 }
                 $type = $this->getType($mimeType, $type);
 
                 $form = $type->getMetaForm();
-                if ($form !== null) {
-                    $field->add($form);
+                if ($form === null) {
+                    return;
                 }
+
+                $previewOptions = $this->spreadsheetPreviewOptions($type, $spreadsheetPreview);
+                if ($previewOptions !== []) {
+                    $previewOptions['sheet_choices'] = $spreadsheetPreview?->sheetChoices();
+                }
+                $field->add($form, $previewOptions);
             })
-            ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType): void {
+            ->addDependent('mappings', 'mappingType', function (DependentField $field, ?ResourceType $type) use ($mimeType, $spreadsheetPreview): void {
                 if (!$type instanceof ResourceType) {
                     return;
                 }
                 $type = $this->getType($mimeType, $type);
 
-                $form = $type->getSubForm();
-                $field->add($form);
+                $field->add($type->getSubForm(), $this->spreadsheetPreviewOptions($type, $spreadsheetPreview));
             })
             ->add('submit', SubmitType::class);
     }
@@ -56,9 +66,16 @@ class FileMappingType extends AbstractType
         $resolver->setDefaults([
             'data_class' => ExternalResourceMappingModel::class,
             'mimeType' => null,
+            'spreadsheet_preview' => null,
             'translation_domain' => 'forms',
             'label' => 'mapping_type',
         ]);
+        $resolver->setAllowedTypes('spreadsheet_preview', ['null', SpreadsheetPreview::class]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return self::FORM_NAME;
     }
 
     public function getAllowedResourceTypes(?string $mimeType): array
@@ -81,6 +98,18 @@ class FileMappingType extends AbstractType
 
             return false; // unknown types excluded
         });
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function spreadsheetPreviewOptions(ResourceType $type, ?SpreadsheetPreview $spreadsheetPreview): array
+    {
+        if (!$type->isSpreadsheet() || !$spreadsheetPreview instanceof SpreadsheetPreview || !$spreadsheetPreview->isAvailable()) {
+            return [];
+        }
+
+        return ['column_choices' => $spreadsheetPreview->columnChoices()];
     }
 
     private function getType(?string $mimeType, ResourceType $type): ResourceType
