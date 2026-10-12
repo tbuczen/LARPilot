@@ -387,9 +387,6 @@ larp:
     tree: 'Drzewo decyzji'
     tree_editor: 'Edytor drzewa decyzji wątku'
     add: Dodaj wątek
-  reference:
-    list: 'Referencje zewnętrzne'
-    add: 'Dodaj referencję zewnętrzną'
   story:
     main: 'Zarządzanie fabułą'
     main_title: 'Fabuła'
@@ -1464,3 +1461,48 @@ location.approve_confirm: Czy na pewno chcesz zatwierdzić tę lokalizację?
 location.reject_location: Odrzuć lokalizację
 location.reject_warning: Zamierzasz odrzucić lokalizację '%location%'. Twórca zobaczy powód odrzucenia i będzie mógł ponownie zgłosić lokalizację po wprowadzeniu zmian.
 location.rejection_reason: Powód odrzucenia
+story_source:
+  tab: 'Źródła'
+  title: 'Źródła zewnętrzne'
+  link: 'Podepnij źródło'
+  link_submit: 'Podepnij'
+  unlink: 'Odepnij'
+  unlink_confirm: 'Powiązanie zostanie usunięte z tego obiektu fabularnego. Samo źródło pozostanie bez zmian.'
+  empty: 'Brak podpiętych źródeł zewnętrznych.'
+  linked: 'Źródło podpięte.'
+  unlinked: 'Źródło odpięte.'
+  invalid_url: 'Ten link nie jest rozpoznanym adresem Discord ani Miro.'
+  item_not_found: 'Ten zsynchronizowany element nie jest dostępny dla tego LARPa.'
+  updated: 'Zaktualizowano'
+  open: 'Otwórz'
+  role_label: 'Rola'
+  search_label: 'Szukaj zsynchronizowanych elementów'
+  search_placeholder: 'Wpisz tytuł lub tekst…'
+  search_empty: 'Brak pasujących elementów.'
+  search_error: 'Wyszukiwanie jest teraz niedostępne.'
+  or: 'lub'
+  url_label: 'Wklej link z Discorda lub Miro'
+  url_placeholder: 'https://discord.com/channels/…'
+  url_help: 'Rozpoznawane są linki do kanałów, wątków i wiadomości Discorda oraz tablic i elementów Miro.'
+  role:
+    primary: 'Główne'
+    mention: 'Wzmianka'
+    notes: 'Notatki'
+  kind:
+    spreadsheet_row: 'Wiersz'
+    spreadsheet: 'Arkusz'
+    document: 'Dokument'
+    document_paragraph: 'Akapit'
+    thread: 'Wątek'
+    comment: 'Wiadomość'
+    board: 'Tablica'
+    board_item: 'Element tablicy'
+    board_frame: 'Ramka'
+    board_connector: 'Łącznik'
+    forum_post: 'Post na forum'
+    url: 'Link'
+  availability:
+    archived: 'Zarchiwizowane'
+    changed: 'Zmienione'
+    gone: 'Brak'
+    forbidden: 'Brak dostępu'
