@@ -43,6 +43,13 @@ services:
     App\Domain\Core\Service\Helper\Logger:
         public: true
 
+    App\Domain\Core\Service\Encryption\SecretBoxCipher:
+        public: true
+        arguments:
+            $currentKey: '%env(base64:INTEGRATIONS_ENCRYPTION_KEY)%'
+            $currentVersion: '%env(int:INTEGRATIONS_ENCRYPTION_KEY_VERSION)%'
+            $retiredKeys: '%env(INTEGRATIONS_ENCRYPTION_RETIRED_KEYS)%'
+
     App\Twig\:
         exclude:
             - '../src/Twig/Components/'
