@@ -10,6 +10,8 @@ use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Form\Integrations\FileMappingType;
 use App\Domain\Integrations\Form\Models\ExternalResourceMappingModel;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
+use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
+use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
 use App\Domain\Integrations\Service\IntegrationManager;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingCommand;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingHandler;
@@ -17,8 +19,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/larp/{larp}', name: 'backoffice_larp_integration_')]
+#[IsGranted(IntegrationSettingsVoter::MODIFY, subject: 'larp')]
 class FileMappingController extends BaseController
 {
     #[Route(
@@ -32,8 +36,14 @@ class FileMappingController extends BaseController
         SharedFile              $sharedFile,
         Request                 $request,
         SaveFileMappingHandler  $handler,
+        IntegrationOwnershipGuard $integrationOwnershipGuard,
         ?ObjectFieldMapping     $mapping = null,
     ): Response {
+        $integrationOwnershipGuard->assertSharedFileBelongsToLarp($sharedFile, $larp, $provider);
+        if ($mapping instanceof ObjectFieldMapping) {
+            $integrationOwnershipGuard->assertMappingBelongsToSharedFile($mapping, $sharedFile, $larp);
+        }
+
         $mappingModel = ExternalResourceMappingModel::fromEntity($mapping);
         $form = $this->createForm(FileMappingType::class, $mappingModel, ['mimeType' => $sharedFile->getMimeType()]);
 
