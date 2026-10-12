@@ -3,7 +3,7 @@
 Production deploys run on every push to `main` through `.github/workflows/deploy.yml`.
 The workflow connects to the server over SSH, writes `.env.local` from the `prod`
 environment's GitHub secrets and runs `make deploy` (git pull, Composer install,
-migrations, integration token backfill, assets, cache).
+migrations, integration token backfill, assets, cache, worker restart signal).
 
 ## Integration token encryption key
 
@@ -72,3 +72,101 @@ repeatedly. `make deploy` runs it right after the migrations.
 4. Once `app:integrations:encrypt-tokens --dry-run` reports nothing to encrypt, the old
    key may be removed from `INTEGRATIONS_ENCRYPTION_RETIRED_KEYS` (keep it with any
    database backups taken before the rotation).
+
+## Background worker (Messenger)
+
+Integration syncs (Discord, Miro, …), queued e-mails and StoryAI indexing run as Symfony
+Messenger messages. They are stored in the `messenger_messages` table and processed by a
+long-running worker:
+
+```bash
+php bin/console messenger:consume async integrations scheduler_integrations --time-limit=3600 --memory-limit=256M --env=prod
+```
+
+`make worker-run` runs the same command in the foreground.
+
+| Transport | What it carries |
+| --- | --- |
+| `async` | e-mails, notifier messages, StoryAI indexing |
+| `integrations` | `SyncExternalSourceMessage` — fetches one page of a linked source, stores items and the cursor, re-queues itself while pages remain |
+| `scheduler_integrations` | `IntegrationSyncSchedule` — every 5 minutes enqueues every enabled source whose `nextSyncAt` has passed |
+| `failed` | messages that exhausted their retries (`messenger:failed:show`, `messenger:failed:retry`) |
+
+The worker exits after an hour (`--time-limit`) or when `messenger:stop-workers` is
+called, so it must run under a process manager that restarts it. `make deploy` calls
+`messenger:stop-workers` at the end; this only writes a restart signal and succeeds
+whether or not a worker is running, so a deploy never depends on the worker. Without a
+worker nothing is lost: messages wait in `messenger_messages` until one starts.
+
+One worker is enough. The schedule and each source sync hold a lock (`LOCK_DSN`, `flock`
+by default), so a second worker on the same server is safe but never syncs one source twice
+at the same time. Workers on different servers need a shared `LOCK_DSN` (for example
+`postgresql+advisory://…`).
+
+### supervisor
+
+`/etc/supervisor/conf.d/larpilot-worker.conf`:
+
+```ini
+[program:larpilot-worker]
+command=php -d memory_limit=-1 /path/to/LARPilot/bin/console messenger:consume async integrations scheduler_integrations --time-limit=3600 --memory-limit=256M --env=prod
+directory=/path/to/LARPilot
+user=www-data
+numprocs=1
+autostart=true
+autorestart=true
+startsecs=0
+stopwaitsecs=30
+stdout_logfile=/path/to/LARPilot/var/log/worker.log
+redirect_stderr=true
+```
+
+```bash
+sudo supervisorctl reread && sudo supervisorctl update && sudo supervisorctl start larpilot-worker
+```
+
+### systemd
+
+`/etc/systemd/system/larpilot-worker.service`:
+
+```ini
+[Unit]
+Description=LARPilot Messenger worker
+After=network.target postgresql.service
+
+[Service]
+User=www-data
+WorkingDirectory=/path/to/LARPilot
+ExecStart=/usr/bin/php -d memory_limit=-1 bin/console messenger:consume async integrations scheduler_integrations --time-limit=3600 --memory-limit=256M --env=prod
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload && sudo systemctl enable --now larpilot-worker
+```
+
+### cron (hosting without supervisor or systemd)
+
+`flock -n` keeps a single worker alive; cron restarts it within a minute after it exits:
+
+```cron
+* * * * * cd /path/to/LARPilot && flock -n var/worker.lock php -d memory_limit=-1 bin/console messenger:consume async integrations scheduler_integrations --time-limit=3600 --memory-limit=256M --env=prod >> var/log/worker.log 2>&1
+```
+
+### Before starting the worker for the first time
+
+Messages may already be waiting in `messenger_messages` (for example e-mails queued while
+no worker ran). Check the backlog before the first start and delete anything that should
+no longer be sent:
+
+```sql
+SELECT queue_name, count(*), min(created_at) FROM messenger_messages GROUP BY queue_name;
+```
+
+### Docker (local development)
+
+`docker compose up -d` starts a `worker` service running the same command.
