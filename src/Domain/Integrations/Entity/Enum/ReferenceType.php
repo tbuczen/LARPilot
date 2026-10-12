@@ -11,5 +11,9 @@ enum ReferenceType: string
     case Thread = 'thread';
     case Comment = 'comment';
     case Board = 'board';
+    case BoardItem = 'board_item';
+    case BoardFrame = 'board_frame';
+    case BoardConnector = 'board_connector';
+    case ForumPost = 'forum_post';
     case Url = 'url'; // fallback / generic
 }
