@@ -68,4 +68,23 @@ class LarpIntegrationRepository extends BaseRepository
             'expiresAt' => $storedToken['expiresAt'],
         ];
     }
+
+    public function countOtherInstallsOfExternalAccount(LarpIntegration $integration, string $externalAccountId): int
+    {
+        return (int) $this->createQueryBuilder('li')
+            ->select('COUNT(li.id)')
+            ->andWhere('li.provider = :provider')
+            ->andWhere('li.externalAccountId = :externalAccountId')
+            ->andWhere('li.id != :integrationId')
+            ->setParameter('provider', $integration->getProvider())
+            ->setParameter('externalAccountId', $externalAccountId)
+            ->setParameter('integrationId', $integration->getId(), UuidType::NAME)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findOneByLarpAndProvider(Larp $larp, LarpIntegrationProvider $provider): ?LarpIntegration
+    {
+        return $this->findOneBy(['larp' => $larp, 'provider' => $provider]);
+    }
 }

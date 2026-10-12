@@ -36,6 +36,7 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
     {
         return match ($this) {
             self::Google => 'partials/_googleDriveIntegration.html.twig',
+            self::Discord => 'discord/_settings.html.twig',
             default => null,
         };
     }

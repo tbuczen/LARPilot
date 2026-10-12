@@ -3,6 +3,7 @@
 namespace App\Domain\Integrations\Repository;
 
 use App\Domain\Core\Repository\BaseRepository;
+use App\Domain\Integrations\Entity\ExternalItem;
 use App\Domain\Integrations\Entity\ExternalSource;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use Doctrine\Persistence\ManagerRegistry;
@@ -25,5 +26,30 @@ class ExternalSourceRepository extends BaseRepository
     public function findOneByExternalId(LarpIntegration $integration, string $externalId): ?ExternalSource
     {
         return $this->findOneBy(['integration' => $integration, 'externalId' => $externalId]);
+    }
+
+    /**
+     * @return ExternalSource[]
+     */
+    public function findForIntegration(LarpIntegration $integration): array
+    {
+        return $this->findBy(['integration' => $integration], ['title' => 'ASC']);
+    }
+
+    public function deleteForIntegration(LarpIntegration $integration): int
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete(ExternalItem::class, 'item')
+            ->andWhere('item.source IN (SELECT source.id FROM ' . ExternalSource::class . ' source WHERE source.integration = :integration)')
+            ->setParameter('integration', $integration)
+            ->getQuery()
+            ->execute();
+
+        return (int) $this->createQueryBuilder('source')
+            ->delete()
+            ->andWhere('source.integration = :integration')
+            ->setParameter('integration', $integration)
+            ->getQuery()
+            ->execute();
     }
 }

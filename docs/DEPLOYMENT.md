@@ -72,3 +72,40 @@ repeatedly. `make deploy` runs it right after the migrations.
 4. Once `app:integrations:encrypt-tokens --dry-run` reports nothing to encrypt, the old
    key may be removed from `INTEGRATIONS_ENCRYPTION_RETIRED_KEYS` (keep it with any
    database backups taken before the rotation).
+
+## Discord bot
+
+Organizers invite one shared LARPilot bot to their Discord server from
+**Integration settings → Discord → Connect**. The bot is read-only (permissions
+`66560` = View Channel + Read Message History) and no Discord token is stored per
+LARP: the callback exchanges the one-time code only to learn which server the bot
+joined (Discord treats the `guild_id` query parameter as a hint), then revokes it.
+
+### Developer portal setup
+
+1. Open the application at <https://discord.com/developers/applications> (it can be
+   the same application used for "Log in with Discord").
+2. **Bot**: add a bot user, copy its token, turn on **Message Content Intent**
+   (needed later to read message text), keep **Public Bot** on so organizers can
+   invite it to their servers, and turn on **Requires OAuth2 Code Grant** so Discord
+   always sends the bot invite back to LARPilot with a code (and the bot cannot be
+   added outside LARPilot).
+3. **OAuth2 → Redirects**: add
+   `https://<your host>/backoffice/larp/integration/connect/discord/check`.
+4. **Installation**: keep **Guild Install** enabled.
+
+### Secrets
+
+| Secret (`prod` environment) | Value |
+| --- | --- |
+| `DISCORD_BOT_TOKEN` | The bot token from the **Bot** page. |
+| `DISCORD_CLIENT_ID` | The application id from **OAuth2**. Falls back to `OAUTH_DISCORD_CLIENT_ID` when empty. |
+| `DISCORD_CLIENT_SECRET` | The client secret from **OAuth2**. Falls back to `OAUTH_DISCORD_CLIENT_SECRET` when empty. |
+
+The deploy workflow writes all three into `.env.local`.
+
+### Disconnecting
+
+Disconnecting Discord from a LARP deletes that LARP's watched channels, everything
+synced from them and the cached excerpts on its story links. The bot leaves the
+server only when no other LARP is still connected to it.

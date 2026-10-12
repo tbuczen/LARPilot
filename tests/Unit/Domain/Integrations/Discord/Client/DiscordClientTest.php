@@ -10,6 +10,7 @@ use App\Domain\Integrations\Discord\Client\Dto\DiscordChannelType;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordMessage;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordThread;
 use App\Domain\Integrations\Discord\Client\Exception\DiscordAccessLostException;
+use App\Domain\Integrations\Discord\Client\Exception\DiscordApiException;
 use App\Domain\Integrations\Discord\Client\Exception\DiscordRateLimitedException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -300,6 +301,72 @@ class DiscordClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         iterator_to_array($discordClient->listMessages('300', limit: 101));
+    }
+
+    public function testExchangeBotAuthorizationCodeUsesClientCredentialsInsteadOfBotToken(): void
+    {
+        $sentOptions = [];
+        $httpClient = (new MockHttpClient(
+            function (string $method, string $url, array $options) use (&$sentOptions): MockResponse {
+                $sentOptions = ['method' => $method, 'url' => $url, 'headers' => $options['normalized_headers'], 'body' => $options['body']];
+
+                return $this->jsonResponse(['access_token' => 'user-token', 'scope' => 'bot', 'guild' => ['id' => '100', 'name' => 'Larp Guild']]);
+            },
+            self::BASE_URI,
+        ))->withOptions(['headers' => ['Authorization' => 'Bot bot-token']]);
+        $discordClient = new DiscordClient($httpClient, $this->createMock(DiscordSleeper::class));
+
+        $authorization = $discordClient->exchangeBotAuthorizationCode('the-code', 'https://larpilot.test/callback', 'client-id', 'client-secret');
+
+        self::assertSame('100', $authorization->guildId);
+        self::assertSame('user-token', $authorization->accessToken);
+        self::assertSame('POST', $sentOptions['method']);
+        self::assertSame(self::BASE_URI . 'oauth2/token', $sentOptions['url']);
+        self::assertSame(['Authorization: Basic ' . base64_encode('client-id:client-secret')], $sentOptions['headers']['authorization']);
+        parse_str((string) $sentOptions['body'], $body);
+        self::assertSame(['grant_type' => 'authorization_code', 'code' => 'the-code', 'redirect_uri' => 'https://larpilot.test/callback'], $body);
+    }
+
+    public function testExchangeWithoutGuildReportsNoGuild(): void
+    {
+        $discordClient = $this->createDiscordClient([
+            $this->jsonResponse(['access_token' => 'user-token', 'scope' => 'bot']),
+        ]);
+
+        self::assertNull($discordClient->exchangeBotAuthorizationCode('the-code', 'https://larpilot.test/callback', 'client-id', 'client-secret')->guildId);
+    }
+
+    public function testRejectedAuthorizationCodeRaisesApiException(): void
+    {
+        $discordClient = $this->createDiscordClient([
+            new MockResponse('{"error":"invalid_grant"}', ['http_code' => 400]),
+        ]);
+
+        $this->expectException(DiscordApiException::class);
+
+        $discordClient->exchangeBotAuthorizationCode('stale-code', 'https://larpilot.test/callback', 'client-id', 'client-secret');
+    }
+
+    public function testLeaveGuildSendsDelete(): void
+    {
+        $discordClient = $this->createDiscordClient([
+            new MockResponse('', ['http_code' => 204]),
+        ]);
+
+        $discordClient->leaveGuild('100');
+
+        self::assertSame(['DELETE', self::BASE_URI . 'users/@me/guilds/100'], [$this->sentRequests[0]['method'], $this->sentRequests[0]['url']]);
+    }
+
+    public function testLeavingAnUnknownGuildIsNotAnError(): void
+    {
+        $discordClient = $this->createDiscordClient([
+            new MockResponse('{"message":"Unknown Guild","code":10004}', ['http_code' => 404]),
+        ]);
+
+        $discordClient->leaveGuild('100');
+
+        self::assertCount(1, $this->sentRequests);
     }
 
     /**

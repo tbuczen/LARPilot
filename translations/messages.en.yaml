@@ -297,7 +297,7 @@ larp:
     connect_failed: 'Could not connect %provider%. Please try again.'
     connect_succeeded: '%provider% is now connected.'
     facebookDescription: 'Connect your Facebook account to allow LARPilot to post updates on your behalf.'
-    discordDescription: 'Connect your Discord account to allow LARPilot to post updates on your behalf.'
+    discordDescription: 'Invite the LARPilot bot to your Discord server and choose which channels it may read for this LARP. The bot only reads; it never posts.'
     asanaDescription: 'Connect your Asana account to allow LARPilot to synchronize work.'
     trelloDescription: 'Connect your Trello account to allow LARPilot to synchronize work.'
     miroDescription: 'Connect your Miro account to allow LARPilot to synchronize board.'

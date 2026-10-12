@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Integrations\Discord\Client;
 
+use App\Domain\Integrations\Discord\Client\Dto\DiscordBotAuthorization;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordChannel;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordGuild;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordMessage;
@@ -129,6 +130,47 @@ final class DiscordClient
         }
     }
 
+    public function exchangeBotAuthorizationCode(string $code, string $redirectUri, string $clientId, string $clientSecret): DiscordBotAuthorization
+    {
+        $path = 'oauth2/token';
+        $response = $this->send('POST', $path, [
+            'headers' => ['Authorization' => $this->basicAuthorization($clientId, $clientSecret)],
+            'body' => [
+                'grant_type' => 'authorization_code',
+                'code' => $code,
+                'redirect_uri' => $redirectUri,
+            ],
+        ]);
+
+        return DiscordBotAuthorization::fromArray($this->decode($path, $response));
+    }
+
+    public function revokeAccessToken(string $accessToken, string $clientId, string $clientSecret): void
+    {
+        $this->send('POST', 'oauth2/token/revoke', [
+            'headers' => ['Authorization' => $this->basicAuthorization($clientId, $clientSecret)],
+            'body' => [
+                'token' => $accessToken,
+                'token_type_hint' => 'access_token',
+            ],
+        ]);
+    }
+
+    public function leaveGuild(string $guildId): void
+    {
+        $this->assertSnowflake($guildId);
+
+        try {
+            $this->send('DELETE', sprintf('users/@me/guilds/%s', $guildId));
+        } catch (DiscordApiException $exception) {
+            if ($exception->getCode() === 404) {
+                return;
+            }
+
+            throw $exception;
+        }
+    }
+
     /**
      * @param array<string, scalar> $query
      * @return list<array<string, mixed>>
@@ -163,9 +205,29 @@ final class DiscordClient
      */
     private function get(string $path, array $query = []): array
     {
+        return $this->decode($path, $this->send('GET', $path, ['query' => $query]));
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function decode(string $path, ResponseInterface $response): array
+    {
+        try {
+            return $response->toArray();
+        } catch (ExceptionInterface) {
+            throw DiscordApiException::invalidPayload($path);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function send(string $method, string $path, array $options = []): ResponseInterface
+    {
         for ($attempt = 1; ; $attempt++) {
             try {
-                $response = $this->discordClient->request('GET', $path, ['query' => $query]);
+                $response = $this->discordClient->request($method, $path, $options);
                 $statusCode = $response->getStatusCode();
             } catch (ExceptionInterface $exception) {
                 throw new DiscordApiException(sprintf('Discord API request to "%s" failed: %s', $path, $exception->getMessage()), 0, $exception);
@@ -188,16 +250,15 @@ final class DiscordClient
                 throw DiscordApiException::unexpectedStatus($path, $statusCode);
             }
 
-            try {
-                $payload = $response->toArray();
-            } catch (ExceptionInterface) {
-                throw DiscordApiException::invalidPayload($path);
-            }
-
             $this->waitForExhaustedBucket($response);
 
-            return $payload;
+            return $response;
         }
+    }
+
+    private function basicAuthorization(string $clientId, string $clientSecret): string
+    {
+        return 'Basic ' . base64_encode(rawurlencode($clientId) . ':' . rawurlencode($clientSecret));
     }
 
     private function resolveRetryAfter(ResponseInterface $response): float
