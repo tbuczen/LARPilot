@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "78e54e231594c2d7fe93a3f5767474d4",
+    "content-hash": "403efc07a07ab0acfc4bbfa0f7020671",
     "packages": [
         {
             "name": "composer/semver",
@@ -12585,15 +12585,11 @@
         {
             "name": "phpstan/phpstan",
             "version": "2.1.32",
-            "source": {
-                "type": "",
-                "url": "",
-                "reference": ""
-            },
             "dist": {
-                "type": "path",
-                "url": "/root/.cache/local-repos/phpstan-phpstan",
-                "reference": "e126cad1e30a99b137b8ed75a85a676450ebb227"
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e126cad1e30a99b137b8ed75a85a676450ebb227",
+                "reference": "e126cad1e30a99b137b8ed75a85a676450ebb227",
+                "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0"
@@ -12611,6 +12607,7 @@
                     "bootstrap.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -12620,16 +12617,23 @@
                 "static analysis"
             ],
             "support": {
-                "issues": "https://github.com/phpstan/phpstan/issues",
-                "forum": "https://github.com/phpstan/phpstan/discussions",
-                "source": "https://github.com/phpstan/phpstan-src",
                 "docs": "https://phpstan.org/user-guide/getting-started",
-                "security": "https://github.com/phpstan/phpstan/security/policy"
+                "forum": "https://github.com/phpstan/phpstan/discussions",
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "security": "https://github.com/phpstan/phpstan/security/policy",
+                "source": "https://github.com/phpstan/phpstan-src"
             },
-            "transport-options": {
-                "symlink": false,
-                "relative": false
-            }
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-11-11T15:18:17+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

@@ -148,14 +148,5 @@
         "symfony/web-profiler-bundle": "7.2.*",
         "symplify/easy-coding-standard": "^12.6.2",
         "zenstruck/foundry": "^2.8"
-    },
-    "repositories": {
-        "phpstan-local": {
-            "type": "path",
-            "url": "/root/.cache/local-repos/phpstan-phpstan",
-            "options": {
-                "symlink": false
-            }
-        }
     }
 }
