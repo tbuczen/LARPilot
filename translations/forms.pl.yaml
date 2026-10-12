@@ -109,12 +109,6 @@ relation:
   from: "Właściciel relacji"
   toType: "Typ strony docelowej relacji"
   to: "Powiązany"
-external_reference:
-  name: "Nazwa"
-  mapping_type: "Typ mapowania"
-  reference_type: "Typ"
-  url: "URL"
-  toType: "Typ docelowy"
 place:
   name: "Unikalna nazwa miejsca"
   description: "Opis miejsca"

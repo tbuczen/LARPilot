@@ -1,0 +1,183 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'includes/story_object_tabs.html.twig' as tabs_macro %}
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% set providerIcons = {
+    discord: 'bi-discord',
+    miro: 'bi-easel',
+    integration_google_drive: 'bi-google',
+    facebook: 'bi-facebook',
+} %}
+{% set availabilityBadges = {
+    archived: 'text-bg-warning',
+    changed: 'text-bg-info',
+    gone: 'text-bg-danger',
+    forbidden: 'text-bg-secondary',
+} %}
+
+{% block title %}{{ 'story_source.tab'|trans }} - {{ storyObject.title }}{% endblock %}
+
+{% block larp_content %}
+    {% include 'includes/story_object_header.html.twig' with {
+        storyObject: storyObject,
+        storyObjectType: storyObjectType,
+        mentionsCount: mentionsCount|default(0)
+    } %}
+
+    {{ tabs_macro.tabs('sources', storyObject, storyObjectType, larp, mentionsCount, storyObjectType in ['quest', 'thread'], applicantsCount, commentsCount, unresolvedCommentsCount) }}
+
+    <div class="tab-pane border border-top-0 rounded-bottom story-sources">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom">
+            <h5 class="mb-0">
+                <i class="bi bi-box-arrow-up-right"></i> {{ 'story_source.title'|trans }}
+                <span class="badge bg-secondary">{{ referencesCount }}</span>
+            </h5>
+            {% if canLink %}
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#linkSourceModal">
+                    <i class="bi bi-plus-lg"></i>{{ 'story_source.link'|trans }}
+                </button>
+            {% endif %}
+        </div>
+
+        {% if referenceGroups is empty %}
+            {{ ui.empty_state('story_source.empty', 'bi-link-45deg') }}
+        {% else %}
+            {% for group in referenceGroups %}
+                <section class="story-sources__group" data-provider="{{ group.provider.value }}">
+                    <h6 class="px-3 pt-3 pb-2 mb-0 text-muted text-uppercase small fw-semibold d-flex align-items-center gap-2">
+                        <i class="bi {{ providerIcons[group.provider.value]|default('bi-link-45deg') }}"></i>
+                        {{ group.provider.label }}
+                        <span class="badge bg-secondary">{{ group.references|length }}</span>
+                    </h6>
+                    <ul class="list-group list-group-flush border-top">
+                        {% for reference in group.references %}
+                            {% set item = reference.externalItem %}
+                            {% set title = item.title|default(reference.name|default(reference.url|default(reference.externalId))) %}
+                            {% set url = item.url|default(reference.url) %}
+                            {% set updatedAt = item.externalUpdatedAt|default(reference.externalUpdatedAt) %}
+                            {% set excerpt = item.excerpt|default(reference.excerpt) %}
+                            <li class="list-group-item story-sources__row" data-reference-id="{{ reference.id }}">
+                                <div class="d-flex flex-column flex-md-row gap-2 align-items-md-start">
+                                    <div class="flex-grow-1 min-w-0">
+                                        <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                            <i class="bi {{ providerIcons[reference.provider.value]|default('bi-link-45deg') }}"
+                                               title="{{ reference.provider.label }}"
+                                               aria-label="{{ reference.provider.label }}"></i>
+                                            {% if url %}
+                                                <a href="{{ url }}" target="_blank" rel="noopener" class="fw-semibold text-break">{{ title }}</a>
+                                            {% else %}
+                                                <span class="fw-semibold text-break">{{ title }}</span>
+                                            {% endif %}
+                                            <span class="badge text-bg-light border">{{ ('story_source.kind.' ~ reference.referenceType.value)|trans }}</span>
+                                            <span class="badge {{ reference.role.value == 'primary' ? 'text-bg-primary' : 'text-bg-secondary' }}">{{ ('story_source.role.' ~ reference.role.value)|trans }}</span>
+                                            {% if item and item.availability.value != 'ok' %}
+                                                <span class="badge {{ availabilityBadges[item.availability.value]|default('text-bg-secondary') }}">{{ ('story_source.availability.' ~ item.availability.value)|trans }}</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if excerpt %}
+                                            <div class="small text-muted text-break mb-1">{{ excerpt|sanitize_html }}</div>
+                                        {% endif %}
+                                        {% if updatedAt %}
+                                            <div class="small text-muted">{{ 'story_source.updated'|trans }}: {{ updatedAt|display_datetime }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex gap-1 flex-shrink-0">
+                                        {% if url %}
+                                            <a href="{{ url }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-info">
+                                                <i class="bi bi-eye"></i>{{ 'view'|trans }}
+                                            </a>
+                                        {% endif %}
+                                        {% if canLink %}
+                                            {{ ui.delete_button(
+                                                reference.id,
+                                                title,
+                                                path('backoffice_larp_story_sources_unlink', {larp: larp.id, storyObject: storyObject.id, reference: reference.id}),
+                                                'story_source.unlink',
+                                                'sm',
+                                                '',
+                                                'story_source.unlink_confirm',
+                                                'story_source.unlink'
+                                            ) }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {% if canLink %}
+        {% include 'includes/delete_modal.html.twig' %}
+
+        <div class="modal fade"
+             id="linkSourceModal"
+             tabindex="-1"
+             aria-labelledby="linkSourceModalLabel"
+             aria-hidden="true"
+             data-controller="story-source-search"
+             data-story-source-search-url-value="{{ path('backoffice_larp_story_sources_search', {larp: larp.id, storyObject: storyObject.id}) }}"
+             data-story-source-search-empty-value="{{ 'story_source.search_empty'|trans }}"
+             data-story-source-search-error-value="{{ 'story_source.search_error'|trans }}"
+             data-action="show.bs.modal->story-source-search#load">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable modal-fullscreen-sm-down">
+                <form method="post"
+                      name="story_source_link"
+                      action="{{ path('backoffice_larp_story_sources_link', {larp: larp.id, storyObject: storyObject.id}) }}"
+                      class="modal-content">
+                    <input type="hidden" name="_token" value="{{ csrf_token('story_source_link') }}">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="linkSourceModalLabel">{{ 'story_source.link'|trans }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="storySourceRole" class="form-label">{{ 'story_source.role_label'|trans }}</label>
+                            <select id="storySourceRole" name="role" class="form-select">
+                                {% for role in roles %}
+                                    <option value="{{ role.value }}" {{ role.value == 'mention' ? 'selected' : '' }}>{{ ('story_source.role.' ~ role.value)|trans }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="storySourceSearch" class="form-label">{{ 'story_source.search_label'|trans }}</label>
+                            <input type="search"
+                                   id="storySourceSearch"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   placeholder="{{ 'story_source.search_placeholder'|trans }}"
+                                   data-story-source-search-target="query"
+                                   data-action="input->story-source-search#search keydown.enter->story-source-search#preventSubmit">
+                            <div class="list-group mt-2" data-story-source-search-target="results" aria-live="polite"></div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 text-muted small my-3">
+                            <hr class="flex-grow-1 my-0">
+                            <span>{{ 'story_source.or'|trans }}</span>
+                            <hr class="flex-grow-1 my-0">
+                        </div>
+
+                        <div>
+                            <label for="storySourceUrl" class="form-label">{{ 'story_source.url_label'|trans }}</label>
+                            <input type="url"
+                                   id="storySourceUrl"
+                                   name="url"
+                                   class="form-control"
+                                   inputmode="url"
+                                   placeholder="{{ 'story_source.url_placeholder'|trans }}">
+                            <div class="form-text">{{ 'story_source.url_help'|trans }}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>{{ 'story_source.link_submit'|trans }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

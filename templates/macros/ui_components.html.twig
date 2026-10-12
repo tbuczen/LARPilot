@@ -125,15 +125,18 @@
     Usage:
         {{ ui.delete_button(tag.id, tag.title, path('...')) }}
         {{ ui.delete_button(tag.id, tag.title, path('...'), 'delete', 'sm') }}
+        {{ ui.delete_button(ref.id, ref.name, path('...'), 'story_source.unlink', 'sm', '', 'story_source.unlink_confirm', 'story_source.unlink') }}
 #}
-{% macro delete_button(itemId, itemName, deleteUrl, label = 'delete', size = 'sm', additionalClasses = '') %}
+{% macro delete_button(itemId, itemName, deleteUrl, label = 'delete', size = 'sm', additionalClasses = '', confirmMessage = null, confirmButton = null) %}
     <button type="button"
             class="btn {% if size %}btn-{{ size }}{% endif %} btn-outline-danger {{ additionalClasses }}"
             data-bs-toggle="modal"
             data-bs-target="#deleteModal"
             data-item-id="{{ itemId }}"
             data-item-name="{{ itemName }}"
-            data-delete-url="{{ deleteUrl }}">
+            data-delete-url="{{ deleteUrl }}"
+            {% if confirmMessage %}data-confirm-message="{{ confirmMessage|trans }}"{% endif %}
+            {% if confirmButton %}data-confirm-button="{{ confirmButton|trans }}"{% endif %}>
         <i class="bi bi-trash"></i>
         {{ label|trans }}
     </button>

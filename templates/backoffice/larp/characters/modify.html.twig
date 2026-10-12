@@ -137,31 +137,6 @@
                 false
             ) }}
 
-            {# References #}
-            <div class="card mb-3 shadow-sm">
-                <div
-                        class="card-header d-flex justify-content-between align-items-center"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#referencesCollapse"
-                        role="button"
-                        aria-expanded="true"
-                        aria-controls="referencesCollapse"
-                >
-                <span class="fw-bold">
-                    {{ 'larp.reference.list'|trans }}
-                </span>
-                    <i class="bi bi-chevron-down transition toggleIcon"></i>
-                </div>
-
-                <div id="referencesCollapse" class="collapse">
-                    <div class="card-body">
-                        {{ component('StoryObjectReferencesListForm', {
-                            storyObject: character,
-                        }) }}
-                    </div>
-                </div>
-            </div>
-
             {# Version History #}
             <div class="card mb-3 shadow-sm">
                 <div
