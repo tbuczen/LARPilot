@@ -1,0 +1,29 @@
+{% import 'macros/ui_components.html.twig' as ui %}
+
+<dl class="row mb-3">
+    <dt class="col-sm-3">{{ 'settings.team'|trans({}, 'miro') }}</dt>
+    <dd class="col-sm-9"><code>{{ integration.externalAccountId|default('-') }}</code></dd>
+    <dt class="col-sm-3">{{ 'settings.scopes'|trans({}, 'miro') }}</dt>
+    <dd class="col-sm-9">{{ integration.scopes|default('-') }}</dd>
+</dl>
+
+{% if integration.status.value == 'needs_reauth' %}
+    <div class="alert alert-warning" data-test="miro-reconnect">
+        <i class="bi bi-exclamation-triangle"></i>
+        {{ 'reconnect.message'|trans({}, 'miro') }}
+    </div>
+{% endif %}
+
+<div class="d-flex flex-wrap gap-2">
+    {% if integration.status.value == 'needs_reauth' %}
+        {{ ui.primary_button('reconnect.button'|trans({}, 'miro'), path('backoffice_larp_connect_integration', { larp: larp.id, provider: integration.provider.value }), 'bi-arrow-repeat') }}
+    {% else %}
+        <a href="{{ path('backoffice_larp_integration_miro_boards', { larp: larp.id }) }}" class="btn btn-outline-primary">
+            <i class="bi bi-pencil"></i>
+            {{ 'settings.manage_boards'|trans({}, 'miro') }}
+        </a>
+    {% endif %}
+    {{ ui.delete_button(integration.id, 'Miro', path('backoffice_larp_integration_miro_disconnect', { larp: larp.id }), 'settings.disconnect'|trans({}, 'miro'), null, '', 'settings.disconnect_confirm'|trans({}, 'miro'), 'settings.disconnect'|trans({}, 'miro')) }}
+</div>
+
+{% include 'includes/delete_modal.html.twig' %}

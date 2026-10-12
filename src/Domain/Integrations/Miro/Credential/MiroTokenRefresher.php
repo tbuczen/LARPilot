@@ -4,6 +4,7 @@ namespace App\Domain\Integrations\Miro\Credential;
 
 use App\Domain\Integrations\DTO\RefreshedToken;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
+use App\Domain\Integrations\Miro\OAuth\MiroOAuthProvider;
 use App\Domain\Integrations\Service\Credential\OAuthTokenRefresherInterface;
 use App\Domain\Integrations\Service\Exceptions\InvalidGrantException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -11,7 +12,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class MiroTokenRefresher implements OAuthTokenRefresherInterface
 {
-    public const TOKEN_URL = 'https://api.miro.com/v1/oauth/token';
+    public const TOKEN_URL = MiroOAuthProvider::TOKEN_URL;
 
     public function __construct(
         private HttpClientInterface $httpClient,

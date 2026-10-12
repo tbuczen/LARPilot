@@ -72,3 +72,18 @@ repeatedly. `make deploy` runs it right after the migrations.
 4. Once `app:integrations:encrypt-tokens --dry-run` reports nothing to encrypt, the old
    key may be removed from `INTEGRATIONS_ENCRYPTION_RETIRED_KEYS` (keep it with any
    database backups taken before the rotation).
+
+## Miro integration
+
+Organizers connect a Miro team per LARP through OAuth (`knpu_oauth2_client` client `integration_miro`).
+
+1. Create an app at https://miro.com/app/settings/user-profile/apps and turn on
+   expiring access tokens (the "Expire user authorization token" option): access tokens then last one hour and every refresh
+   returns a new refresh token, which LARPilot stores under the token-refresh lock.
+2. Add the redirect URI `https://<your-host>/backoffice/larp/integration/connect/integration_miro/check`
+   (and `http://localhost:<port>/backoffice/larp/integration/connect/integration_miro/check` for local
+   development).
+3. Grant only the `boards:read` scope.
+4. Store the app's client ID and secret as the `OAUTH_MIRO_CLIENT_ID` and `OAUTH_MIRO_CLIENT_SECRET`
+   secrets on the `prod` environment. The deploy workflow writes them into `.env.local`; locally,
+   set them in `.env.local` (`.env` only has empty placeholders).

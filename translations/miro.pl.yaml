@@ -1,0 +1,23 @@
+settings:
+  team: 'Zespół Miro'
+  scopes: 'Przyznane uprawnienia'
+  manage_boards: 'Zarządzaj tablicami'
+  disconnect: 'Odłącz'
+  disconnect_confirm: 'Odłączyć Miro? Tablice wybrane dla tego LARP-a i wszystko, co z nich odczytano, zostaną usunięte.'
+reconnect:
+  message: 'LARPilot nie ma już dostępu do Twojego zespołu Miro. Połącz Miro ponownie, aby dalej odczytywać wybrane tablice.'
+  button: 'Połącz Miro ponownie'
+boards:
+  title: 'Tablice Miro'
+  description: 'Wybierz, które tablice połączonego zespołu Miro należą do tego LARP-a.'
+  name: 'Tablica'
+  status: 'Status'
+  selected_badge: 'Wybrana'
+  not_selected_badge: 'Niewybrana'
+  select: 'Dodaj do LARP-a'
+  deselect: 'Usuń z LARP-a'
+  selected: 'Tablica „%board%” jest teraz częścią tego LARP-a.'
+  deselected: 'Tablica została usunięta z tego LARP-a.'
+  empty: 'Nie znaleziono tablic w połączonym zespole Miro.'
+  load_failed: 'Nie udało się wczytać tablic z Miro. Spróbuj ponownie później.'
+disconnected: 'Miro zostało odłączone od tego LARP-a.'

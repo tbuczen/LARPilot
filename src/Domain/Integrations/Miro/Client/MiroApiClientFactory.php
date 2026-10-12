@@ -9,12 +9,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class MiroApiClientFactory
 {
     public function __construct(
-        private readonly HttpClientInterface $httpClient,
+        private readonly HttpClientInterface $miroClient,
     ) {
     }
 
     public function create(string $accessToken): MiroApiClient
     {
-        return new MiroApiClient($this->httpClient, $accessToken);
+        return new MiroApiClient($this->miroClient, $accessToken);
     }
 }
