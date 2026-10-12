@@ -1,8 +1,11 @@
-framework:
-    http_client:
-        scoped_clients:
-            discord.client:
-                base_uri: 'https://discord.com/api/v10/'
-                headers:
-                    Authorization: 'Bot %env(DISCORD_BOT_TOKEN)%'
-                    Accept: 'application/json'
+when@dev: &discord_client
+    framework:
+        http_client:
+            scoped_clients:
+                discord.client:
+                    base_uri: 'https://discord.com/api/v10/'
+                    headers:
+                        Authorization: 'Bot %env(DISCORD_BOT_TOKEN)%'
+                        Accept: 'application/json'
+
+when@prod: *discord_client
