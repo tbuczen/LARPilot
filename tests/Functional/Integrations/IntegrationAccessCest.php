@@ -147,7 +147,8 @@ class IntegrationAccessCest
             'integration' => $integration->getId(),
         ]));
 
-        $I->seeResponseCodeIs(409);
+        $I->seeResponseCodeIsSuccessful();
+        $I->assertSame(['accessToken' => self::ACCESS_TOKEN], json_decode((string) $I->grabResponse()->getContent(), true));
         $I->assertStringContainsString('no-store', (string) $I->grabResponse()->headers->get('Cache-Control'));
     }
 

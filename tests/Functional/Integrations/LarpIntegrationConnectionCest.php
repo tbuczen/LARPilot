@@ -25,26 +25,24 @@ class LarpIntegrationConnectionCest
         $organizer = UserFactory::createApprovedUser();
         $larp = LarpFactory::createDraftLarp($organizer);
         $larpId = $larp->getId()->toRfc4122();
-        $googleUser = new GoogleUser(['email' => 'organizer@example.com']);
-        $I->amLoggedInAs($organizer);
+        $existingIntegration = LarpIntegrationFactory::new()
+            ->forLarp($larp)
+            ->createdBy($organizer)
+            ->google()
+            ->expired()
+            ->needsReauth()
+            ->with(['refreshToken' => 'first-refresh-token'])
+            ->create();
 
         /** @var GoogleIntegrationService $googleIntegrationService */
         $googleIntegrationService = $I->grabService(GoogleIntegrationService::class);
-        $firstIntegration = $googleIntegrationService->createGoogleDriveIntegration(
-            new AccessToken(['access_token' => 'first-access-token', 'refresh_token' => 'first-refresh-token', 'expires_in' => 3600]),
-            $googleUser,
-            $larpId,
-        );
-        $firstIntegration->markNeedsReauth('Token has been expired or revoked.');
-        $I->getEntityManager()->flush();
-
         $reconnectedIntegration = $googleIntegrationService->createGoogleDriveIntegration(
             new AccessToken(['access_token' => 'second-access-token', 'expires_in' => 3600]),
-            $googleUser,
+            new GoogleUser(['email' => 'organizer@example.com']),
             $larpId,
         );
 
-        $I->assertEquals($firstIntegration->getId(), $reconnectedIntegration->getId());
+        $I->assertEquals($existingIntegration->getId(), $reconnectedIntegration->getId());
         $I->getEntityManager()->clear();
         $googleIntegrations = $I->getEntityManager()->getRepository(LarpIntegration::class)->findBy([
             'larp' => $larpId,
