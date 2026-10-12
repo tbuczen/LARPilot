@@ -1,11 +1,3 @@
-<h5>{{ 'larp.integration.current'|trans }}: {{ integration.provider.name }}</h5>
-<strong>Scopes:</strong>
-<ul>
-    {% for scope in integration.scopes|split(' ') %}
-        <li>{{ scope }}</li>
-    {% endfor %}
-</ul>
-
 {% set nowPlus30 = 'now'|date_modify('+30 seconds') %}
 {% if integration.refreshToken is empty and integration.expiresAt < nowPlus30 %}
     <div class="alert alert-warning">
@@ -13,10 +5,9 @@
     </div>
     <a
             href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: provider.value }) }}"
-            target="_blank"
-            class="btn btn-primary"
+            class="btn btn-warning"
     >
-        {{ 'larp.integration.reconnect'|trans }}
+        <i class="bi bi-arrow-repeat"></i>{{ 'larp.integration.reconnect'|trans }}
     </a>
 {% else %}
 

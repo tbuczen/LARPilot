@@ -31,7 +31,7 @@ class IntegrationAccessCest
         $this->createIntegration($I, $larp->_real(), $organizer);
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_mappings', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
 
         $I->seeResponseCodeIsSuccessful();
         $I->seeElement('[data-controller="google-file-picker"]');
@@ -46,12 +46,14 @@ class IntegrationAccessCest
         $this->createIntegration($I, $larp->_real(), $organizer, self::REFRESH_TOKEN);
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        foreach (['backoffice_larp_integrations_hub', 'backoffice_larp_integrations_sources', 'backoffice_larp_integrations_activity', 'backoffice_larp_integrations_mappings'] as $route) {
+            $I->amOnRoute($route, ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
 
-        $I->seeResponseCodeIsSuccessful();
-        $I->dontSeeInSource(self::ACCESS_TOKEN);
-        $I->dontSeeInSource(self::REFRESH_TOKEN);
-        $I->dontSeeElement('[data-oauth-token]');
+            $I->seeResponseCodeIsSuccessful();
+            $I->dontSeeInSource(self::ACCESS_TOKEN);
+            $I->dontSeeInSource(self::REFRESH_TOKEN);
+            $I->dontSeeElement('[data-oauth-token]');
+        }
     }
 
     public function storyWriterCannotOpenIntegrationSettings(FunctionalTester $I): void
@@ -138,7 +140,7 @@ class IntegrationAccessCest
         $integration = $this->createIntegration($I, $larp->_real(), $organizer);
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_mappings', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
         $csrfToken = $I->grabAttributeFrom('[data-controller="google-file-picker"]', 'data-google-file-picker-token-csrf-value');
 
         $I->haveHttpHeader('X-CSRF-Token', $csrfToken);
@@ -387,7 +389,7 @@ class IntegrationAccessCest
         $participant = $this->createParticipant($larp, ...$roleStates);
 
         $I->amLoggedInAs($participant);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_hub', ['larp' => $larp->getId()]);
 
         $I->seeResponseCodeIs(403);
         $I->dontSeeInSource(self::ACCESS_TOKEN);

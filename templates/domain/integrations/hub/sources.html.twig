@@ -1,0 +1,71 @@
+{% extends 'domain/integrations/hub/_provider_layout.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block tab_content %}
+    {% set providerSettings %}{% include provider.settingsTemplate ignore missing with {larp: larp, integration: integration, provider: provider, sources: sources} %}{% endset %}
+    {% if providerSettings|trim is not empty %}
+        <section class="p-3 border-bottom integration-provider-settings">
+            {{ providerSettings }}
+        </section>
+    {% endif %}
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 p-3 border-bottom">
+        <h2 class="h5 mb-0">{{ 'integration_hub.source.title'|trans }} <span class="badge bg-secondary">{{ sources|length }}</span></h2>
+    </div>
+
+    {% if sources is empty %}
+        {{ ui.empty_state(provider.hasMappings ? 'integration_hub.source.empty_with_mappings' : 'integration_hub.source.empty', 'bi-collection') }}
+    {% else %}
+        <ul class="list-group list-group-flush">
+            {% for source in sources %}
+                <li class="list-group-item" data-source-id="{{ source.id }}" data-enabled="{{ source.enabled ? '1' : '0' }}">
+                    <div class="d-flex flex-column flex-md-row gap-2 align-items-md-center">
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                {% if source.url %}
+                                    <a href="{{ source.url }}" target="_blank" rel="noopener" class="fw-semibold text-break">{{ source.title }}</a>
+                                {% else %}
+                                    <span class="fw-semibold text-break">{{ source.title }}</span>
+                                {% endif %}
+                                <span class="badge bg-light text-dark border">{{ ('integration_hub.source.kind.' ~ source.kind.value)|trans }}</span>
+                                {% if not source.enabled %}
+                                    <span class="badge bg-secondary">{{ 'integration_hub.source.paused'|trans }}</span>
+                                {% endif %}
+                                {% if source.lastSyncStatus %}
+                                    {% include 'domain/integrations/hub/_sync_status_badge.html.twig' with {status: source.lastSyncStatus} only %}
+                                {% endif %}
+                            </div>
+                            <div class="small text-muted">
+                                {{ 'integration_hub.last_sync'|trans }}: {{ source.lastSyncedAt ? source.lastSyncedAt|display_datetime : 'integration_hub.never'|trans }}
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 flex-shrink-0">
+                            {% if canSync and source.enabled %}
+                                <form method="post" action="{{ path('backoffice_larp_integrations_source_sync', {larp: larp.id, provider: provider.value, source: source.id}) }}" name="integration_source_sync">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('integration_source_sync_' ~ source.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-arrow-clockwise"></i>{{ 'integration_hub.source.sync_now'|trans }}
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <form method="post" action="{{ path('backoffice_larp_integrations_source_toggle', {larp: larp.id, provider: provider.value, source: source.id}) }}" name="integration_source_toggle">
+                                <input type="hidden" name="_token" value="{{ csrf_token('integration_source_toggle_' ~ source.id) }}">
+                                <input type="hidden" name="enabled" value="{{ source.enabled ? '0' : '1' }}">
+                                {% if source.enabled %}
+                                    <button type="submit" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pause-circle"></i>{{ 'integration_hub.source.pause'|trans }}
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-play-circle"></i>{{ 'integration_hub.source.resume'|trans }}
+                                    </button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

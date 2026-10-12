@@ -9,7 +9,6 @@ use App\Domain\Integrations\DTO\ConnectionCallback;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Entity\SharedFile;
-use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
 use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
 use App\Domain\Integrations\Service\Capability\AccessTokenProviderInterface;
@@ -44,18 +43,11 @@ class IntegrationsSettingsController extends AbstractController
     }
 
     #[Route('/{larp}/integration-settings', name: 'integration_settings', methods: ['GET'])]
-    public function integrationsSettings(
-        Larp                      $larp,
-        LarpIntegrationRepository $larpIntegrationRepository,
-    ): Response {
+    public function integrationsSettings(Larp $larp): RedirectResponse
+    {
         $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
 
-        $integrations = $larpIntegrationRepository->findAllByLarp($larp);
-        return $this->render('backoffice/larp/integrationsSettings.html.twig', [
-            'larp' => $larp,
-            'integrations' => $integrations,
-            'availableProviders' => $this->integrationRegistry->providersSupporting(ConnectableIntegrationInterface::class),
-        ]);
+        return $this->redirectToRoute('backoffice_larp_integrations_hub', ['larp' => $larp->getId()->toRfc4122()], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route('/{larp}/integration/connect/{provider}', name: 'connect_integration', methods: ['GET'])]
@@ -94,12 +86,12 @@ class IntegrationsSettingsController extends AbstractController
         $connectableIntegration = $this->connectableIntegration($provider);
 
         $callback = new ConnectionCallback($this->callbackUrl($provider), $request->query->all());
-        $settingsRedirect = $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
+        $hubRedirect = $this->redirectToRoute('backoffice_larp_integrations_hub', ['larp' => $larp->getId()->toRfc4122()]);
 
         if ($callback->providerError() !== null || $callback->authorizationCode() === null) {
             $this->addFlash('warning', $this->translator->trans('larp.integration.connect_cancelled', ['%provider%' => $provider->getLabel()]));
 
-            return $settingsRedirect;
+            return $hubRedirect;
         }
 
         $connectingUser = $this->getUser();
@@ -112,12 +104,15 @@ class IntegrationsSettingsController extends AbstractController
         } catch (IntegrationConnectionFailedException) {
             $this->addFlash('danger', $this->translator->trans('larp.integration.connect_failed', ['%provider%' => $provider->getLabel()]));
 
-            return $settingsRedirect;
+            return $hubRedirect;
         }
 
         $this->addFlash('success', $this->translator->trans('larp.integration.connect_succeeded', ['%provider%' => $provider->getLabel()]));
 
-        return $settingsRedirect;
+        return $this->redirectToRoute('backoffice_larp_integrations_sources', [
+            'larp' => $larp->getId()->toRfc4122(),
+            'provider' => $provider->value,
+        ]);
     }
 
     #[Route('/{larp}/integration/{integrationId}/filePermissions', name: 'integration_file_permissions', methods: ['POST'])]
@@ -142,7 +137,10 @@ class IntegrationsSettingsController extends AbstractController
 
         $command = new ApplyFilesPermissionsCommand($integration->getId()->toRfc4122(), $files);
         $handler->handle($command);
-        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
+        return $this->redirectToRoute('backoffice_larp_integrations_mappings', [
+            'larp' => $larp->getId()->toRfc4122(),
+            'provider' => $integration->getProvider()->value,
+        ]);
     }
 
 
