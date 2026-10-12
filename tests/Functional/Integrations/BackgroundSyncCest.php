@@ -25,6 +25,7 @@ use App\Domain\Integrations\Service\Exceptions\SourceSyncRateLimitedException;
 use App\Domain\Integrations\Service\Exceptions\SourceSyncUnauthorizedException;
 use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\Integrations\Service\Sync\SourceSyncIntervalPolicy;
+use App\Domain\Integrations\Service\Sync\SourceSyncRequesterInterface;
 use App\Domain\Integrations\Service\Sync\SyncNowDispatcher;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\NullLogger;
@@ -105,6 +106,23 @@ class BackgroundSyncCest
         $I->assertNull($syncedSource->getLastSyncError());
         $I->assertEquals(new \DateTimeImmutable(self::NOW), $syncedSource->getLastSyncedAt());
         $I->assertEquals(new \DateTimeImmutable('2026-10-12 12:30:00'), $syncedSource->getNextSyncAt());
+        $I->assertEquals(new \DateTimeImmutable(self::NOW), $syncedSource->getIntegration()->getLastCheckedAt());
+    }
+
+    public function syncNowDispatcherIsTheHubSyncRequester(FunctionalTester $I): void
+    {
+        $I->wantTo('see the hub sync requester queue a sync of the source');
+
+        $source = $this->createDiscordSource();
+        $syncRequester = $this->createSyncNowDispatcher($I, new FakeSourceSyncCapability());
+        $I->assertInstanceOf(SourceSyncRequesterInterface::class, $syncRequester);
+
+        $syncRequester->requestSync($source->_real());
+
+        $sentEnvelopes = $this->integrationsTransport($I)->getSent();
+        $I->assertCount(1, $sentEnvelopes);
+        $I->assertTrue($source->getId()->equals($sentEnvelopes[0]->getMessage()->sourceId));
+        $I->assertInstanceOf(SyncNowDispatcher::class, $I->grabService(SourceSyncRequesterInterface::class));
     }
 
     public function nextRunResumesFromThePersistedCursor(FunctionalTester $I): void

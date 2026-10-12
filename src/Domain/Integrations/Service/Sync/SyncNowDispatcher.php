@@ -8,7 +8,7 @@ use App\Domain\Integrations\Service\Capability\SourceSyncIntegrationInterface;
 use App\Domain\Integrations\Service\IntegrationRegistry;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final readonly class SyncNowDispatcher
+final readonly class SyncNowDispatcher implements SourceSyncRequesterInterface
 {
     public function __construct(
         private MessageBusInterface $messageBus,
@@ -23,6 +23,11 @@ final readonly class SyncNowDispatcher
         return $source->isEnabled()
             && $integration->getStatus()->isUsable()
             && $this->integrationRegistry->supports($integration->getProvider(), SourceSyncIntegrationInterface::class);
+    }
+
+    public function requestSync(ExternalSource $source): void
+    {
+        $this->dispatch($source);
     }
 
     public function dispatch(ExternalSource $source): bool

@@ -122,6 +122,7 @@ final readonly class SyncExternalSourceHandler
         $source->setLastSyncStatus(ExternalSourceSyncStatus::Success);
         $source->setLastSyncError(null);
         $source->setNextSyncAt($this->syncIntervalPolicy->nextSyncAt($source, $now));
+        $integration->setLastCheckedAt($now);
         $this->entityManager->flush();
     }
 
