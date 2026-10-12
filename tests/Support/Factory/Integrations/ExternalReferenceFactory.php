@@ -9,6 +9,7 @@ use App\Domain\Integrations\Entity\Enum\ReferenceRole;
 use App\Domain\Integrations\Entity\Enum\ReferenceType;
 use App\Domain\Integrations\Entity\ExternalReference;
 use Tests\Support\Factory\Account\UserFactory;
+use Tests\Support\Factory\StoryObject\CharacterFactory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
@@ -32,7 +33,7 @@ final class ExternalReferenceFactory extends PersistentProxyObjectFactory
             'url' => 'https://docs.google.com/document/d/' . $externalId . '/edit',
             'referenceType' => ReferenceType::Document,
             'role' => ReferenceRole::Primary,
-            'storyObject' => null,
+            'storyObject' => CharacterFactory::new(),
             'createdBy' => UserFactory::new(),
         ];
     }
