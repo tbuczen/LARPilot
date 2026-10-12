@@ -4,6 +4,7 @@ namespace App\Domain\Integrations\Service\Google;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\LarpRepository;
+use App\Domain\Integrations\Entity\Enum\ConnectionType;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\Enum\ReferenceType;
 use App\Domain\Integrations\Entity\LarpIntegration;
@@ -130,18 +131,34 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
 
         $tokenValues = $accessToken->getValues();
         $grantedScopes = $tokenValues['scope'] ?? null;
-        $integration = new LarpIntegration();
+        $integration = $this->larpIntegrationRepository->findOneBy([
+            'larp' => $larp,
+            'provider' => LarpIntegrationProvider::Google,
+        ]) ?? new LarpIntegration();
         $integration->setProvider(LarpIntegrationProvider::Google);
+        $integration->setConnectionType(ConnectionType::UserOauth);
         $integration->setAccessToken($accessToken->getToken());
-        $integration->setRefreshToken($accessToken->getRefreshToken());
-        $integration->setExpiresAt((new \DateTime())->setTimestamp($accessToken->getExpires()));
+        $integration->setRefreshToken($accessToken->getRefreshToken() ?? $integration->getRefreshToken());
+        $integration->setExpiresAt($this->resolveExpiresAt($accessToken));
         $integration->setScopes($grantedScopes);
         $integration->setLarp($larp);
         $integration->setOwner($integrationOwnerName);
+        $integration->setExternalAccountId($integrationOwnerName);
+        $integration->markActive();
 
         $this->larpIntegrationRepository->save($integration);
 
         return $integration;
+    }
+
+    private function resolveExpiresAt(AccessTokenInterface $accessToken): ?\DateTimeImmutable
+    {
+        $expiresTimestamp = $accessToken->getExpires();
+        if ($expiresTimestamp === null) {
+            return null;
+        }
+
+        return (new \DateTimeImmutable())->setTimestamp($expiresTimestamp);
     }
 
     protected function createStoryObjectList(ObjectFieldMapping $mapping, StoryObject $storyObject): void
