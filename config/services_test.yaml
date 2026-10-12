@@ -9,11 +9,19 @@ services:
         factory: ['Tests\Support\Http\IntegrationFixtureRouters', 'miro']
         public: true
 
-    discord.client:
+    tests.integrations.discord.mock_client:
         class: Symfony\Component\HttpClient\MockHttpClient
         arguments:
             - '@tests.integrations.discord.fixture_router'
             - !php/const Tests\Support\Http\IntegrationFixtureRouters::DISCORD_BASE_URI
+
+    discord.client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        factory: ['@tests.integrations.discord.mock_client', 'withOptions']
+        arguments:
+            - headers:
+                  Authorization: 'Bot %env(DISCORD_BOT_TOKEN)%'
+                  Accept: 'application/json'
         public: true
 
     miro.client:

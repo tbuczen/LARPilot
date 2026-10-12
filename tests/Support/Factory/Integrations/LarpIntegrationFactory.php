@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Support\Factory\Integrations;
 
+use App\Domain\Integrations\Entity\Enum\ConnectionType;
+use App\Domain\Integrations\Entity\Enum\IntegrationStatus;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,6 +27,8 @@ final class LarpIntegrationFactory extends PersistentProxyObjectFactory
     {
         return [
             'provider' => LarpIntegrationProvider::Google,
+            'connectionType' => ConnectionType::UserOauth,
+            'status' => IntegrationStatus::Active,
             'accessToken' => self::faker()->sha256(),
             'refreshToken' => self::faker()->sha256(),
             'expiresAt' => new \DateTime('+1 hour'),
@@ -88,6 +92,27 @@ final class LarpIntegrationFactory extends PersistentProxyObjectFactory
     {
         return $this->with([
             'refreshToken' => null,
+        ]);
+    }
+
+    public function botInstall(string $externalAccountId): self
+    {
+        return $this->with([
+            'connectionType' => ConnectionType::BotInstall,
+            'externalAccountId' => $externalAccountId,
+            'accessToken' => null,
+            'refreshToken' => null,
+            'expiresAt' => null,
+            'scopes' => null,
+            'owner' => null,
+        ]);
+    }
+
+    public function needsReauth(string $lastError = 'Token has been expired or revoked.'): self
+    {
+        return $this->with([
+            'status' => IntegrationStatus::NeedsReauth,
+            'lastError' => $lastError,
         ]);
     }
 }

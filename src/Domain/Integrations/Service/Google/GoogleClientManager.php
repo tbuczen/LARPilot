@@ -11,10 +11,9 @@ use Google\Service\Drive;
 readonly class GoogleClientManager implements GoogleClientFactoryInterface
 {
     public function __construct(
-        private string                 $googleClientId,
-        private string                 $googleClientSecret,
-        private string                 $serviceAccountJsonPath,
-        private EntityManagerInterface $entityManager,
+        private string                   $serviceAccountJsonPath,
+        private EntityManagerInterface   $entityManager,
+        private GoogleOAuthClientFactory $oauthClientFactory,
     ) {
     }
 
@@ -33,49 +32,80 @@ readonly class GoogleClientManager implements GoogleClientFactoryInterface
     }
 
     /**
-     * @param LarpIntegration $integration
-     * @return Client
-     *
-     * @throws ReAuthenticationNeededException if token refresh fails.
+     * @throws ReAuthenticationNeededException
      */
     public function getClientForIntegration(LarpIntegration $integration): Client
     {
-        // Build the stored token array from your integration entity.
-        $storedToken = [
-            'access_token' => $integration->getAccessToken(),
-            'expires' => $integration->getExpiresAt()->getTimestamp(),
-            'refresh_token' => $integration->getRefreshToken(),
-        ];
+        $client = $this->oauthClientFactory->create();
+        $client->setAccessToken($this->buildStoredToken($integration));
 
-        $client = new Client([
-            'client_id' => $this->googleClientId,
-            'client_secret' => $this->googleClientSecret,
-        ]);
-        $client->setAccessToken($storedToken);
-
-        if ($client->isAccessTokenExpired() && (isset($storedToken['refresh_token']) && ($storedToken['refresh_token'] !== '' && $storedToken['refresh_token'] !== '0'))) {
-            $this->refreshToken($client, $storedToken['refresh_token'], $integration);
+        if (!$client->isAccessTokenExpired()) {
+            return $client;
         }
+
+        $this->refreshToken($client, $integration);
 
         return $client;
     }
 
-    public function refreshToken(Client $client, $refreshToken, LarpIntegration $integration): void
+    /**
+     * @throws ReAuthenticationNeededException
+     */
+    public function refreshToken(Client $client, LarpIntegration $integration): void
     {
-        $newToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
-        if (isset($newToken['error'])) {
-            throw new ReAuthenticationNeededException($integration->getId()->toRfc4122());
+        $refreshToken = $integration->getRefreshToken();
+        if ($refreshToken === null || $refreshToken === '') {
+            $this->failRefresh($integration, 'Missing refresh token.');
         }
-        if (!isset($newToken['refresh_token'])) {
-            $newToken['refresh_token'] = $refreshToken;
+
+        try {
+            $refreshedToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
+        } catch (\Throwable $exception) {
+            $this->failRefresh($integration, $exception->getMessage());
         }
-        $integration->setAccessToken($newToken['access_token']);
-        $integration->setRefreshToken($newToken['refresh_token']);
-        $expiresAt = (new \DateTime())->modify('+' . $newToken['expires_in'] . ' seconds');
-        $integration->setExpiresAt($expiresAt);
+
+        if (isset($refreshedToken['error']) || !isset($refreshedToken['access_token'])) {
+            $this->failRefresh($integration, $refreshedToken['error_description'] ?? $refreshedToken['error'] ?? 'Token refresh failed.');
+        }
+
+        $refreshedToken['refresh_token'] ??= $refreshToken;
+        $expiresIn = (int) ($refreshedToken['expires_in'] ?? 0);
+
+        $integration->setAccessToken($refreshedToken['access_token']);
+        $integration->setRefreshToken($refreshedToken['refresh_token']);
+        $integration->setExpiresAt(new \DateTimeImmutable('+' . $expiresIn . ' seconds'));
+        $integration->markActive();
         $this->entityManager->persist($integration);
         $this->entityManager->flush();
 
-        $client->setAccessToken($newToken);
+        $client->setAccessToken($this->buildStoredToken($integration));
+    }
+
+    /**
+     * @return array{access_token: string, refresh_token: string|null, created: int, expires_in: int}
+     */
+    private function buildStoredToken(LarpIntegration $integration): array
+    {
+        $now = time();
+        $expiresAt = $integration->getExpiresAt()?->getTimestamp() ?? $now;
+
+        return [
+            'access_token' => $integration->getAccessToken() ?? '',
+            'refresh_token' => $integration->getRefreshToken(),
+            'created' => $now,
+            'expires_in' => max(0, $expiresAt - $now),
+        ];
+    }
+
+    /**
+     * @throws ReAuthenticationNeededException
+     */
+    private function failRefresh(LarpIntegration $integration, string $reason): never
+    {
+        $integration->markNeedsReauth($reason);
+        $this->entityManager->persist($integration);
+        $this->entityManager->flush();
+
+        throw new ReAuthenticationNeededException($integration->getId()->toRfc4122());
     }
 }
