@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Functional\Integrations\Reference;
 
 use Doctrine\DBAL\Connection;
-use DoctrineMigrations\Version20261012120000;
+use DoctrineMigrations\Version20261012121500;
 use Symfony\Component\Uid\Uuid;
 use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\Factory\StoryObject\CharacterFactory;
@@ -15,7 +15,7 @@ class ExternalReferenceMigrationCest
 {
     public function _before(FunctionalTester $I): void
     {
-        require_once codecept_root_dir() . 'migrations/Version20261012120000.php';
+        require_once codecept_root_dir() . 'migrations/Version20261012121500.php';
     }
 
     public function backfillsLarpFromStoryObject(FunctionalTester $I): void
@@ -27,8 +27,8 @@ class ExternalReferenceMigrationCest
         $referenceId = $this->insertLegacyReference($connection, $character->getId(), $creator->getId(), 'doc-1', '2026-01-01 10:00:00');
         $orphanReferenceId = $this->insertLegacyReference($connection, null, $creator->getId(), 'doc-2', '2026-01-01 10:00:00');
 
-        $connection->executeStatement(Version20261012120000::BACKFILL_LARP_SQL);
-        $connection->executeStatement(Version20261012120000::DELETE_UNSCOPED_REFERENCES_SQL);
+        $connection->executeStatement(Version20261012121500::BACKFILL_LARP_SQL);
+        $connection->executeStatement(Version20261012121500::DELETE_UNSCOPED_REFERENCES_SQL);
 
         $I->assertSame(
             $character->getLarp()->getId()->toRfc4122(),
@@ -49,7 +49,7 @@ class ExternalReferenceMigrationCest
         $newestReferenceId = $this->insertLegacyReference($connection, $character->getId(), $creator->getId(), 'doc-1', '2026-03-01 10:00:00');
         $otherReferenceId = $this->insertLegacyReference($connection, $otherCharacter->getId(), $creator->getId(), 'doc-1', '2026-01-01 10:00:00');
 
-        $connection->executeStatement(Version20261012120000::DEDUPLICATE_REFERENCES_SQL);
+        $connection->executeStatement(Version20261012121500::DEDUPLICATE_REFERENCES_SQL);
 
         $remainingReferenceIds = $connection->fetchFirstColumn('SELECT id FROM external_reference WHERE external_id = ?', ['doc-1']);
         $I->assertEqualsCanonicalizing([$newestReferenceId, $otherReferenceId], $remainingReferenceIds);

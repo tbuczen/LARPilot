@@ -7,7 +7,7 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20261012120000 extends AbstractMigration
+final class Version20261012121500 extends AbstractMigration
 {
     public const BACKFILL_LARP_SQL = <<<'SQL'
         UPDATE external_reference
