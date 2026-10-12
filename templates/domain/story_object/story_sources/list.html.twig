@@ -10,10 +10,10 @@
     facebook: 'bi-facebook',
 } %}
 {% set availabilityBadges = {
-    archived: 'text-bg-warning',
-    changed: 'text-bg-info',
-    gone: 'text-bg-danger',
-    forbidden: 'text-bg-secondary',
+    archived: 'bg-warning text-dark',
+    changed: 'bg-info',
+    gone: 'bg-danger',
+    forbidden: 'bg-dark',
 } %}
 
 {% block title %}{{ 'story_source.tab'|trans }} - {{ storyObject.title }}{% endblock %}
@@ -69,10 +69,10 @@
                                             {% else %}
                                                 <span class="fw-semibold text-break">{{ title }}</span>
                                             {% endif %}
-                                            <span class="badge text-bg-light border">{{ ('story_source.kind.' ~ reference.referenceType.value)|trans }}</span>
-                                            <span class="badge {{ reference.role.value == 'primary' ? 'text-bg-primary' : 'text-bg-secondary' }}">{{ ('story_source.role.' ~ reference.role.value)|trans }}</span>
+                                            <span class="badge bg-light text-dark border">{{ ('story_source.kind.' ~ reference.referenceType.value)|trans }}</span>
+                                            <span class="badge {{ reference.role.value == 'primary' ? 'bg-primary' : 'bg-secondary' }}">{{ ('story_source.role.' ~ reference.role.value)|trans }}</span>
                                             {% if item and item.availability.value != 'ok' %}
-                                                <span class="badge {{ availabilityBadges[item.availability.value]|default('text-bg-secondary') }}">{{ ('story_source.availability.' ~ item.availability.value)|trans }}</span>
+                                                <span class="badge {{ availabilityBadges[item.availability.value]|default('bg-secondary') }}">{{ ('story_source.availability.' ~ item.availability.value)|trans }}</span>
                                             {% endif %}
                                         </div>
                                         {% if excerpt %}
@@ -122,7 +122,7 @@
              data-story-source-search-url-value="{{ path('backoffice_larp_story_sources_search', {larp: larp.id, storyObject: storyObject.id}) }}"
              data-story-source-search-empty-value="{{ 'story_source.search_empty'|trans }}"
              data-story-source-search-error-value="{{ 'story_source.search_error'|trans }}"
-             data-action="show.bs.modal->story-source-search#load">
+            >
             <div class="modal-dialog modal-lg modal-dialog-scrollable modal-fullscreen-sm-down">
                 <form method="post"
                       name="story_source_link"

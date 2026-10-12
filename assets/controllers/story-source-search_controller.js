@@ -14,9 +14,12 @@ export default class extends Controller {
         this.debounceTimer = null;
         this.abortController = null;
         this.loaded = false;
+        this.boundLoad = this.load.bind(this);
+        this.element.addEventListener('show.bs.modal', this.boundLoad);
     }
 
     disconnect() {
+        this.element.removeEventListener('show.bs.modal', this.boundLoad);
         clearTimeout(this.debounceTimer);
         this.abortController?.abort();
     }
