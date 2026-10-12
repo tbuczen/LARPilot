@@ -2,6 +2,7 @@
 
 namespace App\Domain\Integrations\Entity;
 
+use App\Domain\Core\Doctrine\Type\EncryptedTextType;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Trait\CreatorAwareInterface;
 use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
@@ -38,10 +39,10 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
     #[ORM\Column(type: 'string', enumType: IntegrationStatus::class)]
     private IntegrationStatus $status = IntegrationStatus::Active;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: EncryptedTextType::NAME, nullable: true)]
     private ?string $accessToken = null;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: EncryptedTextType::NAME, nullable: true)]
     private ?string $refreshToken = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]

@@ -16,6 +16,8 @@ doctrine:
         use_savepoints: true
         mapping_types:
             user_status: string
+        types:
+            encrypted_text: App\Domain\Core\Doctrine\Type\EncryptedTextType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

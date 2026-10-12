@@ -163,6 +163,8 @@ deploy-deps:
 	php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
 	@echo "🗄️  Running database migrations..."
 	php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
+	@echo "🔐 Encrypting integration tokens..."
+	php -d memory_limit=-1 bin/console app:integrations:encrypt-tokens --no-interaction
 
 # Compile and update frontend assets
 deploy-assets:
