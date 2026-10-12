@@ -30,8 +30,6 @@ services:
             $recaptchaSecretKey: '%env(GOOGLE_RECAPTCHA_SECRET)%'
 
     _instanceof:
-        App\Domain\Integrations\Service\IntegrationServiceInterface:
-            tags: [ 'app.integration' ]
         Symfony\Component\Security\Core\Authorization\Voter\VoterInterface:
           tags: [ 'security.voter' ]
 
@@ -55,10 +53,6 @@ services:
         arguments:
             $services:
                 integration_google_drive: '@App\Domain\Integrations\Service\Sharing\GoogleDriveSharingService'
-
-    App\Domain\Integrations\Service\IntegrationServiceProvider:
-        arguments:
-            $integrationServices: !tagged_iterator app.integration
 
     ShipMonk\DoctrineEntityPreloader\EntityPreloader: ~
 

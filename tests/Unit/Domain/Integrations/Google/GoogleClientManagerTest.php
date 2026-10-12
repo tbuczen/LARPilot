@@ -5,14 +5,21 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Integrations\Google;
 
 use App\Domain\Integrations\Entity\Enum\IntegrationStatus;
+use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
+use App\Domain\Integrations\Repository\LarpIntegrationRepository;
+use App\Domain\Integrations\Service\Credential\OAuthCredentialProvider;
 use App\Domain\Integrations\Service\Exceptions\ReAuthenticationNeededException;
 use App\Domain\Integrations\Service\Google\GoogleClientManager;
 use App\Domain\Integrations\Service\Google\GoogleOAuthClientFactory;
+use App\Domain\Integrations\Service\Google\GoogleTokenRefresher;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\Client;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\InMemoryStore;
 
 class GoogleClientManagerTest extends TestCase
 {
@@ -24,7 +31,7 @@ class GoogleClientManagerTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->never())->method('flush');
 
-        $clientManager = $this->createClientManager($googleClient, $entityManager);
+        $clientManager = $this->createClientManager($googleClient, $entityManager, $integration);
         $authorizedClient = $clientManager->getClientForIntegration($integration);
 
         $this->assertSame('stored-access-token', $authorizedClient->getAccessToken()['access_token']);
@@ -43,7 +50,7 @@ class GoogleClientManagerTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->once())->method('flush');
 
-        $clientManager = $this->createClientManager($googleClient, $entityManager);
+        $clientManager = $this->createClientManager($googleClient, $entityManager, $integration);
         $authorizedClient = $clientManager->getClientForIntegration($integration);
 
         $this->assertSame('refreshed-access-token', $integration->getAccessToken());
@@ -62,7 +69,7 @@ class GoogleClientManagerTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->once())->method('flush');
 
-        $clientManager = $this->createClientManager($googleClient, $entityManager);
+        $clientManager = $this->createClientManager($googleClient, $entityManager, $integration);
 
         try {
             $clientManager->getClientForIntegration($integration);
@@ -83,7 +90,7 @@ class GoogleClientManagerTest extends TestCase
         $googleClient->expects($this->never())->method('fetchAccessTokenWithRefreshToken');
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
-        $clientManager = $this->createClientManager($googleClient, $entityManager);
+        $clientManager = $this->createClientManager($googleClient, $entityManager, $integration);
 
         $this->expectException(ReAuthenticationNeededException::class);
         try {
@@ -96,6 +103,7 @@ class GoogleClientManagerTest extends TestCase
     private function createIntegration(\DateTimeImmutable $expiresAt): LarpIntegration
     {
         $integration = new LarpIntegration();
+        $integration->setProvider(LarpIntegrationProvider::Google);
         $integration->setAccessToken('stored-access-token');
         $integration->setRefreshToken('stored-refresh-token');
         $integration->setExpiresAt($expiresAt);
@@ -111,11 +119,28 @@ class GoogleClientManagerTest extends TestCase
             ->getMock();
     }
 
-    private function createClientManager(Client $googleClient, EntityManagerInterface $entityManager): GoogleClientManager
+    private function createClientManager(Client $googleClient, EntityManagerInterface $entityManager, LarpIntegration $integration): GoogleClientManager
     {
         $oauthClientFactory = $this->createMock(GoogleOAuthClientFactory::class);
         $oauthClientFactory->method('create')->willReturn($googleClient);
 
-        return new GoogleClientManager('/dev/null', $entityManager, $oauthClientFactory);
+        $larpIntegrationRepository = $this->createMock(LarpIntegrationRepository::class);
+        $larpIntegrationRepository->method('findStoredToken')->willReturnCallback(static fn (): array => [
+            'accessToken' => $integration->getAccessToken(),
+            'refreshToken' => $integration->getRefreshToken(),
+            'expiresAt' => $integration->getExpiresAt(),
+        ]);
+
+        $tokenRefreshers = new ServiceLocator([
+            LarpIntegrationProvider::Google->value => static fn (): GoogleTokenRefresher => new GoogleTokenRefresher($oauthClientFactory),
+        ]);
+        $oauthCredentialProvider = new OAuthCredentialProvider(
+            $tokenRefreshers,
+            new LockFactory(new InMemoryStore()),
+            $larpIntegrationRepository,
+            $entityManager,
+        );
+
+        return new GoogleClientManager('/dev/null', $oauthClientFactory, $oauthCredentialProvider);
     }
 }

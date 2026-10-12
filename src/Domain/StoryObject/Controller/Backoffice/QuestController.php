@@ -6,7 +6,7 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryMarketplace\Entity\Enum\RecruitmentProposalStatus;
 use App\Domain\StoryMarketplace\Entity\RecruitmentProposal;
 use App\Domain\StoryMarketplace\Entity\StoryRecruitment;
@@ -51,7 +51,7 @@ class QuestController extends BaseController
     #[Route('{quest}', name: 'modify', defaults: ['quest' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager             $larpManager,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         StoryObjectMentionService $mentionService,
         Request                 $request,
         Larp                    $larp,
@@ -80,7 +80,7 @@ class QuestController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $questRepository->save($quest);
-            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $quest);
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationRegistry, $new, $quest);
             $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_quest_list', ['larp' => $larp->getId()]);
         }
@@ -141,7 +141,7 @@ class QuestController extends BaseController
     #[Route('{quest}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         Larp                    $larp,
         Request                 $request,
         QuestRepository $questRepository,
@@ -149,7 +149,7 @@ class QuestController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $quest, 'Quest')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $quest, 'Quest')) {
             return $this->redirectToRoute('backoffice_larp_story_quest_list', [
                 'larp' => $larp->getId(),
             ]);

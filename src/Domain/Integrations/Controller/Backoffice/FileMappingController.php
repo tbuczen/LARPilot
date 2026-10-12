@@ -12,7 +12,8 @@ use App\Domain\Integrations\Form\Models\ExternalResourceMappingModel;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
 use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingCommand;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -92,11 +93,11 @@ class FileMappingController extends BaseController
         Larp                    $larp,
         string                    $externalFileId,
         LarpIntegrationProvider   $provider,
-        IntegrationManager        $integrationManager,
+        IntegrationRegistry        $integrationRegistry,
         LarpIntegrationRepository $larpIntegrationRepository
     ): RedirectResponse {
         $integration = $larpIntegrationRepository->findByLarpAndProvider($larp->getId()->toRfc4122(), $provider);
-        $integrationService = $integrationManager->getService($integration);
+        $integrationService = $integrationRegistry->capability($integration, FileSourceIntegrationInterface::class);
         $url = $integrationService->getExternalFileUrl($integration, $externalFileId);
 
         return new RedirectResponse($url);
