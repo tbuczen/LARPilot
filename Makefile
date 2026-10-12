@@ -160,6 +160,7 @@ deploy-deps:
 	@echo "📦 Installing PHP dependencies..."
 	php -d memory_limit=-1 $$(which composer) install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
 	@echo "🧹 Clearing stale cache before migrating..."
+	rm -rf var/cache/prod
 	php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
 	@echo "🗄️  Running database migrations..."
 	php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
