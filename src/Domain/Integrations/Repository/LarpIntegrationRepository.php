@@ -7,6 +7,8 @@ use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends BaseRepository<LarpIntegration>
@@ -42,5 +44,28 @@ class LarpIntegrationRepository extends BaseRepository
             'larp' => $larpId,
             'provider' => $provider,
         ]);
+    }
+
+    /**
+     * @return array{accessToken: ?string, refreshToken: ?string, expiresAt: ?\DateTimeInterface}|null
+     */
+    public function findStoredToken(Uuid $integrationId): ?array
+    {
+        $storedToken = $this->createQueryBuilder('li')
+            ->select('li.accessToken', 'li.refreshToken', 'li.expiresAt')
+            ->andWhere('li.id = :integrationId')
+            ->setParameter('integrationId', $integrationId, UuidType::NAME)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!is_array($storedToken)) {
+            return null;
+        }
+
+        return [
+            'accessToken' => $storedToken['accessToken'],
+            'refreshToken' => $storedToken['refreshToken'],
+            'expiresAt' => $storedToken['expiresAt'],
+        ];
     }
 }

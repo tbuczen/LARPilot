@@ -7,14 +7,15 @@ use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Repository\SharedFileRepository;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\Integrations\Service\Sharing\DriveSharingServiceProvider;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class ApplyFilesPermissionsHandler
 {
     public function __construct(
-        private IntegrationManager          $integrationManager,
+        private IntegrationRegistry          $integrationRegistry,
         private LarpIntegrationRepository   $larpIntegrationRepository,
         private SharedFileRepository        $sharedFileRepository,
         private DriveSharingServiceProvider $sharingServiceProvider,
@@ -52,7 +53,7 @@ readonly class ApplyFilesPermissionsHandler
 
     public function createSharedFile(LarpIntegration $integration, array $file): void
     {
-        $integrationService = $this->integrationManager->getService($integration);
+        $integrationService = $this->integrationRegistry->capability($integration, FileSourceIntegrationInterface::class);
         $url = $integrationService->getExternalFileUrl($integration, $file['fileId']);
 
         $sharedFile = new SharedFile();

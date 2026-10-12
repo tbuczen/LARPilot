@@ -14,8 +14,9 @@ use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
 use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
 use App\Domain\Integrations\Service\CharacterSheetExportService;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Form\CharacterType;
 use App\Domain\StoryObject\Form\Filter\CharacterFilterType;
@@ -56,7 +57,7 @@ class CharacterController extends BaseController
     #[Route('{character}', name: 'modify', defaults: ['character' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager             $larpManager,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         StoryObjectMentionService $mentionService,
         Request                 $request,
         Larp                    $larp,
@@ -92,7 +93,7 @@ class CharacterController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $characterRepository->save($character);
 
-            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $character);
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationRegistry, $new, $character);
 
             $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_character_list', ['larp' => $larp->getId()]);
@@ -193,7 +194,7 @@ class CharacterController extends BaseController
     #[Route('{character}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         Larp                    $larp,
         Request                 $request,
         CharacterRepository $characterRepository,
@@ -201,7 +202,7 @@ class CharacterController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $character, 'Character')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $character, 'Character')) {
             return $this->redirectToRoute('backoffice_larp_story_character_list', [
                 'larp' => $larp->getId(),
             ]);
@@ -246,7 +247,7 @@ class CharacterController extends BaseController
         LarpIntegrationProvider $provider,
         SharedFile              $sharedFile,
         ObjectFieldMapping      $mapping,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         Request                 $request,
         IntegrationOwnershipGuard $integrationOwnershipGuard,
         ImportCharactersHandler $handler
@@ -259,7 +260,7 @@ class CharacterController extends BaseController
             throw $this->createAccessDeniedException('Invalid CSRF token.');
         }
 
-        $integrationService = $integrationManager->getService($provider);
+        $integrationService = $integrationRegistry->capability($sharedFile->getIntegration(), FileSourceIntegrationInterface::class);
 
         $rows = $integrationService->fetchSpreadsheetRows($sharedFile, $mapping);
         $additionalData = [

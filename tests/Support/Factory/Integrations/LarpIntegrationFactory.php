@@ -81,6 +81,16 @@ final class LarpIntegrationFactory extends PersistentProxyObjectFactory
         return $this->withProvider(LarpIntegrationProvider::Facebook);
     }
 
+    public function discord(): self
+    {
+        return $this->withProvider(LarpIntegrationProvider::Discord);
+    }
+
+    public function miro(): self
+    {
+        return $this->withProvider(LarpIntegrationProvider::Miro);
+    }
+
     public function expired(): self
     {
         return $this->with([

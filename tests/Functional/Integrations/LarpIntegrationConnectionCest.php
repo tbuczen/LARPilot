@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Functional\Integrations;
 
+use App\Domain\Integrations\DTO\ConnectionCallback;
 use App\Domain\Integrations\Entity\Enum\ConnectionType;
 use App\Domain\Integrations\Entity\Enum\IntegrationStatus;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Service\Google\GoogleIntegrationService;
-use League\OAuth2\Client\Provider\GoogleUser;
-use League\OAuth2\Client\Token\AccessToken;
 use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\Factory\Core\LarpFactory;
 use Tests\Support\Factory\Integrations\LarpIntegrationFactory;
 use Tests\Support\FunctionalTester;
+use Tests\Support\Integrations\FakeGoogleOAuthGateway;
 
 class LarpIntegrationConnectionCest
 {
@@ -36,10 +36,10 @@ class LarpIntegrationConnectionCest
 
         /** @var GoogleIntegrationService $googleIntegrationService */
         $googleIntegrationService = $I->grabService(GoogleIntegrationService::class);
-        $reconnectedIntegration = $googleIntegrationService->createGoogleDriveIntegration(
-            new AccessToken(['access_token' => 'second-access-token', 'expires_in' => 3600]),
-            new GoogleUser(['email' => 'organizer@example.com']),
-            $larpId,
+        $reconnectedIntegration = $googleIntegrationService->completeConnection(
+            $larp->_real(),
+            new ConnectionCallback('https://larpilot.test/callback', ['code' => FakeGoogleOAuthGateway::CODE_WITHOUT_REFRESH_TOKEN]),
+            $organizer,
         );
 
         $I->assertEquals($existingIntegration->getId(), $reconnectedIntegration->getId());
@@ -50,9 +50,9 @@ class LarpIntegrationConnectionCest
         ]);
         $I->assertCount(1, $googleIntegrations);
         $storedIntegration = $googleIntegrations[0];
-        $I->assertSame('second-access-token', $storedIntegration->getAccessToken());
+        $I->assertSame(FakeGoogleOAuthGateway::accessTokenFor(FakeGoogleOAuthGateway::CODE_WITHOUT_REFRESH_TOKEN), $storedIntegration->getAccessToken());
         $I->assertSame('first-refresh-token', $storedIntegration->getRefreshToken());
-        $I->assertSame('organizer@example.com', $storedIntegration->getExternalAccountId());
+        $I->assertSame(FakeGoogleOAuthGateway::ACCOUNT_EMAIL, $storedIntegration->getExternalAccountId());
         $I->assertSame(ConnectionType::UserOauth, $storedIntegration->getConnectionType());
         $I->assertSame(IntegrationStatus::Active, $storedIntegration->getStatus());
         $I->assertNull($storedIntegration->getLastError());
@@ -68,7 +68,7 @@ class LarpIntegrationConnectionCest
         $botIntegration = LarpIntegrationFactory::new()
             ->forLarp($larp)
             ->createdBy($organizer)
-            ->facebook()
+            ->discord()
             ->botInstall('guild-123456')
             ->with(['config' => ['channels' => ['lore', 'plot']]])
             ->create();

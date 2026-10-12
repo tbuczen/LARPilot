@@ -2,29 +2,35 @@
 
 namespace App\Domain\Integrations\Controller\Backoffice;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\LarpRepository;
+use App\Domain\Integrations\DTO\ConnectionCallback;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
 use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
+use App\Domain\Integrations\Service\Capability\AccessTokenProviderInterface;
+use App\Domain\Integrations\Service\Capability\ConnectableIntegrationInterface;
+use App\Domain\Integrations\Service\Connect\ConnectStateManager;
+use App\Domain\Integrations\Service\Exceptions\IntegrationConnectionFailedException;
+use App\Domain\Integrations\Service\Exceptions\InvalidConnectStateException;
 use App\Domain\Integrations\Service\Exceptions\ReAuthenticationNeededException;
-use App\Domain\Integrations\Service\IntegrationManager;
-use App\Domain\Integrations\Service\IntegrationServiceProvider;
-use App\Domain\Integrations\Service\OAuthTokenProviderFactory;
+use App\Domain\Integrations\Service\Exceptions\UnsupportedCapability;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsCommand;
 use App\Domain\Integrations\UseCase\ApplyFilesPermission\ApplyFilesPermissionsHandler;
-use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/larp', name: 'backoffice_larp_')]
 class IntegrationsSettingsController extends AbstractController
@@ -32,6 +38,8 @@ class IntegrationsSettingsController extends AbstractController
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly IntegrationOwnershipGuard $integrationOwnershipGuard,
+        private readonly IntegrationRegistry $integrationRegistry,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -46,66 +54,70 @@ class IntegrationsSettingsController extends AbstractController
         return $this->render('backoffice/larp/integrationsSettings.html.twig', [
             'larp' => $larp,
             'integrations' => $integrations,
-            'availableProviders' => LarpIntegrationProvider::cases(),
+            'availableProviders' => $this->integrationRegistry->providersSupporting(ConnectableIntegrationInterface::class),
         ]);
     }
 
-    #[Route('/{larp}/integration/connect/{provider}', name: 'connect_integration')]
+    #[Route('/{larp}/integration/connect/{provider}', name: 'connect_integration', methods: ['GET'])]
     public function connectIntegration(
-        Larp                  $larp,
+        Larp                    $larp,
         LarpIntegrationProvider $provider,
-        IntegrationManager      $integrationManager,
-        SessionInterface        $session,
-    ): Response {
+        ConnectStateManager     $connectStateManager,
+    ): RedirectResponse {
         $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
 
-        $session->set('current_larp_id', $larp->getId());
-        $integrationService = $integrationManager->getService($provider);
+        $connectableIntegration = $this->connectableIntegration($provider);
+        $state = $connectStateManager->issue($larp, $provider);
 
-        return $integrationService->connect($larp);
+        return new RedirectResponse($connectableIntegration->authorizationUrl($larp, $state, $this->callbackUrl($provider)));
     }
 
-    #[Route('/integration/connect/{provider}/check', name: 'connect_integration_check')]
+    #[Route('/integration/connect/{provider}/check', name: 'connect_integration_check', methods: ['GET'])]
     public function connectIntegrationCheck(
-        string                       $provider,
-        SessionInterface             $session,
-        ClientRegistry               $clientRegistry,
-        IntegrationServiceProvider   $integrationServiceProvider,
-        LarpRepository               $larpRepository,
+        LarpIntegrationProvider $provider,
+        Request                 $request,
+        ConnectStateManager     $connectStateManager,
+        LarpRepository          $larpRepository,
     ): RedirectResponse {
-        $larpId = $session->get('current_larp_id');
-
-        if (!$larpId) {
-            throw $this->createAccessDeniedException('No LARP ID in session.');
+        try {
+            $larpId = $connectStateManager->consume($request->query->getString('state'), $provider);
+        } catch (InvalidConnectStateException) {
+            throw new BadRequestHttpException('Invalid or expired integration connect state.');
         }
 
         $larp = $larpRepository->find($larpId);
         if (!$larp instanceof Larp) {
-            $session->remove('current_larp_id');
             throw $this->createNotFoundException('LARP not found.');
         }
 
         $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
+        $connectableIntegration = $this->connectableIntegration($provider);
 
-        $client = $clientRegistry->getClient($provider);
+        $callback = new ConnectionCallback($this->callbackUrl($provider), $request->query->all());
+        $settingsRedirect = $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
 
-        $accessToken = $client->getAccessToken([
-            'redirect_uri' => $this->urlGenerator->generate(
-                'backoffice_larp_connect_integration_check',
-                ['provider' => LarpIntegrationProvider::Google->value],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-        ]);
-        $resourceOwner = $client->fetchUserFromToken($accessToken);
+        if ($callback->providerError() !== null || $callback->authorizationCode() === null) {
+            $this->addFlash('warning', $this->translator->trans('larp.integration.connect_cancelled', ['%provider%' => $provider->getLabel()]));
 
-        $providerEnum = LarpIntegrationProvider::from($provider);
-        $integrationService = $integrationServiceProvider->getServiceForIntegration($providerEnum);
+            return $settingsRedirect;
+        }
 
-        $integrationService->finalizeConnection($larpId, $accessToken, $resourceOwner);
+        $connectingUser = $this->getUser();
+        if (!$connectingUser instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
 
-        $session->remove('current_larp_id');
+        try {
+            $connectableIntegration->completeConnection($larp, $callback, $connectingUser);
+        } catch (IntegrationConnectionFailedException) {
+            $this->addFlash('danger', $this->translator->trans('larp.integration.connect_failed', ['%provider%' => $provider->getLabel()]));
 
-        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larpId]);
+            return $settingsRedirect;
+        }
+
+        $this->addFlash('success', $this->translator->trans('larp.integration.connect_succeeded', ['%provider%' => $provider->getLabel()]));
+
+        return $settingsRedirect;
     }
 
     #[Route('/{larp}/integration/{integrationId}/filePermissions', name: 'integration_file_permissions', methods: ['POST'])]
@@ -158,7 +170,6 @@ class IntegrationsSettingsController extends AbstractController
         Larp                      $larp,
         LarpIntegration           $integration,
         Request                   $request,
-        OAuthTokenProviderFactory $oauthTokenProviderFactory,
     ): JsonResponse {
         $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
         $this->integrationOwnershipGuard->assertIntegrationBelongsToLarp($integration, $larp);
@@ -167,22 +178,37 @@ class IntegrationsSettingsController extends AbstractController
             throw $this->createAccessDeniedException('Invalid CSRF token.');
         }
 
-        $tokenProvider = $oauthTokenProviderFactory->findProviderForIntegration($integration);
-        if ($tokenProvider === null) {
+        try {
+            $accessTokenProvider = $this->integrationRegistry->capability($integration, AccessTokenProviderInterface::class);
+        } catch (UnsupportedCapability) {
             throw $this->createNotFoundException();
         }
 
         try {
-            $accessToken = $tokenProvider->getTokenForIntegration($integration->getId()->toRfc4122());
-        } catch (ReAuthenticationNeededException|\LogicException) {
-            return $this->noStore(new JsonResponse(['error' => 'reauthentication_required'], Response::HTTP_CONFLICT));
-        }
-
-        if ($accessToken === null) {
+            $accessToken = $accessTokenProvider->accessToken($integration);
+        } catch (ReAuthenticationNeededException) {
             return $this->noStore(new JsonResponse(['error' => 'reauthentication_required'], Response::HTTP_CONFLICT));
         }
 
         return $this->noStore(new JsonResponse(['accessToken' => $accessToken]));
+    }
+
+    private function connectableIntegration(LarpIntegrationProvider $provider): ConnectableIntegrationInterface
+    {
+        try {
+            return $this->integrationRegistry->providerCapability($provider, ConnectableIntegrationInterface::class);
+        } catch (UnsupportedCapability) {
+            throw $this->createNotFoundException();
+        }
+    }
+
+    private function callbackUrl(LarpIntegrationProvider $provider): string
+    {
+        return $this->urlGenerator->generate(
+            'backoffice_larp_connect_integration_check',
+            ['provider' => $provider->value],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
     }
 
     private function noStore(JsonResponse $response): JsonResponse

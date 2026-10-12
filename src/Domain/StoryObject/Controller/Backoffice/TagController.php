@@ -16,7 +16,8 @@ use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
 use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -106,7 +107,7 @@ class TagController extends BaseController
         LarpIntegrationProvider $provider,
         SharedFile $sharedFile,
         ObjectFieldMapping $mapping,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         Request $request,
         IntegrationOwnershipGuard $integrationOwnershipGuard,
         ImportTagsHandler $handler
@@ -119,7 +120,7 @@ class TagController extends BaseController
             throw $this->createAccessDeniedException('Invalid CSRF token.');
         }
 
-        $integrationService = $integrationManager->getService($provider);
+        $integrationService = $integrationRegistry->capability($sharedFile->getIntegration(), FileSourceIntegrationInterface::class);
 
         $rows = $integrationService->fetchSpreadsheetRows($sharedFile, $mapping);
         $additionalData = [

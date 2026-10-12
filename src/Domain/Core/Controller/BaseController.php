@@ -7,7 +7,9 @@ use App\Domain\Core\Repository\ListableRepositoryInterface;
 use App\Domain\Core\Service\Helper\Logger;
 use App\Domain\Core\Service\LarpManager;
 use App\Domain\Integrations\Entity\LarpIntegration;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\Exceptions\UnsupportedCapability;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryObject\Entity\StoryObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -74,7 +76,7 @@ class BaseController extends AbstractController
     protected function processIntegrationsForStoryObject(
         LarpManager        $larpManager,
         Larp               $larp,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         bool $new,
         ?StoryObject $storyObject
     ): void {
@@ -89,8 +91,8 @@ class BaseController extends AbstractController
             }
 
             try {
-                $integrationService = $integrationManager->getService($integration);
-            } catch (\LogicException) {
+                $integrationService = $integrationRegistry->capability($integration, FileSourceIntegrationInterface::class);
+            } catch (UnsupportedCapability) {
                 continue;
             }
 
@@ -120,14 +122,18 @@ class BaseController extends AbstractController
     protected function removeStoryObjectFromIntegrations(
         LarpManager        $larpManager,
         Larp               $larp,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         StoryObject        $storyObject,
         string             $objectName
     ): bool {
         $integrations = $larpManager->getIntegrationsForLarp($larp);
         foreach ($integrations as $integration) {
+            if (!$integrationRegistry->supports($integration->getProvider(), FileSourceIntegrationInterface::class)) {
+                continue;
+            }
+
             try {
-                $integrationService = $integrationManager->getService($integration);
+                $integrationService = $integrationRegistry->capability($integration, FileSourceIntegrationInterface::class);
                 $integrationService->removeStoryObject($integration, $storyObject);
             } catch (\Throwable $e) {
                 Logger::get()->error($e->getMessage(), $e->getTrace());

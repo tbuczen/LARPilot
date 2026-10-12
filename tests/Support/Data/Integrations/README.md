@@ -9,7 +9,7 @@ registered (see below).
 |------------|---------------------|-------|
 | `discord/` | Discord API v10     | `guild.json`, `channels.json` (category, text, voice and a forum with `available_tags`), `threads_active.json`, `threads_archived_public.json` (`has_more: true`), `messages.json` (newest first, incl. a reply, mentions, an attachment and a forum starter message whose id equals the thread id), `rate_limited.json` (429), `missing_access.json` (403, code `50001`) |
 | `miro/`    | Miro REST API v2    | `boards.json`, `board_items_page_1.json` (has `cursor`), `board_items_page_2.json` (last page, no `cursor`), `frame_children.json`, `connectors.json` (with `captions`), `tags.json`, `rate_limited.json` (429), `unauthorized.json` (401) |
-| `google/`  | Google Sheets API v4 | `sheet_values_characters.json` (`spreadsheets.values.get`, ragged rows) |
+| `google/`  | Google Sheets API v4 | `sheet_values_characters.json` (`spreadsheets.values.get`, ragged rows), `spreadsheet_characters.json` (`spreadsheets.get`, the `Characters` sheet has `sheetId` `1837206251`) |
 
 IDs used across files are consistent (the forum's `available_tags` ids are the
 threads' `applied_tags`; the frame's children have `parent.id` set to the
@@ -40,6 +40,15 @@ $client = new MockHttpClient($router, IntegrationFixtureRouters::DISCORD_BASE_UR
 
 `$router->getRequests()` lists what was called, and `decodedFixture()` loads a
 fixture as an array for assertions.
+
+## Google in the test environment
+
+`config/services_test.yaml` aliases `GoogleClientFactoryInterface` to
+`Tests\Support\Integrations\FixtureGoogleClientFactory`, whose Google clients
+answer Sheets requests from `google/`, and `GoogleOAuthGatewayInterface` to
+`Tests\Support\Integrations\FakeGoogleOAuthGateway`, which turns any
+authorization code into a token (`rejected-code` fails like an
+`invalid_grant`).
 
 ## Service ids in the test environment
 

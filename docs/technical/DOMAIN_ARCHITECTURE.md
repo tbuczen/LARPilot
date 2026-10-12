@@ -298,7 +298,11 @@ templates/domain/{domain_name}/
 - File sharing permissions
 
 **Services**:
-- `IntegrationManager`: Central integration orchestrator
+- `IntegrationRegistry`: Tagged locator of provider services keyed by `LarpIntegrationProvider`; `capability($integration, FooInterface::class)` returns the provider's implementation or throws `UnsupportedCapability`
+- Capability interfaces (`Service/Capability/`): `ConnectableIntegrationInterface`, `FileSourceIntegrationInterface`, `ConversationSourceIntegrationInterface`, `BoardSourceIntegrationInterface`, `CredentialProviderInterface`, `AccessTokenProviderInterface`; a provider service that also implements `SourceContentProviderInterface` is reachable through `capability($integration, SourceContentProviderInterface::class)` as well
+- `OAuthCredentialProvider`: Returns the stored access token and refreshes it only when expired, under a per-integration `symfony/lock`; `invalid_grant` marks the integration `needs_reauth`
+- `BotCredentialProvider`: `Bot <DISCORD_BOT_TOKEN>` header for Discord
+- `ConnectStateManager`: Signed, single-use OAuth `state` for the generic connect/callback routes
 - `GoogleIntegrationService`: Google API wrapper
 - `GoogleSpreadsheetIntegrationHelper`: Spreadsheet operations
 - `GoogleDriveSharingService`: File sharing
