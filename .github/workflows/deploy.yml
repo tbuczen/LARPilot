@@ -56,10 +56,10 @@ jobs:
             done
 
             # Integration OAuth tokens are encrypted with this key. Without it
-            # the committed development key in .env would be used, which is
-            # public. Stop before anything on the server changes.
-            if [ -z "$INTEGRATIONS_ENCRYPTION_KEY" ]; then
-              echo "INTEGRATIONS_ENCRYPTION_KEY is empty. Generate one with: php -r 'echo base64_encode(sodium_crypto_secretbox_keygen()), PHP_EOL;' and set it as a secret on the 'prod' environment (see docs/DEPLOYMENT.md)." >&2
+            # the committed all-zero placeholder in .env would be used. Stop
+            # before anything on the server changes.
+            if [ -z "$INTEGRATIONS_ENCRYPTION_KEY" ] || [ "$INTEGRATIONS_ENCRYPTION_KEY" = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" ]; then
+              echo "INTEGRATIONS_ENCRYPTION_KEY is empty or the development placeholder. Generate one with: php -r 'echo base64_encode(sodium_crypto_secretbox_keygen()), PHP_EOL;' and set it as a secret on the 'prod' environment (see docs/DEPLOYMENT.md)." >&2
               exit 1
             fi
 

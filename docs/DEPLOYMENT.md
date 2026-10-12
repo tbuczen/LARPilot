@@ -20,9 +20,9 @@ backfill encrypts them.
 | `INTEGRATIONS_ENCRYPTION_KEY_VERSION` | Version number of the current key. Defaults to `1`. |
 | `INTEGRATIONS_ENCRYPTION_RETIRED_KEYS` | Older keys that can still decrypt, as `<version>:<base64 key>` separated by commas. Empty by default. |
 
-`.env` ships a development-only key and `.env.test` a fixed test key. Neither may be used in
+`.env` and `.env.test` ship an all-zero placeholder key (not a secret). It must never be used in
 production: the deploy workflow refuses to run when the `INTEGRATIONS_ENCRYPTION_KEY`
-secret is empty.
+secret is empty or still the all-zero placeholder.
 
 ### Generating the key
 
