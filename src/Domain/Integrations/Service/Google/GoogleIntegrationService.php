@@ -38,7 +38,7 @@ readonly class GoogleIntegrationService extends BaseIntegrationService implement
     ];
 
     public function __construct(
-        private GoogleClientManager   $googleClientManager,
+        private GoogleClientFactoryInterface $googleClientManager,
         private UrlGeneratorInterface $urlGenerator,
         private ClientRegistry        $clientRegistry,
         private LarpRepository            $larpRepository,

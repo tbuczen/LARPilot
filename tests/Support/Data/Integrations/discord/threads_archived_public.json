@@ -1,0 +1,50 @@
+{
+    "threads": [
+        {
+            "id": "1100000000000000290",
+            "type": 11,
+            "guild_id": "1100000000000000001",
+            "parent_id": "1100000000000000200",
+            "owner_id": "1200000000000000002",
+            "name": "Prologue — arrival at the keep",
+            "last_message_id": "1300000000000000050",
+            "message_count": 12,
+            "member_count": 4,
+            "total_message_sent": 12,
+            "rate_limit_per_user": 0,
+            "flags": 0,
+            "applied_tags": ["1100000000000000901"],
+            "thread_metadata": {
+                "archived": true,
+                "auto_archive_duration": 4320,
+                "archive_timestamp": "2026-08-15T21:10:00.000000+00:00",
+                "locked": true,
+                "create_timestamp": "2026-08-01T10:00:00.000000+00:00"
+            }
+        },
+        {
+            "id": "1100000000000000289",
+            "type": 11,
+            "guild_id": "1100000000000000001",
+            "parent_id": "1100000000000000200",
+            "owner_id": "1200000000000000001",
+            "name": "Discarded idea — the twin heirs",
+            "last_message_id": "1300000000000000040",
+            "message_count": 2,
+            "member_count": 1,
+            "total_message_sent": 2,
+            "rate_limit_per_user": 0,
+            "flags": 0,
+            "applied_tags": [],
+            "thread_metadata": {
+                "archived": true,
+                "auto_archive_duration": 1440,
+                "archive_timestamp": "2026-07-30T08:00:00.000000+00:00",
+                "locked": false,
+                "create_timestamp": "2026-07-28T08:00:00.000000+00:00"
+            }
+        }
+    ],
+    "members": [],
+    "has_more": true
+}

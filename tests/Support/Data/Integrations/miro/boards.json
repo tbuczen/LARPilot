@@ -1,0 +1,133 @@
+{
+    "data": [
+        {
+            "id": "uXjVOD6LSME=",
+            "type": "board",
+            "name": "Shadows of Ardenne — plot map",
+            "description": "Faction and character relations",
+            "team": {
+                "id": "3458764517517818867",
+                "name": "Ardenne Organizers",
+                "type": "team"
+            },
+            "project": {
+                "id": "3458764517517819001",
+                "type": "project"
+            },
+            "picture": {
+                "id": "3458764517517819002",
+                "imageURL": "https://miro.medium.com/board-picture.png",
+                "type": "picture"
+            },
+            "policy": {
+                "permissionsPolicy": {
+                    "collaborationToolsStartAccess": "all_editors",
+                    "copyAccess": "team_editors",
+                    "copyAccessLevel": "team_editors",
+                    "sharingAccess": "team_members_with_editing_rights"
+                },
+                "sharingPolicy": {
+                    "access": "private",
+                    "inviteToAccountAndBoardLinkAccess": "no_access",
+                    "organizationAccess": "private",
+                    "teamAccess": "edit"
+                }
+            },
+            "viewLink": "https://miro.com/app/board/uXjVOD6LSME=",
+            "owner": {
+                "id": "3458764517517852417",
+                "name": "Morwen's Writer",
+                "type": "user"
+            },
+            "currentUserMembership": {
+                "id": "3458764517517852417",
+                "name": "Morwen's Writer",
+                "role": "owner",
+                "type": "board_member"
+            },
+            "createdAt": "2026-08-01T10:00:00Z",
+            "createdBy": {
+                "id": "3458764517517852417",
+                "name": "Morwen's Writer",
+                "type": "user"
+            },
+            "lastOpenedAt": "2026-10-10T20:15:00Z",
+            "lastOpenedBy": {
+                "id": "3458764517517852417",
+                "name": "Morwen's Writer",
+                "type": "user"
+            },
+            "modifiedAt": "2026-10-10T20:20:00Z",
+            "modifiedBy": {
+                "id": "3458764517517852417",
+                "name": "Morwen's Writer",
+                "type": "user"
+            },
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D",
+                "related": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/members?limit=20&offset=0"
+            }
+        },
+        {
+            "id": "uXjVOFq2Hk8=",
+            "type": "board",
+            "name": "Event timeline",
+            "description": "",
+            "team": {
+                "id": "3458764517517818867",
+                "name": "Ardenne Organizers",
+                "type": "team"
+            },
+            "policy": {
+                "permissionsPolicy": {
+                    "collaborationToolsStartAccess": "all_editors",
+                    "copyAccess": "anyone",
+                    "copyAccessLevel": "anyone",
+                    "sharingAccess": "team_members_with_editing_rights"
+                },
+                "sharingPolicy": {
+                    "access": "private",
+                    "inviteToAccountAndBoardLinkAccess": "no_access",
+                    "organizationAccess": "private",
+                    "teamAccess": "comment"
+                }
+            },
+            "viewLink": "https://miro.com/app/board/uXjVOFq2Hk8=",
+            "owner": {
+                "id": "3458764517517852418",
+                "name": "Aldric (GM)",
+                "type": "user"
+            },
+            "currentUserMembership": {
+                "id": "3458764517517852417",
+                "name": "Morwen's Writer",
+                "role": "commenter",
+                "type": "board_member"
+            },
+            "createdAt": "2026-08-20T08:00:00Z",
+            "createdBy": {
+                "id": "3458764517517852418",
+                "name": "Aldric (GM)",
+                "type": "user"
+            },
+            "modifiedAt": "2026-09-30T16:45:00Z",
+            "modifiedBy": {
+                "id": "3458764517517852418",
+                "name": "Aldric (GM)",
+                "type": "user"
+            },
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOFq2Hk8%3D",
+                "related": "https://api.miro.com/v2/boards/uXjVOFq2Hk8%3D/members?limit=20&offset=0"
+            }
+        }
+    ],
+    "total": 2,
+    "size": 2,
+    "offset": 0,
+    "limit": 20,
+    "links": {
+        "self": "https://api.miro.com/v2/boards?limit=20&offset=0"
+    },
+    "type": "list"
+}

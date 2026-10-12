@@ -70,7 +70,7 @@ class LarpIntegrationConnectionCest
         $botIntegration = LarpIntegrationFactory::new()
             ->forLarp($larp)
             ->createdBy($organizer)
-            ->forProvider(LarpIntegrationProvider::Facebook)
+            ->facebook()
             ->botInstall('guild-123456')
             ->with(['config' => ['channels' => ['lore', 'plot']]])
             ->create();
