@@ -13,7 +13,7 @@ use Google\Service\Sheets\ValueRange;
 readonly class GoogleSpreadsheetIntegrationHelper
 {
     public function __construct(
-        private GoogleClientManager $googleClientManager,
+        private GoogleClientFactoryInterface $googleClientManager,
     ) {
     }
 
