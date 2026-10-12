@@ -9,7 +9,7 @@ use App\Domain\Integrations\Entity\ExternalReference;
 use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Repository\ExternalReferenceRepository;
 use App\Domain\Integrations\Repository\ObjectFieldMappingRepository;
-use App\Domain\Integrations\Service\Google\GoogleClientManager;
+use App\Domain\Integrations\Service\Google\GoogleClientFactoryInterface;
 use App\Domain\StoryObject\Entity\Character;
 use Google\Service\Docs;
 use Google\Service\Docs\BatchUpdateDocumentRequest;
@@ -23,7 +23,7 @@ use Google\Service\Drive\DriveFile;
 readonly class CharacterSheetExportService
 {
     public function __construct(
-        private GoogleClientManager           $googleClientManager,
+        private GoogleClientFactoryInterface $googleClientManager,
         private ObjectFieldMappingRepository $mappingRepository,
         private ExternalReferenceRepository  $referenceRepository,
     ) {

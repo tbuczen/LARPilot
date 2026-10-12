@@ -1,0 +1,27 @@
+services:
+    tests.integrations.discord.fixture_router:
+        class: Tests\Support\Http\FixtureRouter
+        factory: ['Tests\Support\Http\IntegrationFixtureRouters', 'discord']
+        public: true
+
+    tests.integrations.miro.fixture_router:
+        class: Tests\Support\Http\FixtureRouter
+        factory: ['Tests\Support\Http\IntegrationFixtureRouters', 'miro']
+        public: true
+
+    discord.client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@tests.integrations.discord.fixture_router'
+            - !php/const Tests\Support\Http\IntegrationFixtureRouters::DISCORD_BASE_URI
+        public: true
+
+    miro.client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@tests.integrations.miro.fixture_router'
+            - !php/const Tests\Support\Http\IntegrationFixtureRouters::MIRO_BASE_URI
+        public: true
+
+    Symfony\Contracts\HttpClient\HttpClientInterface $discordClient: '@discord.client'
+    Symfony\Contracts\HttpClient\HttpClientInterface $miroClient: '@miro.client'

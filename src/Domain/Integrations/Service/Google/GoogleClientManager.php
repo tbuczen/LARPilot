@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Google\Client;
 use Google\Service\Drive;
 
-readonly class GoogleClientManager
+readonly class GoogleClientManager implements GoogleClientFactoryInterface
 {
     public function __construct(
         private string                 $googleClientId,

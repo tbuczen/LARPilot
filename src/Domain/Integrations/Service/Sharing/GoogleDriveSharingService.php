@@ -3,14 +3,14 @@
 namespace App\Domain\Integrations\Service\Sharing;
 
 use App\Domain\Integrations\Entity\LarpIntegration;
-use App\Domain\Integrations\Service\Google\GoogleClientManager;
+use App\Domain\Integrations\Service\Google\GoogleClientFactoryInterface;
 use Google\Service\Drive;
 use Google\Service\Drive\Permission;
 
 final readonly class GoogleDriveSharingService implements DriveSharingServiceInterface
 {
     public function __construct(
-        private GoogleClientManager $clientManager,
+        private GoogleClientFactoryInterface $clientManager,
     ) {
     }
 
