@@ -48,10 +48,10 @@
                                 {% endif %}
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="visually-hidden">Toggle Dropdown</span>
+                                <span class="visually-hidden">{{ 'larp.status.requirement.toggle_details'|trans }}</span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><h6 class="dropdown-header">Requirements:</h6></li>
+                                <li><h6 class="dropdown-header">{{ 'larp.status.requirement.label'|trans }}</h6></li>
                                 {% for error in transition.validationErrors %}
                                 <li><span class="dropdown-item-text text-danger"><i class="fas fa-exclamation-circle"></i> {{ error }}</span></li>
                                 {% endfor %}
@@ -110,15 +110,15 @@
                 {{ form_row(propertiesForm.description) }}
 
                 <hr class="my-4">
-                <h6 class="mb-3">Social & Visual Settings</h6>
+                <h6 class="mb-3">{{ 'larp.status.social_visual_settings'|trans }}</h6>
 
                 {{ form_row(propertiesForm.headerImageFile) }}
 
                 {% if larp.headerImage %}
                     <div class="mb-3">
-                        <label class="form-label">Current Header Image</label>
+                        <label class="form-label">{{ 'larp.status.current_header_image'|trans }}</label>
                         <div>
-                            <img src="{{ larp.headerImagePath }}" alt="LARP Header" class="img-fluid" style="max-height: 200px;">
+                            <img src="{{ larp.headerImagePath }}" alt="{{ 'larp.status.current_header_image'|trans }}" class="img-fluid" style="max-height: 200px;">
                         </div>
                     </div>
                 {% endif %}
@@ -190,7 +190,7 @@
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#publishRequirements">
-                                <i class="fas fa-upload me-2"></i> Publish Requirements
+                                <i class="fas fa-upload me-2"></i> {{ 'larp.status.requirement.publish'|trans }}
                             </button>
                         </h2>
                         <div id="publishRequirements"
@@ -200,19 +200,19 @@
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
                                         <i class="fas {{ larp.location ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        Location
+                                        {{ 'larp.status.requirement.location'|trans }}
                                     </li>
                                     <li class="mb-2">
                                         <i class="fas {{ larp.description ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        Description
+                                        {{ 'larp.status.requirement.description'|trans }}
                                     </li>
                                     <li class="mb-2">
                                         <i class="fas {{ larp.startDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        Start Date
+                                        {{ 'larp.status.requirement.start_date'|trans }}
                                     </li>
                                     <li class="mb-2">
                                         <i class="fas {{ larp.endDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        End Date
+                                        {{ 'larp.status.requirement.end_date'|trans }}
                                     </li>
                                 </ul>
                             </div>
@@ -226,18 +226,18 @@
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#inquiriesRequirements">
-                                <i class="fas fa-users me-2"></i> Open for Inquiries Requirements
+                                <i class="fas fa-users me-2"></i> {{ 'larp.status.requirement.inquiries'|trans }}
                             </button>
                         </h2>
                         <div id="inquiriesRequirements"
                              class="accordion-collapse collapse"
                              data-bs-parent="#requirementsAccordion">
                             <div class="accordion-body">
-                                <p class="text-muted small mb-2">All publish requirements plus:</p>
+                                <p class="text-muted small mb-2">{{ 'larp.status.requirement.all_publish_plus'|trans }}</p>
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
                                         <i class="fas {{ larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        At least one character
+                                        {{ 'larp.status.requirement.has_character'|trans }}
                                         {% if larp.characters|length > 0 %}
                                             <span class="badge bg-secondary ms-1">{{ larp.characters|length }}</span>
                                         {% endif %}
@@ -245,9 +245,9 @@
                                     <li class="mb-2">
                                         {% set charactersWithoutDesc = larp.characters|filter(c => not c.description) %}
                                         <i class="fas {{ charactersWithoutDesc|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        All characters have descriptions
+                                        {{ 'larp.status.requirement.characters_described'|trans }}
                                         {% if charactersWithoutDesc|length > 0 %}
-                                            <span class="badge bg-warning ms-1">{{ charactersWithoutDesc|length }} missing</span>
+                                            <span class="badge bg-warning ms-1">{{ 'larp.status.requirement.missing'|trans({'%count%': charactersWithoutDesc|length}) }}</span>
                                         {% endif %}
                                     </li>
                                 </ul>
@@ -262,21 +262,21 @@
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#confirmRequirements">
-                                <i class="fas fa-check-double me-2"></i> Confirm Event Requirements
+                                <i class="fas fa-check-double me-2"></i> {{ 'larp.status.requirement.confirm'|trans }}
                             </button>
                         </h2>
                         <div id="confirmRequirements"
                              class="accordion-collapse collapse"
                              data-bs-parent="#requirementsAccordion">
                             <div class="accordion-body">
-                                <p class="text-muted small mb-2">All inquiry requirements plus:</p>
+                                <p class="text-muted small mb-2">{{ 'larp.status.requirement.all_inquiries_plus'|trans }}</p>
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
                                         {% set unassignedChars = larp.characters|filter(c => c.larpParticipant is null) %}
                                         <i class="fas {{ unassignedChars|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
-                                        All characters assigned to participants
+                                        {{ 'larp.status.requirement.characters_assigned'|trans }}
                                         {% if unassignedChars|length > 0 %}
-                                            <span class="badge bg-warning ms-1">{{ unassignedChars|length }} unassigned</span>
+                                            <span class="badge bg-warning ms-1">{{ 'larp.status.requirement.unassigned'|trans({'%count%': unassignedChars|length}) }}</span>
                                         {% endif %}
                                     </li>
                                 </ul>
