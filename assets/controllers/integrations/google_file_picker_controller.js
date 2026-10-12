@@ -7,6 +7,7 @@ export default class extends Controller {
         tokenUrl: String,
         tokenCsrf: String,
         reauthenticationMessage: String,
+        appId: String,
     };
 
     connect() {
@@ -115,15 +116,18 @@ export default class extends Controller {
                 "application/vnd.google-apps.spreadsheet"
             );
 
-        const picker = new google.picker.PickerBuilder()
+        const pickerBuilder = new google.picker.PickerBuilder()
             .setOAuthToken(oauthToken)
             .setDeveloperKey(developerKey)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .addView(docsView)
-            .setCallback(this.onFilePicked.bind(this))
-            .build();
+            .setCallback(this.onFilePicked.bind(this));
 
-        picker.setVisible(true);
+        if (this.appIdValue) {
+            pickerBuilder.setAppId(this.appIdValue);
+        }
+
+        pickerBuilder.build().setVisible(true);
     }
 
     onFilePicked(data) {
@@ -148,8 +152,23 @@ export default class extends Controller {
     renderFileList() {
         this.selectedFilesTarget.replaceChildren();
 
+        const finalArray = this.selectedFileObjects.map((obj) => ({
+            fileId: obj.id,
+            fileName: obj.name,
+            permission: obj.permission,
+            mimeType: obj.mimeType,
+        }));
+        const initialArray = this.initialFiles.map((file) => ({
+            fileId: file.fileId,
+            fileName: file.fileName,
+            permission: file.permission,
+            mimeType: file.mimeType,
+        }));
+
+        this.saveButtonTarget.disabled = JSON.stringify(finalArray) === JSON.stringify(initialArray);
+        this.selectedFilesInputTarget.value = JSON.stringify(finalArray);
+
         if (this.selectedFileObjects.length === 0) {
-            this.selectedFilesInputTarget.value = "";
             return;
         }
 
@@ -175,20 +194,6 @@ export default class extends Controller {
         });
 
         this.selectedFilesTarget.appendChild(table);
-
-        const finalArray = this.selectedFileObjects.map((obj) => {
-            return {
-                fileId: obj.id,
-                fileName: obj.name,
-                permission: obj.permission,
-                mimeType: obj.mimeType,
-            };
-        });
-
-        const changed = JSON.stringify(finalArray) !== JSON.stringify(this.initialFiles);
-
-        this.saveButtonTarget.disabled = !changed;
-        this.selectedFilesInputTarget.value = JSON.stringify(finalArray);
     }
 
     buildNameCell(fileObj) {
@@ -261,7 +266,10 @@ export default class extends Controller {
         removeButton.classList.add("btn", "btn-sm", "btn-outline-danger");
         removeButton.dataset.index = String(index);
         removeButton.dataset.action = "click->google-file-picker#removeFile";
-        removeButton.textContent = "X";
+        removeButton.title = "Remove";
+        const removeIcon = document.createElement("i");
+        removeIcon.classList.add("bi", "bi-trash");
+        removeButton.appendChild(removeIcon);
         group.appendChild(removeButton);
 
         cell.appendChild(group);
@@ -276,7 +284,7 @@ export default class extends Controller {
     }
 
     removeFile(event) {
-        const index = parseInt(event.target.dataset.index, 10);
+        const index = parseInt(event.currentTarget.dataset.index, 10);
         this.selectedFileObjects.splice(index, 1);
         this.renderFileList();
     }

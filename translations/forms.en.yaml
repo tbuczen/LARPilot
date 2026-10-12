@@ -44,6 +44,11 @@ mapping:
     sheet_name: "Spreadsheet Name"
     end_column: "End Column"
     starting_row: "Starting Row"
+    column_placeholder: "Choose a column"
+    preview: "Sheet preview"
+    preview_description: "First rows of the selected sheet. Pick the columns below by their header names."
+    preview_unavailable: "The sheet preview could not be loaded: %message%"
+    preview_empty: "The selected sheet has no rows yet."
   document:
     header_type:
     starting_paragraph:
