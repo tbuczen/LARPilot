@@ -6,6 +6,7 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Integrations\DTO\ConnectionCallback;
 use App\Domain\Integrations\DTO\IntegrationHealth;
+use App\Domain\Integrations\DTO\SpreadsheetPreview;
 use App\Domain\Integrations\Entity\Enum\ConnectionType;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\Enum\ReferenceType;
@@ -36,9 +37,13 @@ readonly class GoogleIntegrationService implements
     FileSourceIntegrationInterface,
     AccessTokenProviderInterface
 {
+    public const DRIVE_FILE_SCOPE = Drive::DRIVE_FILE;
+
+    public const SCOPE_UPGRADE_MESSAGE = 'Google access was granted with an outdated scope. Reconnect Google to keep using Drive files.';
+
     public const GOOGLE_SCOPES = [
-        Drive::DRIVE,
-        'email'
+        self::DRIVE_FILE_SCOPE,
+        'email',
     ];
 
     public function __construct(
@@ -89,7 +94,16 @@ readonly class GoogleIntegrationService implements
             return IntegrationHealth::needsReauth($integration->getLastError());
         }
 
+        if (self::requiresScopeUpgrade($integration)) {
+            return IntegrationHealth::needsReauth(self::SCOPE_UPGRADE_MESSAGE);
+        }
+
         return IntegrationHealth::healthy();
+    }
+
+    public static function requiresScopeUpgrade(LarpIntegration $integration): bool
+    {
+        return !$integration->hasGrantedScope(self::DRIVE_FILE_SCOPE);
     }
 
     public function authorizationHeader(LarpIntegration $integration): string
@@ -112,6 +126,11 @@ readonly class GoogleIntegrationService implements
     {
         $spreadsheetMapping = SpreadsheetMappingModel::fromEntity($mapping);
         return $this->googleSpreadsheetIntegrationHelper->fetchSpreadsheetSheetIdByName($sharedFile, $spreadsheetMapping);
+    }
+
+    public function fetchSpreadsheetPreview(SharedFile $sharedFile, ?string $sheetName, int $headerRowNumber, int $rowLimit): SpreadsheetPreview
+    {
+        return $this->googleSpreadsheetIntegrationHelper->fetchSpreadsheetPreview($sharedFile, $sheetName, $headerRowNumber, $rowLimit);
     }
 
     public function getExternalFileUrl(LarpIntegration $integration, string $externalFileId): string

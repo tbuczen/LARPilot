@@ -35,6 +35,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route('/larp', name: 'backoffice_larp_')]
 class IntegrationsSettingsController extends AbstractController
 {
+    private const FILE_PERMISSIONS = ['reader', 'writer'];
+
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly IntegrationOwnershipGuard $integrationOwnershipGuard,
@@ -134,13 +136,9 @@ class IntegrationsSettingsController extends AbstractController
             throw $this->createAccessDeniedException('Invalid CSRF token.');
         }
 
-        $selectedFilesJson = $request->request->getString('selectedFiles', '[]');
-        $files = json_decode($selectedFilesJson, true);
-        if (!is_array($files)) {
-            $files = [];
-        }
+        $selectedFiles = $this->parseSelectedFiles($request->request->getString('selectedFiles'));
 
-        $command = new ApplyFilesPermissionsCommand($integration->getId()->toRfc4122(), $files);
+        $command = new ApplyFilesPermissionsCommand($integration->getId()->toRfc4122(), $selectedFiles);
         $handler->handle($command);
         return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
     }
@@ -191,6 +189,40 @@ class IntegrationsSettingsController extends AbstractController
         }
 
         return $this->noStore(new JsonResponse(['accessToken' => $accessToken]));
+    }
+
+    /**
+     * @return list<array{fileId: string, fileName: string, permission: string, mimeType: string}>
+     */
+    private function parseSelectedFiles(string $selectedFilesJson): array
+    {
+        try {
+            $decodedFiles = json_decode($selectedFilesJson, true, 4, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            throw new BadRequestHttpException('Selected files must be a JSON list.');
+        }
+
+        if (!is_array($decodedFiles) || !array_is_list($decodedFiles)) {
+            throw new BadRequestHttpException('Selected files must be a JSON list.');
+        }
+
+        $selectedFiles = [];
+        foreach ($decodedFiles as $decodedFile) {
+            $fileId = is_array($decodedFile) ? ($decodedFile['fileId'] ?? null) : null;
+            if (!is_string($fileId) || $fileId === '') {
+                throw new BadRequestHttpException('Every selected file needs a file id.');
+            }
+
+            $permission = $decodedFile['permission'] ?? null;
+            $selectedFiles[] = [
+                'fileId' => $fileId,
+                'fileName' => is_string($decodedFile['fileName'] ?? null) ? $decodedFile['fileName'] : $fileId,
+                'permission' => in_array($permission, self::FILE_PERMISSIONS, true) ? $permission : self::FILE_PERMISSIONS[0],
+                'mimeType' => is_string($decodedFile['mimeType'] ?? null) ? $decodedFile['mimeType'] : '',
+            ];
+        }
+
+        return $selectedFiles;
     }
 
     private function connectableIntegration(LarpIntegrationProvider $provider): ConnectableIntegrationInterface
