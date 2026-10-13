@@ -6,6 +6,7 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Integrations\Entity\Enum\IntegrationStatus;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
+use App\Domain\Integrations\Entity\ExternalItem;
 use App\Domain\Integrations\Entity\ExternalSource;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use Doctrine\Persistence\ManagerRegistry;
@@ -56,6 +57,23 @@ class ExternalSourceRepository extends BaseRepository
             ->orderBy('source.title', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function deleteForIntegration(LarpIntegration $integration): int
+    {
+        $this->getEntityManager()->createQueryBuilder()
+            ->delete(ExternalItem::class, 'item')
+            ->andWhere('item.source IN (SELECT source.id FROM ' . ExternalSource::class . ' source WHERE source.integration = :integration)')
+            ->setParameter('integration', $integration)
+            ->getQuery()
+            ->execute();
+
+        return (int) $this->createQueryBuilder('source')
+            ->delete()
+            ->andWhere('source.integration = :integration')
+            ->setParameter('integration', $integration)
+            ->getQuery()
+            ->execute();
     }
 
     /**

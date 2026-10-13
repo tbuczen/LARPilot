@@ -271,7 +271,7 @@ larp:
     connect_failed: 'Nie udało się połączyć z %provider%. Spróbuj ponownie.'
     connect_succeeded: 'Połączono z %provider%.'
     facebookDescription: 'Połącz swoje konto Facebook, aby umożliwić LARPilot publikowanie aktualizacji w Twoim imieniu.'
-    discordDescription: 'Połącz swoje konto Discord, aby umożliwić LARPilot publikowanie aktualizacji w Twoim imieniu.'
+    discordDescription: 'Zaproś bota LARPilot na swój serwer Discord i wybierz kanały, które może czytać dla tego LARP-a. Bot tylko czyta, nigdy nie publikuje.'
     asanaDescription: 'Połącz swoje konto Asana, aby umożliwić LARPilot synchronizację pracy.'
     trelloDescription: 'Połącz swoje konto Trello, aby umożliwić LARPilot synchronizację pracy.'
     miroDescription: 'Połącz swoje konto Miro, aby umożliwić LARPilot synchronizację tablicy.'

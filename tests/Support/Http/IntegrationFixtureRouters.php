@@ -45,7 +45,10 @@ final class IntegrationFixtureRouters
             ->on('GET', '/guilds/{guild_id}/channels', 'channels.json')
             ->on('GET', '/guilds/{guild_id}/threads/active', 'threads_active.json')
             ->on('GET', '/channels/{channel_id}/threads/archived/public', 'threads_archived_public.json')
-            ->on('GET', '/channels/{channel_id}/messages', 'messages.json');
+            ->on('GET', '/channels/{channel_id}/messages', 'messages.json')
+            ->on('POST', '/oauth2/token', 'oauth2_token_bot.json')
+            ->on('POST', '/oauth2/token/revoke', 'no_content.json')
+            ->on('DELETE', '/users/@me/guilds/{guild_id}', 'no_content.json', 204);
     }
 
     public static function miro(): FixtureRouter

@@ -77,4 +77,18 @@ class ExternalReferenceRepository extends BaseRepository
     {
         return $this->count(['externalItem' => $externalItem]);
     }
+
+    public function clearExcerptsForLarp(Larp $larp, LarpIntegrationProvider $provider): int
+    {
+        return (int) $this->createQueryBuilder('reference')
+            ->update()
+            ->set('reference.excerpt', ':emptyExcerpt')
+            ->andWhere('reference.larp = :larp')
+            ->andWhere('reference.provider = :provider')
+            ->setParameter('emptyExcerpt', null)
+            ->setParameter('larp', $larp)
+            ->setParameter('provider', $provider)
+            ->getQuery()
+            ->execute();
+    }
 }
