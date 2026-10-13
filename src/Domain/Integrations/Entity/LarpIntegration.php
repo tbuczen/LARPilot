@@ -223,6 +223,15 @@ class LarpIntegration implements Timestampable, CreatorAwareInterface
         $this->scopes = $scopes;
     }
 
+    public function hasGrantedScope(string $scope): bool
+    {
+        if ($this->scopes === null) {
+            return false;
+        }
+
+        return in_array($scope, preg_split('/[\s,]+/', trim($this->scopes)) ?: [], true);
+    }
+
     public function setClient(OAuth2ClientInterface $oauthClient): void
     {
         $this->client = $oauthClient;

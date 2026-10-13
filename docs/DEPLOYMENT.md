@@ -170,3 +170,28 @@ SELECT queue_name, count(*), min(created_at) FROM messenger_messages GROUP BY qu
 ### Docker (local development)
 
 `docker compose up -d` starts a `worker` service running the same command.
+
+## Google Drive access scope
+
+LARPilot asks Google only for `https://www.googleapis.com/auth/drive.file` (plus `email`).
+With this scope the app can open only the files an organizer picks in the Google Picker
+and the files it creates itself (exported character sheets, faction folders). The
+service account keeps reading and writing the picked files through the Drive sharing
+the picker applies, so imports and mapping previews do not depend on the organizer's
+token.
+
+The Picker must be built with the Cloud project number (`setAppId`), otherwise the
+picked files are not granted to the app. Set `GOOGLE_APP_ID` to the project number; when
+it is empty the number is taken from the prefix of `OAUTH_GOOGLE_CLIENT_ID`.
+
+### Connections made before the switch
+
+Integrations connected with the old full `drive` scope show a reconnect prompt in the
+Google integration settings instead of the file picker. Each organizer has to:
+
+1. click **Re-connect** and approve the new, narrower access;
+2. open the file picker and select the files LARPilot uses again (spreadsheets,
+   the character-sheet template and its folder), so they are granted to `drive.file`;
+3. optionally remove the old full-Drive grant at
+   <https://myaccount.google.com/permissions>.
+

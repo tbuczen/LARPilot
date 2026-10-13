@@ -43,6 +43,11 @@ mapping:
     sheet_name: "Nazwa arkusza"
     end_column: "Kolumna końcowa"
     starting_row: "Wiersz początkowy"
+    column_placeholder: "Wybierz kolumnę"
+    preview: "Podgląd arkusza"
+    preview_description: "Pierwsze wiersze wybranego arkusza. Wybierz poniżej kolumny po nazwach nagłówków."
+    preview_unavailable: "Nie udało się wczytać podglądu arkusza: %message%"
+    preview_empty: "Wybrany arkusz nie ma jeszcze żadnych wierszy."
   document:
     header_type: "Typ nagłówka"
     starting_paragraph: "Akapit początkowy"
