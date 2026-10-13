@@ -1,0 +1,2 @@
+{% set badgeClasses = {success: 'bg-success', partial: 'bg-warning text-dark', failed: 'bg-danger'} %}
+<span class="badge {{ badgeClasses[status.value]|default('bg-secondary') }}">{{ ('integration_hub.sync_status.' ~ status.value)|trans }}</span>

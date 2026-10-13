@@ -56,7 +56,7 @@ class MiroConnectionCest
 
         $I->followRedirect();
         $I->see('Miro is now connected.');
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_sources', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Miro->value]);
         $I->see('Manage boards', sprintf('a[href="%s"]', $I->getUrl('backoffice_larp_integration_miro_boards', ['larp' => $larp->getId()->toRfc4122()])));
     }
 
@@ -102,7 +102,7 @@ class MiroConnectionCest
         ExternalItemFactory::new()->with(['source' => $otherBoardSource])->create();
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_sources', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Miro->value]);
         $I->seeResponseCodeIsSuccessful();
         $I->seeElement(sprintf('button[data-delete-url="%s"]', $this->disconnectUrl($I, $larp)));
 
@@ -256,9 +256,10 @@ class MiroConnectionCest
         $I->assertSame(IntegrationStatus::NeedsReauth, $storedIntegration?->getStatus());
         $I->assertSame('Refresh token is invalid or revoked', $storedIntegration?->getLastError());
 
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
-        $I->seeElement('[data-test="miro-reconnect"]');
-        $I->see('Reconnect Miro', sprintf('a[href="%s"]', $I->getUrl('backoffice_larp_connect_integration', [
+        $I->amOnRoute('backoffice_larp_integrations_sources', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Miro->value]);
+        $I->see('Access to Miro expired or was revoked.');
+        $I->dontSee('Manage boards');
+        $I->see('Reconnect', sprintf('a[href="%s"]', $I->getUrl('backoffice_larp_connect_integration', [
             'larp' => $larp->getId()->toRfc4122(),
             'provider' => LarpIntegrationProvider::Miro->value,
         ])));
@@ -346,7 +347,10 @@ class MiroConnectionCest
 
     private function disconnectUrl(FunctionalTester $I, Larp $larp): string
     {
-        return $I->getUrl('backoffice_larp_integration_miro_disconnect', ['larp' => $larp->getId()->toRfc4122()]);
+        return $I->getUrl('backoffice_larp_integrations_disconnect', [
+            'larp' => $larp->getId()->toRfc4122(),
+            'provider' => LarpIntegrationProvider::Miro->value,
+        ]);
     }
 
     private function findMiroIntegration(FunctionalTester $I, Uuid $larpId): ?LarpIntegration

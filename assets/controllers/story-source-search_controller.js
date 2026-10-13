@@ -1,10 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['query', 'results'];
+    static targets = ['query', 'results', 'selection', 'selectionLabel'];
 
     static values = {
         url: String,
+        fieldName: { type: String, default: 'item' },
         empty: String,
         error: String,
         delay: { type: Number, default: 250 },
@@ -24,12 +25,25 @@ export default class extends Controller {
         this.abortController?.abort();
     }
 
-    load() {
+    load(event) {
+        this.select(event?.relatedTarget);
         if (this.loaded) {
             return;
         }
         this.loaded = true;
         this.fetchResults('');
+    }
+
+    select(trigger) {
+        if (!trigger?.dataset?.itemId) {
+            return;
+        }
+        if (this.hasSelectionTarget) {
+            this.selectionTarget.value = trigger.dataset.itemId;
+        }
+        if (this.hasSelectionLabelTarget) {
+            this.selectionLabelTarget.textContent = trigger.dataset.itemTitle || '';
+        }
     }
 
     search() {
@@ -78,7 +92,7 @@ export default class extends Controller {
         const buttons = items.map((item) => {
             const button = document.createElement('button');
             button.type = 'submit';
-            button.name = 'item';
+            button.name = this.fieldNameValue;
             button.value = item.id;
             button.className = 'list-group-item list-group-item-action d-flex flex-column align-items-start gap-1';
 

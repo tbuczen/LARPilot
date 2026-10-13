@@ -5,12 +5,19 @@
 {% block larp_title %}{{ 'boards.title'|trans({}, 'miro') }} - {{ larp.title }}{% endblock %}
 
 {% block larp_content %}
-    <div class="card mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_integrations_hub', { larp: larp.id }) }}">{{ 'integration_hub.title'|trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_integrations_sources', { larp: larp.id, provider: integration.provider.value }) }}">{{ integration.provider.label }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'boards.title'|trans({}, 'miro') }}</li>
+        </ol>
+    </nav>
+    <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">{{ 'boards.title'|trans({}, 'miro') }}</h2>
                 <div class="d-flex gap-2">
-                    {{ ui.back_button(path('backoffice_larp_integration_settings', { larp: larp.id })) }}
+                    {{ ui.back_button(path('backoffice_larp_integrations_sources', { larp: larp.id, provider: integration.provider.value })) }}
                 </div>
             </div>
         </div>
@@ -20,7 +27,9 @@
                     <i class="bi bi-exclamation-triangle"></i>
                     {{ 'reconnect.message'|trans({}, 'miro') }}
                 </div>
-                {{ ui.primary_button('reconnect.button'|trans({}, 'miro'), path('backoffice_larp_connect_integration', { larp: larp.id, provider: integration.provider.value }), 'bi-arrow-repeat') }}
+                <a href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: integration.provider.value }) }}" class="btn btn-warning">
+                    <i class="bi bi-arrow-repeat"></i>{{ 'reconnect.button'|trans({}, 'miro') }}
+                </a>
             {% else %}
                 <p class="text-muted">{{ 'boards.description'|trans({}, 'miro') }}</p>
             {% endif %}

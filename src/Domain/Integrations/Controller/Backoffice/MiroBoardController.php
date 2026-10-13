@@ -43,7 +43,7 @@ class MiroBoardController extends AbstractController
             $this->addFlash('danger', $this->translator->trans('boards.load_failed', [], 'miro'));
         }
 
-        return $this->render('backoffice/larp/integrations/miro/boards.html.twig', [
+        return $this->render('domain/integrations/integration_miro/boards.html.twig', [
             'larp' => $larp,
             'integration' => $integration,
             'boards' => $boards,
@@ -93,22 +93,6 @@ class MiroBoardController extends AbstractController
         $this->addFlash('success', $this->translator->trans('boards.selected', ['%board%' => $board->name], 'miro'));
 
         return $boardsRedirect;
-    }
-
-    #[Route('/disconnect', name: 'disconnect', methods: ['POST'])]
-    public function disconnect(Larp $larp, Request $request): RedirectResponse
-    {
-        $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
-        $integration = $this->miroIntegration($larp);
-
-        if (!$this->isCsrfTokenValid('delete', $request->request->getString('_token'))) {
-            throw $this->createAccessDeniedException('Invalid CSRF token.');
-        }
-
-        $this->miroIntegrationProvider->disconnect($integration);
-        $this->addFlash('success', $this->translator->trans('disconnected', [], 'miro'));
-
-        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
     }
 
     private function miroIntegration(Larp $larp): LarpIntegration

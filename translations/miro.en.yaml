@@ -1,9 +1,6 @@
 settings:
-  team: 'Miro team'
-  scopes: 'Granted scopes'
+  selected_boards: '{0}No boards selected yet.|{1}1 board belongs to this LARP.|]1,Inf[%count% boards belong to this LARP.'
   manage_boards: 'Manage boards'
-  disconnect: 'Disconnect'
-  disconnect_confirm: 'Disconnect Miro? The boards selected for this LARP and everything read from them will be removed.'
 reconnect:
   message: 'LARPilot can no longer access your Miro team. Reconnect Miro to keep reading the selected boards.'
   button: 'Reconnect Miro'
@@ -20,4 +17,3 @@ boards:
   deselected: 'Board removed from this LARP.'
   empty: 'No boards were found in the connected Miro team.'
   load_failed: 'Could not load boards from Miro. Please try again later.'
-disconnected: 'Miro has been disconnected from this LARP.'
