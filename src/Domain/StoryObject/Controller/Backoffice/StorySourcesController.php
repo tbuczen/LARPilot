@@ -6,11 +6,13 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Application\Repository\LarpApplicationChoiceRepository;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Integrations\Entity\Enum\ExternalSourceKind;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\Enum\ReferenceRole;
 use App\Domain\Integrations\Entity\ExternalReference;
 use App\Domain\Integrations\Repository\ExternalItemRepository;
 use App\Domain\Integrations\Repository\ExternalReferenceRepository;
+use App\Domain\Integrations\Repository\ExternalSourceRepository;
 use App\Domain\Integrations\Security\Voter\StorySourceVoter;
 use App\Domain\Integrations\Service\ExternalReferenceLinker;
 use App\Domain\Integrations\Service\StorySourceLinkService;
@@ -40,11 +42,13 @@ class StorySourcesController extends BaseController
         CommentRepository $commentRepository,
         StoryObjectMentionService $mentionService,
         LarpApplicationChoiceRepository $choiceRepository,
+        ExternalSourceRepository $sourceRepository,
     ): Response {
         $this->assertStoryObjectBelongsToLarp($storyObject, $larp);
 
         $references = $referenceRepository->findForStoryObject($storyObject);
         $isLoreDocument = $storyObject->getTargetType() === TargetType::LoreDocument;
+        $canLink = $this->isGranted(StorySourceVoter::LINK, $storyObject);
 
         return $this->render('domain/story_object/story_sources/list.html.twig', [
             'larp' => $larp,
@@ -52,7 +56,8 @@ class StorySourcesController extends BaseController
             'storyObjectType' => $storyObject->getTargetType()->value,
             'referenceGroups' => $this->groupByProvider($references),
             'referencesCount' => count($references),
-            'canLink' => $this->isGranted(StorySourceVoter::LINK, $storyObject),
+            'canLink' => $canLink,
+            'miroBoards' => $canLink ? $sourceRepository->findEnabledForLarpByKind($larp, ExternalSourceKind::MiroBoard) : [],
             'roles' => ReferenceRole::cases(),
             'mentionsCount' => $isLoreDocument ? null : count($mentionService->findMentions($storyObject)),
             'applicantsCount' => $storyObject instanceof Character ? $choiceRepository->getApplicationsCountForCharacter($storyObject) : 0,

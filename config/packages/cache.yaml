@@ -20,3 +20,6 @@ framework:
                 adapter: cache.adapter.filesystem
             cache.scheduler:
                 adapter: cache.adapter.filesystem
+            cache.miro_board_snapshots:
+                adapter: cache.app
+                default_lifetime: 600

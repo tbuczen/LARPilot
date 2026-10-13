@@ -4,6 +4,7 @@ namespace App\Domain\Integrations\Repository;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\BaseRepository;
+use App\Domain\Integrations\Entity\Enum\ExternalSourceKind;
 use App\Domain\Integrations\Entity\Enum\IntegrationStatus;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\ExternalSource;
@@ -40,6 +41,24 @@ class ExternalSourceRepository extends BaseRepository
             ->innerJoin('source.integration', 'integration')
             ->andWhere('integration.larp = :larp')
             ->setParameter('larp', $larp)
+            ->orderBy('source.title', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return ExternalSource[]
+     */
+    public function findEnabledForLarpByKind(Larp $larp, ExternalSourceKind $kind): array
+    {
+        return $this->createQueryBuilder('source')
+            ->addSelect('integration')
+            ->innerJoin('source.integration', 'integration')
+            ->andWhere('integration.larp = :larp')
+            ->andWhere('source.kind = :kind')
+            ->andWhere('source.enabled = true')
+            ->setParameter('larp', $larp)
+            ->setParameter('kind', $kind)
             ->orderBy('source.title', 'ASC')
             ->getQuery()
             ->getResult();

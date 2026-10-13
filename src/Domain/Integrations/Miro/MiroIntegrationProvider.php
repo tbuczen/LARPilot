@@ -6,24 +6,31 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Integrations\DTO\ConnectionCallback;
 use App\Domain\Integrations\DTO\IntegrationHealth;
+use App\Domain\Integrations\DTO\RemoteItem;
 use App\Domain\Integrations\DTO\RemoteSource;
+use App\Domain\Integrations\DTO\SourceSyncPage;
 use App\Domain\Integrations\Entity\Enum\ConnectionType;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
+use App\Domain\Integrations\Entity\ExternalSource;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Miro\Client\MiroApiClientFactory;
 use App\Domain\Integrations\Miro\Client\MiroApiException;
 use App\Domain\Integrations\Miro\Client\MiroAuthorizationException;
 use App\Domain\Integrations\Miro\OAuth\MiroOAuthGatewayInterface;
+use App\Domain\Integrations\Miro\Snapshot\MiroBoardSnapshotProvider;
+use App\Domain\Integrations\Miro\Snapshot\MiroBoardSync;
 use App\Domain\Integrations\Repository\ExternalSourceRepository;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Service\Capability\AccessTokenProviderInterface;
+use App\Domain\Integrations\Service\Capability\BoardSourceIntegrationInterface;
 use App\Domain\Integrations\Service\Capability\ConnectableIntegrationInterface;
+use App\Domain\Integrations\Service\Capability\SourceSyncIntegrationInterface;
 use App\Domain\Integrations\Service\Credential\OAuthCredentialProvider;
 use App\Domain\Integrations\Service\Exceptions\IntegrationConnectionFailedException;
 use App\Domain\Integrations\Service\Exceptions\ReAuthenticationNeededException;
 use Doctrine\ORM\EntityManagerInterface;
 
-readonly class MiroIntegrationProvider implements ConnectableIntegrationInterface, AccessTokenProviderInterface
+readonly class MiroIntegrationProvider implements ConnectableIntegrationInterface, AccessTokenProviderInterface, BoardSourceIntegrationInterface, SourceSyncIntegrationInterface
 {
     public function __construct(
         private OAuthCredentialProvider $oauthCredentialProvider,
@@ -32,6 +39,8 @@ readonly class MiroIntegrationProvider implements ConnectableIntegrationInterfac
         private LarpIntegrationRepository $larpIntegrationRepository,
         private ExternalSourceRepository $externalSourceRepository,
         private EntityManagerInterface $entityManager,
+        private MiroBoardSnapshotProvider $boardSnapshotProvider,
+        private MiroBoardSync $boardSync,
     ) {
     }
 
@@ -133,6 +142,24 @@ readonly class MiroIntegrationProvider implements ConnectableIntegrationInterfac
         }
 
         return $boards;
+    }
+
+    /**
+     * @return list<RemoteItem>
+     */
+    public function listBoardItems(LarpIntegration $integration, string $boardId): array
+    {
+        $boardItems = [];
+        foreach ($this->boardSnapshotProvider->snapshot($integration, $boardId)->entries as $entry) {
+            $boardItems[] = new RemoteItem($entry->externalId, $entry->title, $entry->url, $entry->updatedAt);
+        }
+
+        return $boardItems;
+    }
+
+    public function fetchSourcePage(ExternalSource $source, ?array $cursor): SourceSyncPage
+    {
+        return $this->boardSync->fetchPage($source);
     }
 
     public function findIntegration(Larp $larp): ?LarpIntegration

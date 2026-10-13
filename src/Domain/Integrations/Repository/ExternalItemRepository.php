@@ -59,6 +59,19 @@ class ExternalItemRepository extends BaseRepository
     }
 
     /**
+     * @return array<string, ExternalItem>
+     */
+    public function findForSourceIndexedByExternalId(ExternalSource $source): array
+    {
+        $itemsByExternalId = [];
+        foreach ($this->findBy(['source' => $source]) as $item) {
+            $itemsByExternalId[$item->getExternalId()] = $item;
+        }
+
+        return $itemsByExternalId;
+    }
+
+    /**
      * @return ExternalItem[]
      */
     public function searchForLarp(Larp $larp, string $searchTerm, int $limit = 20): array

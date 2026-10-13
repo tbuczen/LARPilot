@@ -7,6 +7,7 @@ use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\ExternalItem;
 use App\Domain\Integrations\Entity\ExternalReference;
+use App\Domain\Integrations\Entity\ExternalSource;
 use App\Domain\StoryObject\Entity\StoryObject;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -71,6 +72,55 @@ class ExternalReferenceRepository extends BaseRepository
             'provider' => $provider,
             'externalId' => $externalId,
         ]);
+    }
+
+    /**
+     * @param list<string> $externalIds
+     * @return ExternalReference[]
+     */
+    public function findForSourceOrExternalIds(ExternalSource $source, array $externalIds): array
+    {
+        $integration = $source->getIntegration();
+        $queryBuilder = $this->createQueryBuilder('reference')
+            ->addSelect('storyObject')
+            ->leftJoin('reference.storyObject', 'storyObject')
+            ->andWhere('reference.larp = :larp')
+            ->setParameter('larp', $integration->getLarp())
+            ->setParameter('source', $source)
+            ->orderBy('reference.createdAt', 'ASC')
+            ->addOrderBy('reference.id', 'ASC');
+
+        if ($externalIds === []) {
+            return $queryBuilder->andWhere('reference.source = :source')->getQuery()->getResult();
+        }
+
+        return $queryBuilder
+            ->andWhere('reference.source = :source OR (reference.provider = :provider AND reference.externalId IN (:externalIds))')
+            ->setParameter('provider', $integration->getProvider())
+            ->setParameter('externalIds', $externalIds)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array<string, list<string|null>>
+     */
+    public function findLinkedNamesByExternalItem(ExternalSource $source): array
+    {
+        $rows = $this->createQueryBuilder('reference')
+            ->select('IDENTITY(reference.externalItem) AS externalItemId', 'reference.name AS name')
+            ->andWhere('reference.source = :source')
+            ->andWhere('reference.externalItem IS NOT NULL')
+            ->setParameter('source', $source)
+            ->getQuery()
+            ->getArrayResult();
+
+        $namesByExternalItem = [];
+        foreach ($rows as $row) {
+            $namesByExternalItem[(string) $row['externalItemId']][] = $row['name'];
+        }
+
+        return $namesByExternalItem;
     }
 
     public function countForExternalItem(ExternalItem $externalItem): int
