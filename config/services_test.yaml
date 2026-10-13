@@ -39,3 +39,20 @@ services:
 
     Tests\Support\Integrations\FixtureGoogleClientFactory: ~
     App\Domain\Integrations\Service\Google\GoogleClientFactoryInterface: '@Tests\Support\Integrations\FixtureGoogleClientFactory'
+
+    Tests\Support\Integrations\FakeMiroOAuthGateway: ~
+    App\Domain\Integrations\Miro\OAuth\MiroOAuthGatewayInterface: '@Tests\Support\Integrations\FakeMiroOAuthGateway'
+
+    Tests\Support\Integrations\MiroTokenEndpoint:
+        public: true
+
+    tests.integrations.miro.oauth_client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@Tests\Support\Integrations\MiroTokenEndpoint'
+
+    App\Domain\Integrations\Miro\Credential\MiroTokenRefresher:
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $httpClient: '@tests.integrations.miro.oauth_client'

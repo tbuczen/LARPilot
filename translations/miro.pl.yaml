@@ -1,0 +1,19 @@
+settings:
+  selected_boards: '{0}Nie wybrano jeszcze tablic.|{1}1 tablica należy do tego LARP-a.|[2,4]%count% tablice należą do tego LARP-a.|[5,Inf[%count% tablic należy do tego LARP-a.'
+  manage_boards: 'Zarządzaj tablicami'
+reconnect:
+  message: 'LARPilot nie ma już dostępu do Twojego zespołu Miro. Połącz Miro ponownie, aby dalej odczytywać wybrane tablice.'
+  button: 'Połącz Miro ponownie'
+boards:
+  title: 'Tablice Miro'
+  description: 'Wybierz, które tablice połączonego zespołu Miro należą do tego LARP-a.'
+  name: 'Tablica'
+  status: 'Status'
+  selected_badge: 'Wybrana'
+  not_selected_badge: 'Niewybrana'
+  select: 'Dodaj do LARP-a'
+  deselect: 'Usuń z LARP-a'
+  selected: 'Tablica „%board%” jest teraz częścią tego LARP-a.'
+  deselected: 'Tablica została usunięta z tego LARP-a.'
+  empty: 'Nie znaleziono tablic w połączonym zespole Miro.'
+  load_failed: 'Nie udało się wczytać tablic z Miro. Spróbuj ponownie później.'

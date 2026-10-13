@@ -92,9 +92,9 @@ class StorySourcesCest
 
         $I->seeResponseCodeIsSuccessful();
         $I->seeNumberOfElements('.story-sources__group', 2);
-        $I->see('Throne room frame', '.story-sources__group[data-provider="miro"] a[target="_blank"][rel="noopener"]');
-        $I->see('Board item', '.story-sources__group[data-provider="miro"] .badge');
-        $I->see('Primary', '.story-sources__group[data-provider="miro"] .badge');
+        $I->see('Throne room frame', '.story-sources__group[data-provider="integration_miro"] a[target="_blank"][rel="noopener"]');
+        $I->see('Board item', '.story-sources__group[data-provider="integration_miro"] .badge');
+        $I->see('Primary', '.story-sources__group[data-provider="integration_miro"] .badge');
         $I->see((string) $item->getTitle(), '.story-sources__group[data-provider="discord"] a');
         $I->see('Archived', '.story-sources__group[data-provider="discord"] .badge');
         $I->seeElement('.story-sources__row a.btn-sm.btn-outline-info');

@@ -268,7 +268,8 @@ class IntegrationConnectFlowCest
 
         $I->seeResponseCodeIsSuccessful();
         $I->seeElement(sprintf('a[href="%s"]', $this->connectUrl($I, $larp->getId(), LarpIntegrationProvider::Google)));
-        foreach ([LarpIntegrationProvider::Facebook, LarpIntegrationProvider::Discord, LarpIntegrationProvider::Miro] as $hiddenProvider) {
+        $I->seeElement(sprintf('a[href="%s"]', $this->connectUrl($I, $larp->getId(), LarpIntegrationProvider::Miro)));
+        foreach ([LarpIntegrationProvider::Facebook, LarpIntegrationProvider::Discord] as $hiddenProvider) {
             $I->dontSeeElement(sprintf('a[href="%s"]', $this->connectUrl($I, $larp->getId(), $hiddenProvider)));
         }
         $I->dontSee('Facebook', 'h2');
