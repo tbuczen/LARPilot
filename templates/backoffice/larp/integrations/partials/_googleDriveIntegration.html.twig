@@ -1,11 +1,3 @@
-<h5>{{ 'larp.integration.current'|trans }}: {{ integration.provider.name }}</h5>
-<strong>Scopes:</strong>
-<ul>
-    {% for scope in integration.scopes|default('')|split(' ') %}
-        <li>{{ scope }}</li>
-    {% endfor %}
-</ul>
-
 {% set nowPlus30 = 'now'|date_modify('+30 seconds') %}
 {% set tokenExpired = integration.refreshToken is empty and integration.expiresAt < nowPlus30 %}
 {% set scopeUpgradeRequired = not integration.hasGrantedScope(constant('App\\Domain\\Integrations\\Service\\Google\\GoogleIntegrationService::DRIVE_FILE_SCOPE')) %}
@@ -14,10 +6,10 @@
         {{ scopeUpgradeRequired ? 'larp.integration.scope_upgrade_required'|trans : 'larp.integration.expired'|trans }}
     </div>
     <a
-            href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: integration.provider.value }) }}"
-            class="btn btn-primary"
+            href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: provider.value }) }}"
+            class="btn btn-warning"
     >
-        {{ 'larp.integration.reconnect'|trans }}
+        <i class="bi bi-arrow-repeat"></i>{{ 'larp.integration.reconnect'|trans }}
     </a>
 {% else %}
 

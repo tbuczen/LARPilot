@@ -7,6 +7,7 @@ use App\Domain\Core\Repository\BaseRepository;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\ExternalItem;
 use App\Domain\Integrations\Entity\ExternalSource;
+use App\Domain\Integrations\Entity\LarpIntegration;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
@@ -62,21 +63,19 @@ class ExternalItemRepository extends BaseRepository
      */
     public function searchForLarp(Larp $larp, string $searchTerm, int $limit = 20): array
     {
-        $queryBuilder = $this->createLarpQueryBuilder($larp)
-            ->orderBy('item.externalUpdatedAt', 'DESC')
-            ->addOrderBy('item.id', 'ASC')
-            ->setMaxResults($limit);
+        return $this->search($this->createLarpQueryBuilder($larp), $searchTerm, $limit);
+    }
 
-        $normalizedTerm = trim($searchTerm);
-        if ($normalizedTerm === '') {
-            return $queryBuilder->getQuery()->getResult();
-        }
+    /**
+     * @return ExternalItem[]
+     */
+    public function searchForIntegration(LarpIntegration $integration, string $searchTerm, int $limit = 50): array
+    {
+        $queryBuilder = $this->createLarpQueryBuilder($integration->getLarp())
+            ->andWhere('source.integration = :integration')
+            ->setParameter('integration', $integration);
 
-        $queryBuilder
-            ->andWhere('LOWER(item.title) LIKE :searchTerm OR LOWER(item.excerpt) LIKE :searchTerm OR LOWER(source.title) LIKE :searchTerm')
-            ->setParameter('searchTerm', '%' . addcslashes(mb_strtolower($normalizedTerm), '%_\\') . '%');
-
-        return $queryBuilder->getQuery()->getResult();
+        return $this->search($queryBuilder, $searchTerm, $limit);
     }
 
     public function findOneForLarp(Larp $larp, string $itemId): ?ExternalItem
@@ -102,6 +101,28 @@ class ExternalItemRepository extends BaseRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @return ExternalItem[]
+     */
+    private function search(QueryBuilder $queryBuilder, string $searchTerm, int $limit): array
+    {
+        $queryBuilder
+            ->orderBy('item.externalUpdatedAt', 'DESC')
+            ->addOrderBy('item.id', 'ASC')
+            ->setMaxResults($limit);
+
+        $normalizedTerm = trim($searchTerm);
+        if ($normalizedTerm === '') {
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        $queryBuilder
+            ->andWhere('LOWER(item.title) LIKE :searchTerm OR LOWER(item.excerpt) LIKE :searchTerm OR LOWER(source.title) LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . addcslashes(mb_strtolower($normalizedTerm), '%_\\') . '%');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     private function createLarpQueryBuilder(Larp $larp): QueryBuilder

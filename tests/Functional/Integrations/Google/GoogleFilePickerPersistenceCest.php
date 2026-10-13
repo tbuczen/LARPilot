@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Functional\Integrations\Google;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\Enum\ResourceType;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Entity\ObjectFieldMapping;
@@ -44,7 +45,7 @@ class GoogleFilePickerPersistenceCest
             ['fileId' => self::NEW_FILE_ID, 'fileName' => 'Casting', 'permission' => 'writer', 'mimeType' => SharedFileFactory::SPREADSHEET_MIME_TYPE],
         ]);
 
-        $I->seeCurrentRouteIs('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
+        $I->seeCurrentRouteIs('backoffice_larp_integrations_mappings', ['larp' => $larp->getId()->toRfc4122(), 'provider' => LarpIntegrationProvider::Google->value]);
 
         $sharedFiles = $this->sharedFilesByFileId($I, $integration);
         $I->assertEqualsCanonicalizing([$keptFile->getFileId(), self::NEW_FILE_ID], array_keys($sharedFiles));
@@ -83,7 +84,7 @@ class GoogleFilePickerPersistenceCest
         $sharedFile = SharedFileFactory::new()->forIntegration($integration)->document()->create()->_real();
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_mappings', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
         $I->submitForm($this->pickerFormSelector($I, $larp->_real(), $integration), ['selectedFiles' => '']);
 
         $I->seeResponseCodeIs(400);
@@ -95,7 +96,7 @@ class GoogleFilePickerPersistenceCest
      */
     private function submitPicker(FunctionalTester $I, Larp $larp, LarpIntegration $integration, array $selectedFiles): void
     {
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_mappings', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
         $I->submitForm($this->pickerFormSelector($I, $larp, $integration), [
             'selectedFiles' => json_encode($selectedFiles, JSON_THROW_ON_ERROR),
         ]);

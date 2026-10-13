@@ -44,7 +44,7 @@ class GoogleDriveScopeCest
             ->_real();
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_mappings', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
 
         $I->seeResponseCodeIsSuccessful();
         $I->seeElement('[data-google-reconnect-prompt]');
@@ -70,7 +70,7 @@ class GoogleDriveScopeCest
         LarpIntegrationFactory::new()->forLarp($larp)->createdBy($organizer)->google()->create();
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_mappings', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
 
         $I->seeResponseCodeIsSuccessful();
         $I->dontSeeElement('[data-google-reconnect-prompt]');
@@ -106,7 +106,7 @@ class GoogleDriveScopeCest
         $I->assertSame(FakeGoogleOAuthGateway::GRANTED_SCOPE, $integration->getScopes());
         $I->assertFalse(GoogleIntegrationService::requiresScopeUpgrade($integration));
 
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_mappings', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Google->value]);
         $I->dontSeeElement('[data-google-reconnect-prompt]');
     }
 

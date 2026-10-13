@@ -4,12 +4,14 @@ namespace App\Domain\Core\Service;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
+use App\Domain\Integrations\Service\Hub\IntegrationHubOverview;
 use ShipMonk\DoctrineEntityPreloader\EntityPreloader;
 
 readonly class LarpDashboardService
 {
     public function __construct(
-        private EntityPreloader $entityPreloader
+        private EntityPreloader $entityPreloader,
+        private IntegrationHubOverview $integrationHubOverview,
     ) {
     }
 
@@ -155,6 +157,7 @@ readonly class LarpDashboardService
     {
         return [
             'total' => $larp->getIntegrations()->count(),
+            'needsAttention' => $this->integrationHubOverview->countNeedingAttention($larp),
         ];
     }
 
