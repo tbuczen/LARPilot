@@ -1561,6 +1561,7 @@ integration_hub:
     enabled_flash: '%source% will be synced again.'
     disabled_flash: '%source% is paused and will not be synced.'
     sync_requested: 'Sync of %source% has been requested.'
+    sync_unavailable: '%source% cannot be synced right now.'
     kind:
       discord_channel: 'Channel'
       discord_forum: 'Forum'

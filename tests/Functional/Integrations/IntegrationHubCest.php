@@ -349,9 +349,9 @@ class IntegrationHubCest
         $I->seeInRepository(ExternalSource::class, ['id' => $source->getId(), 'enabled' => true]);
     }
 
-    public function syncNowIsUnavailableWithoutSyncRequester(FunctionalTester $I): void
+    public function syncNowIsHiddenForProvidersThatCannotSync(FunctionalTester $I): void
     {
-        $I->wantTo('verify Sync now is not offered until a sync requester service exists');
+        $I->wantTo('verify Sync now is not offered for a provider without sync support and still needs CSRF');
 
         $organizer = UserFactory::createApprovedUser();
         $larp = LarpFactory::createDraftLarp($organizer);

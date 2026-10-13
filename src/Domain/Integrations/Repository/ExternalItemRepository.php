@@ -33,6 +33,32 @@ class ExternalItemRepository extends BaseRepository
     }
 
     /**
+     * @param list<string> $externalIds
+     * @return array<string, ExternalItem>
+     */
+    public function findBySourceIndexedByExternalId(ExternalSource $source, array $externalIds): array
+    {
+        if ($externalIds === []) {
+            return [];
+        }
+
+        $items = $this->createQueryBuilder('item')
+            ->andWhere('item.source = :source')
+            ->andWhere('item.externalId IN (:externalIds)')
+            ->setParameter('source', $source)
+            ->setParameter('externalIds', $externalIds)
+            ->getQuery()
+            ->getResult();
+
+        $itemsByExternalId = [];
+        foreach ($items as $item) {
+            $itemsByExternalId[$item->getExternalId()] = $item;
+        }
+
+        return $itemsByExternalId;
+    }
+
+    /**
      * @return ExternalItem[]
      */
     public function searchForLarp(Larp $larp, string $searchTerm, int $limit = 20): array

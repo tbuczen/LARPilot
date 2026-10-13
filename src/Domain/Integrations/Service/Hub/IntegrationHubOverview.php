@@ -11,6 +11,7 @@ use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Repository\ExternalSourceRepository;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Service\Capability\ConnectableIntegrationInterface;
+use App\Domain\Integrations\Service\Google\GoogleIntegrationService;
 use App\Domain\Integrations\Service\IntegrationRegistry;
 
 readonly class IntegrationHubOverview
@@ -85,7 +86,7 @@ readonly class IntegrationHubOverview
             return IntegrationHubState::NotConnected;
         }
 
-        if ($integration->getStatus() === IntegrationStatus::NeedsReauth || $this->hasExpiredUserToken($integration)) {
+        if ($integration->getStatus() === IntegrationStatus::NeedsReauth || $this->hasExpiredUserToken($integration) || $this->requiresScopeUpgrade($integration)) {
             return IntegrationHubState::NeedsReconnect;
         }
 
@@ -138,6 +139,12 @@ readonly class IntegrationHubOverview
         }
 
         return $expiresAt < new \DateTimeImmutable(self::TOKEN_EXPIRY_MARGIN);
+    }
+
+    private function requiresScopeUpgrade(LarpIntegration $integration): bool
+    {
+        return $integration->getProvider() === LarpIntegrationProvider::Google
+            && GoogleIntegrationService::requiresScopeUpgrade($integration);
     }
 
     private function accountLabel(LarpIntegration $integration): ?string

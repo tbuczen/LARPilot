@@ -20,7 +20,7 @@ use App\Domain\Integrations\Service\Hub\IntegrationCard;
 use App\Domain\Integrations\Service\Hub\IntegrationHubOverview;
 use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\Integrations\Service\StorySourceLinkService;
-use App\Domain\Integrations\Service\Sync\SourceSyncRequesterInterface;
+use App\Domain\Integrations\Service\Sync\SyncNowDispatcher;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Repository\StoryObjectRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,7 +62,7 @@ class IntegrationHubController extends BaseController
         LarpIntegrationProvider $provider,
         IntegrationHubOverview $hubOverview,
         ExternalSourceRepository $sourceRepository,
-        ?SourceSyncRequesterInterface $syncRequester = null,
+        SyncNowDispatcher $syncNowDispatcher,
     ): Response {
         $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
         $card = $this->connectedCard($larp, $provider, $hubOverview);
@@ -70,9 +70,17 @@ class IntegrationHubController extends BaseController
             return $this->redirectToHub($larp);
         }
 
+        $sources = $sourceRepository->findForIntegration($card->connectedIntegration());
+        $syncableSourceIds = [];
+        foreach ($sources as $source) {
+            if ($syncNowDispatcher->canSync($source)) {
+                $syncableSourceIds[] = $source->getId()->toRfc4122();
+            }
+        }
+
         return $this->renderTab(self::TAB_SOURCES, $larp, $card, [
-            'sources' => $sourceRepository->findForIntegration($card->connectedIntegration()),
-            'canSync' => $syncRequester instanceof SourceSyncRequesterInterface,
+            'sources' => $sources,
+            'syncableSourceIds' => $syncableSourceIds,
         ]);
     }
 
@@ -199,17 +207,18 @@ class IntegrationHubController extends BaseController
         LarpIntegrationProvider $provider,
         string $source,
         ExternalSourceRepository $sourceRepository,
-        ?SourceSyncRequesterInterface $syncRequester = null,
+        SyncNowDispatcher $syncNowDispatcher,
     ): RedirectResponse {
         $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
         $externalSource = $this->findSourceOfProvider($source, $larp, $provider, $sourceRepository);
         $this->assertCsrfToken('integration_source_sync_' . $externalSource->getId()->toRfc4122(), $request);
 
-        if (!$syncRequester instanceof SourceSyncRequesterInterface) {
-            throw $this->createNotFoundException();
+        if (!$syncNowDispatcher->dispatch($externalSource)) {
+            $this->addFlash('warning', $this->translator->trans('integration_hub.source.sync_unavailable', ['%source%' => $externalSource->getTitle()]));
+
+            return $this->redirectToTab(self::TAB_SOURCES, $larp, $provider);
         }
 
-        $syncRequester->requestSync($externalSource);
         $this->addFlash('success', $this->translator->trans('integration_hub.source.sync_requested', ['%source%' => $externalSource->getTitle()]));
 
         return $this->redirectToTab(self::TAB_SOURCES, $larp, $provider);

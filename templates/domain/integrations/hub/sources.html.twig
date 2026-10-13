@@ -41,7 +41,7 @@
                             </div>
                         </div>
                         <div class="d-flex flex-wrap gap-1 flex-shrink-0">
-                            {% if canSync and source.enabled %}
+                            {% if source.id.toRfc4122 in syncableSourceIds %}
                                 <form method="post" action="{{ path('backoffice_larp_integrations_source_sync', {larp: larp.id, provider: provider.value, source: source.id}) }}" name="integration_source_sync">
                                     <input type="hidden" name="_token" value="{{ csrf_token('integration_source_sync_' ~ source.id) }}">
                                     <button type="submit" class="btn btn-sm btn-outline-secondary">
