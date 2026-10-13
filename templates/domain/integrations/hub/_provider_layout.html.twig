@@ -1,0 +1,60 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ provider.label }} - {{ 'integration_hub.title'|trans }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    {% set breadcrumb %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_integrations_hub', {larp: larp.id}) }}">{{ 'integration_hub.title'|trans }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ provider.label }}</li>
+            </ol>
+        </nav>
+    {% endset %}
+    {% set actions %}
+        {% include 'domain/integrations/hub/_card_actions.html.twig' with {card: card, larp: larp, showSettings: false} only %}
+    {% endset %}
+    {{ ui.page_header(provider.label, actions, breadcrumb, 'integration-provider-header') }}
+
+    <div class="d-flex flex-wrap align-items-center gap-2 gap-md-3 mb-3 small">
+        {% include 'domain/integrations/hub/_state_badge.html.twig' with {state: card.state} only %}
+        <span><span class="text-muted">{{ 'integration_hub.account'|trans }}:</span> <span class="text-break">{{ card.accountLabel|default('integration_hub.unknown_account'|trans) }}</span></span>
+        <span><span class="text-muted">{{ 'integration_hub.last_sync'|trans }}:</span> {{ card.lastSyncedAt ? card.lastSyncedAt|display_datetime : 'integration_hub.never'|trans }}</span>
+        <span><span class="text-muted">{{ 'integration_hub.sources'|trans }}:</span> {{ card.sourceCount }}</span>
+    </div>
+
+    {% if card.state.needsAttention %}
+        <div class="mb-3">
+            {% include 'domain/integrations/hub/_card_problem.html.twig' %}
+        </div>
+    {% endif %}
+
+    {% set tabs = [
+        {key: 'sources', icon: 'bi-collection', label: 'integration_hub.tab.sources'},
+        {key: 'browse', icon: 'bi-search', label: 'integration_hub.tab.browse'},
+        {key: 'activity', icon: 'bi-clock-history', label: 'integration_hub.tab.activity'},
+    ] %}
+    {% if provider.hasMappings %}
+        {% set tabs = tabs|merge([{key: 'mappings', icon: 'bi-diagram-2', label: 'integration_hub.tab.mappings'}]) %}
+    {% endif %}
+
+    <ul class="nav nav-tabs flex-nowrap overflow-x-auto overflow-y-hidden integration-tabs" role="tablist">
+        {% for tab in tabs %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link text-nowrap {{ currentTab == tab.key ? 'active' : '' }}"
+                   {% if currentTab == tab.key %}aria-current="page"{% endif %}
+                   href="{{ path('backoffice_larp_integrations_' ~ tab.key, {larp: larp.id, provider: provider.value}) }}">
+                    <i class="bi {{ tab.icon }}" aria-hidden="true"></i> {{ tab.label|trans }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="border border-top-0 rounded-bottom integration-tab-content">
+        {% block tab_content %}{% endblock %}
+    </div>
+
+    {% include 'includes/delete_modal.html.twig' %}
+{% endblock %}

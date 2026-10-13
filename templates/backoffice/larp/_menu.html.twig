@@ -38,7 +38,7 @@
 
                             {# Administration Dropdown (ROLE_ORGANIZER only) #}
                             {% if isOrganizer %}
-                                {% set isAdministrationRoute = currentRoute == 'backoffice_larp_dashboard' or 'larp_status' in currentRoute or 'larp_invitations' in currentRoute or 'larp_participant' in currentRoute or 'larp_integration_settings' in currentRoute  %}
+                                {% set isAdministrationRoute = currentRoute == 'backoffice_larp_dashboard' or 'larp_status' in currentRoute or 'larp_invitations' in currentRoute or 'larp_participant' in currentRoute or 'larp_integrations_' in currentRoute or 'larp_external_resource_mapping' in currentRoute  %}
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle {% if isAdministrationRoute %}active{% endif %}"
                                        href="#" id="administrationDropdown" role="button" data-bs-toggle="dropdown"
@@ -74,9 +74,8 @@
                                         </li>
                                         {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
                                             <li>
-{#                                                {% if currentRoute == 'backoffice_larp_integration_settings' %}active{% endif %}#}
-                                                <a class="dropdown-item "
-                                                   href="{{ path('backoffice_larp_integration_settings', {'larp': larp.id}) }}"
+                                                <a class="dropdown-item {% if 'larp_integrations_' in currentRoute %}active{% endif %}"
+                                                   href="{{ path('backoffice_larp_integrations_hub', {'larp': larp.id}) }}"
                                                    title="{{ 'larp.integrations'|trans }}">
                                                     <i class="bi bi-plugin"></i> {{ 'larp.integrations'|trans }}
                                                 </a>

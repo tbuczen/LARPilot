@@ -1,0 +1,8 @@
+{% extends 'domain/integrations/hub/_provider_layout.html.twig' %}
+
+{% block tab_content %}
+    <div class="p-3">
+        <h2 class="h5">{{ 'integration_hub.tab.mappings'|trans }}</h2>
+        {% include 'backoffice/larp/integrations/partials/_googleDriveIntegration.html.twig' with {integration: integration, larp: larp, provider: provider} %}
+    </div>
+{% endblock %}

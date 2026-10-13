@@ -1,0 +1,6 @@
+{% if card.state.needsAttention %}
+    <div class="alert {{ card.state.value == 'error' ? 'alert-danger' : 'alert-warning' }} small mb-0 d-flex gap-2 align-items-start" role="status">
+        <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+        <span>{{ ('integration_hub.problem.' ~ card.state.value)|trans({'%provider%': card.provider.label}) }}</span>
+    </div>
+{% endif %}
