@@ -2,6 +2,7 @@
 
 namespace App\Domain\Integrations\Service\Google;
 
+use App\Domain\Integrations\DTO\SpreadsheetPreview;
 use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Form\Models\ExternalResourceMappingModel;
 use App\Domain\Integrations\Form\Models\SpreadsheetMappingModel;
@@ -51,6 +52,59 @@ readonly class GoogleSpreadsheetIntegrationHelper
         } catch (\Exception $e) {
             throw new \RuntimeException('Failed to read spreadsheet: ' . $e->getMessage(), 0, $e);
         }
+    }
+
+    public function fetchSpreadsheetPreview(SharedFile $sharedFile, ?string $sheetName, int $headerRowNumber, int $rowLimit): SpreadsheetPreview
+    {
+        $sheetsService = new Sheets($this->googleClientManager->createServiceAccountClient());
+
+        $spreadsheet = $sheetsService->spreadsheets->get($sharedFile->getFileId(), ['fields' => 'sheets.properties.title']);
+        $sheetNames = [];
+        foreach ($spreadsheet->getSheets() as $sheet) {
+            $sheetNames[] = (string) $sheet->getProperties()->getTitle();
+        }
+
+        if ($sheetNames === []) {
+            return new SpreadsheetPreview([], null, [], []);
+        }
+
+        $selectedSheetName = in_array($sheetName, $sheetNames, true) ? $sheetName : $sheetNames[0];
+        $range = sprintf("'%s'!%d:%d", str_replace("'", "''", $selectedSheetName), $headerRowNumber, $headerRowNumber + $rowLimit);
+        $values = $sheetsService->spreadsheets_values->get($sharedFile->getFileId(), $range)->getValues() ?? [];
+
+        $headerCells = $values[0] ?? [];
+        $dataRows = array_slice($values, 1, $rowLimit);
+        $columnCount = max([count($headerCells), ...array_map(count(...), $dataRows)]);
+        $columnLetters = $columnCount === 0 ? [] : array_map($this->columnLetter(...), range(0, $columnCount - 1));
+
+        $headers = [];
+        foreach ($columnLetters as $columnIndex => $columnLetter) {
+            $headers[$columnLetter] = trim((string) ($headerCells[$columnIndex] ?? ''));
+        }
+
+        $rows = [];
+        foreach ($dataRows as $dataRow) {
+            $row = [];
+            foreach ($columnLetters as $columnIndex => $columnLetter) {
+                $row[$columnLetter] = (string) ($dataRow[$columnIndex] ?? '');
+            }
+            $rows[] = $row;
+        }
+
+        return new SpreadsheetPreview($sheetNames, $selectedSheetName, $headers, $rows);
+    }
+
+    private function columnLetter(int $columnIndex): string
+    {
+        $columnLetter = '';
+        $remainingIndex = $columnIndex + 1;
+        while ($remainingIndex > 0) {
+            $letterOffset = ($remainingIndex - 1) % 26;
+            $columnLetter = chr(ord('A') + $letterOffset) . $columnLetter;
+            $remainingIndex = intdiv($remainingIndex - 1, 26);
+        }
+
+        return $columnLetter;
     }
 
     protected function remapWithColumnLetters(array $rows, string $endColumn): array
