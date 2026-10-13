@@ -199,7 +199,7 @@ Google integration settings instead of the file picker. Each organizer has to:
 ## Discord bot
 
 Organizers invite one shared LARPilot bot to their Discord server from
-**Integration settings → Discord → Connect**. The bot is read-only (permissions
+**Integrations → Discord → Connect**. The bot is read-only (permissions
 `66560` = View Channel + Read Message History) and no Discord token is stored per
 LARP: the callback exchanges the one-time code only to learn which server the bot
 joined (Discord treats the `guild_id` query parameter as a hint), then revokes it.

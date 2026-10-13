@@ -165,9 +165,13 @@
         </div>
         <div class="col-md-3">
             <div class="card text-center">
-                <div class="card-body">
-                    <h6 class="card-title">{{ 'integrations.count'|trans }}</h6>
-                    <h3 class="text-info">{{ dashboard.integrations.total }}</h3>
+                <div class="card-body" data-dashboard-tile="integrations">
+                    <h6 class="card-title">{{ 'integration_hub.dashboard.needs_attention'|trans }}</h6>
+                    <h3 class="{{ dashboard.integrations.needsAttention > 0 ? 'text-warning' : 'text-success' }}" data-integrations-needing-attention>{{ dashboard.integrations.needsAttention }}</h3>
+                    <small class="text-muted d-block">{{ 'integration_hub.dashboard.connected'|trans({'%count%': dashboard.integrations.total}) }}</small>
+                    {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
+                        <a href="{{ path('backoffice_larp_integrations_hub', {larp: larp.id}) }}" class="small">{{ 'integration_hub.dashboard.open'|trans }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

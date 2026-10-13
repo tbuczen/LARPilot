@@ -1,6 +1,3 @@
-disconnect: 'Disconnect Discord'
-disconnect_confirm: 'Disconnecting removes the watched channels, everything synced from them and the cached excerpts for this LARP. Links on story objects stay. The bot leaves the server when no other LARP uses it.'
-disconnected: 'Discord was disconnected and its data for this LARP was removed.'
 settings:
   connected_to: 'Connected to the Discord server "%guild%".'
   needs_reconnect: 'LARPilot cannot reach this Discord server any more. Reconnect to invite the bot again.'

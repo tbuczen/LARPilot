@@ -1,0 +1,114 @@
+{% extends 'domain/integrations/hub/_provider_layout.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% set availabilityBadges = {
+    archived: 'bg-warning text-dark',
+    changed: 'bg-info',
+    gone: 'bg-danger',
+    forbidden: 'bg-dark',
+} %}
+
+{% block tab_content %}
+    <form method="get" name="integration_browse" action="{{ path('backoffice_larp_integrations_browse', {larp: larp.id, provider: provider.value}) }}" class="p-3 border-bottom" role="search">
+        <label for="integrationBrowseQuery" class="form-label">{{ 'integration_hub.browse.search_label'|trans }}</label>
+        <div class="d-flex gap-2">
+            <input type="search" id="integrationBrowseQuery" name="q" value="{{ searchTerm }}" class="form-control"
+                   placeholder="{{ 'story_source.search_placeholder'|trans }}">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i>{{ 'integration_hub.browse.search'|trans }}</button>
+        </div>
+    </form>
+
+    {% if items is empty %}
+        {{ ui.empty_state(searchTerm is empty ? 'integration_hub.browse.empty' : 'story_source.search_empty', 'bi-search') }}
+    {% else %}
+        <ul class="list-group list-group-flush">
+            {% for item in items %}
+                {% set title = item.title|default(item.externalId) %}
+                <li class="list-group-item" data-item-id="{{ item.id }}">
+                    <div class="d-flex flex-column flex-md-row gap-2 align-items-md-start">
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                {% if item.url %}
+                                    <a href="{{ item.url }}" target="_blank" rel="noopener" class="fw-semibold text-break">{{ title }}</a>
+                                {% else %}
+                                    <span class="fw-semibold text-break">{{ title }}</span>
+                                {% endif %}
+                                <span class="badge bg-light text-dark border">{{ ('story_source.kind.' ~ item.kind.referenceType.value)|trans }}</span>
+                                {% if item.availability.value != 'ok' %}
+                                    <span class="badge {{ availabilityBadges[item.availability.value]|default('bg-secondary') }}">{{ ('story_source.availability.' ~ item.availability.value)|trans }}</span>
+                                {% endif %}
+                            </div>
+                            {% if item.excerpt %}
+                                <div class="small text-muted text-break mb-1">{{ item.excerpt|sanitize_html }}</div>
+                            {% endif %}
+                            <div class="small text-muted">
+                                {{ item.source.title }}
+                                {% if item.externalUpdatedAt %} · {{ 'story_source.updated'|trans }}: {{ item.externalUpdatedAt|display_datetime }}{% endif %}
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <button type="button" class="btn btn-sm btn-success"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#linkItemModal"
+                                    data-item-id="{{ item.id }}"
+                                    data-item-title="{{ title }}">
+                                <i class="bi bi-plus-lg"></i>{{ 'integration_hub.browse.link_to'|trans }}
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="modal fade"
+             id="linkItemModal"
+             tabindex="-1"
+             aria-labelledby="linkItemModalLabel"
+             aria-hidden="true"
+             data-controller="story-source-search"
+             data-story-source-search-url-value="{{ path('backoffice_larp_integrations_story_object_search', {larp: larp.id, provider: provider.value}) }}"
+             data-story-source-search-field-name-value="storyObject"
+             data-story-source-search-empty-value="{{ 'integration_hub.browse.story_object_empty'|trans }}"
+             data-story-source-search-error-value="{{ 'story_source.search_error'|trans }}">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable modal-fullscreen-sm-down">
+                <form method="post"
+                      name="integration_item_link"
+                      action="{{ path('backoffice_larp_integrations_item_link', {larp: larp.id, provider: provider.value}) }}"
+                      class="modal-content">
+                    <input type="hidden" name="_token" value="{{ csrf_token('integration_item_link') }}">
+                    <input type="hidden" name="item" value="" data-story-source-search-target="selection">
+                    <div class="modal-header">
+                        <h2 class="modal-title h5" id="linkItemModalLabel">
+                            {{ 'integration_hub.browse.link_to'|trans }}
+                            <span class="text-muted text-break" data-story-source-search-target="selectionLabel"></span>
+                        </h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="integrationLinkRole" class="form-label">{{ 'story_source.role_label'|trans }}</label>
+                            <select id="integrationLinkRole" name="role" class="form-select">
+                                {% for role in roles %}
+                                    <option value="{{ role.value }}" {{ role.value == 'mention' ? 'selected' : '' }}>{{ ('story_source.role.' ~ role.value)|trans }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <label for="integrationLinkStoryObject" class="form-label">{{ 'integration_hub.browse.story_object_label'|trans }}</label>
+                        <input type="search"
+                               id="integrationLinkStoryObject"
+                               class="form-control"
+                               autocomplete="off"
+                               placeholder="{{ 'integration_hub.browse.story_object_placeholder'|trans }}"
+                               data-story-source-search-target="query"
+                               data-action="input->story-source-search#search keydown.enter->story-source-search#preventSubmit">
+                        <div class="list-group mt-2" data-story-source-search-target="results" aria-live="polite"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -53,7 +53,10 @@ class IntegrationConnectFlowCest
 
         $I->seeResponseCodeIsRedirection();
         $I->assertSame(
-            $I->getUrl('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]),
+            $I->getUrl('backoffice_larp_integrations_sources', [
+                'larp' => $larp->getId()->toRfc4122(),
+                'provider' => LarpIntegrationProvider::Google->value,
+            ]),
             $I->grabResponse()->headers->get('Location')
         );
 
@@ -261,7 +264,7 @@ class IntegrationConnectFlowCest
         $larp = LarpFactory::createDraftLarp($organizer);
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_hub', ['larp' => $larp->getId()]);
 
         $I->seeResponseCodeIsSuccessful();
         foreach ([LarpIntegrationProvider::Google, LarpIntegrationProvider::Discord] as $connectableProvider) {

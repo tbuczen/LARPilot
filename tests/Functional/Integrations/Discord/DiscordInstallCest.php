@@ -196,7 +196,7 @@ class DiscordInstallCest
         ]);
         $I->seeResponseCodeIs(403);
 
-        $I->sendAjaxPostRequest($I->getUrl('backoffice_larp_discord_disconnect', ['larp' => $larp->getId()]));
+        $I->sendAjaxPostRequest($I->getUrl('backoffice_larp_integrations_disconnect', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Discord->value]));
         $I->seeResponseCodeIs(403);
 
         $I->assertNotNull($this->findDiscordIntegration($I, $larp->getId()));
@@ -387,7 +387,8 @@ class DiscordInstallCest
         $requestsBefore = count($discordRouter->getRequests());
 
         $I->amLoggedInAs($organizer);
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()]);
+        $I->amOnRoute('backoffice_larp_integrations_sources', ['larp' => $larp->getId(), 'provider' => LarpIntegrationProvider::Discord->value]);
+        $I->seeResponseCodeIsSuccessful();
         $I->seeElement(sprintf('a[href="%s"]', $I->getUrl('backoffice_larp_discord_channels', ['larp' => $larp->getId()->toRfc4122()])));
         $this->disconnect($I, $larp->getId());
 
@@ -428,10 +429,13 @@ class DiscordInstallCest
 
     private function disconnect(FunctionalTester $I, Uuid $larpId): void
     {
-        $I->amOnRoute('backoffice_larp_integration_settings', ['larp' => $larpId]);
+        $I->amOnRoute('backoffice_larp_integrations_hub', ['larp' => $larpId]);
         $csrfToken = $I->grabValueFrom('#deleteModal input[name="_token"]');
         $I->stopFollowingRedirects();
-        $I->sendAjaxPostRequest($I->getUrl('backoffice_larp_discord_disconnect', ['larp' => $larpId->toRfc4122()]), ['_token' => $csrfToken]);
+        $I->sendAjaxPostRequest($I->getUrl('backoffice_larp_integrations_disconnect', [
+            'larp' => $larpId->toRfc4122(),
+            'provider' => LarpIntegrationProvider::Discord->value,
+        ]), ['_token' => $csrfToken]);
     }
 
     /**

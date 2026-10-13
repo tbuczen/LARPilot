@@ -11,7 +11,6 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
     case Discord = 'discord';
     case Miro = 'miro';
 
-
     public function getLabel(): string
     {
         return match ($this) {
@@ -32,12 +31,23 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
         };
     }
 
-    public function integrationSettingsTemplate(): ?string
+    public function settingsTemplate(): string
+    {
+        return sprintf('domain/integrations/%s/_settings.html.twig', $this->value);
+    }
+
+    public function hasMappings(): bool
+    {
+        return $this === self::Google;
+    }
+
+    public function icon(): string
     {
         return match ($this) {
-            self::Google => 'partials/_googleDriveIntegration.html.twig',
-            self::Discord => 'discord/_settings.html.twig',
-            default => null,
+            self::Google => 'bi-google',
+            self::Facebook => 'bi-facebook',
+            self::Discord => 'bi-discord',
+            self::Miro => 'bi-easel',
         };
     }
 

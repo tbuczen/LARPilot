@@ -1,6 +1,3 @@
-disconnect: 'Odłącz Discord'
-disconnect_confirm: 'Odłączenie usuwa obserwowane kanały, wszystko, co z nich zsynchronizowano, oraz zapisane fragmenty dla tego LARP-a. Powiązania w obiektach fabularnych zostają. Bot opuszcza serwer, jeśli nie korzysta z niego żaden inny LARP.'
-disconnected: 'Discord został odłączony, a jego dane dla tego LARP-a usunięte.'
 settings:
   connected_to: 'Połączono z serwerem Discord „%guild%”.'
   needs_reconnect: 'LARPilot nie ma już dostępu do tego serwera Discord. Połącz ponownie, aby znów zaprosić bota.'

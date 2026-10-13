@@ -6,7 +6,6 @@ use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\Tag;
 use App\Domain\Core\Repository\TagRepository;
 use App\Domain\Integrations\Discord\Client\Exception\DiscordApiException;
-use App\Domain\Integrations\Discord\DiscordIntegrationProvider;
 use App\Domain\Integrations\Discord\Picker\DiscordChannelPicker;
 use App\Domain\Integrations\Discord\Picker\DiscordSourceConfig;
 use App\Domain\Integrations\Entity\Enum\ExternalSourceVisibility;
@@ -25,7 +24,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DiscordIntegrationController extends AbstractController
 {
     public const CHANNELS_CSRF_TOKEN_ID = 'discord_channels';
-    public const DISCONNECT_CSRF_TOKEN_ID = 'delete';
 
     public function __construct(
         private readonly LarpIntegrationRepository $larpIntegrationRepository,
@@ -46,7 +44,7 @@ class DiscordIntegrationController extends AbstractController
         } catch (DiscordApiException) {
             $this->addFlash('danger', $this->translator->trans('channels.unavailable', [], 'discord'));
 
-            return $this->redirectToSettings($larp);
+            return $this->redirectToDiscordPage($larp);
         }
 
         $sourceConfigs = [];
@@ -82,29 +80,13 @@ class DiscordIntegrationController extends AbstractController
         } catch (DiscordApiException) {
             $this->addFlash('danger', $this->translator->trans('channels.unavailable', [], 'discord'));
 
-            return $this->redirectToSettings($larp);
+            return $this->redirectToDiscordPage($larp);
         }
 
         $this->discordChannelPicker->save($integration, $channels, $request->request->all('channels'), $this->larpTags($larp));
         $this->addFlash('success', $this->translator->trans('channels.saved', [], 'discord'));
 
         return $this->redirectToRoute('backoffice_larp_discord_channels', ['larp' => $larp->getId()->toRfc4122()]);
-    }
-
-    #[Route('/disconnect', name: 'disconnect', methods: ['POST'])]
-    public function disconnect(Larp $larp, Request $request, DiscordIntegrationProvider $discordIntegrationProvider): RedirectResponse
-    {
-        $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
-        $integration = $this->discordIntegration($larp);
-
-        if (!$this->isCsrfTokenValid(self::DISCONNECT_CSRF_TOKEN_ID, $request->request->getString('_token'))) {
-            throw $this->createAccessDeniedException('Invalid CSRF token.');
-        }
-
-        $discordIntegrationProvider->disconnect($integration);
-        $this->addFlash('success', $this->translator->trans('disconnected', [], 'discord'));
-
-        return $this->redirectToSettings($larp);
     }
 
     private function discordIntegration(Larp $larp): LarpIntegration
@@ -125,8 +107,11 @@ class DiscordIntegrationController extends AbstractController
         return array_values($this->tagRepository->findBy(['larp' => $larp], ['title' => 'ASC']));
     }
 
-    private function redirectToSettings(Larp $larp): RedirectResponse
+    private function redirectToDiscordPage(Larp $larp): RedirectResponse
     {
-        return $this->redirectToRoute('backoffice_larp_integration_settings', ['larp' => $larp->getId()->toRfc4122()]);
+        return $this->redirectToRoute('backoffice_larp_integrations_sources', [
+            'larp' => $larp->getId()->toRfc4122(),
+            'provider' => LarpIntegrationProvider::Discord->value,
+        ]);
     }
 }
