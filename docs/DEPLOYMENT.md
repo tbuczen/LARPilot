@@ -247,3 +247,10 @@ Organizers connect a Miro team per LARP through OAuth (`knpu_oauth2_client` clie
 4. Store the app's client ID and secret as the `OAUTH_MIRO_CLIENT_ID` and `OAUTH_MIRO_CLIENT_SECRET`
    secrets on the `prod` environment. The deploy workflow writes them into `.env.local`; locally,
    set them in `.env.local` (`.env` only has empty placeholders).
+
+## Deploy safety
+
+- `make deploy` deletes `var/cache/prod` before `cache:clear`. `cache:clear` boots the kernel against the previously compiled container, so when new code asks for a service the old container lacks, it fails before it can rebuild anything and the site keeps returning HTTP 500.
+- If the site is down after a deploy, run `rm -rf var/cache/prod && make deploy-no-pull` in the project directory on the server.
+- `public/index.php` starts Sentry from `SENTRY_DSN` before the kernel boots (`BootErrorReporter`), so failures during kernel boot, such as a stale or broken container, reach Sentry. Errors after boot are still reported by the Sentry bundle.
+- The deploy workflow requests `HEALTHCHECK_URL` (repository or `prod` environment variable, default `https://larpilot.com/`) after `make deploy` and fails the run when the site does not answer with a 2xx or 3xx status.

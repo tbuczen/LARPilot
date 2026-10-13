@@ -181,3 +181,20 @@ jobs:
           INTEGRATIONS_ENCRYPTION_KEY: ${{ secrets.INTEGRATIONS_ENCRYPTION_KEY }}
           INTEGRATIONS_ENCRYPTION_KEY_VERSION: ${{ secrets.INTEGRATIONS_ENCRYPTION_KEY_VERSION }}
           INTEGRATIONS_ENCRYPTION_RETIRED_KEYS: ${{ secrets.INTEGRATIONS_ENCRYPTION_RETIRED_KEYS }}
+
+      - name: Check the site responds after deploy
+        if: ${{ !cancelled() }}
+        env:
+          HEALTHCHECK_URL: ${{ vars.HEALTHCHECK_URL || 'https://larpilot.com/' }}
+        run: |
+          status=000
+          for attempt in 1 2 3 4 5 6; do
+            status=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$HEALTHCHECK_URL" || true)
+            echo "Attempt $attempt: $HEALTHCHECK_URL returned HTTP $status"
+            if [ "$status" -ge 200 ] 2>/dev/null && [ "$status" -lt 400 ]; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::$HEALTHCHECK_URL returned HTTP $status after the deploy. The site is down; check var/log/prod.log on the server."
+          exit 1
