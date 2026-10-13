@@ -1,0 +1,12 @@
+{% set selectedBoardCount = sources|filter(source => source.kind.value == 'miro_board' and source.enabled)|length %}
+<div class="d-flex flex-column flex-md-row gap-2 align-items-md-center justify-content-between">
+    <div>
+        <h2 class="h6 mb-1">{{ 'boards.title'|trans({}, 'miro') }}</h2>
+        <p class="small text-muted mb-0">{{ 'settings.selected_boards'|trans({'%count%': selectedBoardCount}, 'miro') }}</p>
+    </div>
+    {% if integration.status.value != 'needs_reauth' %}
+        <a href="{{ path('backoffice_larp_integration_miro_boards', { larp: larp.id }) }}" class="btn btn-outline-primary">
+            <i class="bi bi-pencil"></i>{{ 'settings.manage_boards'|trans({}, 'miro') }}
+        </a>
+    {% endif %}
+</div>

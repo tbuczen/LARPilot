@@ -9,7 +9,7 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
     case Facebook = 'facebook';
     case Google = 'integration_google_drive';
     case Discord = 'discord';
-    case Miro = 'miro';
+    case Miro = 'integration_miro';
 
     public function getLabel(): string
     {
