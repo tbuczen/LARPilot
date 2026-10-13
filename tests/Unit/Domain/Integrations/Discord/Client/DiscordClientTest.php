@@ -236,6 +236,40 @@ class DiscordClientTest extends TestCase
         }
     }
 
+    public function testSingleRateLimitAttemptFailsFastWithRetryAfter(): void
+    {
+        $discordClient = $this->createDiscordClient([
+            new MockResponse(
+                json_encode(['retry_after' => 2.5, 'global' => false], JSON_THROW_ON_ERROR),
+                ['http_code' => 429],
+            ),
+        ])->withRateLimitAttempts(1);
+
+        try {
+            $discordClient->getGuild('100');
+            self::fail('Expected the client to give up after the first rate limit.');
+        } catch (DiscordRateLimitedException $rateLimited) {
+            self::assertSame(2.5, $rateLimited->getRetryAfterSeconds());
+            self::assertCount(1, $this->sentRequests);
+            self::assertSame([], $this->sleptSeconds);
+        }
+    }
+
+    public function testListLatestMessagesReturnsNewestMessagesOldestFirst(): void
+    {
+        $discordClient = $this->createDiscordClient([
+            $this->jsonResponse([
+                $this->messagePayload('5003', 'Third'),
+                $this->messagePayload('5002', 'Second'),
+            ]),
+        ]);
+
+        $messages = $discordClient->listLatestMessages('300', 2);
+
+        self::assertSame(['5002', '5003'], array_map(static fn (DiscordMessage $message): string => $message->id, $messages));
+        self::assertSame(['limit' => '2'], $this->queryOf(0));
+    }
+
     public function testExhaustedBucketWaitsForReset(): void
     {
         $discordClient = $this->createDiscordClient([
