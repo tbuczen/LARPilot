@@ -312,9 +312,32 @@ class MiroBoardBrowserCest
         $I->assertNotNull($I->getEntityManager()->find(Character::class, $character->getId()));
     }
 
-    public function refreshClearsTheSnapshotAndRequestsASync(FunctionalTester $I): void
+    public function snapshotIsCachedUntilForgotten(FunctionalTester $I): void
     {
-        $I->wantTo('refresh a Miro board and see the cached snapshot dropped and a sync queued');
+        $I->wantTo('see the board snapshot served from its cache pool until it is forgotten');
+
+        $organizer = UserFactory::createApprovedUser();
+        $board = $this->createBoard(LarpFactory::createDraftLarp($organizer), $organizer);
+        /** @var MiroBoardSnapshotProvider $snapshotProvider */
+        $snapshotProvider = $I->grabService(MiroBoardSnapshotProvider::class);
+        $router = $this->miroRouter($I);
+
+        $firstSnapshot = $snapshotProvider->snapshot($board->getIntegration(), self::BOARD_ID);
+        $requestsAfterFirstBuild = count($router->getRequests());
+        $I->assertGreaterThan(0, $requestsAfterFirstBuild);
+
+        $cachedSnapshot = $snapshotProvider->snapshot($board->getIntegration(), self::BOARD_ID);
+        $I->assertSame($requestsAfterFirstBuild, count($router->getRequests()));
+        $I->assertSame($firstSnapshot->contentHash(), $cachedSnapshot->contentHash());
+
+        $snapshotProvider->forget($board->getIntegration(), self::BOARD_ID);
+        $snapshotProvider->snapshot($board->getIntegration(), self::BOARD_ID);
+        $I->assertGreaterThan($requestsAfterFirstBuild, count($router->getRequests()));
+    }
+
+    public function refreshRequestsASync(FunctionalTester $I): void
+    {
+        $I->wantTo('refresh a Miro board and see a sync of the board queued');
 
         $organizer = UserFactory::createApprovedUser();
         $larp = LarpFactory::createDraftLarp($organizer);
@@ -322,10 +345,6 @@ class MiroBoardBrowserCest
 
         $I->amLoggedInAs($organizer);
         $I->amOnRoute('backoffice_larp_integration_miro_browser_show', $this->boardRoute($larp, $board));
-        $I->assertNotEmpty($this->miroRouter($I)->getRequests());
-
-        $I->amOnRoute('backoffice_larp_integration_miro_browser_show', $this->boardRoute($larp, $board));
-        $I->assertSame([], $this->miroRouter($I)->getRequests());
 
         $I->stopFollowingRedirects();
         $I->submitForm('form[name="miro_board_refresh"]', []);
@@ -338,7 +357,6 @@ class MiroBoardBrowserCest
 
         $I->followRedirect();
         $I->see('The board will be reloaded from Miro in a moment.');
-        $I->assertNotEmpty($this->miroRouter($I)->getRequests());
     }
 
     public function storyWriterReachesBoardsFromTheStorySourcesTab(FunctionalTester $I): void
