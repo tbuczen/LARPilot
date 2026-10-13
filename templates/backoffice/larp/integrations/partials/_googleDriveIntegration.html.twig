@@ -1,7 +1,9 @@
 {% set nowPlus30 = 'now'|date_modify('+30 seconds') %}
-{% if integration.refreshToken is empty and integration.expiresAt < nowPlus30 %}
-    <div class="alert alert-warning">
-        {{ 'larp.integration.expired'|trans }}
+{% set tokenExpired = integration.refreshToken is empty and integration.expiresAt < nowPlus30 %}
+{% set scopeUpgradeRequired = not integration.hasGrantedScope(constant('App\\Domain\\Integrations\\Service\\Google\\GoogleIntegrationService::DRIVE_FILE_SCOPE')) %}
+{% if tokenExpired or scopeUpgradeRequired %}
+    <div class="alert alert-warning" data-google-reconnect-prompt>
+        {{ scopeUpgradeRequired ? 'larp.integration.scope_upgrade_required'|trans : 'larp.integration.expired'|trans }}
     </div>
     <a
             href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: provider.value }) }}"
@@ -24,6 +26,7 @@
             data-google-file-picker-token-csrf-value="{{ csrf_token('integration_picker_token_' ~ integration.id) }}"
             data-google-file-picker-reauthentication-message-value="{{ 'larp.integration.expired'|trans }}"
             data-google-key="{{ google_api_key }}"
+            data-google-file-picker-app-id-value="{{ google_app_id ?: oauth_google_client_id|split('-')|first }}"
             data-initial-files="{{ sharedFilesArray|json_encode }}"
             data-mappings-base-url="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id , sharedFile: '__FILE_ID__'  }) }}"
     >

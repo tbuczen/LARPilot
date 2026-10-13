@@ -293,6 +293,7 @@ larp:
     current: 'Current integrations'
     expired: 'Integration has expired, if You want to keep using it - please reconnect'
     reconnect: 'Re-connect'
+    scope_upgrade_required: 'This Google connection was granted full access to your Drive. LARPilot now only needs access to the files you pick. Reconnect Google, then open the file picker and select your files again so LARPilot can keep using them.'
     connect_cancelled: 'Connecting %provider% was cancelled. Nothing was changed.'
     connect_failed: 'Could not connect %provider%. Please try again.'
     connect_succeeded: '%provider% is now connected.'
