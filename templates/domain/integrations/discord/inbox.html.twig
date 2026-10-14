@@ -1,0 +1,257 @@
+{% extends card ? 'domain/integrations/hub/_provider_layout.html.twig' : 'domain/integrations/discord/_inbox_layout.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% set statusBadges = {
+    linked: 'bg-success',
+    ignored: 'bg-secondary',
+} %}
+
+{% set availabilityBadges = {
+    archived: 'bg-warning text-dark',
+    changed: 'bg-info',
+    gone: 'bg-danger',
+    forbidden: 'bg-dark',
+} %}
+
+{% set currentStatus = filterForm.status.vars.value %}
+
+{% macro returnFields(csrfTokenId, returnQuery) %}
+    <input type="hidden" name="_token" value="{{ csrf_token(csrfTokenId) }}">
+    <input type="hidden" name="returnQuery" value="{{ returnQuery }}">
+{% endmacro %}
+
+{% block tab_content %}
+    <div data-controller="integration-inbox"
+         data-integration-inbox-selected-label-value="{{ 'inbox.selected'|trans({}, 'discord') }}">
+        {% include 'includes/filter_form.html.twig' with {form: filterForm} %}
+
+        <form id="inboxBulkForm"
+              name="discord_inbox_bulk"
+              method="post"
+              action="{{ path('backoffice_larp_discord_inbox_ignore', {larp: larp.id}) }}"
+              class="px-3 py-2 border-top border-bottom d-flex flex-wrap align-items-center gap-2">
+            {{ _self.returnFields(csrfTokenId, returnQuery) }}
+            <div class="form-check mb-0">
+                <input type="checkbox" class="form-check-input" id="inboxSelectAll"
+                       data-integration-inbox-target="selectAll"
+                       data-action="integration-inbox#toggleAll">
+                <label class="form-check-label" for="inboxSelectAll">{{ 'inbox.select_all'|trans({}, 'discord') }}</label>
+            </div>
+            <span class="small text-muted" data-integration-inbox-target="counter" aria-live="polite"></span>
+            <div class="d-flex flex-wrap gap-1 ms-sm-auto">
+                {% if currentStatus != 'unreviewed' and currentStatus != 'linked' %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary" disabled
+                            formaction="{{ path('backoffice_larp_discord_inbox_restore', {larp: larp.id}) }}"
+                            data-integration-inbox-target="bulkButton">
+                        <i class="bi bi-arrow-counterclockwise"></i>{{ 'inbox.action.restore_selected'|trans({}, 'discord') }}
+                    </button>
+                {% endif %}
+                <button type="submit" class="btn btn-sm btn-outline-secondary" disabled
+                        data-integration-inbox-target="bulkButton">
+                    <i class="bi bi-eye-slash"></i>{{ 'inbox.action.ignore_selected'|trans({}, 'discord') }}
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-primary" disabled
+                        data-bs-toggle="modal"
+                        data-bs-target="#inboxLinkModal"
+                        data-integration-inbox-target="bulkButton">
+                    <i class="bi bi-link-45deg"></i>{{ 'inbox.action.link_selected'|trans({}, 'discord') }}
+                </button>
+            </div>
+        </form>
+
+        {% if pagination.getTotalItemCount == 0 %}
+            {{ ui.empty_state('inbox.empty'|trans({}, 'discord'), 'bi-inbox') }}
+        {% else %}
+            <ul class="list-group list-group-flush">
+                {% for item in pagination %}
+                    {% set title = item.title|default(item.externalId) %}
+                    {% set createSuggestion = item.createSuggestion %}
+                    {% set mappedType = createSuggestion ? createSuggestion.targetType.value : (item.raw.targetType ?? null) %}
+                    <li class="list-group-item" data-inbox-item="{{ item.id }}" data-review-status="{{ item.reviewStatus.value }}">
+                        <div class="d-flex gap-2 align-items-start">
+                            <input type="checkbox" class="form-check-input flex-shrink-0 mt-1"
+                                   name="items[]" value="{{ item.id }}" form="inboxBulkForm"
+                                   aria-label="{{ 'inbox.select_item'|trans({'%title%': title}, 'discord') }}"
+                                   data-integration-inbox-target="checkbox"
+                                   data-action="integration-inbox#updateSelection">
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                    {% if item.url %}
+                                        <a href="{{ item.url }}" target="_blank" rel="noopener" class="fw-semibold text-break">{{ title }}</a>
+                                    {% else %}
+                                        <span class="fw-semibold text-break">{{ title }}</span>
+                                    {% endif %}
+                                    <span class="badge bg-light text-dark border">{{ ('story_source.kind.' ~ item.kind.referenceType.value)|trans }}</span>
+                                    {% if item.reviewStatus.value != 'unreviewed' %}
+                                        <span class="badge {{ statusBadges[item.reviewStatus.value]|default('bg-secondary') }}">{{ ('inbox.status.' ~ item.reviewStatus.value)|trans({}, 'discord') }}</span>
+                                    {% endif %}
+                                    {% if item.availability.value != 'ok' %}
+                                        <span class="badge {{ availabilityBadges[item.availability.value]|default('bg-secondary') }}">{{ ('story_source.availability.' ~ item.availability.value)|trans }}</span>
+                                    {% endif %}
+                                </div>
+
+                                {% set appliedTags = (item.raw.appliedTags ?? [])|filter(appliedTag => appliedTag.name ?? null) %}
+                                {% if appliedTags is not empty %}
+                                    <div class="d-flex flex-wrap gap-1 mb-1" data-inbox-tags>
+                                        {% for appliedTag in appliedTags %}
+                                            <span class="badge rounded-pill bg-light text-dark border"><i class="bi bi-tag" aria-hidden="true"></i> {{ appliedTag.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                {% if item.excerpt %}
+                                    <div class="small text-muted text-break mb-1">{{ item.excerpt|e|nl2br }}</div>
+                                {% endif %}
+
+                                <div class="small text-muted mb-2">
+                                    <i class="bi bi-hash" aria-hidden="true"></i>{{ item.source.title }}
+                                    {% if item.externalUpdatedAt %} · {{ 'inbox.last_activity'|trans({}, 'discord') }}: {{ item.externalUpdatedAt|display_datetime }}{% endif %}
+                                    {% if mappedType %} · {{ 'inbox.mapped_type'|trans({}, 'discord') }}: {{ ('story_type.' ~ mappedType)|trans({}, 'discord') }}{% endif %}
+                                </div>
+
+                                {% if item.reviewStatus.value == 'unreviewed' and item.linkSuggestions is not empty %}
+                                    <div class="d-flex flex-wrap align-items-center gap-1 mb-2" data-inbox-suggestions>
+                                        <span class="small text-muted">{{ 'inbox.suggested'|trans({}, 'discord') }}:</span>
+                                        {% for suggestion in item.linkSuggestions|slice(0, 3) %}
+                                            <form method="post" action="{{ path('backoffice_larp_discord_inbox_link', {larp: larp.id}) }}" class="d-inline">
+                                                {{ _self.returnFields(csrfTokenId, returnQuery) }}
+                                                <input type="hidden" name="items[]" value="{{ item.id }}">
+                                                <button type="submit" name="storyObject" value="{{ suggestion.storyObject.id }}"
+                                                        class="btn btn-sm btn-outline-primary text-break"
+                                                        title="{{ ('inbox.suggestion_source.' ~ suggestion.source)|trans({}, 'discord') }}"
+                                                        data-suggestion-source="{{ suggestion.source }}">
+                                                    <i class="bi bi-link-45deg"></i>{{ suggestion.storyObject.title }} · {{ suggestion.storyObject.targetType.value|trans }}
+                                                </button>
+                                            </form>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% if item.reviewStatus.value == 'ignored' %}
+                                        <form method="post" action="{{ path('backoffice_larp_discord_inbox_restore', {larp: larp.id}) }}" class="d-inline">
+                                            {{ _self.returnFields(csrfTokenId, returnQuery) }}
+                                            <input type="hidden" name="items[]" value="{{ item.id }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-arrow-counterclockwise"></i>{{ 'inbox.action.restore'|trans({}, 'discord') }}
+                                            </button>
+                                        </form>
+                                    {% elseif item.reviewStatus.value == 'unreviewed' %}
+                                        <form method="post" action="{{ path('backoffice_larp_discord_inbox_ignore', {larp: larp.id}) }}" class="d-inline">
+                                            {{ _self.returnFields(csrfTokenId, returnQuery) }}
+                                            <input type="hidden" name="items[]" value="{{ item.id }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-eye-slash"></i>{{ 'inbox.action.ignore'|trans({}, 'discord') }}
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#inboxLinkModal"
+                                            data-item-id="{{ item.id }}"
+                                            data-item-title="{{ title }}">
+                                        <i class="bi bi-link-45deg"></i>{{ 'inbox.action.link'|trans({}, 'discord') }}
+                                    </button>
+                                    {% if item.reviewStatus.value != 'linked' %}
+                                        <button type="button" class="btn btn-sm btn-success"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#inboxCreateModal"
+                                                data-item-id="{{ item.id }}"
+                                                data-item-title="{{ title }}"
+                                                data-target-type="{{ mappedType }}">
+                                            <i class="bi bi-plus-lg"></i>{{ 'inbox.action.create'|trans({}, 'discord') }}
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="px-3 pb-3">
+                {% include 'includes/pagination.html.twig' with {pagination: pagination} %}
+            </div>
+        {% endif %}
+
+        <div class="modal fade"
+             id="inboxLinkModal"
+             tabindex="-1"
+             aria-labelledby="inboxLinkModalLabel"
+             aria-hidden="true"
+             data-integration-inbox-target="linkModal"
+             data-controller="story-source-search"
+             data-story-source-search-url-value="{{ path('backoffice_larp_discord_inbox_story_objects', {larp: larp.id}) }}"
+             data-story-source-search-field-name-value="storyObject"
+             data-story-source-search-empty-value="{{ 'integration_hub.browse.story_object_empty'|trans }}"
+             data-story-source-search-error-value="{{ 'story_source.search_error'|trans }}">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable modal-fullscreen-sm-down">
+                <form method="post"
+                      name="discord_inbox_link"
+                      action="{{ path('backoffice_larp_discord_inbox_link', {larp: larp.id}) }}"
+                      class="modal-content">
+                    {{ _self.returnFields(csrfTokenId, returnQuery) }}
+                    <div data-integration-inbox-target="linkItems"></div>
+                    <div class="modal-header">
+                        <h2 class="modal-title h5 text-break" id="inboxLinkModalLabel">
+                            {{ 'inbox.link_title'|trans({}, 'discord') }}
+                            <span class="text-muted" data-integration-inbox-target="linkLabel"></span>
+                        </h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="inboxLinkStoryObject" class="form-label">{{ 'integration_hub.browse.story_object_label'|trans }}</label>
+                        <input type="search"
+                               id="inboxLinkStoryObject"
+                               class="form-control"
+                               autocomplete="off"
+                               placeholder="{{ 'integration_hub.browse.story_object_placeholder'|trans }}"
+                               data-story-source-search-target="query"
+                               data-action="input->story-source-search#search keydown.enter->story-source-search#preventSubmit">
+                        <div class="list-group mt-2" data-story-source-search-target="results" aria-live="polite"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal fade"
+             id="inboxCreateModal"
+             tabindex="-1"
+             aria-labelledby="inboxCreateModalLabel"
+             aria-hidden="true"
+             data-integration-inbox-target="createModal">
+            <div class="modal-dialog modal-fullscreen-sm-down">
+                <form method="post"
+                      name="discord_inbox_create"
+                      action="{{ path('backoffice_larp_discord_inbox_create', {larp: larp.id}) }}"
+                      class="modal-content">
+                    {{ _self.returnFields(csrfTokenId, returnQuery) }}
+                    <input type="hidden" name="item" value="" data-integration-inbox-target="createItem">
+                    <div class="modal-header">
+                        <h2 class="modal-title h5" id="inboxCreateModalLabel">{{ 'inbox.create_title'|trans({}, 'discord') }}</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="fw-semibold text-break" data-integration-inbox-target="createLabel"></p>
+                        <label for="inboxCreateType" class="form-label">{{ 'channels.story_type'|trans({}, 'discord') }}</label>
+                        <select id="inboxCreateType" name="targetType" class="form-select" required data-integration-inbox-target="createType">
+                            <option value="">{{ 'inbox.choose_type'|trans({}, 'discord') }}</option>
+                            {% for targetType in targetTypes %}
+                                <option value="{{ targetType.value }}">{{ ('story_type.' ~ targetType.value)|trans({}, 'discord') }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="form-text mb-0">{{ 'inbox.create_help'|trans({}, 'discord') }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>{{ 'inbox.action.create_submit'|trans({}, 'discord') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

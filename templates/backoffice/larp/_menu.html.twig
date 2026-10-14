@@ -139,6 +139,19 @@
                                                 <i class="bi bi-house-door"></i> {{ 'dashboard'|trans }}
                                             </a>
                                         </li>
+                                        {% if is_granted('STORY_SOURCE_BROWSE', larp) %}
+                                            {% set discordInboxCount = discord_inbox_count(larp) %}
+                                            {% if discordInboxCount is not null %}
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-1" href="{{ path('backoffice_larp_discord_inbox', {'larp': larp.id}) }}" data-menu-discord-inbox>
+                                                        <i class="bi bi-inbox"></i> {{ 'inbox.title'|trans({}, 'discord') }}
+                                                        {% if discordInboxCount > 0 %}
+                                                            <span class="badge rounded-pill bg-danger">{{ discordInboxCount }}</span>
+                                                        {% endif %}
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        {% endif %}
                                         <li><hr class="dropdown-divider"></li>
 
                                         {# Core Story Elements #}

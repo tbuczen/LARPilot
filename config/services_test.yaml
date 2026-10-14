@@ -56,3 +56,6 @@ services:
         autoconfigure: true
         arguments:
             $httpClient: '@tests.integrations.miro.oauth_client'
+
+    Tests\Support\Integrations\MarkerLinkSuggester:
+        tags: ['app.integrations.link_suggester']

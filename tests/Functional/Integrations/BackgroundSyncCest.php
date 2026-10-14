@@ -24,6 +24,7 @@ use App\Domain\Integrations\Service\Exceptions\SourceSyncForbiddenException;
 use App\Domain\Integrations\Service\Exceptions\SourceSyncRateLimitedException;
 use App\Domain\Integrations\Service\Exceptions\SourceSyncUnauthorizedException;
 use App\Domain\Integrations\Service\IntegrationRegistry;
+use App\Domain\Integrations\Service\Suggestion\LinkSuggestionAggregator;
 use App\Domain\Integrations\Service\Sync\SourceSyncIntervalPolicy;
 use App\Domain\Integrations\Service\Sync\SourceSyncRequesterInterface;
 use App\Domain\Integrations\Service\Sync\SyncNowDispatcher;
@@ -342,6 +343,7 @@ class BackgroundSyncCest
             $I->grabService(MessageBusInterface::class),
             new MockClock(self::NOW),
             new NullLogger(),
+            $I->grabService(LinkSuggestionAggregator::class),
         );
     }
 

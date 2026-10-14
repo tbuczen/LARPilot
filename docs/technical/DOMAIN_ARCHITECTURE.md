@@ -306,6 +306,8 @@ templates/domain/{domain_name}/
 - `GoogleIntegrationService`: Google API wrapper
 - `GoogleSpreadsheetIntegrationHelper`: Spreadsheet operations
 - `GoogleDriveSharingService`: File sharing
+- Link suggestions (`Service/Suggestion/`, provider-agnostic): every service implementing `LinkSuggesterInterface` is tagged `app.integrations.link_suggester` (via `#[AutoconfigureTag]`) and returns `LinkSuggestionCandidate`s (link to a story object, or create-as type/tag) for an `ExternalItem`; `LinkSuggestionAggregator` merges them, keeps the top 5 per item and stores them as `ExternalItemSuggestion` rows with the suggester's `source` (`name`, `tag`, later `ai`). Suggestions are refreshed for unreviewed items after each sync page. v1 suggesters: `TitleMatchLinkSuggester` (normalized, accent-folded title match) and `MappedTagLinkSuggester` (forum-tag mapping in `raw.appliedTags`). Adding a suggester (e.g. the AI helper, Miro import) only needs a new tagged service
+- `ExternalItemTriage`: link (bulk), ignore/restore, and create-from-item (story object + Primary link in one transaction) used by the Discord inbox (`DiscordInboxController`)
 
 **Use Cases**: `SaveFileMapping`, `ApplyFilesPermission`, `ImportCharacters`
 

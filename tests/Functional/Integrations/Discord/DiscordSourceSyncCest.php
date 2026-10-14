@@ -24,6 +24,7 @@ use App\Domain\Integrations\Repository\ExternalItemRepository;
 use App\Domain\Integrations\Repository\ExternalSourceRepository;
 use App\Domain\Integrations\Service\Capability\ConversationSourceIntegrationInterface;
 use App\Domain\Integrations\Service\IntegrationRegistry;
+use App\Domain\Integrations\Service\Suggestion\LinkSuggestionAggregator;
 use App\Domain\Integrations\Service\Sync\SourceSyncIntervalPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\NullLogger;
@@ -374,6 +375,7 @@ class DiscordSourceSyncCest
             $I->grabService(MessageBusInterface::class),
             new MockClock(self::NOW),
             new NullLogger(),
+            $I->grabService(LinkSuggestionAggregator::class),
         );
     }
 
