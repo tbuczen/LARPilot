@@ -1531,7 +1531,7 @@ integration_hub:
   purpose:
     integration_google_drive: 'Share Drive files and import characters, events and tags from spreadsheets.'
     discord: 'Browse server threads and link them to story objects.'
-    miro: 'Browse board items and link them to story objects.'
+    integration_miro: 'Browse board items and link them to story objects.'
     facebook: 'Legacy connection. It can no longer be connected again.'
   state:
     connected: 'Connected'
