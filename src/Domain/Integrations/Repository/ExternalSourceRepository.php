@@ -11,6 +11,7 @@ use App\Domain\Integrations\Entity\ExternalItem;
 use App\Domain\Integrations\Entity\ExternalSource;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends BaseRepository<ExternalSource>
@@ -30,6 +31,25 @@ class ExternalSourceRepository extends BaseRepository
     public function findOneByExternalId(LarpIntegration $integration, string $externalId): ?ExternalSource
     {
         return $this->findOneBy(['integration' => $integration, 'externalId' => $externalId]);
+    }
+
+    public function findMiroBoardOfLarp(string $sourceId, Larp $larp): ?ExternalSource
+    {
+        if (!Uuid::isValid($sourceId)) {
+            return null;
+        }
+
+        $board = $this->find($sourceId);
+        if (!$board instanceof ExternalSource || $board->getKind() !== ExternalSourceKind::MiroBoard) {
+            return null;
+        }
+
+        $integration = $board->getIntegration();
+        if ($integration->getProvider() !== LarpIntegrationProvider::Miro || !$integration->getLarp()->getId()->equals($larp->getId())) {
+            return null;
+        }
+
+        return $board;
     }
 
     /**

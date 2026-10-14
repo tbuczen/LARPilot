@@ -2,8 +2,8 @@
 
 If your team maps the story on Miro boards – who knows whom, which faction
 lives where, how a plot unfolds – you can connect those boards to your LARP.
-Later you will be able to link board items to story objects and import a story
-map into LARPilot.
+You can link board items to story objects and import a story map into
+LARPilot.
 
 This guide is for **LARP organizers**. It takes a couple of minutes.
 
@@ -49,13 +49,8 @@ to open it in Miro.
 
 ## 3. What happens next
 
-> **Coming soon:** browsing the items and frames of your boards inside
-> LARPilot, and linking them to story objects with name and tag suggestions
-> (Miro board browser). Until it ships, the **Browse** tab stays empty for
-> Miro. You can already link a whole board or a single item to a story object
-> by pasting its Miro link on the story object's **Sources** tab – see
-> [Connect Discord → Link a conversation](connect-discord.md#5-link-a-conversation-to-a-story-object);
-> it works the same way for Miro links.
+Click **Browse board** next to a board to see its frames, items and
+connectors, link them to story objects, and [import a story map](#5-import-a-story-map).
 
 Miro does not tell LARPilot when a board changes, so boards are read when you
 open them in LARPilot and kept for a short while, rather than synced in the
@@ -79,29 +74,59 @@ LARPilot shows a yellow banner:
 Click **Reconnect Miro** (or **Reconnect** on the Integrations page) and sign
 in again. Your board choices are kept.
 
-## 5. Tag your boards for a later import
+## 5. Import a story map
 
-A future update will turn a Miro story map into LARPilot story objects and
-relations. Nothing is written without your confirmation: LARPilot first shows
-a preview and you tick what to import. Re-running it only shows what changed.
+You can turn a Miro story map into LARPilot story objects and relations
+without retyping it. Organizers and story writers can run the import.
 
-You can prepare your boards today so the import can make good suggestions:
+1. Open the board (**Browse board** on the Miro page) and click **Import…**.
+2. LARPilot reads the board and shows a preview. **Nothing is written yet.**
+   Each suggested change is a row with a checkbox:
+   - **Link** – the Miro element is linked to an existing story object. The
+     *Now in LARPilot* column shows the object as it is today, *After import*
+     shows it linked to the element. Rows marked *Exact title match, no type
+     tag* are less certain; check them before ticking.
+   - **Create** – a new story object of the tagged type is created with the
+     element's title and linked to it.
+   - **Create relation** – a relation is created between the two story
+     objects at the ends of a connector.
+3. Tick the rows you want and click **Import selected**. Only ticked rows are
+   imported, all in one go. A relation whose new story object you did not
+   tick is skipped.
+4. Run the import again whenever the board changes: it only shows what is not
+   in LARPilot yet. Elements already linked are counted, not listed again.
 
-- **Tag cards and sticky notes with their type.** Use Miro tags named exactly
-  `Character`, `Faction`, `Thread`, `Quest`, `Place`, `Item` or `Event`.
-  A tagged card is matched to an existing story object of that type with the
-  same name, or offered as a new one.
-- **Use the same names as in LARPilot.** A card called "Captain Mira Vale"
-  links to the character "Captain Mira Vale". Untagged cards are only matched
-  when the title is an exact match; others are listed as *unmapped* for you to
-  decide.
+Descriptions are not copied from Miro, and the import never changes or deletes
+existing story objects.
+
+Below the preview, LARPilot lists elements that need your decision (unmapped
+elements, connectors without a known relation type, relations that cannot
+connect those kinds of story objects) and characters that could be members of
+a faction. Faction membership is shown for information only – add members on
+the faction page.
+
+### Tag your boards for good suggestions
+
+- **Tag cards, sticky notes and app cards with their type.** Use Miro tags
+  named `Character`, `Faction`, `Thread`, `Quest`, `Place`, `Item` or `Event`
+  (upper or lower case). A tagged element is matched to an existing story
+  object of that type with the same name – ignoring case, accents and
+  punctuation, so "Captain Mira Vale" matches "Captain Mira Valé" – or offered
+  as a new one. Use one type tag per element.
+- **Use the same names as in LARPilot.** Untagged elements (including shapes
+  and text) are only matched when the title is exactly the same; others are
+  listed as *unmapped* for you to link by hand in the board browser.
 - **Name frames after factions, threads or places.** A frame called
-  "House Ardenne" is matched to the faction of that name, and tagged
-  characters inside it are shown as possible members.
+  "House Ardenne" is matched to the faction, thread or place of that name, and
+  characters tagged `Character` inside a faction frame are shown as possible
+  members.
 - **Label connectors with the relationship.** Write the relation on the
-  arrow's caption, for example `friend`, `enemy`, `family` or `ally`.
-  Connectors with an unknown caption are flagged for you to choose a type –
-  LARPilot never guesses.
+  arrow's caption: `friend`, `enemy`, `family` or `ally`, or a common synonym
+  such as `rival`, `cousin`, `sister`, `alliance` – in English or Polish
+  (`przyjaciel`, `wróg`, `rodzina`, `sojusznik`, …). The arrow's direction
+  becomes the relation's direction. Connectors with an unknown or empty
+  caption are flagged *Needs type* – LARPilot never guesses. Relations of
+  these types connect characters and factions only; others are skipped.
 
 ## Disconnect
 

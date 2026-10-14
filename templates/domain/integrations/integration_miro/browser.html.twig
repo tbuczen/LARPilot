@@ -93,6 +93,9 @@
             <a href="{{ boardUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-info">
                 <i class="bi bi-eye"></i>{{ 'browser.open_in_miro'|trans({}, 'miro') }}
             </a>
+            <a href="{{ path('backoffice_larp_integration_miro_import_preview', {larp: larp.id, source: board.id}) }}" class="btn btn-outline-primary" data-miro-import-board>
+                <i class="bi bi-box-arrow-in-down"></i>{{ 'import.open'|trans({}, 'miro') }}
+            </a>
             <button type="button" class="btn btn-success"
                     data-bs-toggle="modal"
                     data-bs-target="#miroLinkModal"

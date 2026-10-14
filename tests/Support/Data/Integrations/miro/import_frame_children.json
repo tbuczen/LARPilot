@@ -1,0 +1,75 @@
+{
+    "data": [
+        {
+            "id": "3458764600000000101",
+            "type": "sticky_note",
+            "data": {
+                "content": "<p>Lady Morwen</p>",
+                "shape": "square"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 200,
+                "height": 200
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000101"
+            },
+            "tagIds": [
+                "3458764600000009101"
+            ],
+            "parent": {
+                "id": "3458764600000000001",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/frames/3458764600000000001"
+                }
+            }
+        },
+        {
+            "id": "3458764600000000102",
+            "type": "sticky_note",
+            "data": {
+                "content": "<p>Cousin Elric</p>",
+                "shape": "square"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 200,
+                "height": 200
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000102"
+            },
+            "tagIds": [
+                "3458764600000009101"
+            ],
+            "parent": {
+                "id": "3458764600000000001",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/frames/3458764600000000001"
+                }
+            }
+        }
+    ],
+    "total": 2,
+    "size": 2,
+    "limit": 50,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items?limit=50"
+    },
+    "type": "cursor-list"
+}
