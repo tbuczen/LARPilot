@@ -23,6 +23,7 @@
         "moneyphp/money": "^4.8",
         "nikic/php-parser": "^5.6.2",
         "openai-php/client": "^0.18.0",
+        "paragonie/sodium_compat": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.6.3",
         "phpstan/phpdoc-parser": "^2.3",
         "scienta/doctrine-json-functions": "^6.3",
