@@ -6,8 +6,18 @@ namespace App\Domain\Integrations\Discord\Client\Exception;
 
 final class DiscordRateLimitedException extends DiscordApiException
 {
-    public static function retriesExhausted(string $path, int $attempts): self
+    private float $retryAfterSeconds = 0.0;
+
+    public static function retriesExhausted(string $path, int $attempts, float $retryAfterSeconds = 0.0): self
     {
-        return new self(sprintf('Discord kept rate limiting "%s" after %d attempts.', $path, $attempts), 429);
+        $exception = new self(sprintf('Discord kept rate limiting "%s" after %d attempts.', $path, $attempts), 429);
+        $exception->retryAfterSeconds = $retryAfterSeconds;
+
+        return $exception;
+    }
+
+    public function getRetryAfterSeconds(): float
+    {
+        return $this->retryAfterSeconds;
     }
 }

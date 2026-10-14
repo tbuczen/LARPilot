@@ -7,6 +7,8 @@ namespace Tests\Unit\Domain\Integrations;
 use App\Domain\Integrations\Discord\Client\DiscordClient;
 use App\Domain\Integrations\Discord\Client\DiscordSleeper;
 use App\Domain\Integrations\Discord\DiscordIntegrationProvider;
+use App\Domain\Integrations\Discord\Picker\DiscordChannelPicker;
+use App\Domain\Integrations\Discord\Sync\DiscordSourceSync;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Repository\ExternalReferenceRepository;
@@ -15,8 +17,10 @@ use App\Domain\Integrations\Repository\LarpIntegrationRepository;
 use App\Domain\Integrations\Service\Capability\AccessTokenProviderInterface;
 use App\Domain\Integrations\Service\Capability\BoardSourceIntegrationInterface;
 use App\Domain\Integrations\Service\Capability\ConnectableIntegrationInterface;
+use App\Domain\Integrations\Service\Capability\ConversationSourceIntegrationInterface;
 use App\Domain\Integrations\Service\Capability\CredentialProviderInterface;
 use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\Capability\SourceSyncIntegrationInterface;
 use App\Domain\Integrations\Service\Credential\BotCredentialProvider;
 use App\Domain\Integrations\Service\Exceptions\UnsupportedCapability;
 use App\Domain\Integrations\Service\Google\GoogleIntegrationService;
@@ -80,6 +84,15 @@ class IntegrationRegistryTest extends TestCase
         $this->assertFalse($registry->supports(LarpIntegrationProvider::Facebook, CredentialProviderInterface::class));
     }
 
+    public function testDiscordProvidesConversationSourcesAndSourceSync(): void
+    {
+        $registry = $this->createRegistry();
+
+        $this->assertTrue($registry->supports(LarpIntegrationProvider::Discord, SourceSyncIntegrationInterface::class));
+        $this->assertTrue($registry->supports(LarpIntegrationProvider::Discord, ConversationSourceIntegrationInterface::class));
+        $this->assertFalse($registry->supports(LarpIntegrationProvider::Google, ConversationSourceIntegrationInterface::class));
+    }
+
     private function createDiscordProvider(): DiscordIntegrationProvider
     {
         return new DiscordIntegrationProvider(
@@ -92,6 +105,8 @@ class IntegrationRegistryTest extends TestCase
             new NullLogger(),
             'discord-client-id',
             'discord-client-secret',
+            $this->createMock(DiscordChannelPicker::class),
+            $this->createMock(DiscordSourceSync::class),
         );
     }
 

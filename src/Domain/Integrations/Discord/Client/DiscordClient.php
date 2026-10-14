@@ -29,10 +29,24 @@ final class DiscordClient
 
     private const DEFAULT_RETRY_AFTER_SECONDS = 1.0;
 
+    private int $rateLimitAttempts = self::MAX_RATE_LIMIT_ATTEMPTS;
+
     public function __construct(
         private readonly HttpClientInterface $discordClient,
         private readonly DiscordSleeper $sleeper,
     ) {
+    }
+
+    public function withRateLimitAttempts(int $rateLimitAttempts): self
+    {
+        if ($rateLimitAttempts < 1) {
+            throw new InvalidArgumentException(sprintf('Discord rate limit attempts must be at least 1, %d given.', $rateLimitAttempts));
+        }
+
+        $client = clone $this;
+        $client->rateLimitAttempts = $rateLimitAttempts;
+
+        return $client;
     }
 
     public function getGuild(string $guildId): DiscordGuild
@@ -128,6 +142,23 @@ final class DiscordClient
 
             $cursor = $messages[array_key_last($messages)]->id;
         }
+    }
+
+    /**
+     * @return list<DiscordMessage>
+     */
+    public function listLatestMessages(string $channelOrThreadId, int $limit = self::MAX_PAGE_SIZE): array
+    {
+        $this->assertSnowflake($channelOrThreadId);
+        $this->assertPageSize($limit);
+
+        $messages = array_map(
+            DiscordMessage::fromArray(...),
+            $this->getList(sprintf('channels/%s/messages', $channelOrThreadId), ['limit' => $limit]),
+        );
+        usort($messages, fn (DiscordMessage $left, DiscordMessage $right): int => $this->compareSnowflakes($left->id, $right->id));
+
+        return array_slice($messages, -$limit);
     }
 
     public function exchangeBotAuthorizationCode(string $code, string $redirectUri, string $clientId, string $clientSecret): DiscordBotAuthorization
@@ -238,11 +269,12 @@ final class DiscordClient
             }
 
             if ($statusCode === 429) {
-                if ($attempt >= self::MAX_RATE_LIMIT_ATTEMPTS) {
-                    throw DiscordRateLimitedException::retriesExhausted($path, $attempt);
+                $retryAfterSeconds = $this->resolveRetryAfter($response);
+                if ($attempt >= $this->rateLimitAttempts) {
+                    throw DiscordRateLimitedException::retriesExhausted($path, $attempt, $retryAfterSeconds);
                 }
 
-                $this->sleeper->sleep($this->resolveRetryAfter($response));
+                $this->sleeper->sleep($retryAfterSeconds);
                 continue;
             }
 
