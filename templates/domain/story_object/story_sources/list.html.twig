@@ -34,9 +34,23 @@
                 <span class="badge bg-secondary">{{ referencesCount }}</span>
             </h5>
             {% if canLink %}
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#linkSourceModal">
-                    <i class="bi bi-plus-lg"></i>{{ 'story_source.link'|trans }}
-                </button>
+                <div class="d-flex flex-wrap gap-2">
+                    {% if miroBoards is not empty %}
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-miro-board-menu>
+                                <i class="bi bi-eye"></i>{{ 'browser.browse_boards'|trans({}, 'miro') }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                {% for miroBoard in miroBoards %}
+                                    <li><a class="dropdown-item text-break" href="{{ path('backoffice_larp_integration_miro_browser_show', {larp: larp.id, source: miroBoard.id}) }}">{{ miroBoard.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#linkSourceModal">
+                        <i class="bi bi-plus-lg"></i>{{ 'story_source.link'|trans }}
+                    </button>
+                </div>
             {% endif %}
         </div>
 

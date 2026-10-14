@@ -37,4 +37,14 @@ class SourceContentTest extends TestCase
         $this->assertTrue($content->isEmpty());
         $this->assertSame('', $content->plainText);
     }
+
+    public function testTitleAndTagsAreHashedWithTheChunks(): void
+    {
+        $chunks = [new SourceContentChunk(0, 'Text')];
+        $digest = new SourceContent($chunks, null, 'Thread title', ['Main plot']);
+
+        $this->assertSame('Text', $digest->plainText);
+        $this->assertSame(hash('sha256', "Thread title\n\nMain plot\n\nText"), $digest->contentHash);
+        $this->assertNotSame((new SourceContent($chunks, null, 'Renamed title', ['Main plot']))->contentHash, $digest->contentHash);
+    }
 }

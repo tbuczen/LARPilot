@@ -1526,7 +1526,7 @@ integration_hub:
   purpose:
     integration_google_drive: 'Udostępniaj pliki z Dysku i importuj postacie, wydarzenia oraz tagi z arkuszy.'
     discord: 'Przeglądaj wątki z serwera i powiązuj je z obiektami fabularnymi.'
-    miro: 'Przeglądaj elementy tablic i powiązuj je z obiektami fabularnymi.'
+    integration_miro: 'Przeglądaj elementy tablic i powiązuj je z obiektami fabularnymi.'
     facebook: 'Starsze połączenie. Nie można go już połączyć ponownie.'
   state:
     connected: 'Połączono'

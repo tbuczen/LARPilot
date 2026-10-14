@@ -1,0 +1,65 @@
+{
+    "threads": [
+        {
+            "id": "1100000000000000301",
+            "type": 11,
+            "guild_id": "1100000000000000001",
+            "parent_id": "1100000000000000200",
+            "owner_id": "1200000000000000001",
+            "name": "Lady Morwen — the stolen seal",
+            "last_message_id": "1300000000000000004",
+            "message_count": 4,
+            "member_count": 2,
+            "total_message_sent": 4,
+            "rate_limit_per_user": 0,
+            "flags": 0,
+            "applied_tags": [
+                "1100000000000000901",
+                "1100000000000000903"
+            ],
+            "thread_metadata": {
+                "archived": false,
+                "auto_archive_duration": 4320,
+                "archive_timestamp": "2026-09-20T18:00:00.000000+00:00",
+                "locked": false,
+                "create_timestamp": "2026-09-20T18:00:00.000000+00:00"
+            }
+        },
+        {
+            "id": "1100000000000000310",
+            "type": 11,
+            "guild_id": "1100000000000000001",
+            "parent_id": "1100000000000000210",
+            "owner_id": "1200000000000000001",
+            "name": "Council vote timeline",
+            "last_message_id": "1300000000000000020",
+            "message_count": 1,
+            "member_count": 2,
+            "total_message_sent": 1,
+            "rate_limit_per_user": 0,
+            "flags": 0,
+            "thread_metadata": {
+                "archived": false,
+                "auto_archive_duration": 1440,
+                "archive_timestamp": "2026-10-01T12:00:00.000000+00:00",
+                "locked": false,
+                "invitable": true,
+                "create_timestamp": "2026-10-01T12:00:00.000000+00:00"
+            }
+        }
+    ],
+    "members": [
+        {
+            "id": "1100000000000000301",
+            "user_id": "1200000000000000001",
+            "join_timestamp": "2026-09-20T18:00:00.000000+00:00",
+            "flags": 1
+        },
+        {
+            "id": "1100000000000000310",
+            "user_id": "1200000000000000001",
+            "join_timestamp": "2026-10-01T12:00:00.000000+00:00",
+            "flags": 1
+        }
+    ]
+}

@@ -47,6 +47,8 @@ class IntegrationHubCest
         $I->see('Not connected', self::GOOGLE_CARD . ' .badge');
         $I->seeElement(self::GOOGLE_CARD . ' a.btn-success[href="' . $this->connectUrl($I, $larp->getId()->toRfc4122()) . '"]');
         $I->dontSeeElement(self::GOOGLE_CARD . ' .btn-outline-danger');
+        $I->see('Browse board items and link them to story objects.', '.integration-card[data-provider="integration_miro"]');
+        $I->dontSee('integration_hub.purpose.');
     }
 
     public function connectedProviderShowsAccountSourcesAndLastSync(FunctionalTester $I): void

@@ -17,4 +17,9 @@ class MiroApiClientFactory
     {
         return new MiroApiClient($this->miroClient, $accessToken);
     }
+
+    public function createWithoutRateLimitRetries(string $accessToken): MiroApiClient
+    {
+        return new MiroApiClient($this->miroClient, $accessToken, maxRateLimitRetries: 0);
+    }
 }

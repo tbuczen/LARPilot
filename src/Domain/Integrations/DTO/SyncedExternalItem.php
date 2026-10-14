@@ -2,6 +2,7 @@
 
 namespace App\Domain\Integrations\DTO;
 
+use App\Domain\Integrations\Entity\Enum\ExternalItemAvailability;
 use App\Domain\Integrations\Entity\Enum\ExternalItemKind;
 
 final readonly class SyncedExternalItem
@@ -19,6 +20,7 @@ final readonly class SyncedExternalItem
         public ?string $parentExternalId = null,
         public ?\DateTimeImmutable $externalUpdatedAt = null,
         public ?array $raw = null,
+        public ExternalItemAvailability $availability = ExternalItemAvailability::Ok,
     ) {
     }
 }
