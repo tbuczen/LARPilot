@@ -6,6 +6,7 @@ namespace App\Domain\Integrations\MessageHandler;
 
 use App\Domain\Integrations\DTO\SourceSyncPage;
 use App\Domain\Integrations\DTO\SyncedExternalItem;
+use App\Domain\Integrations\Entity\Enum\ExternalItemAvailability;
 use App\Domain\Integrations\Entity\Enum\ExternalSourceSyncStatus;
 use App\Domain\Integrations\Entity\ExternalItem;
 use App\Domain\Integrations\Entity\ExternalSource;
