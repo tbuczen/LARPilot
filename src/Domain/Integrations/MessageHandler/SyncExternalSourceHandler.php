@@ -155,11 +155,23 @@ final readonly class SyncExternalSourceHandler
                 ->setExternalUpdatedAt($syncedItem->externalUpdatedAt)
                 ->setRaw($syncedItem->raw)
                 ->setLastSeenAt($seenAt)
-                ->setAvailability(ExternalItemAvailability::Ok);
+                ->setAvailability($syncedItem->availability);
         }
+
+        $this->markMissing($source, $page->missingExternalIds);
 
         $source->setSyncCursor($page->nextCursor);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param list<string> $missingExternalIds
+     */
+    private function markMissing(ExternalSource $source, array $missingExternalIds): void
+    {
+        foreach ($this->externalItemRepository->findBySourceIndexedByExternalId($source, $missingExternalIds) as $missingItem) {
+            $missingItem->setAvailability(ExternalItemAvailability::Gone);
+        }
     }
 
     private function redispatch(ExternalSource $source, int $delayMilliseconds): void

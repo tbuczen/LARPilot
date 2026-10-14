@@ -35,6 +35,7 @@ class MiroApiClient
         private readonly string $accessToken,
         ?Closure $sleeper = null,
         ?Closure $clock = null,
+        private readonly int $maxRateLimitRetries = self::MAX_RATE_LIMIT_RETRIES,
     ) {
         $this->sleeper = $sleeper ?? static function (int $seconds): void {
             sleep($seconds);
@@ -161,8 +162,13 @@ class MiroApiClient
                 ]);
                 $statusCode = $response->getStatusCode();
 
-                if ($statusCode === 429 && $attempt < self::MAX_RATE_LIMIT_RETRIES) {
-                    ($this->sleeper)($this->secondsUntilRateLimitReset($response, $attempt));
+                if ($statusCode === 429) {
+                    $secondsToWait = $this->secondsUntilRateLimitReset($response, $attempt);
+                    if ($attempt >= $this->maxRateLimitRetries) {
+                        throw new MiroRateLimitExceededException(sprintf('Miro rate limit still exceeded for %s after retries.', $path), $secondsToWait);
+                    }
+
+                    ($this->sleeper)($secondsToWait);
                     $attempt++;
                     continue;
                 }
@@ -181,10 +187,6 @@ class MiroApiClient
     {
         if ($statusCode === 401) {
             throw new MiroAuthorizationException(sprintf('Miro rejected the access token for %s.', $path), $statusCode);
-        }
-
-        if ($statusCode === 429) {
-            throw new MiroRateLimitExceededException(sprintf('Miro rate limit still exceeded for %s after retries.', $path), $statusCode);
         }
 
         if ($statusCode >= 400) {
