@@ -59,15 +59,7 @@ class RelationType extends AbstractType
                 'disabled' => $disableFrom
             ])
             ->addDependent('from', 'fromType', $this->getClosure($larp, $disableFrom, $contextOwner))
-            ->add('toType', ChoiceType::class, [
-                'label' => 'relation.toType',
-                'choices' => TargetType::getAvailableForRelations(),
-                'choice_label' => fn (TargetType $type) => $type->name,
-                'choice_value' => fn (?TargetType $type) => $type?->value,
-                'required' => true,
-                'placeholder' => 'choose',
-                'disabled' => $disableTo
-            ])
+            ->addDependent('toType', ['relationType', 'fromType'], $this->getToTypeClosure($disableTo))
             ->addDependent('to', 'toType', $this->getClosure($larp, $disableTo, $contextOwner))
             ->add('submit', SubmitType::class, [
                 'label' => 'submit',
@@ -124,25 +116,46 @@ class RelationType extends AbstractType
         };
     }
 
+    private function getToTypeClosure(bool $disableTo): \Closure
+    {
+        return function (DependentField $field, ?RelationKind $relationType, ?TargetType $fromType) use ($disableTo): void {
+            $choices = $relationType instanceof RelationKind && $fromType instanceof TargetType
+                ? $relationType->getCompatibleTargetTypesFor($fromType)
+                : TargetType::getAvailableForRelations();
+
+            $field->add(ChoiceType::class, [
+                'label' => 'relation.toType',
+                'choices' => $choices,
+                'choice_label' => fn (TargetType $type) => $type->name,
+                'choice_value' => fn (?TargetType $type) => $type?->value,
+                'required' => true,
+                'placeholder' => 'choose',
+                'disabled' => $disableTo,
+            ]);
+        };
+    }
+
     /**
      * @return bool[]
      */
     private function getDisabledFieldList(FormBuilderInterface $builder, ?StoryObject $contextOwner): array
     {
+        if (!$contextOwner instanceof StoryObject) {
+            return [false, false];
+        }
+
         /** @var Relation|null $relation */
         $relation = $builder->getData();
-
         $isEditing = $relation && null !== $relation->getCreatedAt();
-        $disableFrom = false;
-        $disableTo = false;
 
-        if ($isEditing && $contextOwner instanceof StoryObject) {
-            if ($relation->getFrom() === $contextOwner) {
-                $disableFrom = true;
-            } elseif ($relation->getTo() === $contextOwner) {
-                $disableTo = true;
-            }
+        if (!$isEditing || $relation->getFrom() === $contextOwner) {
+            return [true, false];
         }
-        return [$disableFrom, $disableTo];
+
+        if ($relation->getTo() === $contextOwner) {
+            return [false, true];
+        }
+
+        return [false, false];
     }
 }

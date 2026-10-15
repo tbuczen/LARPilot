@@ -19,13 +19,13 @@
                         </li>
                     {% endif %}
                     <li class="list-group-item">
-                        <strong>{{ 'valid_until'|trans }}:</strong> {{ invitation.validTo|date('Y-m-d H:i') }}
+                        <strong>{{ 'valid_until'|trans }}:</strong> {{ invitation.validTo|display_datetime }}
                     </li>
                 </ul>
 
                 {% if app.user %}
                     <form method="post" action="{{ path('public_larp_accept_invitation', { slug: larp.slug, code: invitation.code }) }}">
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-primary">
                             {{ 'accept'|trans }}
                         </button>
                     </form>

@@ -48,6 +48,10 @@ uczestnikami, a także narzędzia do raportowania i obsługi incydentów.
 
 ### User Guides
 
+- [Organizer guides](docs/guides/README.md) - Plain-language guides for organizers
+  - [Connect your Discord server](docs/guides/connect-discord.md) - Invite the bot, choose channels, privacy
+  - [Connect Miro](docs/guides/connect-miro.md) - Sign in, pick boards, tagging for import
+  - [Discord & Miro Q&A](docs/guides/integrations-faq.md) - Sync delay, private threads, disconnecting
 - [Character Allocation System](docs/CHARACTER_ALLOCATION_SYSTEM.md) - Player application and character assignment workflow
 - [Decision Tree System](docs/DECISION_TREE_SYSTEM.md) - Interactive branching narrative editor for quests and threads
 - [Event Planning System](docs/EVENT_PLANNING_SYSTEM.md) - Event scheduling, resource booking, and conflict detection

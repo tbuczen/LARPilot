@@ -5,7 +5,7 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryObject\Entity\Item;
 use App\Domain\StoryObject\Form\Filter\ItemFilterType;
 use App\Domain\StoryObject\Form\ItemType;
@@ -42,7 +42,7 @@ class ItemController extends BaseController
     #[Route('{item}', name: 'modify', defaults: ['item' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         StoryObjectMentionService $mentionService,
         Request $request,
         Larp $larp,
@@ -62,7 +62,7 @@ class ItemController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $itemRepository->save($item);
-            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $item);
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationRegistry, $new, $item);
             $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
         }
@@ -99,14 +99,14 @@ class ItemController extends BaseController
     #[Route('{item}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         Larp $larp,
         Request $request,
         ItemRepository $itemRepository,
         Item $item,
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $item, 'Item')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $item, 'Item')) {
             return $this->redirectToRoute('backoffice_larp_story_item_list', ['larp' => $larp->getId()]);
         }
 

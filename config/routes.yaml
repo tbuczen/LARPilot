@@ -20,6 +20,12 @@ application_backoffice:
   type: attribute
   prefix: /backoffice
 
+# CallTranscript Domain
+call_transcript_backoffice:
+  resource: '../src/Domain/CallTranscript/Controller/Backoffice/'
+  type: attribute
+  prefix: /backoffice
+
 # Core Domain
 core_public:
   resource: '../src/Domain/Core/Controller/Public/'

@@ -6,7 +6,8 @@ use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\Helper\Logger;
 use App\Domain\Core\Service\LarpManager;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryObject\Entity\Faction;
 use App\Domain\StoryObject\Form\FactionType;
 use App\Domain\StoryObject\Form\Filter\FactionFilterType;
@@ -44,7 +45,7 @@ class FactionController extends BaseController
     #[Route('{faction}', name: 'modify', defaults: ['faction' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager             $larpManager,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         StoryObjectMentionService $mentionService,
         Request                 $request,
         Larp                    $larp,
@@ -67,7 +68,7 @@ class FactionController extends BaseController
             $integrations = $larpManager->getIntegrationsForLarp($larp);
             foreach ($integrations as $integration) {
                 try {
-                    $integrationService = $integrationManager->getService($integration);
+                    $integrationService = $integrationRegistry->capability($integration, FileSourceIntegrationInterface::class);
                     if ($new) {
                         $integrationService->createStoryObject($integration, $faction);
                     } else {
@@ -115,7 +116,7 @@ class FactionController extends BaseController
     #[Route('{faction}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         Larp                    $larp,
         Request                 $request,
         FactionRepository $factionRepository,
@@ -123,7 +124,7 @@ class FactionController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $faction, 'Faction')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $faction, 'Faction')) {
             return $this->redirectToRoute('backoffice_larp_story_faction_list', [
                 'larp' => $larp->getId(),
             ]);

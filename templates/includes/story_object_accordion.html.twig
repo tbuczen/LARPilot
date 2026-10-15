@@ -88,14 +88,14 @@
                 {% endif %}
 
                 <div class="mt-3 d-flex gap-2">
-                    <a href="{{ path(listRoute, {'larp': larp.id}) }}" class="btn btn-outline-secondary">
+                    <a href="{{ path(listRoute, {'larp': larp.id}) }}" class="btn btn-outline-info">
                         {{ 'view_all'|trans }}
                     </a>
                     {% if addRoute and addButtonLabel and character and character.id %}
                         <a href="{{ path(addRoute, {'larp': larp.id, 'character': character.id}) }}"
                            class="btn btn-success"
                            target="_blank">
-                            <i class="bi bi-plus-circle"></i> {{ addButtonLabel|trans }}
+                            <i class="bi bi-plus-lg"></i> {{ addButtonLabel|trans }}
                         </a>
                     {% endif %}
                 </div>

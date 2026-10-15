@@ -1,0 +1,65 @@
+services:
+    tests.integrations.discord.fixture_router:
+        class: Tests\Support\Http\FixtureRouter
+        factory: ['Tests\Support\Http\IntegrationFixtureRouters', 'discord']
+        public: true
+
+    tests.integrations.miro.fixture_router:
+        class: Tests\Support\Http\FixtureRouter
+        factory: ['Tests\Support\Http\IntegrationFixtureRouters', 'miro']
+        public: true
+
+    tests.integrations.discord.mock_client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@tests.integrations.discord.fixture_router'
+            - !php/const Tests\Support\Http\IntegrationFixtureRouters::DISCORD_BASE_URI
+
+    discord.client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        factory: ['@tests.integrations.discord.mock_client', 'withOptions']
+        arguments:
+            - headers:
+                  Authorization: 'Bot %env(DISCORD_BOT_TOKEN)%'
+                  Accept: 'application/json'
+        public: true
+
+    miro.client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@tests.integrations.miro.fixture_router'
+            - !php/const Tests\Support\Http\IntegrationFixtureRouters::MIRO_BASE_URI
+        public: true
+
+    Symfony\Contracts\HttpClient\HttpClientInterface $discordClient: '@discord.client'
+    Symfony\Contracts\HttpClient\HttpClientInterface $miroClient: '@miro.client'
+
+    Tests\Support\Integrations\FakeGoogleOAuthGateway: ~
+    App\Domain\Integrations\Service\Google\GoogleOAuthGatewayInterface: '@Tests\Support\Integrations\FakeGoogleOAuthGateway'
+
+    Tests\Support\Integrations\FixtureGoogleClientFactory: ~
+    App\Domain\Integrations\Service\Google\GoogleClientFactoryInterface: '@Tests\Support\Integrations\FixtureGoogleClientFactory'
+
+    Tests\Support\Integrations\FakeMiroOAuthGateway: ~
+    App\Domain\Integrations\Miro\OAuth\MiroOAuthGatewayInterface: '@Tests\Support\Integrations\FakeMiroOAuthGateway'
+
+    Tests\Support\Integrations\MiroTokenEndpoint:
+        public: true
+
+    tests.integrations.miro.oauth_client:
+        class: Symfony\Component\HttpClient\MockHttpClient
+        arguments:
+            - '@Tests\Support\Integrations\MiroTokenEndpoint'
+
+    App\Domain\Integrations\Miro\Credential\MiroTokenRefresher:
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $httpClient: '@tests.integrations.miro.oauth_client'
+
+    Tests\Support\CallTranscript\FakeSpeechToTextProvider:
+        public: true
+    App\Domain\CallTranscript\Service\SpeechToText\SpeechToTextProviderInterface: '@Tests\Support\CallTranscript\FakeSpeechToTextProvider'
+
+    Tests\Support\Integrations\MarkerLinkSuggester:
+        tags: ['app.integrations.link_suggester']

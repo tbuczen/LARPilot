@@ -1,0 +1,114 @@
+[
+    {
+        "id": "1300000000000000003",
+        "channel_id": "1100000000000000301",
+        "author": {
+            "id": "1200000000000000002",
+            "username": "aldric_gm",
+            "discriminator": "0",
+            "global_name": "Aldric (GM)",
+            "avatar": null,
+            "public_flags": 0
+        },
+        "content": "Reply: the seal should surface during the second evening.",
+        "timestamp": "2026-09-21T10:15:00.000000+00:00",
+        "edited_timestamp": null,
+        "tts": false,
+        "mention_everyone": false,
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "pinned": false,
+        "type": 19,
+        "flags": 0,
+        "components": [],
+        "message_reference": {
+            "type": 0,
+            "message_id": "1300000000000000002",
+            "channel_id": "1100000000000000301",
+            "guild_id": "1100000000000000001"
+        },
+        "referenced_message": null
+    },
+    {
+        "id": "1300000000000000002",
+        "channel_id": "1100000000000000301",
+        "author": {
+            "id": "1200000000000000001",
+            "username": "morwen_writer",
+            "discriminator": "0",
+            "global_name": "Morwen's Writer",
+            "avatar": "8342729096ea3675442027381ff50dfe",
+            "public_flags": 0
+        },
+        "content": "<@1200000000000000002> who holds the seal at game start? See the map in <#1100000000000000210>.",
+        "timestamp": "2026-09-20T19:42:11.000000+00:00",
+        "edited_timestamp": "2026-09-20T19:45:00.000000+00:00",
+        "tts": false,
+        "mention_everyone": false,
+        "mentions": [
+            {
+                "id": "1200000000000000002",
+                "username": "aldric_gm",
+                "discriminator": "0",
+                "global_name": "Aldric (GM)",
+                "avatar": null,
+                "public_flags": 0
+            }
+        ],
+        "mention_roles": [],
+        "attachments": [
+            {
+                "id": "1400000000000000001",
+                "filename": "seal-sketch.png",
+                "size": 48213,
+                "url": "https://cdn.discordapp.com/attachments/1100000000000000301/1400000000000000001/seal-sketch.png",
+                "proxy_url": "https://media.discordapp.net/attachments/1100000000000000301/1400000000000000001/seal-sketch.png",
+                "width": 640,
+                "height": 480,
+                "content_type": "image/png"
+            }
+        ],
+        "embeds": [],
+        "reactions": [
+            {
+                "count": 2,
+                "count_details": {"burst": 0, "normal": 2},
+                "me": false,
+                "me_burst": false,
+                "burst_colors": [],
+                "emoji": {"id": null, "name": "👍"}
+            }
+        ],
+        "pinned": true,
+        "type": 0,
+        "flags": 0,
+        "components": []
+    },
+    {
+        "id": "1100000000000000301",
+        "channel_id": "1100000000000000301",
+        "author": {
+            "id": "1200000000000000001",
+            "username": "morwen_writer",
+            "discriminator": "0",
+            "global_name": "Morwen's Writer",
+            "avatar": "8342729096ea3675442027381ff50dfe",
+            "public_flags": 0
+        },
+        "content": "**Lady Morwen** wants the stolen seal back before the council convenes.\n\n- Suspects her cousin\n- Owes a favour to the smugglers",
+        "timestamp": "2026-09-20T18:00:00.000000+00:00",
+        "edited_timestamp": null,
+        "tts": false,
+        "mention_everyone": false,
+        "mentions": [],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "pinned": false,
+        "type": 0,
+        "flags": 0,
+        "components": []
+    }
+]

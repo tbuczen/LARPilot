@@ -1,0 +1,38 @@
+<article class="card h-100 integration-card" data-provider="{{ card.provider.value }}" data-state="{{ card.state.value }}">
+    <div class="card-body d-flex flex-column gap-3">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="d-flex align-items-center gap-2 min-w-0">
+                <i class="bi {{ card.provider.icon }} fs-4" aria-hidden="true"></i>
+                <h2 class="h5 mb-0 text-break">{{ card.provider.label }}</h2>
+            </div>
+            {% include 'domain/integrations/hub/_state_badge.html.twig' with {state: card.state} only %}
+        </div>
+        <p class="text-muted mb-0">{{ card.purposeKey|trans }}</p>
+        {% if card.state.connected %}
+            <dl class="row small mb-0 gy-1">
+                <dt class="col-5 fw-normal text-muted">{{ 'integration_hub.account'|trans }}</dt>
+                <dd class="col-7 mb-0 text-break">{{ card.accountLabel|default('integration_hub.unknown_account'|trans) }}</dd>
+                <dt class="col-5 fw-normal text-muted">{{ 'integration_hub.last_sync'|trans }}</dt>
+                <dd class="col-7 mb-0">{{ card.lastSyncedAt ? card.lastSyncedAt|display_datetime : 'integration_hub.never'|trans }}</dd>
+                <dt class="col-5 fw-normal text-muted">{{ 'integration_hub.sources'|trans }}</dt>
+                <dd class="col-7 mb-0" data-source-count>{{ card.sourceCount }}</dd>
+                {% if card.provider.value == 'discord' %}
+                    {% set inboxCount = discord_inbox_count(larp) %}
+                    <dt class="col-5 fw-normal text-muted">{{ 'inbox.title'|trans({}, 'discord') }}</dt>
+                    <dd class="col-7 mb-0">
+                        <a href="{{ path('backoffice_larp_discord_inbox', {larp: larp.id}) }}" class="d-inline-flex align-items-center gap-1" data-inbox-link>
+                            {{ 'inbox.open'|trans({}, 'discord') }}
+                            {% if inboxCount > 0 %}
+                                <span class="badge rounded-pill bg-danger" data-inbox-count>{{ inboxCount }}</span>
+                            {% endif %}
+                        </a>
+                    </dd>
+                {% endif %}
+            </dl>
+        {% endif %}
+        {% include 'domain/integrations/hub/_card_problem.html.twig' %}
+    </div>
+    <div class="card-footer bg-transparent d-flex flex-wrap justify-content-end gap-2">
+        {% include 'domain/integrations/hub/_card_actions.html.twig' with {card: card, larp: larp, size: 'sm'} only %}
+    </div>
+</article>

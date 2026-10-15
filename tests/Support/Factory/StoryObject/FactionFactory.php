@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Support\Factory\StoryObject;
 
 use App\Domain\StoryObject\Entity\Faction;
+use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\Factory\Core\LarpFactory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
@@ -24,6 +25,7 @@ final class FactionFactory extends PersistentProxyObjectFactory
             'title' => self::faker()->company(),
             'description' => self::faker()->optional()->paragraphs(2, true),
             'larp' => LarpFactory::new(),
+            'createdBy' => UserFactory::new(),
         ];
     }
 

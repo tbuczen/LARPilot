@@ -1,0 +1,75 @@
+{
+    "data": [
+        {
+            "id": "3458764600000000012",
+            "type": "card",
+            "data": {
+                "title": "Council convenes",
+                "description": "Saturday evening, great hall",
+                "dueDate": "2026-11-14T19:00:00Z",
+                "assigneeId": "3458764517517852418"
+            },
+            "style": {
+                "cardTheme": "#2d9bf0"
+            },
+            "position": {
+                "x": 3000,
+                "y": 400,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 320,
+                "height": 94,
+                "rotation": 0
+            },
+            "tagIds": ["3458764600000009002"],
+            "createdAt": "2026-08-05T15:00:00Z",
+            "createdBy": {"id": "3458764517517852418", "type": "user"},
+            "modifiedAt": "2026-09-10T10:00:00Z",
+            "modifiedBy": {"id": "3458764517517852418", "type": "user"},
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/cards/3458764600000000012"
+            }
+        },
+        {
+            "id": "3458764600000000013",
+            "type": "text",
+            "data": {
+                "content": "<p>Act II</p>"
+            },
+            "style": {
+                "fillColor": "transparent",
+                "fillOpacity": "1.0",
+                "fontFamily": "arial",
+                "fontSize": "48",
+                "textAlign": "left",
+                "color": "#1a1a1a"
+            },
+            "position": {
+                "x": 2800,
+                "y": -800,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 320,
+                "rotation": 0
+            },
+            "createdAt": "2026-08-05T15:10:00Z",
+            "createdBy": {"id": "3458764517517852418", "type": "user"},
+            "modifiedAt": "2026-08-05T15:10:00Z",
+            "modifiedBy": {"id": "3458764517517852418", "type": "user"},
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/texts/3458764600000000013"
+            }
+        }
+    ],
+    "total": 5,
+    "size": 2,
+    "limit": 10,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items?limit=10&cursor=MzQ1ODc2NDYwMDAwMDAwMDAxMX4%3D"
+    },
+    "type": "cursor-list"
+}

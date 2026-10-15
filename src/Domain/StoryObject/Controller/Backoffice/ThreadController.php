@@ -6,7 +6,7 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryMarketplace\Entity\Enum\RecruitmentProposalStatus;
 use App\Domain\StoryMarketplace\Entity\RecruitmentProposal;
 use App\Domain\StoryMarketplace\Entity\StoryRecruitment;
@@ -52,7 +52,7 @@ class ThreadController extends BaseController
     #[Route('{thread}', name: 'modify', defaults: ['thread' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager                                           $larpManager,
-        IntegrationManager                                    $integrationManager,
+        IntegrationRegistry                                    $integrationRegistry,
         StoryObjectMentionService                             $mentionService,
         Request                                               $request,
         Larp                                                  $larp,
@@ -86,7 +86,7 @@ class ThreadController extends BaseController
             );
             $threadRepository->save($thread);
 
-            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $thread);
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationRegistry, $new, $thread);
 
             $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_thread_list', ['larp' => $larp->getId()]);
@@ -148,7 +148,7 @@ class ThreadController extends BaseController
     #[Route('{thread}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager        $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         Larp               $larp,
         Request            $request,
         ThreadRepository   $threadRepository,
@@ -156,7 +156,7 @@ class ThreadController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $thread, 'Thread')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $thread, 'Thread')) {
             return $this->redirectToRoute('backoffice_larp_story_thread_list', [
                 'larp' => $larp->getId(),
             ]);

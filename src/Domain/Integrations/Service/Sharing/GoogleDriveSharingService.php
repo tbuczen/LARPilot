@@ -3,14 +3,14 @@
 namespace App\Domain\Integrations\Service\Sharing;
 
 use App\Domain\Integrations\Entity\LarpIntegration;
-use App\Domain\Integrations\Service\Google\GoogleClientManager;
+use App\Domain\Integrations\Service\Google\GoogleClientFactoryInterface;
 use Google\Service\Drive;
 use Google\Service\Drive\Permission;
 
 final readonly class GoogleDriveSharingService implements DriveSharingServiceInterface
 {
     public function __construct(
-        private GoogleClientManager $clientManager,
+        private GoogleClientFactoryInterface $clientManager,
     ) {
     }
 
@@ -28,10 +28,19 @@ final readonly class GoogleDriveSharingService implements DriveSharingServiceInt
             'fields' => 'permissions(id, role, type, emailAddress)',
         ]);
 
-        foreach ($existingPermissions->getPermissions() as $perm) {
-            if ($perm->getEmailAddress() === $serviceAccountEmail && $perm->getRole() === $permissionType) {
+        foreach ($existingPermissions->getPermissions() as $permission) {
+            if ($permission->getEmailAddress() !== $serviceAccountEmail) {
+                continue;
+            }
+            if ($permission->getRole() === $permissionType) {
                 return;
             }
+
+            $roleChange = new Permission();
+            $roleChange->setRole($permissionType);
+            $drive->permissions->update($fileId, $permission->getId(), $roleChange);
+
+            return;
         }
 
         $newPermission = new Permission();
@@ -39,6 +48,6 @@ final readonly class GoogleDriveSharingService implements DriveSharingServiceInt
         $newPermission->setRole($permissionType);
         $newPermission->setEmailAddress($serviceAccountEmail);
 
-        $drive->permissions->create($fileId, $newPermission);
+        $drive->permissions->create($fileId, $newPermission, ['sendNotificationEmail' => false]);
     }
 }

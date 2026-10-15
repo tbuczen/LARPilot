@@ -1,0 +1,7 @@
+{
+    "status": 429,
+    "code": "tooManyRequests",
+    "message": "Request rate limit exceeded",
+    "context": null,
+    "type": "error"
+}
