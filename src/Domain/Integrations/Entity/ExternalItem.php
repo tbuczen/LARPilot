@@ -8,6 +8,8 @@ use App\Domain\Integrations\Entity\Enum\ExternalItemKind;
 use App\Domain\Integrations\Entity\Enum\ExternalItemReviewStatus;
 use App\Domain\Integrations\Repository\ExternalItemRepository;
 use App\Domain\Integrations\Service\ExcerptNormalizer;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Timestampable;
@@ -63,9 +65,18 @@ class ExternalItem implements Timestampable
     #[ORM\Column(type: 'string', length: 20, enumType: ExternalItemReviewStatus::class, options: ['default' => 'unreviewed'])]
     private ExternalItemReviewStatus $reviewStatus = ExternalItemReviewStatus::Unreviewed;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $suggestionsRefreshedAt = null;
+
+    /** @var Collection<int, ExternalItemSuggestion> */
+    #[ORM\OneToMany(targetEntity: ExternalItemSuggestion::class, mappedBy: 'item', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['score' => 'DESC'])]
+    private Collection $suggestions;
+
     public function __construct()
     {
         $this->id = Uuid::v4();
+        $this->suggestions = new ArrayCollection();
     }
 
     public function getSource(): ExternalSource
@@ -209,5 +220,56 @@ class ExternalItem implements Timestampable
     {
         $this->reviewStatus = $reviewStatus;
         return $this;
+    }
+
+    public function getSuggestionsRefreshedAt(): ?\DateTimeImmutable
+    {
+        return $this->suggestionsRefreshedAt;
+    }
+
+    public function markSuggestionsRefreshed(\DateTimeImmutable $refreshedAt): self
+    {
+        $this->suggestionsRefreshedAt = $refreshedAt;
+        return $this;
+    }
+
+    /** @return Collection<int, ExternalItemSuggestion> */
+    public function getSuggestions(): Collection
+    {
+        return $this->suggestions;
+    }
+
+    /**
+     * @param list<ExternalItemSuggestion> $suggestions
+     */
+    public function replaceSuggestions(array $suggestions, \DateTimeImmutable $refreshedAt): self
+    {
+        $this->suggestions->clear();
+        foreach ($suggestions as $suggestion) {
+            $this->suggestions->add($suggestion);
+        }
+
+        return $this->markSuggestionsRefreshed($refreshedAt);
+    }
+
+    /**
+     * @return list<ExternalItemSuggestion>
+     */
+    public function getLinkSuggestions(): array
+    {
+        return array_values($this->suggestions->filter(
+            static fn (ExternalItemSuggestion $suggestion): bool => $suggestion->isLinkSuggestion(),
+        )->toArray());
+    }
+
+    public function getCreateSuggestion(): ?ExternalItemSuggestion
+    {
+        foreach ($this->suggestions as $suggestion) {
+            if ($suggestion->getTargetType() !== null) {
+                return $suggestion;
+            }
+        }
+
+        return null;
     }
 }

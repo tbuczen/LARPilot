@@ -39,14 +39,20 @@
     {% if provider.hasMappings %}
         {% set tabs = tabs|merge([{key: 'mappings', icon: 'bi-diagram-2', label: 'integration_hub.tab.mappings'}]) %}
     {% endif %}
+    {% if provider.value == 'discord' %}
+        {% set tabs = tabs|merge([{key: 'inbox', icon: 'bi-inbox', label: 'inbox.tab', domain: 'discord', route: 'backoffice_larp_discord_inbox', badge: discord_inbox_count(larp)}]) %}
+    {% endif %}
 
     <ul class="nav nav-tabs flex-nowrap overflow-x-auto overflow-y-hidden integration-tabs" role="tablist">
         {% for tab in tabs %}
             <li class="nav-item" role="presentation">
                 <a class="nav-link text-nowrap {{ currentTab == tab.key ? 'active' : '' }}"
                    {% if currentTab == tab.key %}aria-current="page"{% endif %}
-                   href="{{ path('backoffice_larp_integrations_' ~ tab.key, {larp: larp.id, provider: provider.value}) }}">
-                    <i class="bi {{ tab.icon }}" aria-hidden="true"></i> {{ tab.label|trans }}
+                   href="{{ tab.route is defined ? path(tab.route, {larp: larp.id}) : path('backoffice_larp_integrations_' ~ tab.key, {larp: larp.id, provider: provider.value}) }}">
+                    <i class="bi {{ tab.icon }}" aria-hidden="true"></i> {{ tab.label|trans({}, tab.domain|default('messages')) }}
+                    {% if tab.badge|default(0) > 0 %}
+                        <span class="badge rounded-pill bg-danger" data-inbox-count>{{ tab.badge }}</span>
+                    {% endif %}
                 </a>
             </li>
         {% endfor %}

@@ -20,6 +20,7 @@ use App\Domain\Integrations\Service\Exceptions\SourceSyncRateLimitedException;
 use App\Domain\Integrations\Service\Exceptions\SourceSyncUnauthorizedException;
 use App\Domain\Integrations\Service\Exceptions\UnsupportedCapability;
 use App\Domain\Integrations\Service\IntegrationRegistry;
+use App\Domain\Integrations\Service\Suggestion\LinkSuggestionAggregator;
 use App\Domain\Integrations\Service\Sync\SourceSyncIntervalPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
@@ -48,6 +49,7 @@ final readonly class SyncExternalSourceHandler
         private MessageBusInterface $messageBus,
         private ClockInterface $clock,
         private LoggerInterface $logger,
+        private LinkSuggestionAggregator $linkSuggestionAggregator,
     ) {
     }
 
@@ -162,6 +164,8 @@ final readonly class SyncExternalSourceHandler
 
         $source->setSyncCursor($page->nextCursor);
         $this->entityManager->flush();
+
+        $this->linkSuggestionAggregator->refresh($source->getIntegration()->getLarp(), $existingItems);
     }
 
     /**

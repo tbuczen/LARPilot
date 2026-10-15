@@ -4,6 +4,8 @@ namespace App\Domain\Integrations\Repository;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Repository\BaseRepository;
+use App\Domain\Integrations\Entity\Enum\ExternalItemKind;
+use App\Domain\Integrations\Entity\Enum\ExternalItemReviewStatus;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\ExternalItem;
 use App\Domain\Integrations\Entity\ExternalSource;
@@ -22,6 +24,8 @@ use Symfony\Component\Uid\Uuid;
  */
 class ExternalItemRepository extends BaseRepository
 {
+    public const INBOX_KINDS = [ExternalItemKind::Thread, ExternalItemKind::ForumPost];
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ExternalItem::class);
@@ -114,6 +118,59 @@ class ExternalItemRepository extends BaseRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function createInboxQueryBuilder(LarpIntegration $integration): QueryBuilder
+    {
+        return $this->createLarpQueryBuilder($integration->getLarp())
+            ->andWhere('source.integration = :integration')
+            ->andWhere('item.kind IN (:inboxKinds)')
+            ->setParameter('integration', $integration)
+            ->setParameter('inboxKinds', array_map(static fn (ExternalItemKind $kind): string => $kind->value, self::INBOX_KINDS))
+            ->orderBy('item.externalUpdatedAt', 'DESC')
+            ->addOrderBy('item.id', 'ASC');
+    }
+
+    public function countUnreviewedInbox(LarpIntegration $integration): int
+    {
+        return (int) $this->createInboxQueryBuilder($integration)
+            ->select('COUNT(item.id)')
+            ->andWhere('item.reviewStatus = :unreviewed')
+            ->setParameter('unreviewed', ExternalItemReviewStatus::Unreviewed->value)
+            ->resetDQLPart('orderBy')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param list<string> $itemIds
+     * @return ExternalItem[]
+     */
+    public function findInboxItems(LarpIntegration $integration, array $itemIds): array
+    {
+        $validItemIds = array_values(array_filter($itemIds, static fn (string $itemId): bool => Uuid::isValid($itemId)));
+        if ($validItemIds === []) {
+            return [];
+        }
+
+        return $this->createInboxQueryBuilder($integration)
+            ->andWhere('item.id IN (:itemIds)')
+            ->setParameter('itemIds', array_map(static fn (string $itemId): string => Uuid::fromString($itemId)->toRfc4122(), $validItemIds))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return ExternalItem[]
+     */
+    public function findUnreviewedInboxWithoutSuggestions(LarpIntegration $integration): array
+    {
+        return $this->createInboxQueryBuilder($integration)
+            ->andWhere('item.reviewStatus = :unreviewed')
+            ->andWhere('item.suggestionsRefreshedAt IS NULL')
+            ->setParameter('unreviewed', ExternalItemReviewStatus::Unreviewed->value)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

@@ -139,6 +139,38 @@ title instead. **View** opens it in Discord.
 
 Unlinking only removes the link in LARPilot. Nothing changes in Discord.
 
+## 6. Triage new threads in the inbox
+
+New threads and forum posts from watched channels land in the **Discord
+inbox**, so you don't have to hunt for them. Open it from the **Inbox** tab
+on the Discord page of the Integrations hub (the red number is how many are
+waiting), from the Discord card on the hub, or – for story writers – from
+**Story → Discord inbox**.
+
+Each entry shows the title, the forum tags, the last activity and, for
+organizer-only channels, a short excerpt. LARPilot also suggests what it
+belongs to:
+
+- **By name** – a story object whose title appears in the thread title, ignoring
+  case, punctuation and accents. "Wolves – betrayal" suggests the faction
+  *Wolves*.
+- **By forum tag** – the story type and LARP tag you mapped to the post's forum
+  tag in step 3.
+
+For every entry you can:
+
+- click a suggestion to link the thread to that story object at once;
+- **Link…** to pick any story object by its title;
+- **Create from thread** to make a new story object of the mapped type – the
+  thread title becomes its title, the excerpt its description, mapped LARP
+  tags are added, and the thread is linked to it;
+- **Ignore** to hide it. Ignored threads stay ignored after later syncs; pick
+  the *Ignored* status filter and **Restore** to bring one back.
+
+Tick several entries to **Link selected…** or **Ignore selected** in one go.
+Filter by channel, status (*Unreviewed* by default) and whether an entry has
+suggestions. Organizers and story writers can use the inbox.
+
 ## Privacy, in short
 
 - The bot reads **only** the channels you switched on. Everything else on the
