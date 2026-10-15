@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b528169f817460e1613090867884987",
+    "content-hash": "229105a8ba88af2a8d76345b0c42d96f",
     "packages": [
         {
             "name": "composer/semver",
@@ -10231,16 +10231,16 @@
         },
         {
             "name": "symfony/ux-autocomplete",
-            "version": "v2.31.0",
+            "version": "v2.36.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-autocomplete.git",
-                "reference": "35063b65e9648eed2257d4fdc5c66fe26e3d7e53"
+                "reference": "832f66056959aba68faef3a6cabc8d8ff606b2e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-autocomplete/zipball/35063b65e9648eed2257d4fdc5c66fe26e3d7e53",
-                "reference": "35063b65e9648eed2257d4fdc5c66fe26e3d7e53",
+                "url": "https://api.github.com/repos/symfony/ux-autocomplete/zipball/832f66056959aba68faef3a6cabc8d8ff606b2e4",
+                "reference": "832f66056959aba68faef3a6cabc8d8ff606b2e4",
                 "shasum": ""
             },
             "require": {
@@ -10256,7 +10256,7 @@
             },
             "require-dev": {
                 "doctrine/collections": "^1.6.8|^2.0",
-                "doctrine/doctrine-bundle": "^2.4.3",
+                "doctrine/doctrine-bundle": "^2.4.3|^3.0|^4.0",
                 "doctrine/orm": "^2.9.4|^3.0",
                 "fakerphp/faker": "^1.22",
                 "mtdowling/jmespath.php": "^2.6",
@@ -10301,7 +10301,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-autocomplete/tree/v2.31.0"
+                "source": "https://github.com/symfony/ux-autocomplete/tree/v2.36.2"
             },
             "funding": [
                 {
@@ -10321,7 +10321,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-16T07:24:06+00:00"
+            "time": "2026-07-08T13:49:33+00:00"
         },
         {
             "name": "symfony/ux-live-component",
