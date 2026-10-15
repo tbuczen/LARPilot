@@ -12,6 +12,8 @@ parameters:
     openai.api_key: '%env(OPENAI_API_KEY)%'
     openai.embedding_model: '%env(OPENAI_EMBEDDING_MODEL)%'
     openai.completion_model: '%env(OPENAI_COMPLETION_MODEL)%'
+    openai.transcription_model: '%env(OPENAI_TRANSCRIPTION_MODEL)%'
+    call_transcript.storage_directory: '%kernel.project_dir%/var/call_recordings'
     # Vector Store configuration (CQRS - external vector database)
     vector_store.dsn: '%env(default::VECTOR_STORE_DSN)%'
 services:
@@ -76,6 +78,21 @@ services:
 
     App\Domain\StoryAI\Service\Provider\LLMProviderInterface:
         alias: App\Domain\StoryAI\Service\Provider\OpenAIProvider
+
+    App\Domain\CallTranscript\Service\SpeechToText\OpenAISpeechToTextProvider:
+        arguments:
+            $apiKey: '%openai.api_key%'
+            $model: '%openai.transcription_model%'
+
+    App\Domain\CallTranscript\Service\SpeechToText\SpeechToTextProviderInterface:
+        alias: App\Domain\CallTranscript\Service\SpeechToText\OpenAISpeechToTextProvider
+
+    App\Domain\CallTranscript\Service\Import\CallRecordingImporterInterface:
+        alias: App\Domain\CallTranscript\Service\Import\CraigRecordingImporter
+
+    App\Domain\CallTranscript\Service\CallRecordingStorage:
+        arguments:
+            $storageDirectory: '%call_transcript.storage_directory%'
 
     # Vector Store (CQRS - external vector database for AI embeddings)
     App\Domain\StoryAI\Service\VectorStore\VectorStoreFactory:

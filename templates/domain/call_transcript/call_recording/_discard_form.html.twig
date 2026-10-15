@@ -1,0 +1,8 @@
+<form method="post" class="d-inline" name="call_recording_discard"
+      action="{{ path('backoffice_larp_call_transcript_discard', { larp: larp.id, recording: recording.id }) }}"
+      onsubmit="return confirm('{{ 'call_recording.discard_confirm'|trans({}, 'call_transcript')|e('js') }}')">
+    <input type="hidden" name="_token" value="{{ csrf_token('call_recording_discard_' ~ recording.id) }}">
+    <button type="submit" class="btn {{ small is defined and not small ? '' : 'btn-sm' }} btn-outline-danger">
+        <i class="bi bi-trash"></i>{{ 'call_recording.discard'|trans({}, 'call_transcript') }}
+    </button>
+</form>

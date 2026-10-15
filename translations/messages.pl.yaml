@@ -258,6 +258,7 @@ larp:
   relations: 'Relacje fabularne'
   events: 'Wydarzenia'
   integrations: 'Integracje'
+  call_transcripts: 'Transkrypcje rozmów'
   integrationSettings: 'Ustawienia integracji'
   integration:
     googleDrive: 'Integracja Google Drive'

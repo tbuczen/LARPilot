@@ -81,6 +81,15 @@
                                                 </a>
                                             </li>
                                         {% endif %}
+                                        {% if is_granted('CALL_TRANSCRIPT_MANAGE', larp) %}
+                                            <li>
+                                                <a class="dropdown-item {% if 'larp_call_transcript_' in currentRoute %}active{% endif %}"
+                                                   href="{{ path('backoffice_larp_call_transcript_list', {'larp': larp.id}) }}"
+                                                   title="{{ 'larp.call_transcripts'|trans }}">
+                                                    <i class="bi bi-mic"></i> {{ 'larp.call_transcripts'|trans }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
                                             <a class="dropdown-item"

@@ -57,5 +57,9 @@ services:
         arguments:
             $httpClient: '@tests.integrations.miro.oauth_client'
 
+    Tests\Support\CallTranscript\FakeSpeechToTextProvider:
+        public: true
+    App\Domain\CallTranscript\Service\SpeechToText\SpeechToTextProviderInterface: '@Tests\Support\CallTranscript\FakeSpeechToTextProvider'
+
     Tests\Support\Integrations\MarkerLinkSuggester:
         tags: ['app.integrations.link_suggester']

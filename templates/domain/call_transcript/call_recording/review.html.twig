@@ -1,0 +1,62 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ 'call_recording.review.title'|trans({}, 'call_transcript') }} - {{ recording.title }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    {% set listPath = path('backoffice_larp_call_transcript_list', { larp: larp.id }) %}
+    {% set actions %}
+        {{ ui.back_button(listPath) }}
+    {% endset %}
+    {{ ui.page_header(recording.title, actions) }}
+
+    {% if not recording.awaitingReview %}
+        {{ ui.info_alert(('call_recording.status.' ~ recording.status.value)|trans({}, 'call_transcript')) }}
+    {% else %}
+        <p class="text-muted">{{ 'call_recording.review.intro'|trans({}, 'call_transcript') }}</p>
+        {% if recording.recordingStartedAt %}
+            <p class="small text-muted">{{ 'call_recording.review.started_at'|trans({ '%date%': recording.recordingStartedAt|display_datetime }, 'call_transcript') }}</p>
+        {% endif %}
+
+        <form method="post" name="call_recording_start" action="{{ path('backoffice_larp_call_transcript_start', { larp: larp.id, recording: recording.id }) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('call_recording_start_' ~ recording.id) }}">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">{{ 'call_recording.review.speakers'|trans({ '%count%': recording.tracks|length }, 'call_transcript') }}</h2>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for track in recording.tracks %}
+                        {% set trackInputId = 'call-track-' ~ track.id %}
+                        <li class="list-group-item" data-call-track="{{ track.speaker }}">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="speakers[]" value="{{ track.id }}" id="{{ trackInputId }}" checked>
+                                <label class="form-check-label" for="{{ trackInputId }}">
+                                    <span class="fw-semibold text-break">{{ track.speaker }}</span>
+                                    {% if track.hasTranscript %}
+                                        <span class="badge text-bg-success">{{ 'call_recording.review.has_transcript'|trans({}, 'call_transcript') }}</span>
+                                    {% else %}
+                                        <span class="badge bg-light text-dark border">{{ 'call_recording.review.needs_transcription'|trans({}, 'call_transcript') }}</span>
+                                    {% endif %}
+                                </label>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="card-footer">
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-between align-items-sm-center">
+                        <span class="small text-muted">{{ 'call_recording.review.exclude_hint'|trans({}, 'call_transcript') }}</span>
+                        <div class="d-flex justify-content-end gap-2">
+                            {{ ui.back_button(listPath, 'cancel') }}
+                            {{ ui.primary_button('call_recording.review.submit'|trans({}, 'call_transcript'), null, 'bi-mic', 'submit') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="d-flex justify-content-end">
+            {% include 'domain/call_transcript/call_recording/_discard_form.html.twig' with { small: false } %}
+        </div>
+    {% endif %}
+{% endblock %}

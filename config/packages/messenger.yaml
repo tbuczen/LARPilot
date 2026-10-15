@@ -42,6 +42,9 @@ framework:
 
             App\Domain\Integrations\Message\SyncExternalSourceMessage: integrations
 
+            App\Domain\CallTranscript\Message\TranscribeCallTrackMessage: async
+            App\Domain\CallTranscript\Message\FinalizeCallTranscriptMessage: async
+
 when@test:
     framework:
         messenger:
