@@ -258,6 +258,7 @@ larp:
   relations: 'Relacje fabularne'
   events: 'Wydarzenia'
   integrations: 'Integracje'
+  call_transcripts: 'Transkrypcje rozmów'
   integrationSettings: 'Ustawienia integracji'
   integration:
     googleDrive: 'Integracja Google Drive'
@@ -266,8 +267,12 @@ larp:
     current: 'Obecne integracje'
     expired: 'Integracja wygasła, jeśli chcesz dalej z niej korzystać - połącz ponownie'
     reconnect: 'Połącz ponownie'
+    scope_upgrade_required: 'To połączenie z Google ma pełny dostęp do Twojego Dysku. LARPilot potrzebuje teraz dostępu tylko do wybranych plików. Połącz Google ponownie, a następnie otwórz wybór plików i zaznacz swoje pliki jeszcze raz, aby LARPilot mógł dalej z nich korzystać.'
+    connect_cancelled: 'Łączenie z %provider% zostało anulowane. Nic nie zostało zmienione.'
+    connect_failed: 'Nie udało się połączyć z %provider%. Spróbuj ponownie.'
+    connect_succeeded: 'Połączono z %provider%.'
     facebookDescription: 'Połącz swoje konto Facebook, aby umożliwić LARPilot publikowanie aktualizacji w Twoim imieniu.'
-    discordDescription: 'Połącz swoje konto Discord, aby umożliwić LARPilot publikowanie aktualizacji w Twoim imieniu.'
+    discordDescription: 'Zaproś bota LARPilot na swój serwer Discord i wybierz kanały, które może czytać dla tego LARP-a. Bot tylko czyta, nigdy nie publikuje.'
     asanaDescription: 'Połącz swoje konto Asana, aby umożliwić LARPilot synchronizację pracy.'
     trelloDescription: 'Połącz swoje konto Trello, aby umożliwić LARPilot synchronizację pracy.'
     miroDescription: 'Połącz swoje konto Miro, aby umożliwić LARPilot synchronizację tablicy.'
@@ -384,9 +389,6 @@ larp:
     tree: 'Drzewo decyzji'
     tree_editor: 'Edytor drzewa decyzji wątku'
     add: Dodaj wątek
-  reference:
-    list: 'Referencje zewnętrzne'
-    add: 'Dodaj referencję zewnętrzną'
   story:
     main: 'Zarządzanie fabułą'
     main_title: 'Fabuła'
@@ -533,6 +535,25 @@ larp:
     cancelled.description: "Wydarzenie zostało anulowane"
     completed.description: "Wydarzenie zostało zakończone"
     requirements: Wymagania statusu
+    requirement:
+      label: "Wymagania:"
+      toggle_details: "Pokaż wymagania"
+      publish: "Wymagania publikacji"
+      inquiries: "Wymagania otwarcia zgłoszeń"
+      confirm: "Wymagania potwierdzenia wydarzenia"
+      all_publish_plus: "Wszystkie wymagania publikacji oraz:"
+      all_inquiries_plus: "Wszystkie wymagania otwarcia zgłoszeń oraz:"
+      location: "Lokalizacja"
+      description: "Opis"
+      start_date: "Data rozpoczęcia"
+      end_date: "Data zakończenia"
+      has_character: "Co najmniej jedna postać"
+      characters_described: "Wszystkie postacie mają opisy"
+      characters_assigned: "Wszystkie postacie przypisane do uczestników"
+      missing: "Brakuje: %count%"
+      unassigned: "Nieprzypisane: %count%"
+    social_visual_settings: "Ustawienia społecznościowe i wizualne"
+    current_header_image: "Obecny obraz nagłówka"
   properties: 'Właściwości'
 
   browse_characters: Przeglądaj dostępne postacie
@@ -1442,3 +1463,129 @@ location.approve_confirm: Czy na pewno chcesz zatwierdzić tę lokalizację?
 location.reject_location: Odrzuć lokalizację
 location.reject_warning: Zamierzasz odrzucić lokalizację '%location%'. Twórca zobaczy powód odrzucenia i będzie mógł ponownie zgłosić lokalizację po wprowadzeniu zmian.
 location.rejection_reason: Powód odrzucenia
+story_source:
+  tab: 'Źródła'
+  title: 'Źródła zewnętrzne'
+  link: 'Podepnij źródło'
+  link_submit: 'Podepnij'
+  unlink: 'Odepnij'
+  unlink_confirm: 'Powiązanie zostanie usunięte z tego obiektu fabularnego. Samo źródło pozostanie bez zmian.'
+  empty: 'Brak podpiętych źródeł zewnętrznych.'
+  linked: 'Źródło podpięte.'
+  unlinked: 'Źródło odpięte.'
+  invalid_url: 'Ten link nie jest rozpoznanym adresem Discord ani Miro.'
+  item_not_found: 'Ten zsynchronizowany element nie jest dostępny dla tego LARPa.'
+  updated: 'Zaktualizowano'
+  open: 'Otwórz'
+  role_label: 'Rola'
+  search_label: 'Szukaj zsynchronizowanych elementów'
+  search_placeholder: 'Wpisz tytuł lub tekst…'
+  search_empty: 'Brak pasujących elementów.'
+  search_error: 'Wyszukiwanie jest teraz niedostępne.'
+  or: 'lub'
+  url_label: 'Wklej link z Discorda lub Miro'
+  url_placeholder: 'https://discord.com/channels/…'
+  url_help: 'Rozpoznawane są linki do kanałów, wątków i wiadomości Discorda oraz tablic i elementów Miro.'
+  role:
+    primary: 'Główne'
+    mention: 'Wzmianka'
+    notes: 'Notatki'
+  kind:
+    spreadsheet_row: 'Wiersz'
+    spreadsheet: 'Arkusz'
+    document: 'Dokument'
+    document_paragraph: 'Akapit'
+    thread: 'Wątek'
+    comment: 'Wiadomość'
+    board: 'Tablica'
+    board_item: 'Element tablicy'
+    board_frame: 'Ramka'
+    board_connector: 'Łącznik'
+    forum_post: 'Post na forum'
+    url: 'Link'
+  availability:
+    archived: 'Zarchiwizowane'
+    changed: 'Zmienione'
+    gone: 'Brak'
+    forbidden: 'Brak dostępu'
+
+integration_hub:
+  title: 'Integracje'
+  intro: 'Połącz narzędzia, których używa Twój zespół. LARPilot je odczytuje i pozwala powiązać znalezione treści z obiektami fabularnymi.'
+  empty: 'Nie ma jeszcze dostępnych integracji.'
+  connect: 'Połącz'
+  settings: 'Ustawienia'
+  reconnect: 'Połącz ponownie'
+  disconnect: 'Odłącz'
+  disconnect_confirm: 'LARPilot przestanie odczytywać dane z tego konta i zapomni zsynchronizowane źródła. Powiązania dodane do obiektów fabularnych pozostaną.'
+  disconnected: 'Odłączono %provider%.'
+  account: 'Konto'
+  unknown_account: 'Nieznane konto'
+  last_sync: 'Ostatnia synchronizacja'
+  never: 'Nigdy'
+  sources: 'Źródła'
+  purpose:
+    integration_google_drive: 'Udostępniaj pliki z Dysku i importuj postacie, wydarzenia oraz tagi z arkuszy.'
+    discord: 'Przeglądaj wątki z serwera i powiązuj je z obiektami fabularnymi.'
+    integration_miro: 'Przeglądaj elementy tablic i powiązuj je z obiektami fabularnymi.'
+    facebook: 'Starsze połączenie. Nie można go już połączyć ponownie.'
+  state:
+    connected: 'Połączono'
+    needs_reconnect: 'Wymaga ponownego połączenia'
+    error: 'Błąd'
+    not_connected: 'Nie połączono'
+  problem:
+    needs_reconnect: 'Dostęp do %provider% wygasł lub został cofnięty. Połącz ponownie, aby kontynuować synchronizację.'
+    error: 'Podczas synchronizacji %provider% coś poszło nie tak. Szczegóły znajdziesz w zakładce Aktywność.'
+  tab:
+    sources: 'Źródła'
+    browse: 'Przeglądaj'
+    activity: 'Aktywność'
+    mappings: 'Mapowania'
+  sync_status:
+    success: 'Zsynchronizowano'
+    partial: 'Częściowo zsynchronizowano'
+    failed: 'Synchronizacja nieudana'
+  source:
+    title: 'Źródła'
+    empty: 'Brak źródeł. Wybierz w ustawieniach powyżej, co LARPilot ma odczytywać.'
+    empty_with_mappings: 'Brak źródeł. Udostępnij pliki w zakładce Mapowania, aby zacząć.'
+    paused: 'Wstrzymane'
+    pause: 'Wstrzymaj'
+    resume: 'Wznów'
+    sync_now: 'Synchronizuj teraz'
+    enabled_flash: '%source% będzie znowu synchronizowane.'
+    disabled_flash: '%source% zostało wstrzymane i nie będzie synchronizowane.'
+    sync_requested: 'Zlecono synchronizację %source%.'
+    sync_unavailable: 'Nie można teraz zsynchronizować %source%.'
+    kind:
+      discord_channel: 'Kanał'
+      discord_forum: 'Forum'
+      miro_board: 'Tablica'
+      google_file: 'Plik'
+  browse:
+    search_label: 'Szukaj w zsynchronizowanych elementach'
+    search: 'Szukaj'
+    empty: 'Nic jeszcze nie zsynchronizowano.'
+    link_to: 'Powiąż z…'
+    linked: 'Powiązano z %storyObject%.'
+    story_object_label: 'Obiekt fabularny'
+    story_object_placeholder: 'Wpisz postać, wątek, zadanie…'
+    story_object_empty: 'Brak pasujących obiektów fabularnych.'
+  activity:
+    title: 'Ostatnia aktywność'
+    empty: 'Nic jeszcze nie zsynchronizowano.'
+    connection: 'Połączenie'
+    last_checked: 'Ostatnio sprawdzono'
+    technical_details: 'Szczegóły techniczne'
+    connection_connected: '%provider% jest połączone i działa.'
+    connection_needs_reconnect: 'Dostęp do %provider% wygasł lub został cofnięty. Połącz ponownie, aby kontynuować synchronizację.'
+    connection_error: 'Ostatnia próba połączenia z %provider% nie powiodła się.'
+    connection_not_connected: '%provider% nie jest połączone.'
+    sync_success: 'Wszystko zsynchronizowano.'
+    sync_partial: 'Części elementów nie udało się zsynchronizować. Zostaną ponowione przy następnym uruchomieniu.'
+    sync_failed: 'Synchronizacja nie powiodła się. LARPilot spróbuje ponownie później.'
+  dashboard:
+    needs_attention: 'Integracje wymagające uwagi'
+    connected: 'Połączone: %count%'
+    open: 'Otwórz integracje'

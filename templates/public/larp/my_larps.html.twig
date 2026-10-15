@@ -33,13 +33,13 @@
                                     <div class="text-muted small">
                                         <i class="bi bi-calendar3 me-1"></i>
                                         {% if participant.larp.startDate %}
-                                            {{ participant.larp.startDate|date('Y-m-d H:i') }}
+                                            {{ participant.larp.startDate|display_datetime }}
                                         {% else %}
                                             &mdash;
                                         {% endif %}
                                         {% if participant.larp.endDate %}
                                             <span class="mx-1">&bull;</span>
-                                            {{ participant.larp.endDate|date('Y-m-d H:i') }}
+                                            {{ participant.larp.endDate|display_datetime }}
                                         {% endif %}
                                         {% if participant.larp.location %}
                                             <span class="mx-1">&bull;</span>
@@ -49,8 +49,8 @@
                                 </div>
                                 {% if participant.isOrganizer %}
                                     <a href="{{ path('backoffice_larp_dashboard', {'larp': participant.larp.id}) }}"
-                                       class="btn btn-primary btn-sm mt-3 mt-md-0">
-                                        <i class="bi bi-gear me-1"></i>{{ 'manage'|trans }}
+                                       class="btn btn-outline-primary btn-sm mt-3 mt-md-0">
+                                        <i class="bi bi-gear"></i>{{ 'manage'|trans }}
                                     </a>
                                 {% endif %}
                             </div>

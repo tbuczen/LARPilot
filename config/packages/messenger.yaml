@@ -12,13 +12,24 @@ framework:
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
+            integrations:
+                dsn: '%env(MESSENGER_INTEGRATIONS_TRANSPORT_DSN)%'
+                options:
+                    use_notify: true
+                    check_delayed_interval: 60000
+                retry_strategy:
+                    max_retries: 3
+                    delay: 60000
+                    multiplier: 4
             failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
 
         default_bus: messenger.bus.default
 
         buses:
-            messenger.bus.default: []
+            messenger.bus.default:
+                middleware:
+                    - doctrine_ping_connection
 
         routing:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
@@ -28,3 +39,16 @@ framework:
             # StoryAI embedding messages
             App\Domain\StoryAI\Message\IndexStoryObjectMessage: async
             App\Domain\StoryAI\Message\ReindexLarpMessage: async
+
+            App\Domain\Integrations\Message\SyncExternalSourceMessage: integrations
+
+            App\Domain\CallTranscript\Message\TranscribeCallTrackMessage: async
+            App\Domain\CallTranscript\Message\FinalizeCallTranscriptMessage: async
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'in-memory://'
+                integrations: 'in-memory://'
+                failed: 'in-memory://'

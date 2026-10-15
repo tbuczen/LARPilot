@@ -61,7 +61,7 @@
                             </div>
                             <form method="post" action="{{ path('backoffice_larp_character_export_sheet', {larp: larp.id, character: character.id}) }}">
                                 <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-file-earmark-arrow-down me-2"></i>
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
                                     {{ 'larp.character.export.button'|trans }}
                                 </button>
                             </form>
@@ -71,7 +71,7 @@
                             <div>
                                 <h5 class="mb-1">{{ 'larp.character.export.title'|trans }}</h5>
                                 <p class="text-muted mb-2">{{ 'larp.character.export.not_configured'|trans }}</p>
-                                <a href="{{ path('backoffice_larp_integration_settings', {larp: larp.id}) }}" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ path('backoffice_larp_integrations_hub', {larp: larp.id}) }}" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-gear"></i>
                                     {{ 'larp.character.export.configure'|trans }}
                                 </a>
@@ -136,31 +136,6 @@
                 'thread',
                 false
             ) }}
-
-            {# References #}
-            <div class="card mb-3 shadow-sm">
-                <div
-                        class="card-header d-flex justify-content-between align-items-center"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#referencesCollapse"
-                        role="button"
-                        aria-expanded="true"
-                        aria-controls="referencesCollapse"
-                >
-                <span class="fw-bold">
-                    {{ 'larp.reference.list'|trans }}
-                </span>
-                    <i class="bi bi-chevron-down transition toggleIcon"></i>
-                </div>
-
-                <div id="referencesCollapse" class="collapse">
-                    <div class="card-body">
-                        {{ component('StoryObjectReferencesListForm', {
-                            storyObject: character,
-                        }) }}
-                    </div>
-                </div>
-            </div>
 
             {# Version History #}
             <div class="card mb-3 shadow-sm">

@@ -64,5 +64,15 @@
             </a>
         </li>
         {% endif %}
+
+        {% if storyObject.exists %}
+        <li class="nav-item" role="presentation">
+            <a class="nav-link {{ currentTab == 'sources' ? 'active' : '' }}"
+               href="{{ path('backoffice_larp_story_sources_list', {larp: larp.id, storyObject: storyObject.id}) }}">
+                <i class="bi bi-box-arrow-up-right me-2"></i>{{ 'story_source.tab'|trans }}
+                <span class="badge bg-secondary ms-1">{{ storyObject.externalReferences|length }}</span>
+            </a>
+        </li>
+        {% endif %}
     </ul>
 {% endmacro %}

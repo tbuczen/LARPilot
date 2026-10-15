@@ -72,7 +72,7 @@
                         {# Form actions #}
                         <div class="d-flex justify-content-between align-items-center mt-4">
                             <a href="{{ path('public_larp_details', {'slug': larp.slug}) }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-1"></i>{{ 'common.back'|trans }}
+                                <i class="bi bi-arrow-left"></i>{{ 'common.back'|trans }}
                             </a>
 
                             {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success btn-lg'}}) }}

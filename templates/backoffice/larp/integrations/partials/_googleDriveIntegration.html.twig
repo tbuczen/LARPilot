@@ -1,23 +1,15 @@
-<h5>{{ 'larp.integration.current'|trans }}: {{ integration.provider.name }}</h5>
-<strong>Scopes:</strong>
-<ul>
-    {% for scope in integration.scopes|split(' ') %}
-        <li>{{ scope }}</li>
-    {% endfor %}
-</ul>
-
-{# If token is expired, show Reconnect button #}
 {% set nowPlus30 = 'now'|date_modify('+30 seconds') %}
-{% if integration.expiresAt < nowPlus30 %}
-    <div class="alert alert-warning">
-        {{ 'larp.integration.expired'|trans }}
+{% set tokenExpired = integration.refreshToken is empty and integration.expiresAt < nowPlus30 %}
+{% set scopeUpgradeRequired = not integration.hasGrantedScope(constant('App\\Domain\\Integrations\\Service\\Google\\GoogleIntegrationService::DRIVE_FILE_SCOPE')) %}
+{% if tokenExpired or scopeUpgradeRequired %}
+    <div class="alert alert-warning" data-google-reconnect-prompt>
+        {{ scopeUpgradeRequired ? 'larp.integration.scope_upgrade_required'|trans : 'larp.integration.expired'|trans }}
     </div>
     <a
             href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: provider.value }) }}"
-            target="_blank"
-            class="btn btn-primary"
+            class="btn btn-warning"
     >
-        {{ 'larp.integration.reconnect'|trans }}
+        <i class="bi bi-arrow-repeat"></i>{{ 'larp.integration.reconnect'|trans }}
     </a>
 {% else %}
 
@@ -30,14 +22,17 @@
     }) %}
     <div
             data-controller="google-file-picker"
-            data-oauth-token="{{ integration.accessToken }}"
+            data-google-file-picker-token-url-value="{{ path('backoffice_larp_integration_picker_token', { larp: larp.id, integration: integration.id }) }}"
+            data-google-file-picker-token-csrf-value="{{ csrf_token('integration_picker_token_' ~ integration.id) }}"
+            data-google-file-picker-reauthentication-message-value="{{ 'larp.integration.expired'|trans }}"
             data-google-key="{{ google_api_key }}"
+            data-google-file-picker-app-id-value="{{ google_app_id ?: oauth_google_client_id|split('-')|first }}"
             data-initial-files="{{ sharedFilesArray|json_encode }}"
             data-mappings-base-url="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id , sharedFile: '__FILE_ID__'  }) }}"
     >
         <p>{{ 'larp.file_select.open_picker_desc'|trans }}</p>
         <button
-                class="btn btn-success"
+                class="btn btn-outline-info"
                 data-action="click->google-file-picker#openPicker"
         >
             {{ 'open'|trans }}
@@ -47,6 +42,7 @@
                 action="{{ path('backoffice_larp_integration_file_permissions', { larp: larp.id, integrationId: integration.id }) }}"
                 method="post"
         >
+            <input type="hidden" name="_token" value="{{ csrf_token('integration_file_permissions_' ~ integration.id) }}">
             <input
                     type="hidden"
                     data-google-file-picker-target="selectedFilesInput"
@@ -60,7 +56,7 @@
             >
                 {{ 'save'|trans }}
             </button>
-            <a href="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id}) }}" class="btn btn-secondary">
+            <a href="{{ path('backoffice_larp_external_resource_mapping', { larp: larp.id, integration: integration.id}) }}" class="btn btn-outline-secondary">
                 {{ 'larp.mapping.title'|trans }}
             </a>
 

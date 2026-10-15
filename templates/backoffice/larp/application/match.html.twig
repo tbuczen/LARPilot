@@ -5,7 +5,7 @@
 {% block larp_content %}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>{{ 'larp.applications.match'|trans }}</h2>
-        <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-secondary">
+        <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> {{ 'back'|trans }}
         </a>
     </div>
@@ -38,69 +38,71 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <table class="table table-sm">
-                            <thead>
-                            <tr>
-                                <th>{{ 'larp.applications.applicant'|trans }}</th>
-                                <th>{{ 'larp.application.priority'|trans }}</th>
-                                <th>{{ 'larp.application.justification'|trans }}</th>
-                                <th>{{ 'votes'|trans }}</th>
-                                <th>{{ 'actions'|trans }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for choice in characterMatch.choices %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
                                 <tr>
-                                    <td>{{ choice.applicantEmail }}</td>
-                                    <td>
-                                        <span class="badge bg-secondary">{{ choice.priority }}</span>
-                                    </td>
-                                    <td>{{ choice.justification|default('-') }}</td>
-                                    <td>
-                                            <span class="badge bg-{{ choice.voteStats.total > 0 ? 'success' : (choice.voteStats.total < 0 ? 'danger' : 'secondary') }}">
-                                                {{ choice.voteStats.total }}
-                                            </span>
-                                        <small class="text-muted">
-                                            (↑{{ choice.voteStats.upvotes }} ↓{{ choice.voteStats.downvotes }})
-                                        </small>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button type="button"
-                                                    class="btn btn-sm btn-success {{ userVotes[choice.id] is defined and userVotes[choice.id].vote > 0 ? 'active' : '' }}"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#voteModal"
-                                                    data-choice-id="{{ choice.id }}"
-                                                    data-character="{{ choice.characterTitle }}"
-                                                    data-applicant="{{ choice.applicantEmail }}"
-                                                    data-vote="1">
-                                                <i class="bi bi-hand-thumbs-up"></i>
-                                            </button>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-danger {{ userVotes[choice.id] is defined and userVotes[choice.id].vote < 0 ? 'active' : '' }}"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#voteModal"
-                                                    data-choice-id="{{ choice.id }}"
-                                                    data-character="{{ choice.characterTitle }}"
-                                                    data-applicant="{{ choice.applicantEmail }}"
-                                                    data-vote="-1">
-                                                <i class="bi bi-hand-thumbs-down"></i>
-                                            </button>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-info"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#voteDetailsModal"
-                                                    data-choice-id="{{ choice.id }}"
-                                                    data-character="{{ choice.characterTitle }}"
-                                                    data-applicant="{{ choice.applicantEmail }}">
-                                                <i class="bi bi-info-circle"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+                                    <th>{{ 'larp.applications.applicant'|trans }}</th>
+                                    <th>{{ 'larp.application.priority'|trans }}</th>
+                                    <th>{{ 'larp.application.justification'|trans }}</th>
+                                    <th>{{ 'votes'|trans }}</th>
+                                    <th>{{ 'actions'|trans }}</th>
                                 </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                {% for choice in characterMatch.choices %}
+                                    <tr>
+                                        <td>{{ choice.applicantEmail }}</td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ choice.priority }}</span>
+                                        </td>
+                                        <td>{{ choice.justification|default('-') }}</td>
+                                        <td>
+                                                <span class="badge bg-{{ choice.voteStats.total > 0 ? 'success' : (choice.voteStats.total < 0 ? 'danger' : 'secondary') }}">
+                                                    {{ choice.voteStats.total }}
+                                                </span>
+                                            <small class="text-muted">
+                                                (↑{{ choice.voteStats.upvotes }} ↓{{ choice.voteStats.downvotes }})
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-success {{ userVotes[choice.id] is defined and userVotes[choice.id].vote > 0 ? 'active' : '' }}"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#voteModal"
+                                                        data-choice-id="{{ choice.id }}"
+                                                        data-character="{{ choice.characterTitle }}"
+                                                        data-applicant="{{ choice.applicantEmail }}"
+                                                        data-vote="1">
+                                                    <i class="bi bi-hand-thumbs-up"></i>
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-danger {{ userVotes[choice.id] is defined and userVotes[choice.id].vote < 0 ? 'active' : '' }}"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#voteModal"
+                                                        data-choice-id="{{ choice.id }}"
+                                                        data-character="{{ choice.characterTitle }}"
+                                                        data-applicant="{{ choice.applicantEmail }}"
+                                                        data-vote="-1">
+                                                    <i class="bi bi-hand-thumbs-down"></i>
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-info"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#voteDetailsModal"
+                                                        data-choice-id="{{ choice.id }}"
+                                                        data-character="{{ choice.characterTitle }}"
+                                                        data-applicant="{{ choice.applicantEmail }}">
+                                                    <i class="bi bi-info-circle"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
@@ -138,7 +140,7 @@
                         <input type="hidden" id="voteValue" name="vote" value="">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
                         <button type="submit" class="btn btn-primary">{{ 'larp.applications.submit_vote'|trans }}</button>
                     </div>
                 </form>
@@ -164,7 +166,7 @@
                     <div id="voteDetailsList"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
         </div>

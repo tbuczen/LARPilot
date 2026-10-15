@@ -1,0 +1,81 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ 'call_recording.title'|trans({}, 'call_transcript') }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    {{ ui.page_header('call_recording.title'|trans({}, 'call_transcript')) }}
+
+    <p class="text-muted">{{ 'call_recording.intro'|trans({}, 'call_transcript') }}</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h5 mb-0">{{ 'call_recording.upload'|trans({}, 'call_transcript') }}</h2>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+                {{ form_row(form.title) }}
+                {{ form_row(form.language) }}
+                {{ form_row(form.archive) }}
+                <p class="small text-muted">{{ 'call_recording.consent_hint'|trans({}, 'call_transcript') }}</p>
+                <div class="d-flex justify-content-end">
+                    {{ ui.primary_button('call_recording.upload_submit'|trans({}, 'call_transcript'), null, 'bi-upload', 'submit') }}
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">{{ 'call_recording.imports'|trans({}, 'call_transcript') }}</h2>
+        </div>
+        <div class="card-body p-0">
+            {% if recordings is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{{ 'call_recording.column.title'|trans({}, 'call_transcript') }}</th>
+                                <th>{{ 'call_recording.column.status'|trans({}, 'call_transcript') }}</th>
+                                <th>{{ 'call_recording.column.uploaded'|trans({}, 'call_transcript') }}</th>
+                                <th>{{ 'actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recording in recordings %}
+                                <tr data-call-recording="{{ recording.id }}" data-call-recording-status="{{ recording.status.value }}">
+                                    <td class="text-break">{{ recording.title }}</td>
+                                    <td>
+                                        <span class="badge text-bg-{{ {awaiting_review: 'warning', transcribing: 'info', completed: 'success', failed: 'danger'}[recording.status.value] }}">
+                                            {{ ('call_recording.status.' ~ recording.status.value)|trans({}, 'call_transcript') }}
+                                        </span>
+                                        {% if recording.failureReason %}
+                                            <div class="small text-muted" style="white-space: pre-line">{{ recording.failureReason }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-nowrap">{{ recording.createdAt|display_datetime }}</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            {% if recording.awaitingReview %}
+                                                {{ ui.edit_button(path('backoffice_larp_call_transcript_review', { larp: larp.id, recording: recording.id }), 'call_recording.review.open'|trans({}, 'call_transcript')) }}
+                                            {% endif %}
+                                            {% if recording.knowledgeDocument %}
+                                                {{ ui.view_button(path('backoffice_larp_knowledge_modify', { larp: larp.id, document: recording.knowledgeDocument.id }), 'call_recording.open_transcript'|trans({}, 'call_transcript')) }}
+                                            {% endif %}
+                                            {% if not recording.transcribing %}
+                                                {% include 'domain/call_transcript/call_recording/_discard_form.html.twig' %}
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted p-3 mb-0">{{ 'empty_list'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

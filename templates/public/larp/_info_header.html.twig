@@ -11,7 +11,7 @@
         {% if (showManageButton is not defined or showManageButton) and is_granted('VIEW_BO_LARP_DETAILS', larp) %}
             <div class="mt-2">
                 <a href="{{ path('backoffice_larp_dashboard', {'larp': larp.id}) }}" class="btn btn-light btn-sm">
-                    <i class="bi bi-gear me-1"></i>{{ 'manage'|trans }}
+                    <i class="bi bi-gear"></i>{{ 'manage'|trans }}
                 </a>
             </div>
         {% endif %}
@@ -46,12 +46,12 @@
                             <li class="mb-2">
                                 <i class="bi bi-calendar-event text-muted me-2"></i>
                                 <strong>{{ 'start_date'|trans }}:</strong><br>
-                                <span class="ms-3">{{ larp.startDate|date('Y-m-d H:i') }}</span>
+                                <span class="ms-3">{{ larp.startDate|display_datetime }}</span>
                             </li>
                             <li class="mb-2">
                                 <i class="bi bi-calendar-event text-muted me-2"></i>
                                 <strong>{{ 'end_date'|trans }}:</strong><br>
-                                <span class="ms-3">{{ larp.endDate|date('Y-m-d H:i') }}</span>
+                                <span class="ms-3">{{ larp.endDate|display_datetime }}</span>
                             </li>
                             <li>
                                 <i class="bi bi-info-circle text-muted me-2"></i>

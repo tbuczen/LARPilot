@@ -5,7 +5,7 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryMarketplace\Entity\Enum\RecruitmentProposalStatus;
 use App\Domain\StoryMarketplace\Entity\RecruitmentProposal;
 use App\Domain\StoryMarketplace\Entity\StoryRecruitment;
@@ -207,7 +207,7 @@ class EventController extends BaseController
     #[Route('{event}', name: 'modify', defaults: ['event' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager        $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         StoryObjectMentionService $mentionService,
         Request            $request,
         Larp               $larp,
@@ -227,7 +227,7 @@ class EventController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $eventRepository->save($event);
 
-            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $event);
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationRegistry, $new, $event);
 
             $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_event_list', ['larp' => $larp->getId()]);
@@ -265,7 +265,7 @@ class EventController extends BaseController
     #[Route('{event}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager             $larpManager,
-        IntegrationManager      $integrationManager,
+        IntegrationRegistry      $integrationRegistry,
         Larp                    $larp,
         Request                 $request,
         EventRepository $eventRepository,
@@ -273,7 +273,7 @@ class EventController extends BaseController
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
 
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $event, 'Event')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $event, 'Event')) {
             return $this->redirectToRoute('backoffice_larp_story_event_list', [
                 'larp' => $larp->getId(),
             ]);

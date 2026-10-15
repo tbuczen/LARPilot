@@ -165,9 +165,13 @@
         </div>
         <div class="col-md-3">
             <div class="card text-center">
-                <div class="card-body">
-                    <h6 class="card-title">{{ 'integrations.count'|trans }}</h6>
-                    <h3 class="text-info">{{ dashboard.integrations.total }}</h3>
+                <div class="card-body" data-dashboard-tile="integrations">
+                    <h6 class="card-title">{{ 'integration_hub.dashboard.needs_attention'|trans }}</h6>
+                    <h3 class="{{ dashboard.integrations.needsAttention > 0 ? 'text-warning' : 'text-success' }}" data-integrations-needing-attention>{{ dashboard.integrations.needsAttention }}</h3>
+                    <small class="text-muted d-block">{{ 'integration_hub.dashboard.connected'|trans({'%count%': dashboard.integrations.total}) }}</small>
+                    {% if is_granted('VIEW_BO_LARP_INTEGRATION_SETTINGS', larp) %}
+                        <a href="{{ path('backoffice_larp_integrations_hub', {larp: larp.id}) }}" class="small">{{ 'integration_hub.dashboard.open'|trans }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -177,9 +181,9 @@
                     <h6 class="card-title">{{ 'event.dates'|trans }}</h6>
                     <small class="text-muted">
                         {% if larp.startDate %}
-                            {{ larp.startDate|date('Y-m-d H:i') }}
+                            {{ larp.startDate|display_datetime }}
                             {% if larp.endDate and larp.endDate != larp.startDate %}
-                                - {{ larp.endDate|date('Y-m-d H:i') }}
+                                - {{ larp.endDate|display_datetime }}
                             {% endif %}
                         {% else %}
                             {{ 'not_set'|trans }}
@@ -225,16 +229,16 @@
                 <div class="card-body">
                     <div class="btn-group" role="group">
                         {% if dashboard.applications.pending > 0 %}
-                        <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-warning">
+                        <a href="{{ path('backoffice_larp_applications_list', {'larp': larp.id}) }}" class="btn btn-outline-primary">
                             {{ 'applications.review'|trans }} ({{ dashboard.applications.pending }})
                         </a>
                         {% endif %}
                         {% if dashboard.characters.unassigned > 0 %}
-                        <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-info">
+                        <a href="{{ path('backoffice_larp_applications_match', {'larp': larp.id}) }}" class="btn btn-outline-primary">
                             {{ 'characters.assign'|trans }} ({{ dashboard.characters.unassigned }})
                         </a>
                         {% endif %}
-                        <a href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}" class="btn btn-primary">{{ 'participants.manage'|trans }}</a>
+                        <a href="{{ path('backoffice_larp_participant_list', {'larp': larp.id}) }}" class="btn btn-outline-primary">{{ 'participants.manage'|trans }}</a>
 {#                        <a href="#" class="btn btn-success">{{ 'send_announcement'|trans }}</a>#}
 {#                        <a href="#" class="btn btn-outline-secondary">{{ 'generate_reports'|trans }}</a>#}
                     </div>

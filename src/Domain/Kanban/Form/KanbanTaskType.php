@@ -56,7 +56,6 @@ class KanbanTaskType extends AbstractType
             ->add('dueDate', DateTimeType::class, [
                 'label' => 'kanban.due_date',
                 'required' => false,
-                'widget' => 'single_text',
             ])
             ->add('visibility', ChoiceType::class, [
                 'label' => 'kanban.visibility',

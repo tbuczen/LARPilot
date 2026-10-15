@@ -43,6 +43,11 @@ mapping:
     sheet_name: "Nazwa arkusza"
     end_column: "Kolumna końcowa"
     starting_row: "Wiersz początkowy"
+    column_placeholder: "Wybierz kolumnę"
+    preview: "Podgląd arkusza"
+    preview_description: "Pierwsze wiersze wybranego arkusza. Wybierz poniżej kolumny po nazwach nagłówków."
+    preview_unavailable: "Nie udało się wczytać podglądu arkusza: %message%"
+    preview_empty: "Wybrany arkusz nie ma jeszcze żadnych wierszy."
   document:
     header_type: "Typ nagłówka"
     starting_paragraph: "Akapit początkowy"
@@ -55,6 +60,7 @@ larp:
   location: "Lokalizacja"
   select_location: "Wybierz lokalizację"
   start_date: "Data rozpoczęcia"
+  dates: "Termin"
   end_date: "Data zakończenia"
   discord_server_url: "URL serwera Discord"
   facebook_event_url: "URL wydarzenia na Facebooku"
@@ -108,12 +114,6 @@ relation:
   from: "Właściciel relacji"
   toType: "Typ strony docelowej relacji"
   to: "Powiązany"
-external_reference:
-  name: "Nazwa"
-  mapping_type: "Typ mapowania"
-  reference_type: "Typ"
-  url: "URL"
-  toType: "Typ docelowy"
 place:
   name: "Unikalna nazwa miejsca"
   description: "Opis miejsca"
@@ -143,6 +143,7 @@ event:
   characters: "Postacie zaangażowane w wydarzenie"
   tags: "Tagi"
   start_time: 'Czas rozpoczęcia'
+  time_range: 'Czas'
   end_time: 'Czas zakończenia'
   choose_faction: 'Wybierz frakcję...'
   known_publicly: 'Publicznie znane'
@@ -254,6 +255,7 @@ planning_resource:
   shareable: 'Zasób współdzielony'
   shareable_help: 'Zezwól na wiele jednoczesnych rezerwacji'
   available_from: 'Dostępny od'
+  availability: 'Dostępność'
   available_until: 'Dostępny do'
   character: 'Powiązana postać'
   character_placeholder: 'Wybierz postać (opcjonalnie)'
@@ -266,6 +268,7 @@ scheduled_event:
   title_placeholder: 'np. Scena bójki w tawernie'
   description: 'Opis'
   start_time: 'Czas rozpoczęcia'
+  time_range: 'Czas'
   end_time: 'Czas zakończenia'
   setup_minutes: 'Czas przygotowania (minuty)'
   setup_minutes_help: 'Czas przygotowania przed wydarzeniem'
@@ -308,6 +311,7 @@ filter:
     status: 'Status'
     location: 'Lokalizacja'
     start_date: 'Data rozpoczęcia'
+    dates: 'Daty'
     end_date: 'Data zakończenia'
     resource: 'Zasób'
     character: 'Postać/NPC'
@@ -567,6 +571,7 @@ knowledge_document:
     rules: "Zasady i mechanika"
     faction: "Informacje o frakcji"
     world: "Informacje o świecie"
+    call_transcript: "Transkrypcja rozmowy"
     other: "Inne"
   list: "Dokumenty wiedzy"
   create: "Utwórz dokument"

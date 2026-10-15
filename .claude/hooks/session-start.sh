@@ -3,8 +3,13 @@
 # and PHPStan locally, matching what CI does, without Docker.
 #
 # Known sandbox quirks this works around (see comments inline):
-#   - php8.4-bcmath / php8.4-apcu aren't preinstalled; `apt-get update` first
-#     is required or the .deb fetch 404s.
+#   - phpX.Y-bcmath / phpX.Y-apcu aren't preinstalled; `apt-get update` first
+#     is required or the .deb fetch 404s. The PHP version varies between
+#     sandbox images (8.3, 8.4), so packages and ini paths are derived from
+#     the installed CLI instead of hardcoded.
+#   - Ubuntu's php-redis package (5.3.x) trips symfony/cache's
+#     `conflict: ext-redis <6.1`. The app doesn't use Redis, so Composer is
+#     told to ignore that platform requirement when the loaded ext is older.
 #   - phpstan/phpstan ships no "source" (git) reference in Packagist
 #     metadata, only a GitHub zipball "dist" URL. This sandbox's egress
 #     proxy gates api.github.com behind the session's repo allowlist, so
@@ -22,17 +27,23 @@ cd "$REPO_DIR" || exit 1
 export COMPOSER_ALLOW_SUPERUSER=1
 
 # --- PHP extensions needed for composer install / CI parity ------------
+PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
+
 NEEDED_EXT=()
-php -m | grep -qi '^bcmath$' || NEEDED_EXT+=("php8.4-bcmath")
-php -m | grep -qi '^apcu$' || NEEDED_EXT+=("php8.4-apcu")
+php -m | grep -qi '^bcmath$' || NEEDED_EXT+=("php${PHP_VER}-bcmath")
+php -m | grep -qi '^apcu$' || NEEDED_EXT+=("php${PHP_VER}-apcu")
 if [ "${#NEEDED_EXT[@]}" -gt 0 ]; then
   apt-get update -qq
   apt-get install -y -qq "${NEEDED_EXT[@]}"
 fi
 
-APCU_INI="/etc/php/8.4/cli/conf.d/20-apcu.ini"
+APCU_INI="/etc/php/${PHP_VER}/cli/conf.d/20-apcu.ini"
 if [ -f "$APCU_INI" ] && ! grep -q '^apc.enable_cli' "$APCU_INI"; then
   echo "apc.enable_cli=1" >> "$APCU_INI"
+fi
+
+if php -r 'exit(extension_loaded("redis") && version_compare(phpversion("redis"), "6.1", "<") ? 0 : 1);'; then
+  export COMPOSER_IGNORE_PLATFORM_REQ="ext-redis"
 fi
 
 # --- Composer: clear this sandbox's placeholder github-oauth entry -----

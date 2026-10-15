@@ -37,13 +37,19 @@ If `vendor/bin/codecept run Functional` fails with `APCu is not enabled` or
   Runtime is missing`. Always export it before running Composer here.
 - **APCu isn't installed by default**, and `config/packages/framework.yaml`
   configures `cache.app: cache.adapter.apcu` with no test-env override —
-  functional tests crash with `APCu is not enabled` until `php8.4-apcu` is
+  functional tests crash with `APCu is not enabled` until `php<version>-apcu` (matching `php -v`) is
   installed and `apc.enable_cli=1` is set for the CLI SAPI.
 - **`bin/console sass:build` must run before functional tests** that render
   any page extending `base.html.twig` — without a built
   `var/sass/app.output.css`, every such request 500s with `The file
   .../app.output.css doesn't exist`. This isn't a real app bug; it's a
   missing build step.
+
+- **Old `php-redis` vs `symfony/cache`.** Ubuntu ships `php-redis` 5.3.x,
+  which `symfony/cache` declares a conflict with (`ext-redis <6.1`). The app
+  doesn't use Redis; the hook sets `COMPOSER_IGNORE_PLATFORM_REQ=ext-redis`
+  for its Composer runs when the loaded extension is older. Export the same
+  variable before running Composer by hand.
 
 ## Codeception form-submission gotcha
 

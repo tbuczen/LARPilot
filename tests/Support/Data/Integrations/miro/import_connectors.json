@@ -1,0 +1,156 @@
+{
+    "data": [
+        {
+            "id": "3458764600000000501",
+            "type": "connector",
+            "shape": "curved",
+            "isSupported": true,
+            "startItem": {
+                "id": "3458764600000000101",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000101"
+                }
+            },
+            "endItem": {
+                "id": "3458764600000000102",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000102"
+                }
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/connectors/3458764600000000501"
+            },
+            "captions": [
+                {
+                    "content": "<p>Cousin</p>",
+                    "position": "50%"
+                }
+            ]
+        },
+        {
+            "id": "3458764600000000502",
+            "type": "connector",
+            "shape": "curved",
+            "isSupported": true,
+            "startItem": {
+                "id": "3458764600000000201",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000201"
+                }
+            },
+            "endItem": {
+                "id": "3458764600000000101",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000101"
+                }
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/connectors/3458764600000000502"
+            },
+            "captions": [
+                {
+                    "content": "<p>suspects</p>",
+                    "position": "50%"
+                }
+            ]
+        },
+        {
+            "id": "3458764600000000503",
+            "type": "connector",
+            "shape": "curved",
+            "isSupported": true,
+            "startItem": {
+                "id": "3458764600000000201",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000201"
+                }
+            },
+            "endItem": {
+                "id": "3458764600000000202",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000202"
+                }
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/connectors/3458764600000000503"
+            },
+            "captions": [
+                {
+                    "content": "<p>friend</p>",
+                    "position": "50%"
+                }
+            ]
+        },
+        {
+            "id": "3458764600000000504",
+            "type": "connector",
+            "shape": "curved",
+            "isSupported": true,
+            "startItem": {
+                "id": "3458764600000000011",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000011"
+                }
+            },
+            "endItem": {
+                "id": "3458764600000000203",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000203"
+                }
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/connectors/3458764600000000504"
+            },
+            "captions": [
+                {
+                    "content": "<p>ally</p>",
+                    "position": "50%"
+                }
+            ]
+        },
+        {
+            "id": "3458764600000000505",
+            "type": "connector",
+            "shape": "curved",
+            "isSupported": true,
+            "startItem": {
+                "id": "3458764600000000201",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000201"
+                }
+            },
+            "endItem": {
+                "id": "3458764600000000203",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000203"
+                }
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/connectors/3458764600000000505"
+            },
+            "captions": [
+                {
+                    "content": "<p>Przyjaźń</p>",
+                    "position": "50%"
+                }
+            ]
+        }
+    ],
+    "total": 5,
+    "size": 5,
+    "limit": 50,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/connectors?limit=50"
+    },
+    "type": "cursor-list"
+}

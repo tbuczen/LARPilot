@@ -40,6 +40,7 @@ class KnowledgeDocumentType extends AbstractType
                     'knowledge_document.category.rules' => 'rules',
                     'knowledge_document.category.faction' => 'faction',
                     'knowledge_document.category.world' => 'world',
+                    'knowledge_document.category.call_transcript' => 'call_transcript',
                     'knowledge_document.category.other' => 'other',
                 ],
             ])

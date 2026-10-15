@@ -1,0 +1,7 @@
+framework:
+    http_client:
+        scoped_clients:
+            miro.client:
+                base_uri: 'https://api.miro.com/v2/'
+                headers:
+                    Accept: 'application/json'

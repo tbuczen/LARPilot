@@ -38,12 +38,11 @@ class ScheduledEventType extends AbstractType
                 'attr' => ['rows' => 4],
             ])
             ->add('startTime', DateTimeType::class, [
-                'label' => 'scheduled_event.start_time',
-                'widget' => 'single_text',
+                'label' => 'scheduled_event.time_range',
+                'range_end' => 'endTime',
             ])
             ->add('endTime', DateTimeType::class, [
                 'label' => 'scheduled_event.end_time',
-                'widget' => 'single_text',
             ])
             ->add('setupMinutes', IntegerType::class, [
                 'label' => 'scheduled_event.setup_minutes',

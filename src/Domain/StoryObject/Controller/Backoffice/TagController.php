@@ -14,7 +14,10 @@ use App\Domain\Core\UseCase\ImportTags\ImportTagsHandler;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Entity\SharedFile;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
+use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,6 +88,8 @@ class TagController extends BaseController
         LarpManager             $larpManager,
         LarpIntegrationProvider $provider
     ): Response {
+        $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
+
         $integration = $larpManager->getIntegrationTypeForLarp($larp, $provider);
         Assert::notNull($integration, sprintf('Integration %s not found for LARP %s', $provider->value, $larp->getId()->toRfc4122()));
 
@@ -96,16 +101,26 @@ class TagController extends BaseController
         ]);
     }
 
-    #[Route('import/{provider}/{sharedFile}/{mapping}', name: 'import_from_mapping', methods: ['GET', 'POST'])]
+    #[Route('import/{provider}/{sharedFile}/{mapping}', name: 'import_from_mapping', methods: ['POST'])]
     public function importFromSelectedMapping(
         Larp $larp,
         LarpIntegrationProvider $provider,
         SharedFile $sharedFile,
         ObjectFieldMapping $mapping,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
+        Request $request,
+        IntegrationOwnershipGuard $integrationOwnershipGuard,
         ImportTagsHandler $handler
     ): Response {
-        $integrationService = $integrationManager->getService($provider);
+        $this->denyAccessUnlessGranted(IntegrationSettingsVoter::MODIFY, $larp);
+        $integrationOwnershipGuard->assertSharedFileBelongsToLarp($sharedFile, $larp, $provider);
+        $integrationOwnershipGuard->assertMappingBelongsToSharedFile($mapping, $sharedFile, $larp);
+
+        if (!$this->isCsrfTokenValid('import_from_mapping_' . $mapping->getId()->toRfc4122(), $request->request->getString('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        $integrationService = $integrationRegistry->capability($sharedFile->getIntegration(), FileSourceIntegrationInterface::class);
 
         $rows = $integrationService->fetchSpreadsheetRows($sharedFile, $mapping);
         $additionalData = [

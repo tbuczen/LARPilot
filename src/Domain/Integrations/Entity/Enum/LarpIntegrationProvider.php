@@ -8,17 +8,16 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
 {
     case Facebook = 'facebook';
     case Google = 'integration_google_drive';
-    //    case Discord = 'discord';
-    //    case Asana = 'asana';
-    //    case Trello = 'trello';
-    //    case Miro = 'miro';
-
+    case Discord = 'discord';
+    case Miro = 'integration_miro';
 
     public function getLabel(): string
     {
         return match ($this) {
             self::Google => 'Google Drive',
             self::Facebook => 'Facebook',
+            self::Discord => 'Discord',
+            self::Miro => 'Miro',
         };
     }
 
@@ -27,14 +26,28 @@ enum LarpIntegrationProvider: string implements LabelableEnumInterface
         return match ($this) {
             self::Google => 'larp.integration.googleDriveDescription',
             self::Facebook => 'larp.integration.facebookDescription',
+            self::Discord => 'larp.integration.discordDescription',
+            self::Miro => 'larp.integration.miroDescription',
         };
     }
 
-    public function integrationSettingsTemplate(): ?string
+    public function settingsTemplate(): string
+    {
+        return sprintf('domain/integrations/%s/_settings.html.twig', $this->value);
+    }
+
+    public function hasMappings(): bool
+    {
+        return $this === self::Google;
+    }
+
+    public function icon(): string
     {
         return match ($this) {
-            self::Google => 'partials/_googleDriveIntegration.html.twig',
-            default => null,
+            self::Google => 'bi-google',
+            self::Facebook => 'bi-facebook',
+            self::Discord => 'bi-discord',
+            self::Miro => 'bi-easel',
         };
     }
 
