@@ -207,7 +207,7 @@
                                             </div>
                                             <div class="text-end ms-3">
                                                 <span class="badge bg-secondary">
-                                                    {{ larp.startDate|date('M Y') }}
+                                                    {{ larp.startDate|display_datetime }}
                                                 </span>
                                                 {% if larp.status %}
                                                     <span class="badge bg-{{ larp.status.value == 'COMPLETED' ? 'success' : 'primary' }} d-block mt-1">
@@ -296,7 +296,7 @@
                             <a href="https://www.google.com/maps/dir/?api=1&destination={{ location.latitude }},{{ location.longitude }}"
                                target="_blank" rel="noopener noreferrer"
                                class="btn btn-primary w-100">
-                                <i class="fas fa-directions me-2"></i>
+                                <i class="fas fa-directions"></i>
                                 {{ 'location.get_directions'|trans }}
                             </a>
                         </div>

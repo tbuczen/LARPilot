@@ -1,0 +1,17 @@
+{
+    "token_type": "Bearer",
+    "access_token": "fixture-bot-access-token",
+    "scope": "bot",
+    "expires_in": 604800,
+    "refresh_token": "fixture-bot-refresh-token",
+    "guild": {
+        "id": "1100000000000000001",
+        "name": "Shadows of Ardenne LARP",
+        "icon": "a_1269e74af4df7417b13759eae50c83dc",
+        "description": "Organizer server for the Shadows of Ardenne campaign",
+        "features": ["COMMUNITY", "NEWS", "THREADS_ENABLED"],
+        "owner_id": "1200000000000000001",
+        "verification_level": 1,
+        "roles": []
+    }
+}

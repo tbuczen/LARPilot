@@ -1,0 +1,275 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+{% import _self as browser %}
+
+{% macro entry_row(entry, boardView, larp, board) %}
+    {% set storedItem = boardView.storedItem(entry.externalId) %}
+    {% set references = boardView.references(entry.externalId) %}
+    {% set title = entry.title is empty ? ('browser.type.' ~ entry.type)|trans({}, 'miro') : entry.title %}
+    <li class="list-group-item miro-board-entry" data-miro-entry="{{ entry.externalId }}" data-miro-type="{{ entry.type }}">
+        <div class="d-flex flex-column flex-md-row gap-2 align-items-md-start">
+            <div class="flex-grow-1 min-w-0">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    <a href="{{ entry.url }}" target="_blank" rel="noopener noreferrer" class="fw-semibold text-break">{{ title }}</a>
+                    <span class="badge bg-light text-dark border">{{ ('browser.type.' ~ entry.type)|trans({}, 'miro') }}</span>
+                    {% for tag in entry.tags %}
+                        <span class="badge text-bg-secondary" data-miro-tag>{{ tag }}</span>
+                    {% endfor %}
+                    {% if storedItem and storedItem.availability.value == 'changed' %}
+                        <span class="badge bg-info" data-miro-availability="changed">{{ 'story_source.availability.changed'|trans }}</span>
+                    {% endif %}
+                </div>
+                {% if entry.text is not empty and entry.text != entry.title and not entry.connector %}
+                    <div class="small text-muted text-break mb-1">{{ entry.text|u.truncate(240, '…') }}</div>
+                {% endif %}
+                {{ browser.link_status(references, larp, board) }}
+            </div>
+            <div class="d-flex gap-1 flex-shrink-0">
+                {{ browser.link_button(entry.externalId, title) }}
+            </div>
+        </div>
+    </li>
+{% endmacro %}
+
+{% macro link_status(references, larp, board) %}
+    {% if references is empty %}
+        <div class="small text-muted" data-miro-link-status="unlinked">{{ 'browser.not_linked'|trans({}, 'miro') }}</div>
+    {% else %}
+        <div class="d-flex flex-wrap align-items-center gap-1 small" data-miro-link-status="linked">
+            <span class="text-muted">{{ 'browser.linked_to'|trans({}, 'miro') }}:</span>
+            {% for reference in references %}
+                <span class="d-inline-flex align-items-center gap-1 border rounded px-2 py-1" data-miro-reference="{{ reference.id }}">
+                    <a href="{{ path('backoffice_larp_story_sources_list', {larp: larp.id, storyObject: reference.storyObject.id}) }}" class="text-break">{{ reference.storyObject.title }}</a>
+                    <form method="post" name="miro_board_unlink" class="d-inline"
+                          action="{{ path('backoffice_larp_integration_miro_browser_unlink', {larp: larp.id, source: board.id, reference: reference.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('miro_board_unlink_' ~ reference.id) }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-1"
+                                title="{{ 'browser.unlink'|trans({}, 'miro') }}"
+                                aria-label="{{ 'browser.unlink_from'|trans({'%storyObject%': reference.storyObject.title}, 'miro') }}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </span>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro link_button(targetId, title) %}
+    <button type="button" class="btn btn-sm btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#miroLinkModal"
+            data-item-id="{{ targetId }}"
+            data-item-title="{{ title }}">
+        <i class="bi bi-plus-lg"></i>{{ 'browser.link_to'|trans({}, 'miro') }}
+    </button>
+{% endmacro %}
+
+{% block larp_title %}{{ board.title }} - {{ 'boards.title'|trans({}, 'miro') }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+            {% if canManageIntegration %}
+                <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_integrations_hub', {larp: larp.id}) }}">{{ 'integration_hub.title'|trans }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_integrations_sources', {larp: larp.id, provider: board.integration.provider.value}) }}">{{ board.integration.provider.label }}</a></li>
+            {% else %}
+                <li class="breadcrumb-item">{{ board.integration.provider.label }}</li>
+            {% endif %}
+            <li class="breadcrumb-item active text-break" aria-current="page">{{ board.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row gap-2 justify-content-between align-items-md-center mb-3 miro-board-header">
+        <h1 class="mb-0 text-break">{{ board.title }}</h1>
+        <div class="d-flex flex-wrap gap-2">
+            <form method="post" name="miro_board_refresh" action="{{ path('backoffice_larp_integration_miro_browser_refresh', {larp: larp.id, source: board.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('miro_board_refresh_' ~ board.id) }}">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise"></i>{{ 'browser.refresh'|trans({}, 'miro') }}
+                </button>
+            </form>
+            <a href="{{ boardUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-info">
+                <i class="bi bi-eye"></i>{{ 'browser.open_in_miro'|trans({}, 'miro') }}
+            </a>
+            <a href="{{ path('backoffice_larp_integration_miro_import_preview', {larp: larp.id, source: board.id}) }}" class="btn btn-outline-primary" data-miro-import-board>
+                <i class="bi bi-box-arrow-in-down"></i>{{ 'import.open'|trans({}, 'miro') }}
+            </a>
+            <button type="button" class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#miroLinkModal"
+                    data-item-id="{{ board.externalId }}"
+                    data-item-title="{{ board.title }}">
+                <i class="bi bi-plus-lg"></i>{{ 'browser.link_board'|trans({}, 'miro') }}
+            </button>
+        </div>
+    </div>
+
+    {% if problem %}
+        <div class="alert alert-warning" data-miro-problem="{{ problem }}">
+            <i class="bi bi-exclamation-triangle"></i>
+            {{ ('browser.problem.' ~ problem)|trans({'%seconds%': retryAfterSeconds}, 'miro') }}
+        </div>
+        {% if problem == 'needs_reauth' and canManageIntegration %}
+            <a href="{{ path('backoffice_larp_connect_integration', {larp: larp.id, provider: board.integration.provider.value}) }}" class="btn btn-warning mb-3">
+                <i class="bi bi-arrow-repeat"></i>{{ 'reconnect.button'|trans({}, 'miro') }}
+            </a>
+        {% endif %}
+    {% endif %}
+
+    {% set boardReferences = boardView ? boardView.references(board.externalId) : [] %}
+    <div class="mb-3" data-miro-board-links>
+        {{ browser.link_status(boardReferences, larp, board) }}
+    </div>
+
+    <details class="border rounded mb-3 miro-live-embed" data-controller="lazy-embed" data-lazy-embed-src-value="{{ liveEmbedUrl }}" data-action="toggle->lazy-embed#load">
+        <summary class="p-3 fw-semibold">
+            <i class="bi bi-easel" aria-hidden="true"></i> {{ 'browser.live_embed'|trans({}, 'miro') }}
+        </summary>
+        <div class="px-3 pb-3">
+            <p class="small text-muted">{{ 'browser.live_embed_hint'|trans({}, 'miro') }}</p>
+            <div class="ratio ratio-16x9">
+                <iframe title="{{ 'browser.live_embed'|trans({}, 'miro') }}" data-lazy-embed-target="frame" class="border rounded" allowfullscreen></iframe>
+            </div>
+        </div>
+    </details>
+
+    {% if boardView %}
+        <p class="small text-muted mb-3" data-miro-snapshot-built-at>
+            {{ 'browser.snapshot_built_at'|trans({'%date%': boardView.snapshot.builtAt|display_datetime}, 'miro') }}
+        </p>
+
+        {% if boardView.snapshot.entries is empty %}
+            {{ ui.empty_state('browser.empty'|trans({}, 'miro'), 'bi-easel') }}
+        {% endif %}
+
+        {% for frameGroup in boardView.frameGroups %}
+            {% set frame = frameGroup.frame %}
+            {% set frameTitle = frame.title is empty ? 'browser.type.frame'|trans({}, 'miro') : frame.title %}
+            <details class="border rounded mb-3 miro-board-frame" data-miro-frame="{{ frame.externalId }}" open>
+                <summary class="p-3 fw-semibold text-break">
+                    <i class="bi bi-bounding-box" aria-hidden="true"></i> {{ frameTitle }}
+                    <span class="badge bg-secondary">{{ frameGroup.items|length }}</span>
+                </summary>
+                <div class="d-flex flex-column flex-md-row gap-2 align-items-md-center justify-content-between px-3 pb-3 border-bottom" data-miro-entry="{{ frame.externalId }}" data-miro-type="frame">
+                    <div class="min-w-0">
+                        <a href="{{ frame.url }}" target="_blank" rel="noopener noreferrer" class="small">{{ 'browser.open_frame'|trans({}, 'miro') }}</a>
+                        {{ browser.link_status(boardView.references(frame.externalId), larp, board) }}
+                    </div>
+                    <div class="d-flex gap-1 flex-shrink-0">
+                        {{ browser.link_button(frame.externalId, frameTitle) }}
+                    </div>
+                </div>
+                {% if frameGroup.items is empty %}
+                    <p class="text-muted small p-3 mb-0">{{ 'browser.frame_empty'|trans({}, 'miro') }}</p>
+                {% else %}
+                    <ul class="list-group list-group-flush rounded-bottom">
+                        {% for entry in frameGroup.items %}
+                            {{ browser.entry_row(entry, boardView, larp, board) }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </details>
+        {% endfor %}
+
+        {% if boardView.looseItems is not empty %}
+            <details class="border rounded mb-3 miro-board-frame" data-miro-frame="none" open>
+                <summary class="p-3 fw-semibold">
+                    <i class="bi bi-sticky" aria-hidden="true"></i> {{ 'browser.outside_frames'|trans({}, 'miro') }}
+                    <span class="badge bg-secondary">{{ boardView.looseItems|length }}</span>
+                </summary>
+                <ul class="list-group list-group-flush rounded-bottom border-top">
+                    {% for entry in boardView.looseItems %}
+                        {{ browser.entry_row(entry, boardView, larp, board) }}
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endif %}
+
+        {% if boardView.connectors is not empty %}
+            <details class="border rounded mb-3 miro-board-connectors" data-miro-connectors open>
+                <summary class="p-3 fw-semibold">
+                    <i class="bi bi-arrow-left-right" aria-hidden="true"></i> {{ 'browser.connectors'|trans({}, 'miro') }}
+                    <span class="badge bg-secondary">{{ boardView.connectors|length }}</span>
+                </summary>
+                <ul class="list-group list-group-flush rounded-bottom border-top">
+                    {% for entry in boardView.connectors %}
+                        {{ browser.entry_row(entry, boardView, larp, board) }}
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endif %}
+
+        {% if boardView.missingItems is not empty %}
+            <details class="border border-danger-subtle rounded mb-3 miro-board-missing" data-miro-missing>
+                <summary class="p-3 fw-semibold">
+                    <i class="bi bi-question-circle" aria-hidden="true"></i> {{ 'browser.missing'|trans({}, 'miro') }}
+                    <span class="badge bg-danger">{{ boardView.missingItems|length }}</span>
+                </summary>
+                <p class="small text-muted px-3">{{ 'browser.missing_hint'|trans({}, 'miro') }}</p>
+                <ul class="list-group list-group-flush rounded-bottom border-top">
+                    {% for missingItem in boardView.missingItems %}
+                        <li class="list-group-item" data-miro-entry="{{ missingItem.externalId }}">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                <span class="fw-semibold text-break">{{ missingItem.title|default(missingItem.externalId) }}</span>
+                                <span class="badge bg-danger" data-miro-availability="gone">{{ 'story_source.availability.gone'|trans }}</span>
+                            </div>
+                            {{ browser.link_status(boardView.references(missingItem.externalId), larp, board) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endif %}
+    {% endif %}
+
+    <div class="modal fade"
+         id="miroLinkModal"
+         tabindex="-1"
+         aria-labelledby="miroLinkModalLabel"
+         aria-hidden="true"
+         data-controller="story-source-search"
+         data-story-source-search-url-value="{{ path('backoffice_larp_integration_miro_browser_story_object_search', {larp: larp.id, source: board.id}) }}"
+         data-story-source-search-field-name-value="storyObject"
+         data-story-source-search-empty-value="{{ 'integration_hub.browse.story_object_empty'|trans }}"
+         data-story-source-search-error-value="{{ 'story_source.search_error'|trans }}">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-fullscreen-sm-down">
+            <form method="post"
+                  name="miro_board_link"
+                  action="{{ path('backoffice_larp_integration_miro_browser_link', {larp: larp.id, source: board.id}) }}"
+                  class="modal-content">
+                <input type="hidden" name="_token" value="{{ csrf_token('miro_board_link_' ~ board.id) }}">
+                <input type="hidden" name="target" value="" data-story-source-search-target="selection">
+                <div class="modal-header">
+                    <h2 class="modal-title h5 text-break" id="miroLinkModalLabel">
+                        {{ 'browser.link_to'|trans({}, 'miro') }}
+                        <span class="text-muted" data-story-source-search-target="selectionLabel"></span>
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="miroLinkRole" class="form-label">{{ 'story_source.role_label'|trans }}</label>
+                        <select id="miroLinkRole" name="role" class="form-select">
+                            {% for role in roles %}
+                                <option value="{{ role.value }}" {{ role.value == 'mention' ? 'selected' : '' }}>{{ ('story_source.role.' ~ role.value)|trans }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <label for="miroLinkStoryObject" class="form-label">{{ 'integration_hub.browse.story_object_label'|trans }}</label>
+                    <input type="search"
+                           id="miroLinkStoryObject"
+                           class="form-control"
+                           autocomplete="off"
+                           placeholder="{{ 'integration_hub.browse.story_object_placeholder'|trans }}"
+                           data-story-source-search-target="query"
+                           data-action="input->story-source-search#search keydown.enter->story-source-search#preventSubmit">
+                    <div class="list-group mt-2" data-story-source-search-target="results" aria-live="polite"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

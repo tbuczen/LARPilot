@@ -1,0 +1,53 @@
+{% extends 'domain/integrations/hub/_provider_layout.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block tab_content %}
+    <div class="p-3 border-bottom">
+        <h2 class="h5 mb-0">{{ 'integration_hub.activity.title'|trans }}</h2>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item" data-activity="connection">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                <span class="fw-semibold">{{ 'integration_hub.activity.connection'|trans }}</span>
+                {% include 'domain/integrations/hub/_state_badge.html.twig' with {state: card.state} only %}
+            </div>
+            <p class="mb-1">{{ ('integration_hub.activity.connection_' ~ card.state.value)|trans({'%provider%': provider.label}) }}</p>
+            <div class="small text-muted">
+                {{ 'integration_hub.activity.last_checked'|trans }}: {{ integration.lastCheckedAt ? integration.lastCheckedAt|display_datetime : 'integration_hub.never'|trans }}
+            </div>
+            {% if integration.lastError %}
+                <details class="small mt-1">
+                    <summary class="text-muted">{{ 'integration_hub.activity.technical_details'|trans }}</summary>
+                    <code class="d-block text-break mt-1">{{ integration.lastError }}</code>
+                </details>
+            {% endif %}
+        </li>
+        {% for source in sources|filter(source => source.lastSyncedAt or source.lastSyncStatus) %}
+            <li class="list-group-item" data-activity="sync" data-source-id="{{ source.id }}">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    <span class="fw-semibold text-break">{{ source.title }}</span>
+                    {% if source.lastSyncStatus %}
+                        {% include 'domain/integrations/hub/_sync_status_badge.html.twig' with {status: source.lastSyncStatus} only %}
+                    {% endif %}
+                </div>
+                {% if source.lastSyncStatus %}
+                    <p class="mb-1">{{ ('integration_hub.activity.sync_' ~ source.lastSyncStatus.value)|trans }}</p>
+                {% endif %}
+                <div class="small text-muted">
+                    {{ 'integration_hub.last_sync'|trans }}: {{ source.lastSyncedAt ? source.lastSyncedAt|display_datetime : 'integration_hub.never'|trans }}
+                </div>
+                {% if source.lastSyncError %}
+                    <details class="small mt-1">
+                        <summary class="text-muted">{{ 'integration_hub.activity.technical_details'|trans }}</summary>
+                        <code class="d-block text-break mt-1">{{ source.lastSyncError }}</code>
+                    </details>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="list-group-item">
+                {{ ui.empty_state('integration_hub.activity.empty', 'bi-clock-history', 'py-3') }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

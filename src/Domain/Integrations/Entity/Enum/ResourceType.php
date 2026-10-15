@@ -54,7 +54,7 @@ enum ResourceType: string
     {
         return match ($this) {
             self::CHARACTER_LIST, self::CHARACTER_DOC, self::CHARACTER_DOC_TEMPLATE, self::CHARACTER_DOC_DIRECTORY => $targetType === TargetType::Character,
-            self::EVENT_LIST, self::EVENT_DOC => $targetType === TargetType::Faction,
+            self::EVENT_LIST, self::EVENT_DOC => $targetType === TargetType::Event,
             self::TAG_LIST => $targetType === TargetType::Tag,
         };
     }

@@ -1,0 +1,5 @@
+{% if source.kind.value == 'miro_board' %}
+    <a href="{{ path('backoffice_larp_integration_miro_browser_show', {larp: larp.id, source: source.id}) }}" class="btn btn-sm btn-outline-info" data-miro-browse-board>
+        <i class="bi bi-eye"></i>{{ 'browser.browse'|trans({}, 'miro') }}
+    </a>
+{% endif %}

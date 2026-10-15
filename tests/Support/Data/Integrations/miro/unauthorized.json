@@ -1,0 +1,7 @@
+{
+    "status": 401,
+    "code": "tokenNotProvided",
+    "message": "No authentication token was provided or the token is invalid",
+    "context": null,
+    "type": "error"
+}

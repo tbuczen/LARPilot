@@ -1,0 +1,36 @@
+[
+    {
+        "id": "1300000000000000004",
+        "channel_id": "1100000000000000301",
+        "author": {
+            "id": "1200000000000000002",
+            "username": "aldric_gm",
+            "discriminator": "0",
+            "global_name": "Aldric (GM)",
+            "avatar": null,
+            "public_flags": 0
+        },
+        "content": "<@1200000000000000001> the smugglers want payment ||in silver|| before <t:1790000000:f>.",
+        "timestamp": "2026-09-22T08:00:00.000000+00:00",
+        "edited_timestamp": null,
+        "tts": false,
+        "mention_everyone": false,
+        "mentions": [
+            {
+                "id": "1200000000000000001",
+                "username": "morwen_writer",
+                "discriminator": "0",
+                "global_name": "Morwen's Writer",
+                "avatar": null,
+                "public_flags": 0
+            }
+        ],
+        "mention_roles": [],
+        "attachments": [],
+        "embeds": [],
+        "pinned": false,
+        "type": 0,
+        "flags": 0,
+        "components": []
+    }
+]

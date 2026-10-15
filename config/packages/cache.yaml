@@ -15,5 +15,11 @@ framework:
         #app: cache.adapter.apcu
 
         # Namespaced pools use the above "app" backend by default
-        #pools:
-            #my.dedicated.cache: null
+        pools:
+            cache.messenger.restart_workers_signal:
+                adapter: cache.adapter.filesystem
+            cache.scheduler:
+                adapter: cache.adapter.filesystem
+            cache.miro_board_snapshots:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 600

@@ -1,0 +1,114 @@
+{
+    "data": [
+        {
+            "id": "3458764600000000001",
+            "type": "frame",
+            "data": {
+                "format": "custom",
+                "title": "House Morwen",
+                "type": "freeform",
+                "showContent": true
+            },
+            "style": {
+                "fillColor": "#ffffffff"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 1600,
+                "height": 900
+            },
+            "createdAt": "2026-08-01T10:05:00Z",
+            "createdBy": {"id": "3458764517517852417", "type": "user"},
+            "modifiedAt": "2026-10-10T20:20:00Z",
+            "modifiedBy": {"id": "3458764517517852417", "type": "user"},
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/frames/3458764600000000001",
+                "related": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items?parent_item_id=3458764600000000001&limit=10&cursor="
+            }
+        },
+        {
+            "id": "3458764600000000010",
+            "type": "sticky_note",
+            "data": {
+                "content": "<p>The <strong>stolen seal</strong> is hidden in the chapel</p>",
+                "shape": "square"
+            },
+            "style": {
+                "fillColor": "light_yellow",
+                "textAlign": "center",
+                "textAlignVertical": "middle"
+            },
+            "position": {
+                "x": 2100.5,
+                "y": -300,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 199.0,
+                "height": 228.0
+            },
+            "tagIds": ["3458764600000009001"],
+            "createdAt": "2026-08-02T11:00:00Z",
+            "createdBy": {"id": "3458764517517852417", "type": "user"},
+            "modifiedAt": "2026-09-01T09:00:00Z",
+            "modifiedBy": {"id": "3458764517517852418", "type": "user"},
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/sticky_notes/3458764600000000010"
+            }
+        },
+        {
+            "id": "3458764600000000011",
+            "type": "shape",
+            "data": {
+                "content": "<p>Smugglers' Guild</p>",
+                "shape": "round_rectangle"
+            },
+            "style": {
+                "fillColor": "#e6e6e6",
+                "fillOpacity": "1.0",
+                "fontFamily": "open_sans",
+                "fontSize": "14",
+                "borderColor": "#1a1a1a",
+                "borderWidth": "2.0",
+                "borderOpacity": "1.0",
+                "borderStyle": "normal",
+                "textAlign": "center",
+                "textAlignVertical": "middle",
+                "color": "#1a1a1a"
+            },
+            "position": {
+                "x": 2500,
+                "y": 120,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 240,
+                "height": 120,
+                "rotation": 0
+            },
+            "createdAt": "2026-08-03T12:00:00Z",
+            "createdBy": {"id": "3458764517517852418", "type": "user"},
+            "modifiedAt": "2026-08-03T12:00:00Z",
+            "modifiedBy": {"id": "3458764517517852418", "type": "user"},
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/shapes/3458764600000000011"
+            }
+        }
+    ],
+    "total": 5,
+    "size": 3,
+    "cursor": "MzQ1ODc2NDYwMDAwMDAwMDAxMX4=",
+    "limit": 10,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items?limit=10&cursor=",
+        "next": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items?limit=10&cursor=MzQ1ODc2NDYwMDAwMDAwMDAxMX4%3D"
+    },
+    "type": "cursor-list"
+}

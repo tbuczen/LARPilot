@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Domain\Core\Doctrine\Type\EncryptedTextType;
+use App\Domain\Core\Service\Encryption\SecretBoxCipher;
 use App\Domain\Core\Service\Helper\Logger;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -15,5 +17,6 @@ class Kernel extends BaseKernel
         parent::boot();
         // Ensure logger is available before any other logic would use it
         $this->getContainer()->get(Logger::class);
+        EncryptedTextType::useCipher($this->getContainer()->get(SecretBoxCipher::class));
     }
 }

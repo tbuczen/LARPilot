@@ -5,6 +5,7 @@ namespace App\Domain\Kanban\Entity;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpParticipant;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
+use App\Domain\Core\Service\Helper\DateFormat;
 use App\Domain\Kanban\Entity\Enum\KanbanStatus;
 use App\Domain\Kanban\Entity\Enum\TaskVisibility;
 use App\Domain\Kanban\Repository\KanbanTaskRepository;
@@ -172,7 +173,7 @@ class KanbanTask
         $this->activityLog[] = [
             'type' => $type,
             'data' => $data,
-            'timestamp' => (new \DateTimeImmutable())->format('Y-m-d H:i:s')
+            'timestamp' => (new \DateTimeImmutable())->format(DateFormat::ISO_DATETIME_SECONDS)
         ];
     }
 }

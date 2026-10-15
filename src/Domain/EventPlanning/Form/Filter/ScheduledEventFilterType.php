@@ -3,6 +3,7 @@
 namespace App\Domain\EventPlanning\Form\Filter;
 
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Core\Form\Filter\DateRangeFilter;
 use App\Domain\EventPlanning\Entity\Enum\EventStatus;
 use App\Domain\EventPlanning\Entity\PlanningResource;
 use App\Domain\Map\Entity\MapLocation;
@@ -38,14 +39,15 @@ class ScheduledEventFilterType extends AbstractType
                 ),
             ])
             ->add('startDate', DateType::class, [
-                'label' => 'filter.event.start_date',
+                'label' => 'filter.event.dates',
                 'required' => false,
-                'widget' => 'single_text',
+                'range_end' => 'endDate',
+                'apply_filter' => DateRangeFilter::from('startTime'),
             ])
             ->add('endDate', DateType::class, [
                 'label' => 'filter.event.end_date',
                 'required' => false,
-                'widget' => 'single_text',
+                'apply_filter' => DateRangeFilter::to('startTime', 'endTime'),
             ]);
 
         if ($larp) {

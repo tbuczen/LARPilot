@@ -1,0 +1,165 @@
+.air-datepicker.larp-dp,
+html .air-datepicker-overlay {
+    --adp-font-family: inherit;
+    --adp-font-size: 0.95rem;
+    --adp-width: 300px;
+    --adp-z-index: 1090;
+    --adp-padding: 6px;
+    --adp-border-radius: var(--bo-border-radius-lg, 8px);
+    --adp-border-color: var(--bo-gray-200, #dee2e6);
+    --adp-border-color-inner: var(--bo-gray-100, #e9ecef);
+    --adp-background-color: var(--bs-body-bg, #fff);
+    --adp-background-color-hover: var(--bo-gray-100, #e9ecef);
+    --adp-background-color-active: var(--bo-gray-200, #dee2e6);
+    --adp-background-color-in-range: rgba(13, 110, 253, 0.12);
+    --adp-background-color-in-range-focused: rgba(13, 110, 253, 0.2);
+    --adp-background-color-selected-other-month: #6ea8fe;
+    --adp-background-color-selected-other-month-focused: #3d8bfd;
+    --adp-color: var(--bs-body-color, #212529);
+    --adp-color-secondary: var(--bo-gray-500, #6c757d);
+    --adp-accent-color: var(--bo-primary, #0d6efd);
+    --adp-color-current-date: var(--bo-primary, #0d6efd);
+    --adp-color-other-month: var(--bo-gray-400, #adb5bd);
+    --adp-color-disabled: var(--bo-gray-300, #ced4da);
+    --adp-cell-border-radius: 6px;
+    --adp-cell-background-color-selected: var(--bo-primary, #0d6efd);
+    --adp-cell-background-color-selected-hover: var(--bo-primary-hover, #0b5ed7);
+    --adp-cell-background-color-in-range: rgba(13, 110, 253, 0.12);
+    --adp-cell-background-color-in-range-hover: rgba(13, 110, 253, 0.2);
+    --adp-cell-border-color-in-range: var(--bo-primary, #0d6efd);
+    --adp-day-name-color: var(--bo-gray-500, #6c757d);
+    --adp-nav-arrow-color: var(--bo-gray-600, #495057);
+    --adp-btn-height: 36px;
+    --adp-btn-color: var(--bo-gray-600, #495057);
+    --adp-btn-color-hover: var(--bs-body-color, #212529);
+    --adp-btn-border-radius: var(--bo-border-radius, 6px);
+    --adp-btn-background-color-hover: var(--bo-gray-100, #e9ecef);
+    --adp-btn-background-color-active: var(--bo-gray-200, #dee2e6);
+    --adp-overlay-background-color: rgba(18, 22, 27, 0.45);
+    --adp-overlay-z-index: 1089;
+    --adp-mobile-width: min(360px, calc(100vw - 32px));
+    --adp-mobile-font-size: 1rem;
+    --adp-mobile-day-cell-height: 44px;
+    --adp-mobile-nav-height: 44px;
+}
+
+html.dark-mode {
+    .air-datepicker.larp-dp,
+    .air-datepicker-overlay {
+        --adp-border-color: #3a444f;
+        --adp-border-color-inner: #2f3842;
+        --adp-background-color: #1b2128;
+        --adp-background-color-hover: #2a323b;
+        --adp-background-color-active: #333c46;
+        --adp-color: #e6e9ec;
+        --adp-color-secondary: #9aa5b1;
+        --adp-accent-color: #6ea8fe;
+        --adp-color-current-date: #6ea8fe;
+        --adp-color-other-month: #5c6670;
+        --adp-color-disabled: #46505a;
+        --adp-cell-background-color-selected: #3d8bfd;
+        --adp-cell-background-color-selected-hover: #5c9dfd;
+        --adp-background-color-in-range: rgba(110, 168, 254, 0.18);
+        --adp-cell-background-color-in-range: rgba(110, 168, 254, 0.18);
+        --adp-cell-background-color-in-range-hover: rgba(110, 168, 254, 0.28);
+        --adp-day-name-color: #9aa5b1;
+        --adp-nav-arrow-color: #aab4be;
+        --adp-btn-color: #aab4be;
+        --adp-btn-color-hover: #e6e9ec;
+        --adp-btn-background-color-hover: #2a323b;
+        --adp-btn-background-color-active: #333c46;
+        --adp-overlay-background-color: rgba(0, 0, 0, 0.6);
+    }
+}
+
+.air-datepicker.larp-dp {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+    .air-datepicker-cell.-current- {
+        font-weight: 600;
+    }
+
+    .air-datepicker--buttons {
+        border-top: 1px solid var(--adp-border-color-inner);
+    }
+
+    .air-datepicker-button.larp-dp-button {
+        font-weight: 500;
+    }
+
+    .air-datepicker-button.larp-dp-button-primary {
+        color: var(--adp-accent-color);
+    }
+}
+
+.larp-dp-time {
+    display: grid;
+    gap: 6px;
+    padding: 8px 6px 10px;
+    border-top: 1px solid var(--adp-border-color-inner);
+}
+
+.larp-dp-time-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto;
+    align-items: center;
+    gap: 6px;
+
+    .form-select {
+        width: auto;
+        min-width: 3.75rem;
+        padding-right: 1.75rem;
+        background-position: right 0.4rem center;
+        background-color: var(--adp-background-color);
+        color: var(--adp-color);
+        border-color: var(--adp-border-color);
+    }
+}
+
+.larp-dp-time-label {
+    min-width: 3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--adp-color-secondary);
+}
+
+.larp-dp-time-date {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--adp-color);
+}
+
+.larp-dp-time-separator {
+    color: var(--adp-color-secondary);
+}
+
+.larp-dp-warning {
+    font-size: 0.85rem;
+    color: var(--bo-danger, #dc3545);
+}
+
+.air-datepicker.-is-mobile-.larp-dp .larp-dp-time-row .form-select {
+    min-height: 40px;
+    font-size: 1rem;
+}
+
+.larp-date-input {
+    .larp-date-display {
+        width: 1%;
+        min-width: 0;
+        cursor: pointer;
+        font-variant-numeric: tabular-nums;
+        text-overflow: ellipsis;
+        background-color: var(--bs-body-bg);
+
+        @media (max-width: 575.98px) {
+            font-size: 0.875rem;
+        }
+    }
+
+    .larp-date-clear[hidden] {
+        display: none;
+    }
+}

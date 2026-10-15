@@ -16,6 +16,8 @@ doctrine:
         use_savepoints: true
         mapping_types:
             user_status: string
+        types:
+            encrypted_text: App\Domain\Core\Doctrine\Type\EncryptedTextType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -56,6 +58,12 @@ doctrine:
               dir: '%kernel.project_dir%/src/Domain/Incidents/Entity'
               prefix: 'App\Domain\Incidents\Entity'
               alias: Incidents
+            CallTranscript:
+              type: attribute
+              is_bundle: false
+              dir: '%kernel.project_dir%/src/Domain/CallTranscript/Entity'
+              prefix: 'App\Domain\CallTranscript\Entity'
+              alias: CallTranscript
             Integrations:
               type: attribute
               is_bundle: false

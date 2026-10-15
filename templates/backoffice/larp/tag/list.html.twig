@@ -16,7 +16,7 @@
                     {% if integrations is defined and integrations|length > 0 %}
                         {% for integration in integrations %}
                             <a href="{{ path('backoffice_larp_story_tag_import_integration', {'larp': larp.id, 'provider': integration.provider.value }) }}"
-                               class="btn btn-primary">
+                               class="btn btn-outline-primary">
                                 {{ 'larp.import_google'|trans }}
                             </a>
                         {% endfor %}
@@ -25,7 +25,7 @@
                     {% endif %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importModal">
                 {{ 'larp.import_tags'|trans }}
             </button>
-            {{ ui.primary_button('create', path('backoffice_larp_story_tag_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {{ ui.create_button(path('backoffice_larp_story_tag_modify', { larp: larp.id })) }}
         {% endset %}
         {{ ui.card_header('larp.tag.list', actions) }}
         <div class="card-body p-0">

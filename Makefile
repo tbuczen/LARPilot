@@ -18,7 +18,7 @@ endif
 .PHONY: up build install migrate assets dev start stop clean logs
 .PHONY: test test-unit test-filter lint lint-fix stan ecs ecs-fix qa
 .PHONY: db-wait db-create db-drop db-migrate db-reset db-status db-shell
-.PHONY: deploy deploy-no-pull deploy-deps deploy-assets deploy-cache
+.PHONY: deploy deploy-no-pull deploy-deps deploy-assets deploy-cache deploy-workers worker-run
 
 # Wait until Postgres is ready (inside compose network)
 db-wait:
@@ -152,29 +152,45 @@ deploy:
 	$(MAKE) deploy-no-pull
 
 # Deployment without git pull
-deploy-no-pull: deploy-deps deploy-cache deploy-assets
+deploy-no-pull: deploy-deps deploy-cache deploy-assets deploy-workers
 	@echo "✅ Deployment complete!"
 
 # Install/update PHP dependencies (production mode)
 deploy-deps:
 	@echo "📦 Installing PHP dependencies..."
-	php -d memory_limit=-1 $$(which composer) install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+	php -d memory_limit=-1 $$(which composer) install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
+	@echo "🧹 Clearing stale cache before migrating..."
+	rm -rf var/cache/prod
+	php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
 	@echo "🗄️  Running database migrations..."
-	php -d memory_limit=512M bin/console doctrine:migrations:migrate --no-interaction
+	php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
+	@echo "🔐 Encrypting integration tokens..."
+	php -d memory_limit=-1 bin/console app:integrations:encrypt-tokens --no-interaction
 
 # Compile and update frontend assets
 deploy-assets:
 	@echo "🎨 Building frontend assets..."
 	rm -rf public/assets/*
-	php -d memory_limit=512M bin/console importmap:install
-	php -d memory_limit=512M bin/console sass:build || true
-	php -d memory_limit=512M bin/console asset-map:compile
+	php -d memory_limit=-1 bin/console assets:install public
+	php -d memory_limit=-1 bin/console importmap:install
+	php -d memory_limit=-1 bin/console sass:build || true
+	php -d memory_limit=-1 bin/console asset-map:compile
 	php -d memory_limit=-1 $$(which composer) dump-autoload --optimize
 
 # Clear and warm up cache
 deploy-cache:
 	@echo "🧹 Clearing cache..."
-	php -d memory_limit=512M bin/console cache:clear --env=prod --no-warmup
-	php -d memory_limit=512M bin/console cache:warmup --env=prod
+	php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
+	php -d memory_limit=-1 bin/console cache:warmup --env=prod
 	@echo "🔧 Setting permissions..."
 	chmod -R 775 var/cache var/log || true
+
+# Ask running Messenger workers to exit after their current message so the
+# process manager restarts them on the new code. Succeeds when none run.
+deploy-workers:
+	@echo "🔁 Restarting Messenger workers..."
+	php -d memory_limit=-1 bin/console messenger:stop-workers --env=prod || true
+
+# Run the Messenger worker in the foreground (production hosts without Docker)
+worker-run:
+	php -d memory_limit=-1 bin/console messenger:consume async integrations scheduler_integrations --time-limit=3600 --memory-limit=256M --env=prod

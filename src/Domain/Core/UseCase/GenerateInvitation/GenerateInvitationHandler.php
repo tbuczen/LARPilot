@@ -5,6 +5,7 @@ namespace App\Domain\Core\UseCase\GenerateInvitation;
 use App\Domain\Core\DTO\GenerateInvitationDTO;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Entity\LarpInvitation;
+use App\Domain\Core\Service\Helper\DateFormat;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class GenerateInvitationHandler
@@ -31,7 +32,7 @@ readonly class GenerateInvitationHandler
         return new GenerateInvitationDTO(
             invitationCode: $invitation->getCode(),
             larpId: $larp->getId()->toRfc4122(),
-            validTo: $invitation->getValidTo()->format('Y-m-d H:i:s'),
+            validTo: $invitation->getValidTo()->format(DateFormat::ISO_DATETIME_SECONDS),
             invitedRole: $command->invitedRole->value
         );
     }

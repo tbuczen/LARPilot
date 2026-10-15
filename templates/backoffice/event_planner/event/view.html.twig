@@ -23,7 +23,7 @@
                     <h2 class="mb-0">{{ event.title }}</h2>
                     <div>
                         <a href="{{ path('backoffice_event_planner_event_modify', { larp: larp.id, event: event.id }) }}"
-                           class="btn btn-primary">
+                           class="btn btn-outline-primary">
                             <i class="bi bi-pencil"></i> {{ 'edit'|trans }}
                         </a>
                     </div>
@@ -36,10 +36,10 @@
                     <h5>{{ 'event_planner.event.details'|trans }}</h5>
                     <dl class="row">
                         <dt class="col-sm-4">{{ 'event_planner.event.start_time'|trans }}</dt>
-                        <dd class="col-sm-8">{{ event.startTime|date('Y-m-d H:i') }}</dd>
+                        <dd class="col-sm-8">{{ event.startTime|display_datetime }}</dd>
 
                         <dt class="col-sm-4">{{ 'event_planner.event.end_time'|trans }}</dt>
-                        <dd class="col-sm-8">{{ event.endTime|date('Y-m-d H:i') }}</dd>
+                        <dd class="col-sm-8">{{ event.endTime|display_datetime }}</dd>
 
                         <dt class="col-sm-4">{{ 'event_planner.event.duration'|trans }}</dt>
                         <dd class="col-sm-8">{{ event.durationMinutes }} {{ 'minutes'|trans }}</dd>
