@@ -317,6 +317,23 @@ templates/domain/{domain_name}/
 
 ---
 
+### 14. CallTranscript
+**Scope**: Importing recorded calls (Discord via the Craig bot) and turning them into speaker-attributed transcripts (#192)
+
+**Entities**: `CallRecording` (one import, status `awaiting_review` → `transcribing` → `completed`/`failed`), `CallRecordingTrack` (one speaker's audio and/or Craig transcript, plus its transcribed segments)
+
+**Flow**:
+1. An organizer uploads a Craig multi-track zip (`CallTranscriptController`, guarded by `CallTranscriptVoter::MANAGE`, organizers only). `CraigRecordingImporter` (behind `CallRecordingImporterInterface`) extracts one track per speaker into `var/call_recordings/{recording}` (speaker = filename without the leading `N-` track number), pairs Craig transcripts (`.vtt` > `.srt` > `.txt`) with speakers by filename and reads `info.txt` for the start time and `/notemessage` notes.
+2. On the review page the organizer unticks speakers; their files are deleted before anything is queued (`CallTranscriptionStarter`).
+3. One `TranscribeCallTrackMessage` per remaining track runs on the `async` transport. A track with a Craig transcript is parsed (`SubtitleParser`); otherwise its audio goes to `SpeechToTextProviderInterface` (`OpenAISpeechToTextProvider`, `OPENAI_TRANSCRIPTION_MODEL`, default `whisper-1`, language `pl` unless auto-detect is chosen). The track's files are deleted right after.
+4. When no track is pending, `FinalizeCallTranscriptMessage` merges all segments and notes in time order (`TranscriptMerger`, lines `[hh:mm:ss] Speaker: text`) into a non-public `KnowledgeDocument` (category `call_transcript`) and removes the recording's directory (`CallTranscriptPublisher`).
+
+**Templates**: `templates/domain/call_transcript/`
+
+**Dependencies**: StoryObject (`KnowledgeDocument`), Core, Account
+
+---
+
 ## Domain Dependency Map
 
 ```

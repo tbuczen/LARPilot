@@ -127,6 +127,7 @@ knowledge_document:
     rules: "Rules & Mechanics"
     faction: "Faction Information"
     world: "World Information"
+    call_transcript: "Call transcript"
     other: "Other"
   list: "Knowledge Documents"
   create: "Create Document"

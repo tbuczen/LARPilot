@@ -571,6 +571,7 @@ knowledge_document:
     rules: "Zasady i mechanika"
     faction: "Informacje o frakcji"
     world: "Informacje o świecie"
+    call_transcript: "Transkrypcja rozmowy"
     other: "Inne"
   list: "Dokumenty wiedzy"
   create: "Utwórz dokument"
