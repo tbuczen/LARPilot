@@ -15,12 +15,12 @@
                 </div>
                 <div class="modal-body">
                     <a href="{{ path('backoffice_larp_story_event_import_file', {'larp': larp.id}) }}"
-                       class="btn btn-secondary">
+                       class="btn btn-outline-primary">
                         {{ 'larp.import_file'|trans }}
                     </a>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light"
+                    <button type="button" class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">{{ 'close'|trans }}</button>
                 </div>
             </div>
@@ -29,10 +29,10 @@
 
     <div class="card mt-4">
         {% set actions %}
-            <a href="{{ path('backoffice_larp_story_event_timeline', { larp: larp.id }) }}" class="btn btn-info">
+            <a href="{{ path('backoffice_larp_story_event_timeline', { larp: larp.id }) }}" class="btn btn-outline-info">
                 <i class="bi bi-clock-history"></i> {{ 'lore.timeline'|trans }}
             </a>
-            {{ ui.primary_button('create', path('backoffice_larp_story_event_modify', { larp: larp.id }), 'bi-plus-circle') }}
+            {{ ui.create_button(path('backoffice_larp_story_event_modify', { larp: larp.id })) }}
         {% endset %}
         {{ ui.card_header('larp.event.list', actions) }}
 
@@ -68,8 +68,8 @@
                             {{ event.title }}
                             </a>
                             </td>
-                        <td>{{ event.startTime ? event.startTime|date('Y-m-d H:i') : '-' }}</td>
-                        <td>{{ event.endTime ? event.endTime|date('Y-m-d H:i') : '-' }}</td>
+                        <td>{{ event.startTime ? event.startTime|display_datetime : '-' }}</td>
+                        <td>{{ event.endTime ? event.endTime|display_datetime : '-' }}</td>
                         <td>{{ event.description|truncate_words(10) }}</td>
                         <td>
                             {{ ui.delete_button(event.id, event.title, path('backoffice_larp_story_event_delete', { larp: larp.id, event: event.id })) }}

@@ -1,5 +1,5 @@
 {% macro confirmFormButton(formId, buttonLabel, confirmMessage) %}
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ formId }}">
+    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmModal-{{ formId }}">
         {{ buttonLabel|trans }}
     </button>
 
@@ -14,7 +14,7 @@
                     <p>{{ confirmMessage|trans }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ 'cancel'|trans }}</button>
                     <button type="button" class="btn btn-danger" onclick="document.getElementById('{{ formId }}').submit();">{{ 'confirm'|trans }}</button>
                 </div>
             </div>

@@ -7,7 +7,7 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryObject\Entity\LoreDocument;
 use App\Domain\StoryObject\Form\Filter\LoreDocumentFilterType;
 use App\Domain\StoryObject\Form\LoreDocumentType;
@@ -52,7 +52,7 @@ class LoreDocumentController extends BaseController
     #[Route('{loreDocument}', name: 'modify', defaults: ['loreDocument' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         StoryObjectMentionService $mentionService,
         Request $request,
         Larp $larp,
@@ -71,7 +71,7 @@ class LoreDocumentController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->save($loreDocument);
-            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $loreDocument);
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationRegistry, $new, $loreDocument);
             $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_loreDocument_list', ['larp' => $larp->getId()]);
         }
@@ -93,14 +93,14 @@ class LoreDocumentController extends BaseController
     #[Route('{loreDocument}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         Larp $larp,
         Request $request,
         LoreDocumentRepository $repository,
         LoreDocument $loreDocument,
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $loreDocument, 'LoreDocument')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $loreDocument, 'LoreDocument')) {
             return $this->redirectToRoute('backoffice_larp_story_loreDocument_list', ['larp' => $larp->getId()]);
         }
 

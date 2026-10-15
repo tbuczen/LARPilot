@@ -285,6 +285,7 @@ larp:
   relations: 'Story Relations'
   events: 'Events'
   integrations: 'Integrations'
+  call_transcripts: 'Call transcripts'
   integrationSettings: 'Integration Settings'
   integration:
     googleDrive: 'Google Drive Integration'
@@ -293,8 +294,12 @@ larp:
     current: 'Current integrations'
     expired: 'Integration has expired, if You want to keep using it - please reconnect'
     reconnect: 'Re-connect'
+    scope_upgrade_required: 'This Google connection was granted full access to your Drive. LARPilot now only needs access to the files you pick. Reconnect Google, then open the file picker and select your files again so LARPilot can keep using them.'
+    connect_cancelled: 'Connecting %provider% was cancelled. Nothing was changed.'
+    connect_failed: 'Could not connect %provider%. Please try again.'
+    connect_succeeded: '%provider% is now connected.'
     facebookDescription: 'Connect your Facebook account to allow LARPilot to post updates on your behalf.'
-    discordDescription: 'Connect your Discord account to allow LARPilot to post updates on your behalf.'
+    discordDescription: 'Invite the LARPilot bot to your Discord server and choose which channels it may read for this LARP. The bot only reads; it never posts.'
     asanaDescription: 'Connect your Asana account to allow LARPilot to synchronize work.'
     trelloDescription: 'Connect your Trello account to allow LARPilot to synchronize work.'
     miroDescription: 'Connect your Miro account to allow LARPilot to synchronize board.'
@@ -412,9 +417,6 @@ larp:
     tree: 'Decision Tree'
     tree_editor: 'Thread Decision Tree Editor'
     add: 'Add Thread'
-  reference:
-    list: 'External References'
-    add: 'Add External Reference'
   story:
     main: 'Story Management'
     main_title: 'Story'
@@ -565,6 +567,25 @@ larp:
     confirmed.description: "Event confirmed and will happen"
     cancelled.description: "Event has been cancelled"
     completed.description: "Event has been completed"
+    requirement:
+      label: "Requirements:"
+      toggle_details: "Show requirements"
+      publish: "Publish Requirements"
+      inquiries: "Open for Inquiries Requirements"
+      confirm: "Confirm Event Requirements"
+      all_publish_plus: "All publish requirements plus:"
+      all_inquiries_plus: "All inquiry requirements plus:"
+      location: "Location"
+      description: "Description"
+      start_date: "Start Date"
+      end_date: "End Date"
+      has_character: "At least one character"
+      characters_described: "All characters have descriptions"
+      characters_assigned: "All characters assigned to participants"
+      missing: "%count% missing"
+      unassigned: "%count% unassigned"
+    social_visual_settings: "Social & Visual Settings"
+    current_header_image: "Current Header Image"
   properties: 'Properties'
 
 marketplace:
@@ -1447,3 +1468,129 @@ ui:
   action_cannot_be_undone: 'This action cannot be undone.'
   required_field: 'This field is required'
   optional: 'optional'
+story_source:
+  tab: 'Sources'
+  title: 'External sources'
+  link: 'Link source'
+  link_submit: 'Link'
+  unlink: 'Unlink'
+  unlink_confirm: 'The link will be removed from this story object. The source itself stays untouched.'
+  empty: 'No external sources are linked yet.'
+  linked: 'Source linked.'
+  unlinked: 'Source unlinked.'
+  invalid_url: 'This link is not a recognised Discord or Miro address.'
+  item_not_found: 'This synced item is not available for this LARP.'
+  updated: 'Updated'
+  open: 'Open'
+  role_label: 'Role'
+  search_label: 'Search synced items'
+  search_placeholder: 'Type a title or text…'
+  search_empty: 'No synced items match.'
+  search_error: 'Search is not available right now.'
+  or: 'or'
+  url_label: 'Paste a Discord or Miro link'
+  url_placeholder: 'https://discord.com/channels/…'
+  url_help: 'Discord channel, thread or message links and Miro board or item links are recognised.'
+  role:
+    primary: 'Primary'
+    mention: 'Mention'
+    notes: 'Notes'
+  kind:
+    spreadsheet_row: 'Row'
+    spreadsheet: 'Spreadsheet'
+    document: 'Document'
+    document_paragraph: 'Paragraph'
+    thread: 'Thread'
+    comment: 'Message'
+    board: 'Board'
+    board_item: 'Board item'
+    board_frame: 'Frame'
+    board_connector: 'Connector'
+    forum_post: 'Forum post'
+    url: 'Link'
+  availability:
+    archived: 'Archived'
+    changed: 'Changed'
+    gone: 'Missing'
+    forbidden: 'No access'
+
+integration_hub:
+  title: 'Integrations'
+  intro: 'Connect the tools your team already uses. LARPilot reads them and lets you link what you find to story objects.'
+  empty: 'No integrations are available yet.'
+  connect: 'Connect'
+  settings: 'Settings'
+  reconnect: 'Reconnect'
+  disconnect: 'Disconnect'
+  disconnect_confirm: 'LARPilot will stop reading from this account and forget its synced sources. Links already added to story objects stay.'
+  disconnected: '%provider% was disconnected.'
+  account: 'Account'
+  unknown_account: 'Unknown account'
+  last_sync: 'Last sync'
+  never: 'Never'
+  sources: 'Sources'
+  purpose:
+    integration_google_drive: 'Share Drive files and import characters, events and tags from spreadsheets.'
+    discord: 'Browse server threads and link them to story objects.'
+    integration_miro: 'Browse board items and link them to story objects.'
+    facebook: 'Legacy connection. It can no longer be connected again.'
+  state:
+    connected: 'Connected'
+    needs_reconnect: 'Needs reconnect'
+    error: 'Error'
+    not_connected: 'Not connected'
+  problem:
+    needs_reconnect: 'Access to %provider% expired or was revoked. Reconnect to keep syncing.'
+    error: 'Something went wrong while syncing %provider%. Check the Activity tab for details.'
+  tab:
+    sources: 'Sources'
+    browse: 'Browse'
+    activity: 'Activity'
+    mappings: 'Mappings'
+  sync_status:
+    success: 'Synced'
+    partial: 'Partly synced'
+    failed: 'Sync failed'
+  source:
+    title: 'Sources'
+    empty: 'No sources yet. Choose what LARPilot should read in the settings above.'
+    empty_with_mappings: 'No sources yet. Share files on the Mappings tab to start.'
+    paused: 'Paused'
+    pause: 'Pause'
+    resume: 'Resume'
+    sync_now: 'Sync now'
+    enabled_flash: '%source% will be synced again.'
+    disabled_flash: '%source% is paused and will not be synced.'
+    sync_requested: 'Sync of %source% has been requested.'
+    sync_unavailable: '%source% cannot be synced right now.'
+    kind:
+      discord_channel: 'Channel'
+      discord_forum: 'Forum'
+      miro_board: 'Board'
+      google_file: 'File'
+  browse:
+    search_label: 'Search synced items'
+    search: 'Search'
+    empty: 'Nothing has been synced yet.'
+    link_to: 'Link to…'
+    linked: 'Linked to %storyObject%.'
+    story_object_label: 'Story object'
+    story_object_placeholder: 'Type a character, thread, quest…'
+    story_object_empty: 'No story objects match.'
+  activity:
+    title: 'Recent activity'
+    empty: 'Nothing has been synced yet.'
+    connection: 'Connection'
+    last_checked: 'Last checked'
+    technical_details: 'Technical details'
+    connection_connected: '%provider% is connected and working.'
+    connection_needs_reconnect: 'Access to %provider% expired or was revoked. Reconnect to keep syncing.'
+    connection_error: 'The last attempt to reach %provider% failed.'
+    connection_not_connected: '%provider% is not connected.'
+    sync_success: 'Everything was synced.'
+    sync_partial: 'Some items could not be synced. They will be retried on the next run.'
+    sync_failed: 'The sync failed. LARPilot will try again later.'
+  dashboard:
+    needs_attention: 'Integrations needing attention'
+    connected: '%count% connected'
+    open: 'Open integrations'

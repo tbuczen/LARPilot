@@ -1,0 +1,19 @@
+{% import 'macros/ui_components.html.twig' as ui %}
+
+<p>
+    <i class="bi bi-discord"></i>
+    {{ 'settings.connected_to'|trans({ '%guild%': integration.config.guildName ?? integration.externalAccountId }, 'discord') }}
+</p>
+{% if not integration.status.usable %}
+    {{ ui.warning_alert('settings.needs_reconnect'|trans({}, 'discord')) }}
+{% endif %}
+<p class="text-muted small">{{ 'settings.privacy_note'|trans({}, 'discord') }}</p>
+<div class="d-flex gap-2">
+    <a href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: integration.provider.value }) }}"
+       class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-repeat"></i>{{ 'settings.reconnect'|trans({}, 'discord') }}
+    </a>
+    <a href="{{ path('backoffice_larp_discord_channels', { larp: larp.id }) }}" class="btn btn-outline-primary">
+        <i class="bi bi-pencil"></i>{{ 'settings.choose_channels'|trans({}, 'discord') }}
+    </a>
+</div>

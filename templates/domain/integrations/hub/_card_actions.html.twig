@@ -1,0 +1,26 @@
+{% import 'macros/ui_components.html.twig' as ui %}
+{% set size = size|default(null) %}
+{% set showSettings = showSettings ?? true %}
+{% if card.state.connected %}
+    {% if showSettings %}
+        {{ ui.edit_button(path('backoffice_larp_integrations_sources', {larp: larp.id, provider: card.provider.value}), 'integration_hub.settings', size) }}
+    {% endif %}
+    {% if card.connectable and card.state.needsAttention %}
+        <a href="{{ path('backoffice_larp_connect_integration', {larp: larp.id, provider: card.provider.value}) }}"
+           class="btn {% if size %}btn-{{ size }}{% endif %} btn-warning">
+            <i class="bi bi-arrow-repeat"></i>{{ 'integration_hub.reconnect'|trans }}
+        </a>
+    {% endif %}
+    {{ ui.delete_button(
+        card.provider.value,
+        card.provider.label,
+        path('backoffice_larp_integrations_disconnect', {larp: larp.id, provider: card.provider.value}),
+        'integration_hub.disconnect',
+        size,
+        '',
+        'integration_hub.disconnect_confirm',
+        'integration_hub.disconnect'
+    ) }}
+{% elseif card.connectable %}
+    {{ ui.create_button(path('backoffice_larp_connect_integration', {larp: larp.id, provider: card.provider.value}), 'integration_hub.connect', 'bi-plus-lg', size) }}
+{% endif %}

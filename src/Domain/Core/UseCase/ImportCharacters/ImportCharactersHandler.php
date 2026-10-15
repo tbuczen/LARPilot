@@ -13,8 +13,8 @@ use App\Domain\Integrations\Entity\Enum\ReferenceType;
 use App\Domain\Integrations\Entity\ExternalReference;
 use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Repository\SharedFileRepository;
-use App\Domain\Integrations\Service\IntegrationManager;
-use App\Domain\Integrations\Service\IntegrationServiceInterface;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryObject\Entity\Character;
 use App\Domain\StoryObject\Repository\CharacterRepository;
 use App\Domain\StoryObject\Repository\FactionRepository;
@@ -26,7 +26,7 @@ use Webmozart\Assert\Assert;
 class ImportCharactersHandler
 {
     private array $cache = [];
-    private ?IntegrationServiceInterface $integrationService = null;
+    private ?FileSourceIntegrationInterface $integrationService = null;
 
     public function __construct(
         private readonly LarpRepository            $larpRepository,
@@ -35,7 +35,7 @@ class ImportCharactersHandler
         private readonly TagRepository             $tagRepository,
         private readonly LarpParticipantRepository $larpParticipantRepository,
         private readonly SharedFileRepository      $sharedFileRepository,
-        private readonly IntegrationManager        $integrationManager,
+        private readonly IntegrationRegistry        $integrationRegistry,
         private readonly EntityManagerInterface    $entityManager
     ) {
     }
@@ -55,7 +55,7 @@ class ImportCharactersHandler
         $file = $this->sharedFileRepository->find($command->externalFileId);
         $existingCharactersMap = $this->getExistingCharactersMap($command->larpId);
 
-        $this->integrationService = $this->integrationManager->getService($file->getIntegration());
+        $this->integrationService = $this->integrationRegistry->capability($file->getIntegration(), FileSourceIntegrationInterface::class);
 
         Assert::notNull($larp, sprintf('LARP %s not found for the character import handler.', $command->larpId));
 

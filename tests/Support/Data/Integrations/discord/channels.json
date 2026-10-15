@@ -1,0 +1,125 @@
+[
+    {
+        "id": "1100000000000000100",
+        "type": 4,
+        "guild_id": "1100000000000000001",
+        "name": "Story",
+        "parent_id": null,
+        "position": 0,
+        "flags": 0,
+        "permission_overwrites": []
+    },
+    {
+        "id": "1100000000000000010",
+        "type": 0,
+        "guild_id": "1100000000000000001",
+        "name": "general",
+        "parent_id": null,
+        "position": 1,
+        "flags": 0,
+        "topic": "Everything that does not fit elsewhere",
+        "last_message_id": "1300000000000000099",
+        "rate_limit_per_user": 0,
+        "nsfw": false,
+        "permission_overwrites": []
+    },
+    {
+        "id": "1100000000000000011",
+        "type": 0,
+        "guild_id": "1100000000000000001",
+        "name": "rules",
+        "parent_id": null,
+        "position": 2,
+        "flags": 0,
+        "topic": null,
+        "last_message_id": null,
+        "rate_limit_per_user": 0,
+        "nsfw": false,
+        "permission_overwrites": [
+            {
+                "id": "1100000000000000001",
+                "type": 0,
+                "allow": "0",
+                "deny": "2048"
+            }
+        ]
+    },
+    {
+        "id": "1100000000000000200",
+        "type": 15,
+        "guild_id": "1100000000000000001",
+        "name": "character-threads",
+        "parent_id": "1100000000000000100",
+        "position": 3,
+        "flags": 16,
+        "topic": "One post per character storyline",
+        "last_message_id": "1100000000000000302",
+        "rate_limit_per_user": 0,
+        "nsfw": false,
+        "permission_overwrites": [],
+        "available_tags": [
+            {
+                "id": "1100000000000000901",
+                "name": "Main plot",
+                "moderated": false,
+                "emoji_id": null,
+                "emoji_name": "📜"
+            },
+            {
+                "id": "1100000000000000902",
+                "name": "Side quest",
+                "moderated": false,
+                "emoji_id": null,
+                "emoji_name": null
+            },
+            {
+                "id": "1100000000000000903",
+                "name": "Approved",
+                "moderated": true,
+                "emoji_id": null,
+                "emoji_name": "✅"
+            }
+        ],
+        "default_reaction_emoji": {
+            "emoji_id": null,
+            "emoji_name": "👍"
+        },
+        "default_thread_rate_limit_per_user": 0,
+        "default_auto_archive_duration": 4320,
+        "default_sort_order": 0,
+        "default_forum_layout": 1,
+        "template": ""
+    },
+    {
+        "id": "1100000000000000210",
+        "type": 0,
+        "guild_id": "1100000000000000001",
+        "name": "faction-planning",
+        "parent_id": "1100000000000000100",
+        "position": 4,
+        "flags": 0,
+        "topic": "Faction politics and plotting",
+        "last_message_id": "1100000000000000310",
+        "rate_limit_per_user": 0,
+        "nsfw": false,
+        "default_auto_archive_duration": 1440,
+        "permission_overwrites": []
+    },
+    {
+        "id": "1100000000000000020",
+        "type": 2,
+        "guild_id": "1100000000000000001",
+        "name": "Voice",
+        "parent_id": null,
+        "position": 5,
+        "flags": 0,
+        "bitrate": 64000,
+        "user_limit": 0,
+        "rtc_region": null,
+        "video_quality_mode": 1,
+        "last_message_id": null,
+        "rate_limit_per_user": 0,
+        "nsfw": false,
+        "permission_overwrites": []
+    }
+]

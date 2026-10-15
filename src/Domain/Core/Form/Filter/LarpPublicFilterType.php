@@ -21,7 +21,6 @@ class LarpPublicFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        //TODO:: filtering start date and end date should be >= start date and <= endDate
         //statuses, settings, types, must be multiple OR
         //location needs to be autocomplete to location entity
         //PRO: there should be option to localise a larp in range of given address
@@ -76,14 +75,14 @@ class LarpPublicFilterType extends AbstractType
                     ->setParameter('status', LocationApprovalStatus::APPROVED->value)
             ])
             ->add('startDate', Filters\DateFilterType::class, [
+                'label' => 'event.dates',
                 'required' => false,
-                'widget' => 'single_text',
-                'attr' => ['class' => 'form-control']
+                'range_end' => 'endDate',
+                'apply_filter' => DateRangeFilter::from('startDate'),
             ])
             ->add('endDate', Filters\DateFilterType::class, [
                 'required' => false,
-                'widget' => 'single_text',
-                'attr' => ['class' => 'form-control']
+                'apply_filter' => DateRangeFilter::to('startDate', 'endDate'),
             ])
             ->add('minDuration', Filters\NumberFilterType::class, [
                 'required' => false,

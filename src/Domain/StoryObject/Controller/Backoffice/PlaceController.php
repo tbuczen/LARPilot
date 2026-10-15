@@ -5,7 +5,7 @@ namespace App\Domain\StoryObject\Controller\Backoffice;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Service\LarpManager;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Service\IntegrationRegistry;
 use App\Domain\StoryObject\Entity\Place;
 use App\Domain\StoryObject\Form\Filter\PlaceFilterType;
 use App\Domain\StoryObject\Form\PlaceType;
@@ -40,7 +40,7 @@ class PlaceController extends BaseController
     #[Route('{place}', name: 'modify', defaults: ['place' => null], methods: ['GET', 'POST'])]
     public function modify(
         LarpManager $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         StoryObjectMentionService $mentionService,
         Request $request,
         Larp $larp,
@@ -59,7 +59,7 @@ class PlaceController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $placeRepository->save($place);
-            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationManager, $new, $place);
+            $this->processIntegrationsForStoryObject($larpManager, $larp, $integrationRegistry, $new, $place);
             $this->addFlash('success', $this->translator->trans('success_save'));
             return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
         }
@@ -96,14 +96,14 @@ class PlaceController extends BaseController
     #[Route('{place}/delete', name: 'delete', methods: ['GET', 'POST'])]
     public function delete(
         LarpManager $larpManager,
-        IntegrationManager $integrationManager,
+        IntegrationRegistry $integrationRegistry,
         Larp $larp,
         Request $request,
         PlaceRepository $placeRepository,
         Place $place,
     ): Response {
         $deleteIntegrations = $request->query->getBoolean('integrations');
-        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationManager, $place, 'Place')) {
+        if ($deleteIntegrations && !$this->removeStoryObjectFromIntegrations($larpManager, $larp, $integrationRegistry, $place, 'Place')) {
             return $this->redirectToRoute('backoffice_larp_story_place_list', ['larp' => $larp->getId()]);
         }
 

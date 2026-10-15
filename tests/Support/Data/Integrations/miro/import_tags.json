@@ -1,0 +1,48 @@
+{
+    "data": [
+        {
+            "id": "3458764600000009101",
+            "type": "tag",
+            "title": "Character",
+            "fillColor": "red",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/tags/3458764600000009101"
+            }
+        },
+        {
+            "id": "3458764600000009102",
+            "type": "tag",
+            "title": "faction",
+            "fillColor": "red",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/tags/3458764600000009102"
+            }
+        },
+        {
+            "id": "3458764600000009103",
+            "type": "tag",
+            "title": "Place",
+            "fillColor": "red",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/tags/3458764600000009103"
+            }
+        },
+        {
+            "id": "3458764600000009001",
+            "type": "tag",
+            "title": "Main plot",
+            "fillColor": "red",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/tags/3458764600000009001"
+            }
+        }
+    ],
+    "total": 4,
+    "size": 4,
+    "offset": 0,
+    "limit": 20,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/tags?limit=20&offset=0"
+    },
+    "type": "list"
+}

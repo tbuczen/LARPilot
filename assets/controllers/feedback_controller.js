@@ -260,7 +260,7 @@ export default class extends Controller {
         const downloadLink = document.createElement('a');
         downloadLink.href = screenshotData;
         downloadLink.download = `feedback_screenshot_${Date.now()}.png`;
-        downloadLink.className = 'btn btn-sm btn-outline-primary ms-2';
+        downloadLink.className = 'btn btn-sm btn-outline-secondary ms-2';
         downloadLink.innerHTML = '<i class="bi bi-download"></i> Download Screenshot';
         downloadLink.target = '_blank';
 

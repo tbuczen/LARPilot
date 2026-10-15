@@ -1,0 +1,97 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ 'boards.title'|trans({}, 'miro') }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_integrations_hub', { larp: larp.id }) }}">{{ 'integration_hub.title'|trans }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('backoffice_larp_integrations_sources', { larp: larp.id, provider: integration.provider.value }) }}">{{ integration.provider.label }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'boards.title'|trans({}, 'miro') }}</li>
+        </ol>
+    </nav>
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">{{ 'boards.title'|trans({}, 'miro') }}</h2>
+                <div class="d-flex gap-2">
+                    {{ ui.back_button(path('backoffice_larp_integrations_sources', { larp: larp.id, provider: integration.provider.value })) }}
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if needsReauth %}
+                <div class="alert alert-warning" data-test="miro-reconnect">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    {{ 'reconnect.message'|trans({}, 'miro') }}
+                </div>
+                <a href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: integration.provider.value }) }}" class="btn btn-warning">
+                    <i class="bi bi-arrow-repeat"></i>{{ 'reconnect.button'|trans({}, 'miro') }}
+                </a>
+            {% else %}
+                <p class="text-muted">{{ 'boards.description'|trans({}, 'miro') }}</p>
+            {% endif %}
+        </div>
+        {% if not needsReauth %}
+            {% if boards is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{{ 'boards.name'|trans({}, 'miro') }}</th>
+                                <th>{{ 'boards.status'|trans({}, 'miro') }}</th>
+                                <th>{{ 'actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for board in boards %}
+                                {% set isSelected = board.externalId in selectedBoardIds %}
+                                <tr data-miro-board="{{ board.externalId }}">
+                                    <td>
+                                        {% if board.url %}
+                                            <a href="{{ board.url }}" target="_blank" rel="noopener noreferrer">{{ board.name }}</a>
+                                        {% else %}
+                                            {{ board.name }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if isSelected %}
+                                            <span class="badge text-bg-success">{{ 'boards.selected_badge'|trans({}, 'miro') }}</span>
+                                        {% else %}
+                                            <span class="badge text-bg-light">{{ 'boards.not_selected_badge'|trans({}, 'miro') }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form method="post" action="{{ path('backoffice_larp_integration_miro_board_toggle', { larp: larp.id }) }}" name="miro_board_toggle">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('miro_board_' ~ integration.id) }}">
+                                            <input type="hidden" name="boardId" value="{{ board.externalId }}">
+                                            {% if isSelected %}
+                                                <input type="hidden" name="selected" value="0">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                    {{ 'boards.deselect'|trans({}, 'miro') }}
+                                                </button>
+                                            {% else %}
+                                                <input type="hidden" name="selected" value="1">
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="bi bi-plus-lg"></i>
+                                                    {{ 'boards.select'|trans({}, 'miro') }}
+                                                </button>
+                                            {% endif %}
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="card-body pt-0">
+                    <p class="text-muted">{{ 'boards.empty'|trans({}, 'miro') }}</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
