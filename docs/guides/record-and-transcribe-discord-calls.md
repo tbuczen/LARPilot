@@ -65,8 +65,12 @@ it soon.
 
 ### 3. Download
 
-On the download page choose **Multi-track** and **FLAC**. You get a `.zip`
-with one audio file per person, named after their Discord name.
+On the download page choose **Multi-track**. You get a `.zip` with one audio
+file per person, named after their Discord name.
+
+- To transcribe on your own computer, **FLAC** gives the best quality.
+- To upload to LARPilot (below), choose **Ogg Vorbis** or **MP3**: each
+  person's file must stay under 25 MB, which an hour of FLAC usually is not.
 
 To leave someone out, delete their file before you share or transcribe.
 
@@ -170,24 +174,31 @@ transcript and summary, and keeps them on a dashboard where you can delete
 them. The paid plan has an API and webhooks, which LARPilot could use later.
 Start at [discmeet.com](https://discmeet.com/discord-transcription).
 
-## Putting a transcript into LARPilot today
+## Putting a transcript into LARPilot
 
-Until the import is ready:
+Organizers can import a Craig recording straight into LARPilot:
 
-1. In your LARP, create a **knowledge document** (category of your choice,
-   visible to organizers only).
-2. Paste the transcript, or the bot's summary, into it.
-3. Mention the characters, factions and threads it talks about, so the
-   document shows up on their pages.
+1. Open **Administration → Call transcripts** and upload the Craig `.zip`
+   (Ogg Vorbis or MP3, see above). Pick the language: Polish is the default.
+2. LARPilot lists the speakers it found. Untick anyone who did not agree to
+   be recorded: their audio is deleted and never transcribed.
+3. Each person is transcribed separately in the background, then merged into
+   one transcript in time order (`[00:12:31] anna: …`). If the zip already
+   contains Craig's own transcripts, LARPilot uses them instead.
+4. When it is done, **Open transcript** shows the result. It is visible to
+   organizers only. The audio is deleted as soon as the transcript is ready.
 
-If you use Craig's Google Drive upload, you can also keep the transcript as a
-Google Doc and attach it to the LARP through the Google Drive integration.
+Transcripts are raw material. Copy the decisions that matter into the story
+objects they are about, or into a **Lore Document** (Story → Lore Documents),
+which the whole writing team can find and the AI Assistant can read.
+
+If you used NotesBot or DiscMeet, their notes arrive in a Discord thread; when
+that channel is watched by LARPilot, the thread shows up in the **Discord
+inbox** like any other conversation.
 
 ## What's coming
 
-LARPilot will connect to these bots instead of building its own recorder:
-you'll upload a Craig download (or point LARPilot at the Craig folder in
-Google Drive), and LARPilot will transcribe each person's track in Polish,
-merge it into one transcript, and save it as a LARPilot note, a Google Doc or a
+Next steps: longer calls (splitting big audio files), reading Craig's Google
+Drive folder automatically, and saving transcripts to a Google Doc or a
 Discord thread. Progress is tracked in
 [tbuczen/LARPilot#192](https://github.com/tbuczen/LARPilot/issues/192).

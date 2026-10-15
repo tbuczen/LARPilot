@@ -13,10 +13,10 @@ story objects on the **Sources** tab.
 ## Why does it take a few minutes for new Discord threads to show up?
 
 Discord does not notify websites when something new is posted, so LARPilot
-has to ask. It checks your watched channels **about every 5 minutes** in the
+has to ask. It checks your watched channels **about every 30 minutes** in the
 background. Discord also limits how many questions a bot may ask per second,
 so on a large server LARPilot spreads the reading out and may need a little
-longer. A thread started now usually shows up within a few minutes.
+longer. A thread started now usually shows up within half an hour.
 
 **Sync now** on a source asks for an earlier check. It still runs in the
 background, so give it a minute.
@@ -48,9 +48,10 @@ LARPilot is an index, not a copy of your chat.
 
 ## What does LARPilot store from Miro?
 
-The names and links of the boards you select. When board browsing arrives it
-will also keep the titles, tags and positions of board items so you can search
-and link them. Your Miro login is stored encrypted and is used only to read the
+The names and links of the boards you select, and for each board item
+(frames, cards, sticky notes, shapes, text and connectors) its title, plain
+text, tags, type, link and the frame it sits in, so you can search and link
+them. Your Miro login is stored encrypted and is used only to read the
 boards you selected.
 
 ## Does LARPilot post or change anything in Discord or Miro?

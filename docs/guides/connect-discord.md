@@ -101,20 +101,15 @@ shown to players.
 
 ## 4. What happens next
 
-> **Coming soon:** reading threads and posts from your watched channels is the
-> next step (Discord thread sync). Until it ships, the **Browse** tab stays
-> empty and there is no **Sync now** button for Discord. Your channel choices
-> are saved and will be used as soon as it is available. You can already link
-> a Discord thread to a story object by pasting its link (see below).
-
-Once thread sync is available:
-
-- LARPilot checks your watched channels **about every 5 minutes**. New threads
-  and posts appear on the **Browse** tab after a few minutes, not instantly –
-  see [Why is there a delay?](integrations-faq.md#why-does-it-take-a-few-minutes-for-new-discord-threads-to-show-up).
+- LARPilot reads your watched channels in the background, **about every 30
+  minutes**. New threads and posts appear on the **Browse** tab and in the
+  **Discord inbox** after that, not instantly – see [Why is there a delay?](integrations-faq.md#why-does-it-take-a-few-minutes-for-new-discord-threads-to-show-up).
 - **Sync now** on a source asks for an earlier check.
 - The **Activity** tab shows when each channel was last read and whether
   anything went wrong.
+- Private threads are never read. For **Organizers only** channels LARPilot
+  keeps a short excerpt of the first and latest messages; for **Player-facing**
+  channels it keeps only titles and links.
 
 ## 5. Link a conversation to a story object
 
