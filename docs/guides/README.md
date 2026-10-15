@@ -2,6 +2,12 @@
 
 Plain-language guides for LARP organizers.
 
+## Start here
+
+- [Organizer cookbook](organizer-cookbook.md) – how to run a LARP with
+  LARPilot alongside Google Drive, Discord and Miro: which tool for what, and
+  step-by-step recipes from the first import to the game weekend.
+
 ## Integrations
 
 - [Connect your Discord server](connect-discord.md) – invite the bot, choose
