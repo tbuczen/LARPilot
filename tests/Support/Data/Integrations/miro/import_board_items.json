@@ -1,0 +1,136 @@
+{
+    "data": [
+        {
+            "id": "3458764600000000001",
+            "type": "frame",
+            "data": {
+                "format": "custom",
+                "title": "House Morwen",
+                "type": "freeform"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 200,
+                "height": 200
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000001"
+            }
+        },
+        {
+            "id": "3458764600000000201",
+            "type": "card",
+            "data": {
+                "title": "Captain Mira Vale",
+                "description": "Harbour watch"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 200,
+                "height": 200
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000201"
+            },
+            "tagIds": [
+                "3458764600000009101"
+            ]
+        },
+        {
+            "id": "3458764600000000202",
+            "type": "sticky_note",
+            "data": {
+                "content": "<p>Old Lighthouse</p>",
+                "shape": "square"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 200,
+                "height": 200
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000202"
+            },
+            "tagIds": [
+                "3458764600000009103"
+            ]
+        },
+        {
+            "id": "3458764600000000203",
+            "type": "sticky_note",
+            "data": {
+                "content": "<p>Brother Tomas</p>",
+                "shape": "square"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 200,
+                "height": 200
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000203"
+            }
+        },
+        {
+            "id": "3458764600000000011",
+            "type": "shape",
+            "data": {
+                "content": "<p>Smugglers' Guild</p>",
+                "shape": "round_rectangle"
+            },
+            "position": {
+                "x": 0,
+                "y": 0,
+                "origin": "center",
+                "relativeTo": "canvas_center"
+            },
+            "geometry": {
+                "width": 200,
+                "height": 200
+            },
+            "createdAt": "2026-09-01T10:00:00Z",
+            "modifiedAt": "2026-09-01T10:00:00Z",
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items/3458764600000000011"
+            },
+            "tagIds": [
+                "3458764600000009001"
+            ]
+        }
+    ],
+    "total": 5,
+    "size": 5,
+    "limit": 50,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items?limit=50"
+    },
+    "type": "cursor-list"
+}

@@ -6,7 +6,6 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Integrations\DTO\ExternalReferenceLink;
-use App\Domain\Integrations\Entity\Enum\ExternalSourceKind;
 use App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider;
 use App\Domain\Integrations\Entity\Enum\ReferenceRole;
 use App\Domain\Integrations\Entity\Enum\ReferenceType;
@@ -236,21 +235,7 @@ class MiroBoardBrowserController extends BaseController
 
     private function findBoard(string $sourceId, Larp $larp, ExternalSourceRepository $sourceRepository): ExternalSource
     {
-        if (!Uuid::isValid($sourceId)) {
-            throw $this->createNotFoundException();
-        }
-
-        $board = $sourceRepository->find($sourceId);
-        if (!$board instanceof ExternalSource || $board->getKind() !== ExternalSourceKind::MiroBoard) {
-            throw $this->createNotFoundException();
-        }
-
-        $integration = $board->getIntegration();
-        if ($integration->getProvider() !== LarpIntegrationProvider::Miro || !$integration->getLarp()->getId()->equals($larp->getId())) {
-            throw $this->createNotFoundException();
-        }
-
-        return $board;
+        return $sourceRepository->findMiroBoardOfLarp($sourceId, $larp) ?? throw $this->createNotFoundException();
     }
 
     private function findStoryObjectOfLarp(string $storyObjectId, Larp $larp, StoryObjectRepository $storyObjectRepository): StoryObject
