@@ -13,7 +13,7 @@ import { Controller } from '@hotwired/stimulus';
  *
  * 2. Add delete button with data attributes:
  *    <button type="button"
- *            class="btn btn-sm btn-danger"
+ *            class="btn btn-sm btn-outline-danger"
  *            data-bs-toggle="modal"
  *            data-bs-target="#deleteModal"
  *            data-item-id="{{ item.id }}"

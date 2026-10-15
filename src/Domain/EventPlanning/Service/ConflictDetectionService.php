@@ -2,6 +2,7 @@
 
 namespace App\Domain\EventPlanning\Service;
 
+use App\Domain\Core\Service\Helper\DateFormat;
 use App\Domain\EventPlanning\Entity\Enum\ConflictSeverity;
 use App\Domain\EventPlanning\Entity\Enum\ConflictType;
 use App\Domain\EventPlanning\Entity\PlanningResource;
@@ -74,8 +75,8 @@ readonly class ConflictDetectionService
                             'Resource "%s" is already booked for "%s" from %s to %s',
                             $resource->getName(),
                             $otherEvent->getTitle(),
-                            $otherEvent->getStartTime()->format('H:i'),
-                            $otherEvent->getEndTime()->format('H:i')
+                            $otherEvent->getStartTime()->format(DateFormat::TIME),
+                            $otherEvent->getEndTime()->format(DateFormat::TIME)
                         )
                     );
 

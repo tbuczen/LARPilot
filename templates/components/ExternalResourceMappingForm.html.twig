@@ -4,9 +4,49 @@
     {% if form.meta is defined %}
         {{ form_row(form.meta) }}
     {% endif %}
+    {% set spreadsheetPreview = this.spreadsheetPreview %}
+    {% if spreadsheetPreview is not null %}
+        <div class="card mb-3" data-spreadsheet-preview>
+            <div class="card-header">{{ 'mapping.spreadsheet.preview'|trans({}, 'forms') }}</div>
+            <div class="card-body p-0">
+                {% if not spreadsheetPreview.available %}
+                    <div class="alert alert-warning m-3">
+                        {{ 'mapping.spreadsheet.preview_unavailable'|trans({ '%message%': spreadsheetPreview.error }, 'forms') }}
+                    </div>
+                {% elseif spreadsheetPreview.headers is empty %}
+                    <p class="text-muted m-3">{{ 'mapping.spreadsheet.preview_empty'|trans({}, 'forms') }}</p>
+                {% else %}
+                    <p class="text-muted small px-3 pt-3 mb-2">{{ 'mapping.spreadsheet.preview_description'|trans({}, 'forms') }}</p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    {% for columnLetter, headerName in spreadsheetPreview.headers %}
+                                        <th scope="col">
+                                            <span class="text-muted">{{ columnLetter }}</span>
+                                            {{ headerName }}
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for previewRow in spreadsheetPreview.rows %}
+                                    <tr>
+                                        {% for cellValue in previewRow %}
+                                            <td>{{ cellValue }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
     {% if form.mappings is defined %}
         {{ form_row(form.mappings) }}
     {% endif %}
-    {{ form_row(form.submit) }}
+    {{ form_row(form.submit, { attr: { class: 'btn btn-primary' } }) }}
     {{ form_end(form) }}
 </div>

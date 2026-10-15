@@ -10,15 +10,21 @@ use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\Integrations\Form\Integrations\FileMappingType;
 use App\Domain\Integrations\Form\Models\ExternalResourceMappingModel;
 use App\Domain\Integrations\Repository\LarpIntegrationRepository;
-use App\Domain\Integrations\Service\IntegrationManager;
+use App\Domain\Integrations\Security\IntegrationOwnershipGuard;
+use App\Domain\Integrations\Security\Voter\IntegrationSettingsVoter;
+use App\Domain\Integrations\Service\Capability\FileSourceIntegrationInterface;
+use App\Domain\Integrations\Service\IntegrationRegistry;
+use App\Domain\Integrations\Service\SpreadsheetMappingPreviewProvider;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingCommand;
 use App\Domain\Integrations\UseCase\SaveFileMapping\SaveFileMappingHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/larp/{larp}', name: 'backoffice_larp_integration_')]
+#[IsGranted(IntegrationSettingsVoter::MODIFY, subject: 'larp')]
 class FileMappingController extends BaseController
 {
     #[Route(
@@ -32,10 +38,21 @@ class FileMappingController extends BaseController
         SharedFile              $sharedFile,
         Request                 $request,
         SaveFileMappingHandler  $handler,
+        IntegrationOwnershipGuard $integrationOwnershipGuard,
+        SpreadsheetMappingPreviewProvider $spreadsheetMappingPreviewProvider,
         ?ObjectFieldMapping     $mapping = null,
     ): Response {
+        $integrationOwnershipGuard->assertSharedFileBelongsToLarp($sharedFile, $larp, $provider);
+        if ($mapping instanceof ObjectFieldMapping) {
+            $integrationOwnershipGuard->assertMappingBelongsToSharedFile($mapping, $sharedFile, $larp);
+        }
+
         $mappingModel = ExternalResourceMappingModel::fromEntity($mapping);
-        $form = $this->createForm(FileMappingType::class, $mappingModel, ['mimeType' => $sharedFile->getMimeType()]);
+        $form = $this->createForm(
+            FileMappingType::class,
+            $mappingModel,
+            $spreadsheetMappingPreviewProvider->formOptionsFor($sharedFile, $this->submittedMetaValues($request) ?? $mappingModel->meta)
+        );
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,24 +88,29 @@ class FileMappingController extends BaseController
         ]);
     }
 
-    #[Route('/integration/{provider}/file/{externalFileId}/preview', name: 'preview_spreadsheet')]
-    public function previewSpreadsheet(Larp $larp, LarpIntegrationProvider $provider, string $externalFileId, Request $request): Response
-    {
-        return new Response('TODO: previewSpreadsheet');
-    }
-
     #[Route('/integration/{provider}/file/{externalFileId}/open', name: 'file_open')]
     public function openExternalFile(
         Larp                    $larp,
         string                    $externalFileId,
         LarpIntegrationProvider   $provider,
-        IntegrationManager        $integrationManager,
+        IntegrationRegistry        $integrationRegistry,
         LarpIntegrationRepository $larpIntegrationRepository
     ): RedirectResponse {
         $integration = $larpIntegrationRepository->findByLarpAndProvider($larp->getId()->toRfc4122(), $provider);
-        $integrationService = $integrationManager->getService($integration);
+        $integrationService = $integrationRegistry->capability($integration, FileSourceIntegrationInterface::class);
         $url = $integrationService->getExternalFileUrl($integration, $externalFileId);
 
         return new RedirectResponse($url);
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function submittedMetaValues(Request $request): ?array
+    {
+        $submittedMapping = $request->request->all(FileMappingType::FORM_NAME);
+        $submittedMeta = $submittedMapping['meta'] ?? null;
+
+        return is_array($submittedMeta) ? $submittedMeta : null;
     }
 }

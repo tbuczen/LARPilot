@@ -1,11 +1,10 @@
 
-# whether to use the project's gitignore file to ignore files
-# Added on 2025-04-07
+# whether to use project's .gitignore files to ignore files
 ignore_all_files_in_gitignore: true
-# list of additional paths to ignore
-# same syntax as gitignore, so you can use * and **
-# Was previously called `ignored_dirs`, please update your config if you are using that.
-# Added (renamed) on 2025-04-07
+
+# list of additional paths to ignore in this project.
+# Same syntax as gitignore, so you can use * and **.
+# Note: global ignored_paths from serena_config.yml are also applied additively.
 ignored_paths: []
 
 # whether the project is in read-only mode
@@ -13,7 +12,9 @@ ignored_paths: []
 # Added on 2025-04-18
 read_only: false
 
-# list of tool names to exclude. We recommend not excluding any tools, see the readme for more details.
+# list of tool names to exclude.
+# This extends the existing exclusions (e.g. from the global configuration)
+#
 # Below is the complete list of tools for convenience.
 # To make sure you have the latest list of tools, and to view their descriptions, 
 # execute `uv run scripts/print_tool_overview.py`.
@@ -60,6 +61,14 @@ initial_prompt: ""
 # the name by which the project can be referenced within Serena
 project_name: "LARPilot"
 
+# list of tools to include that would otherwise be disabled (particularly optional tools that are disabled by default).
+# This extends the existing inclusions (e.g. from the global configuration).
+included_optional_tools: []
+
+# fixed set of tools to use as the base tool set (if non-empty), replacing Serena's default set of tools.
+# This cannot be combined with non-empty excluded_tools or included_optional_tools.
+fixed_tools: []
+
 # list of mode names to that are always to be included in the set of active modes
 # The full set of modes to be activated is base_modes + default_modes.
 # If the setting is undefined, the base_modes from the global configuration (serena_config.yml) apply.
@@ -75,6 +84,41 @@ base_modes:
 # This setting can, in turn, be overridden by CLI parameters (--mode).
 default_modes:
 
+# time budget (seconds) per tool call for the retrieval of additional symbol information
+# such as docstrings or parameter information.
+# This overrides the corresponding setting in the global configuration; see the documentation there.
+# If null or missing, use the setting from the global configuration.
+symbol_info_budget:
+
+# The language backend to use for this project.
+# If not set, the global setting from serena_config.yml is used.
+# Valid values: LSP, JetBrains
+# Note: the backend is fixed at startup. If a project with a different backend
+# is activated post-init, an error will be returned.
+language_backend:
+
+# line ending convention to use when writing source files.
+# Possible values: unset (use global setting), "lf", "crlf", or "native" (platform default)
+# This does not affect Serena's own files (e.g. memories and configuration files), which always use native line endings.
+line_ending:
+
+# list of regex patterns which, when matched, mark a memory entry as read‑only.
+# Extends the list from the global configuration, merging the two lists.
+read_only_memory_patterns: []
+
+# list of regex patterns for memories to completely ignore.
+# Matching memories will not appear in list_memories or activate_project output
+# and cannot be accessed via read_memory or write_memory.
+# To access ignored memory files, use the read_file tool on the raw file path.
+# Extends the list from the global configuration, merging the two lists.
+# Example: ["_archive/.*", "_episodes/.*"]
+ignored_memory_patterns: []
+
+# advanced configuration option allowing to configure language server-specific options.
+# Maps the language key to the options.
+# Have a look at the docstring of the constructors of the LS implementations within solidlsp (e.g., for C# or PHP) to see which options are available.
+# No documentation on options means no options are available.
+ls_specific_settings: {}
 # list of tools to include that would otherwise be disabled (particularly optional tools that are disabled by default)
 included_optional_tools: []
 
@@ -93,6 +137,10 @@ encoding: utf-8
 #   fortran             fsharp              go                  groovy              haskell
 #   java                julia               kotlin              lua                 markdown
 #   matlab              nix                 pascal              perl                php
+#   php_phpactor        powershell          python              python_jedi         r
+#   rego                ruby                ruby_solargraph     rust                scala
+#   swift               terraform           toml                typescript          typescript_vts
+#   vue                 yaml                zig
 #   powershell          python              python_jedi         r                   rego
 #   ruby                ruby_solargraph     rust                scala               swift
 #   terraform           toml                typescript          typescript_vts      vue

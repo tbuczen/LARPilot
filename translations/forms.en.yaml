@@ -44,6 +44,11 @@ mapping:
     sheet_name: "Spreadsheet Name"
     end_column: "End Column"
     starting_row: "Starting Row"
+    column_placeholder: "Choose a column"
+    preview: "Sheet preview"
+    preview_description: "First rows of the selected sheet. Pick the columns below by their header names."
+    preview_unavailable: "The sheet preview could not be loaded: %message%"
+    preview_empty: "The selected sheet has no rows yet."
   document:
     header_type:
     starting_paragraph:
@@ -56,6 +61,7 @@ larp:
   location: "Location"
   select_location: "Select a location"
   start_date: "Start Date"
+  dates: "Dates"
   end_date: "End Date"
   discord_server_url: "Discord Server URL"
   facebook_event_url: "Facebook Event URL"
@@ -104,6 +110,35 @@ thread:
   characters: "Characters involved in thread"
   tags: "Tags"
   choose_faction: "Choose a faction..."
+knowledge_document:
+  title: "Document Title"
+  title_placeholder: "Enter document title..."
+  content: "Content"
+  owners: "Owners"
+  owners_help: "Story Objects that own this document (Characters, Factions, etc.). Owners and their members (for factions) can access the document."
+  is_public: "Public Document"
+  is_public_help: "Public documents are visible to all characters in the LARP"
+  visible_to: "Additional Visibility"
+  visible_to_help: "Story Objects that can view this document (Characters, Factions, etc.). For factions, all members gain access."
+  category:
+    title: "Category"
+    lore: "Lore & World-Building"
+    history: "History & Background"
+    rules: "Rules & Mechanics"
+    faction: "Faction Information"
+    world: "World Information"
+    call_transcript: "Call transcript"
+    other: "Other"
+  list: "Knowledge Documents"
+  create: "Create Document"
+  edit: "Edit Document"
+  delete: "Delete Document"
+  delete_confirm: "Are you sure you want to delete this document?"
+  empty_list: "No documents found"
+  filter:
+    title: "Title"
+    category: "Category"
+    is_public: "Public Only"
 relation:
   name: "Relation Name"
   description: "Description of the relation"
@@ -112,12 +147,6 @@ relation:
   from: "Relation Owner"
   toType: "Type of target side of relation"
   to: "Related"
-external_reference:
-  name: "Name"
-  mapping_type: "Mapping Type"
-  reference_type: "Type"
-  url: "URL"
-  toType: "Target Type"
 place:
   name: "Unique Place Name"
   description: "Place Description"
@@ -147,6 +176,7 @@ event:
   characters: "Characters involved in event"
   tags: "Tags"
   start_time: 'Start Time'
+  time_range: 'Time'
   end_time: 'End Time'
   choose_faction: 'Choose a faction...'
   known_publicly: 'Known Publicly'
@@ -253,6 +283,7 @@ planning_resource:
   shareable: 'Shareable Resource'
   shareable_help: 'Allow multiple simultaneous bookings'
   available_from: 'Available From'
+  availability: 'Availability'
   available_until: 'Available Until'
   character: 'Linked Character'
   character_placeholder: 'Select character (optional)'
@@ -265,6 +296,7 @@ scheduled_event:
   title_placeholder: 'e.g., Tavern Brawl Scene'
   description: 'Description'
   start_time: 'Start Time'
+  time_range: 'Time'
   end_time: 'End Time'
   setup_minutes: 'Setup Time (minutes)'
   setup_minutes_help: 'Preparation time before event'
@@ -307,6 +339,7 @@ filter:
     status: 'Status'
     location: 'Location'
     start_date: 'Start Date'
+    dates: 'Dates'
     end_date: 'End Date'
     resource: 'Resource'
     character: 'Character/NPC'

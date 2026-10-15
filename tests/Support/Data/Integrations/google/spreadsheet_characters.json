@@ -1,0 +1,29 @@
+{
+    "spreadsheetId": "1qZ3oPZf0cXq8u3k6Yw7mB2nV4sT9rL5aE1dH6jK0gWc",
+    "properties": {
+        "title": "Story bible",
+        "locale": "en_GB",
+        "timeZone": "Europe/Warsaw"
+    },
+    "sheets": [
+        {
+            "properties": {
+                "sheetId": 0,
+                "title": "Cover",
+                "index": 0,
+                "sheetType": "GRID",
+                "gridProperties": {"rowCount": 100, "columnCount": 26}
+            }
+        },
+        {
+            "properties": {
+                "sheetId": 1837206251,
+                "title": "Characters",
+                "index": 1,
+                "sheetType": "GRID",
+                "gridProperties": {"rowCount": 1000, "columnCount": 4}
+            }
+        }
+    ],
+    "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1qZ3oPZf0cXq8u3k6Yw7mB2nV4sT9rL5aE1dH6jK0gWc/edit"
+}

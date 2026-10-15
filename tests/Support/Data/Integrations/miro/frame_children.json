@@ -1,0 +1,83 @@
+{
+    "data": [
+        {
+            "id": "3458764600000000101",
+            "type": "sticky_note",
+            "data": {
+                "content": "<p>Lady Morwen</p>",
+                "shape": "square"
+            },
+            "style": {
+                "fillColor": "light_pink",
+                "textAlign": "center",
+                "textAlignVertical": "middle"
+            },
+            "position": {
+                "x": 200,
+                "y": 150,
+                "origin": "center",
+                "relativeTo": "parent_top_left"
+            },
+            "geometry": {
+                "width": 199.0,
+                "height": 228.0
+            },
+            "parent": {
+                "id": "3458764600000000001",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/frames/3458764600000000001"
+                }
+            },
+            "createdAt": "2026-08-01T10:10:00Z",
+            "createdBy": {"id": "3458764517517852417", "type": "user"},
+            "modifiedAt": "2026-08-01T10:10:00Z",
+            "modifiedBy": {"id": "3458764517517852417", "type": "user"},
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/sticky_notes/3458764600000000101"
+            }
+        },
+        {
+            "id": "3458764600000000102",
+            "type": "sticky_note",
+            "data": {
+                "content": "<p>Cousin Elric</p>",
+                "shape": "square"
+            },
+            "style": {
+                "fillColor": "light_blue",
+                "textAlign": "center",
+                "textAlignVertical": "middle"
+            },
+            "position": {
+                "x": 800,
+                "y": 150,
+                "origin": "center",
+                "relativeTo": "parent_top_left"
+            },
+            "geometry": {
+                "width": 199.0,
+                "height": 228.0
+            },
+            "parent": {
+                "id": "3458764600000000001",
+                "links": {
+                    "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/frames/3458764600000000001"
+                }
+            },
+            "createdAt": "2026-08-01T10:12:00Z",
+            "createdBy": {"id": "3458764517517852417", "type": "user"},
+            "modifiedAt": "2026-08-01T10:12:00Z",
+            "modifiedBy": {"id": "3458764517517852417", "type": "user"},
+            "links": {
+                "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/sticky_notes/3458764600000000102"
+            }
+        }
+    ],
+    "total": 2,
+    "size": 2,
+    "limit": 10,
+    "links": {
+        "self": "https://api.miro.com/v2/boards/uXjVOD6LSME%3D/items?parent_item_id=3458764600000000001&limit=10&cursor="
+    },
+    "type": "cursor-list"
+}

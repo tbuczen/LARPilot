@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Integrations\Miro\Client;
+
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+class MiroApiClientFactory
+{
+    public function __construct(
+        private readonly HttpClientInterface $miroClient,
+    ) {
+    }
+
+    public function create(string $accessToken): MiroApiClient
+    {
+        return new MiroApiClient($this->miroClient, $accessToken);
+    }
+
+    public function createWithoutRateLimitRetries(string $accessToken): MiroApiClient
+    {
+        return new MiroApiClient($this->miroClient, $accessToken, maxRateLimitRetries: 0);
+    }
+}

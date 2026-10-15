@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-use App\Domain\StoryObject\Entity\Enum\TargetType;
 use App\Domain\StoryObject\Entity\Relation;
 use App\Domain\StoryObject\Entity\StoryObject;
 use App\Domain\StoryObject\Form\RelationType;
@@ -44,7 +43,7 @@ class StoryObjectRelationForm extends AbstractController
     public function instantiateForm(): FormInterface
     {
         $formData = $this->initialFormData ?? (new Relation())
-            ->setFromType(TargetType::Character)
+            ->setFromType($this->storyObject::getTargetType())
             ->setFrom($this->storyObject);
 
         return $this->createForm(RelationType::class, $formData, [

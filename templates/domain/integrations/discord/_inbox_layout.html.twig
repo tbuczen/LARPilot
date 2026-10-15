@@ -1,0 +1,13 @@
+{% extends 'backoffice/larp/base.html.twig' %}
+
+{% import 'macros/ui_components.html.twig' as ui %}
+
+{% block larp_title %}{{ 'inbox.title'|trans({}, 'discord') }} - {{ larp.title }}{% endblock %}
+
+{% block larp_content %}
+    {{ ui.page_header('inbox.title'|trans({}, 'discord'), null, null, 'integration-inbox-header') }}
+
+    <div class="border rounded integration-tab-content">
+        {% block tab_content %}{% endblock %}
+    </div>
+{% endblock %}

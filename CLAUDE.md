@@ -99,6 +99,7 @@ LARPilot follows a **Domain-Driven Design (DDD)** approach with modular architec
 - **Map**: Geographic mapping and location management
 - **EventPlanning**: Event scheduling, resource management, conflict detection
 - **Integration**: External service integrations (Google Sheets, Docs, Calendar)
+- **CallTranscript**: Craig call recording import, per-speaker speech-to-text and merged transcripts saved as knowledge documents
 
 **Domain Structure**:
 ```
@@ -193,12 +194,17 @@ LARP entities use Symfony Workflow for status management (`larp_stage_status` st
   - `story_graph_controller.js`: Cytoscape graph visualization
   - `google-places-autocomplete_controller.js`: Google Places address autocomplete
 
+**Button System**: All buttons and `a.btn` links follow one role → color → size scheme (create = `btn-success`, save/submit = `btn-primary`, edit = `btn-outline-primary`, view = `btn-outline-info`, alert = `btn-warning`, delete = `btn-outline-danger`, back/cancel = `btn-outline-secondary`; `btn-sm` in table rows and toolbars). See [`docs/UI_BUTTONS.md`](docs/UI_BUTTONS.md) and the visual reference `docs/ui/ui-guide.html`; styles live in `assets/styles/components/_buttons.scss`.
+
+**Dates & Time**: Show dates as `d-m-Y` and date-times as `d-m-Y H:i` (no seconds); machine values stay ISO. Format strings are defined once in `App\Domain\Core\Service\Helper\DateFormat`; Twig uses `|display_date` / `|display_datetime` / `|display_time`, PHP uses `->format(DateFormat::…)`. Every `DateType`/`DateTimeType` gets the unified Air Datepicker-based picker automatically (form type extensions in `src/Domain/Core/Form/Extension/`); a from–to pair is one picker via `'range_end' => 'endField'` on the start field. See [`docs/UI_DATES.md`](docs/UI_DATES.md).
+
 **Key Frontend Libraries**:
 - Bootstrap 5.3 for UI
 - TomSelect for autocomplete fields
 - Quill for WYSIWYG editing
 - Cytoscape for graph visualization (story graphs and decision trees)
 - SortableJS for drag-and-drop
+- Air Datepicker for every date/date-time field (wrapped by `assets/utils/larpDatePicker.js`)
 
 **Decision Tree Editor** (`decision_tree_controller.js`):
 - Visual editor for Quest and Thread branching narratives
@@ -446,7 +452,7 @@ Backoffice list pages follow a consistent template pattern for displaying filter
                                 <td>{{ tag.description|sanitize_html|default('-') }}</td>
                                 <td>
                                     {# Delete button with modal #}
-                                    <button type="button" class="btn btn-sm btn-danger"
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
                                             data-bs-toggle="modal"
                                             data-bs-target="#deleteModal"
                                             data-item-id="{{ tag.id }}"

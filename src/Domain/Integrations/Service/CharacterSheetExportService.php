@@ -6,10 +6,11 @@ use App\Domain\Integrations\Entity\Enum\ReferenceRole;
 use App\Domain\Integrations\Entity\Enum\ReferenceType;
 use App\Domain\Integrations\Entity\Enum\ResourceType;
 use App\Domain\Integrations\Entity\ExternalReference;
+use App\Domain\Integrations\Entity\LarpIntegration;
 use App\Domain\Integrations\Entity\ObjectFieldMapping;
 use App\Domain\Integrations\Repository\ExternalReferenceRepository;
 use App\Domain\Integrations\Repository\ObjectFieldMappingRepository;
-use App\Domain\Integrations\Service\Google\GoogleClientManager;
+use App\Domain\Integrations\Service\Google\GoogleClientFactoryInterface;
 use App\Domain\StoryObject\Entity\Character;
 use Google\Service\Docs;
 use Google\Service\Docs\BatchUpdateDocumentRequest;
@@ -19,11 +20,17 @@ use Google\Service\Docs\Request as DocsRequest;
 use Google\Service\Docs\SubstringMatchCriteria;
 use Google\Service\Drive;
 use Google\Service\Drive\DriveFile;
+use Google\Service\Exception as GoogleServiceException;
+use Symfony\Component\HttpFoundation\Response;
 
 readonly class CharacterSheetExportService
 {
+    private const DOCX_MIME_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    private const DRAFT_SUFFIX = ' (refreshing)';
+    private const REFERENCE_NAME = 'Character Sheet';
+
     public function __construct(
-        private GoogleClientManager           $googleClientManager,
+        private GoogleClientFactoryInterface $googleClientManager,
         private ObjectFieldMappingRepository $mappingRepository,
         private ExternalReferenceRepository  $referenceRepository,
     ) {
@@ -68,40 +75,27 @@ readonly class CharacterSheetExportService
         $docsService = new Docs($client);
         $driveService = new Drive($client);
 
-        // Determine target folder and document name
+        $templateId = $template->getExternalFile()->getFileId();
         $targetFolderId = $this->getTargetFolderId($character, $directory, $driveService);
         $documentName = $this->generateDocumentName($character);
 
-        // Check if document already exists
-        $existingDocumentId = $this->findExistingDocument($driveService, $targetFolderId, $documentName);
-        $existed = false;
+        $existingDocumentId = $this->findExistingDocumentId($character, $driveService, $targetFolderId, $documentName);
 
-        if ($existingDocumentId) {
-            // Delete existing document to recreate from updated template
-            // This ensures template structure changes are reflected
-            $driveService->files->delete($existingDocumentId);
-            $existed = true;
+        if ($existingDocumentId === null) {
+            $documentId = $this->createDocumentFromTemplate($docsService, $driveService, $templateId, $documentName, $targetFolderId, $character);
+        } else {
+            $this->refreshDocumentFromTemplate($docsService, $driveService, $templateId, $existingDocumentId, $documentName, $targetFolderId, $character);
+            $documentId = $existingDocumentId;
         }
 
-        // Create new document from template (always from latest template)
-        $newDocumentId = $this->createDocumentFromTemplate(
-            $docsService,
-            $driveService,
-            $template->getExternalFile()->getFileId(),
-            $documentName,
-            $targetFolderId,
-            $character
-        );
+        $documentUrl = "https://docs.google.com/document/d/{$documentId}/edit";
 
-        $documentUrl = "https://docs.google.com/document/d/{$newDocumentId}/edit";
-
-        // Create or update external reference
-        $this->createOrUpdateExternalReference($character, $newDocumentId, $documentUrl, $integration->getProvider());
+        $this->createOrUpdateExternalReference($character, $documentId, $documentUrl, $integration);
 
         return [
-            'documentId' => $newDocumentId,
+            'documentId' => $documentId,
             'documentUrl' => $documentUrl,
-            'existed' => $existed,
+            'existed' => $existingDocumentId !== null,
         ];
     }
 
@@ -184,7 +178,32 @@ readonly class CharacterSheetExportService
         return sprintf('%s - Character Sheet', $character->getTitle());
     }
 
-    private function findExistingDocument(Drive $driveService, string $folderId, string $documentName): ?string
+    private function findExistingDocumentId(Character $character, Drive $driveService, string $folderId, string $documentName): ?string
+    {
+        $referencedDocumentId = $this->findCharacterSheetReference($character)?->getExternalId();
+        if ($referencedDocumentId !== null && $this->isLiveDocument($driveService, $referencedDocumentId)) {
+            return $referencedDocumentId;
+        }
+
+        return $this->findDocumentByName($driveService, $folderId, $documentName);
+    }
+
+    private function isLiveDocument(Drive $driveService, string $documentId): bool
+    {
+        try {
+            $document = $driveService->files->get($documentId, ['fields' => 'id, trashed']);
+        } catch (GoogleServiceException $exception) {
+            if (in_array($exception->getCode(), [Response::HTTP_NOT_FOUND, Response::HTTP_FORBIDDEN], true)) {
+                return false;
+            }
+
+            throw $exception;
+        }
+
+        return !$document->getTrashed();
+    }
+
+    private function findDocumentByName(Drive $driveService, string $folderId, string $documentName): ?string
     {
         $query = sprintf(
             "'%s' in parents and name = '%s' and mimeType = 'application/vnd.google-apps.document' and trashed = false",
@@ -203,6 +222,37 @@ readonly class CharacterSheetExportService
         }
 
         return null;
+    }
+
+    private function refreshDocumentFromTemplate(
+        Docs   $docsService,
+        Drive  $driveService,
+        string $templateId,
+        string $existingDocumentId,
+        string $documentName,
+        string $targetFolderId,
+        Character $character
+    ): void {
+        $draftDocumentId = $this->createDocumentFromTemplate(
+            $docsService,
+            $driveService,
+            $templateId,
+            $documentName . self::DRAFT_SUFFIX,
+            $targetFolderId,
+            $character
+        );
+
+        try {
+            $exportedDraft = $driveService->files->export($draftDocumentId, self::DOCX_MIME_TYPE, ['alt' => 'media']);
+            $driveService->files->update($existingDocumentId, new DriveFile(['name' => $documentName]), [
+                'data' => (string) $exportedDraft->getBody(),
+                'mimeType' => self::DOCX_MIME_TYPE,
+                'uploadType' => 'multipart',
+                'fields' => 'id',
+            ]);
+        } finally {
+            $driveService->files->delete($draftDocumentId);
+        }
     }
 
     private function createDocumentFromTemplate(
@@ -349,33 +399,42 @@ readonly class CharacterSheetExportService
         Character $character,
         string $documentId,
         string $documentUrl,
-        \App\Domain\Integrations\Entity\Enum\LarpIntegrationProvider $provider
+        LarpIntegration $integration
     ): void {
-        // Check if reference already exists for this character and document type
-        $existingReference = $this->referenceRepository->findOneBy([
-            'storyObject' => $character,
-            'referenceType' => ReferenceType::Document,
-            'role' => ReferenceRole::Primary,
-        ]);
+        $existingReference = $this->findCharacterSheetReference($character);
 
         if ($existingReference) {
             // Update existing reference
             $existingReference->setExternalId($documentId);
             $existingReference->setUrl($documentUrl);
-            $existingReference->setName('Character Sheet');
+            $existingReference->setName(self::REFERENCE_NAME);
             $this->referenceRepository->save($existingReference);
         } else {
             // Create new reference
             $reference = new ExternalReference();
             $reference->setStoryObject($character);
-            $reference->setProvider($provider);
+            $reference->setProvider($integration->getProvider());
             $reference->setExternalId($documentId);
             $reference->setReferenceType(ReferenceType::Document);
             $reference->setRole(ReferenceRole::Primary);
-            $reference->setName('Character Sheet');
+            $reference->setName(self::REFERENCE_NAME);
             $reference->setUrl($documentUrl);
+            $creator = $character->getCreatedBy() ?? $integration->getCreatedBy();
+            if ($creator !== null) {
+                $reference->setCreatedBy($creator);
+            }
             $this->referenceRepository->save($reference);
         }
+    }
+
+    private function findCharacterSheetReference(Character $character): ?ExternalReference
+    {
+        return $this->referenceRepository->findOneBy([
+            'storyObject' => $character,
+            'referenceType' => ReferenceType::Document,
+            'role' => ReferenceRole::Primary,
+            'name' => self::REFERENCE_NAME,
+        ]);
     }
 
     private function stripHtml(?string $html): string

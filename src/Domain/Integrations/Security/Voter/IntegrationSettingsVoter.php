@@ -4,7 +4,6 @@ namespace App\Domain\Integrations\Security\Voter;
 
 use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Larp;
-use App\Domain\Core\Entity\LarpParticipant;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -27,9 +26,21 @@ class IntegrationSettingsVoter extends Voter
             return false;
         }
 
-        $participants = $subject->getParticipants();
-        /** @var LarpParticipant|null $userOrganizer */
-        $userOrganizer = $participants->filter(fn (LarpParticipant $participant): bool => $participant->getUser()->getId() === $user->getId() && $participant->isAdmin())->first();
-        return $userOrganizer !== null;
+        if (!$user->isApproved()) {
+            return false;
+        }
+
+        foreach ($subject->getParticipants() as $participant) {
+            $participantUser = $participant->getUser();
+            if (!$participantUser instanceof User) {
+                continue;
+            }
+
+            if ($participantUser->getId()->equals($user->getId()) && $participant->isAdmin()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

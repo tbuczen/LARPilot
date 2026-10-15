@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { Timeline } from 'vis-timeline';
+import { formatDisplayDateTime } from '../utils/larpDatePicker.js';
 
 /**
  * Interactive timeline controller using vis-timeline
@@ -321,6 +322,10 @@ export default class extends Controller {
         }
     }
 
+    formatDateTime(date) {
+        return formatDisplayDateTime(date);
+    }
+
     async showCreateModal(clickedDate) {
         return new Promise((resolve) => {
             // Create modal
@@ -351,13 +356,13 @@ export default class extends Controller {
                                         <textarea class="form-control" id="eventDescription" rows="3"></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Time: ${clickedDate.toLocaleString()}</label>
+                                        <label class="form-label">Time: ${this.formatDateTime(clickedDate)}</label>
                                         <input type="hidden" id="eventStartTime" value="${clickedDate.toISOString()}">
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn btn-primary" id="saveEventBtn">Create</button>
                             </div>
                         </div>

@@ -37,3 +37,11 @@ knpu_oauth2_client:
             client_id: '%env(OAUTH_GOOGLE_CLIENT_ID)%'
             client_secret: '%env(OAUTH_GOOGLE_CLIENT_SECRET)%'
             redirect_route: backoffice_dashboard
+        integration_miro:
+            type: generic
+            provider_class: App\Domain\Integrations\Miro\OAuth\MiroOAuthProvider
+            client_id: '%env(OAUTH_MIRO_CLIENT_ID)%'
+            client_secret: '%env(OAUTH_MIRO_CLIENT_SECRET)%'
+            redirect_route: backoffice_larp_connect_integration_check
+            redirect_params:
+                provider: integration_miro
