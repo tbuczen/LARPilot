@@ -8,6 +8,9 @@ Plain-language guides for LARP organizers.
   channels, decide what is organizer-only, link threads to story objects.
 - [Connect Miro](connect-miro.md) – sign in, pick boards, keep the connection
   alive, tag boards for a later import.
+- [Record and transcribe Discord calls](record-and-transcribe-discord-calls.md)
+  – use Craig, NotesBot or DiscMeet to keep planning calls as text, with
+  Polish transcripts and who said what.
 - [Discord & Miro Q&A](integrations-faq.md) – delays, privacy, private
   threads, disconnecting.
 
