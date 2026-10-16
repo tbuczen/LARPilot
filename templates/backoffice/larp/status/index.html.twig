@@ -11,7 +11,7 @@
             </div>
             <div class="card-body">
                 <div class="d-flex align-items-center mb-3">
-                    <span class="badge badge-{{ currentStatus.value == 'DRAFT' ? 'secondary' : (currentStatus.value == 'CONFIRMED' ? 'success' : 'primary') }} fs-5 me-3">
+                    <span class="badge text-bg-{{ currentStatus.value == 'DRAFT' ? 'secondary' : (currentStatus.value == 'CONFIRMED' ? 'success' : 'primary') }} fs-5 me-3">
                         {{ currentStatus.value }}
                     </span>
                     <div>
@@ -33,8 +33,8 @@
                                     onclick="return confirm('{{ 'larp.status.confirm_transition'|trans({'%transition%': transition.label}) }}')">
                                 {{ transition.label }}
                                 {% if transition.to %}
-                                    <i class="fas fa-arrow-right"></i>
-                                    <span class="badge badge-light">{{ transition.to }}</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                    <span class="badge text-bg-secondary">{{ transition.to }}</span>
                                 {% endif %}
                             </button>
                         </form>
@@ -43,8 +43,8 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
                                 {{ transition.label }}
                                 {% if transition.to %}
-                                    <i class="fas fa-arrow-right"></i>
-                                    <span class="badge badge-light">{{ transition.to }}</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                    <span class="badge text-bg-secondary">{{ transition.to }}</span>
                                 {% endif %}
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -53,7 +53,7 @@
                             <ul class="dropdown-menu">
                                 <li><h6 class="dropdown-header">{{ 'larp.status.requirement.label'|trans }}</h6></li>
                                 {% for error in transition.validationErrors %}
-                                <li><span class="dropdown-item-text text-danger"><i class="fas fa-exclamation-circle"></i> {{ error }}</span></li>
+                                <li><span class="dropdown-item-text text-danger"><i class="bi bi-exclamation-circle"></i> {{ error }}</span></li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -142,14 +142,14 @@
                 <div class="workflow-diagram">
                     {% for status in allStatuses %}
                     <div class="workflow-step {{ status == currentStatus ? 'active' : '' }}">
-                        <span class="badge badge-{{ status.value == currentStatus.value ? 'primary' : 'light' }}">
+                        <span class="badge text-bg-{{ status.value == currentStatus.value ? 'primary' : 'secondary' }}">
                             {{ status.value }}
                         </span>
                         <small class="d-block mt-1">{{ ('larp.status.' ~ status.value|lower)|trans }}</small>
                     </div>
                     {% if not loop.last %}
                     <div class="workflow-arrow">
-                        <i class="fas fa-arrow-down"></i>
+                        <i class="bi bi-arrow-down"></i>
                     </div>
                     {% endif %}
                     {% endfor %}
@@ -164,13 +164,13 @@
             <div class="card-body">
                 <div class="mb-2">
                     <strong>{{ 'larp.status.visible_everyone'|trans }}:</strong>
-                    <span class="badge badge-{{ currentStatus.isVisibleForEveryone() ? 'success' : 'secondary' }}">
+                    <span class="badge text-bg-{{ currentStatus.isVisibleForEveryone() ? 'success' : 'secondary' }}">
                         {{ currentStatus.isVisibleForEveryone() ? 'yes'|trans : 'no'|trans }}
                     </span>
                 </div>
                 <div>
                     <strong>{{ 'larp.status.visible_organizers'|trans }}:</strong>
-                    <span class="badge badge-{{ currentStatus.isVisibleForOrganizers() ? 'success' : 'secondary' }}">
+                    <span class="badge text-bg-{{ currentStatus.isVisibleForOrganizers() ? 'success' : 'secondary' }}">
                         {{ currentStatus.isVisibleForOrganizers() ? 'yes'|trans : 'no'|trans }}
                     </span>
                 </div>
@@ -190,7 +190,7 @@
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#publishRequirements">
-                                <i class="fas fa-upload me-2"></i> {{ 'larp.status.requirement.publish'|trans }}
+                                <i class="bi bi-upload me-2"></i> {{ 'larp.status.requirement.publish'|trans }}
                             </button>
                         </h2>
                         <div id="publishRequirements"
@@ -199,19 +199,19 @@
                             <div class="accordion-body">
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.location ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi {{ larp.location ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' }}"></i>
                                         {{ 'larp.status.requirement.location'|trans }}
                                     </li>
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.description ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi {{ larp.description ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' }}"></i>
                                         {{ 'larp.status.requirement.description'|trans }}
                                     </li>
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.startDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi {{ larp.startDate ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' }}"></i>
                                         {{ 'larp.status.requirement.start_date'|trans }}
                                     </li>
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.endDate ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi {{ larp.endDate ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' }}"></i>
                                         {{ 'larp.status.requirement.end_date'|trans }}
                                     </li>
                                 </ul>
@@ -226,7 +226,7 @@
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#inquiriesRequirements">
-                                <i class="fas fa-users me-2"></i> {{ 'larp.status.requirement.inquiries'|trans }}
+                                <i class="bi bi-people me-2"></i> {{ 'larp.status.requirement.inquiries'|trans }}
                             </button>
                         </h2>
                         <div id="inquiriesRequirements"
@@ -236,7 +236,7 @@
                                 <p class="text-muted small mb-2">{{ 'larp.status.requirement.all_publish_plus'|trans }}</p>
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
-                                        <i class="fas {{ larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi {{ larp.characters|length > 0 ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' }}"></i>
                                         {{ 'larp.status.requirement.has_character'|trans }}
                                         {% if larp.characters|length > 0 %}
                                             <span class="badge bg-secondary ms-1">{{ larp.characters|length }}</span>
@@ -244,7 +244,7 @@
                                     </li>
                                     <li class="mb-2">
                                         {% set charactersWithoutDesc = larp.characters|filter(c => not c.description) %}
-                                        <i class="fas {{ charactersWithoutDesc|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi {{ charactersWithoutDesc|length == 0 and larp.characters|length > 0 ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' }}"></i>
                                         {{ 'larp.status.requirement.characters_described'|trans }}
                                         {% if charactersWithoutDesc|length > 0 %}
                                             <span class="badge bg-warning ms-1">{{ 'larp.status.requirement.missing'|trans({'%count%': charactersWithoutDesc|length}) }}</span>
@@ -262,7 +262,7 @@
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#confirmRequirements">
-                                <i class="fas fa-check-double me-2"></i> {{ 'larp.status.requirement.confirm'|trans }}
+                                <i class="bi bi-check2-all me-2"></i> {{ 'larp.status.requirement.confirm'|trans }}
                             </button>
                         </h2>
                         <div id="confirmRequirements"
@@ -273,7 +273,7 @@
                                 <ul class="list-unstyled mb-0">
                                     <li class="mb-2">
                                         {% set unassignedChars = larp.characters|filter(c => c.larpParticipant is null) %}
-                                        <i class="fas {{ unassignedChars|length == 0 and larp.characters|length > 0 ? 'fa-check-circle text-success' : 'fa-times-circle text-danger' }}"></i>
+                                        <i class="bi {{ unassignedChars|length == 0 and larp.characters|length > 0 ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger' }}"></i>
                                         {{ 'larp.status.requirement.characters_assigned'|trans }}
                                         {% if unassignedChars|length > 0 %}
                                             <span class="badge bg-warning ms-1">{{ 'larp.status.requirement.unassigned'|trans({'%count%': unassignedChars|length}) }}</span>
@@ -302,7 +302,7 @@
 }
 
 .workflow-step.active {
-    background-color: #e3f2fd;
+    background-color: rgba(33, 150, 243, 0.12);
     border: 2px solid #2196f3;
 }
 
