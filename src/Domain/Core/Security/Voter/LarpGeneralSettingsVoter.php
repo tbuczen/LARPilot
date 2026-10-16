@@ -33,11 +33,8 @@ class LarpGeneralSettingsVoter extends Voter
             return false;
         }
 
-        // Check if user is an organizer for this specific LARP
-        $participants = $subject->getParticipants();
-        /** @var LarpParticipant|null $userOrganizer */
-        $userOrganizer = $participants->filter(fn (LarpParticipant $participant): bool => $participant->getUser()->getId() === $user->getId() && $participant->isAdmin())->first();
-        // If the user is not participating as an organizer for this LARP, deny access
-        return $userOrganizer !== null;
+        return $subject->getParticipants()->exists(
+            fn (int $key, LarpParticipant $participant): bool => $participant->getUser()->getId()->equals($user->getId()) && $participant->isAdmin()
+        );
     }
 }

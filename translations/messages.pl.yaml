@@ -132,6 +132,27 @@ larp:
     warning: 'Ta akcja jest nieodwracalna! Wszystkie dane powiązane z tym LARPem zostaną trwale usunięte.'
     confirm: 'Czy na pewno chcesz usunąć %title%?'
     success: 'LARP "%title%" został usunięty.'
+    button: 'Usuń LARPa'
+    draft_only: 'Można usunąć tylko LARPa w stanie Szkic. Jeśli przeszedł już dalej, odwołaj go.'
+    consequences: 'Usunięte zostaną wszystkie postacie, wątki, questy, zgłoszenia, uczestnicy, zaproszenia, ankiety, mapy, galerie, zadania kanban, nagrania rozmów, integracje i zapisane filtry tego LARPa. Połączone integracje zostaną najpierw rozłączone.'
+    type_title: 'Aby potwierdzić, wpisz tytuł LARPa: %title%'
+    title_placeholder: 'Tytuł LARPa'
+    confirm_button: 'Usuń trwale'
+    title_mismatch: 'Wpisany tytuł się nie zgadza. LARP nie został usunięty.'
+    invalid_token: 'Sesja wygasła. Spróbuj ponownie.'
+  cancel:
+    button: 'Odwołaj LARPa'
+    title: 'Odwołaj LARPa'
+    confirm: 'Czy na pewno chcesz odwołać %title%?'
+    consequences: 'Odwołania nie można cofnąć. LARP pozostanie widoczny na swojej stronie publicznej z informacją „Odwołany”, nowe zgłoszenia i ankiety nie będą przyjmowane, a gracze nie będą mogli już potwierdzić ani odrzucić zaproponowanych postaci. Wszystkie dane zostaną zachowane.'
+    confirm_button: 'Tak, odwołaj tego LARPa'
+    keep: 'Zachowaj LARPa'
+    success: 'LARP został odwołany.'
+    not_available: 'Nie można odwołać zakończonego ani już odwołanego LARPa.'
+  cancelled_notice:
+    title: 'Ten LARP został odwołany'
+    description: 'Organizatorzy odwołali to wydarzenie. Zgłoszenia są zamknięte.'
+  applications_closed: 'Zgłoszenia na tego LARPa są zamknięte.'
   plan:
     your_plan: 'Twój Plan'
     unlimited_larps: 'Nielimitowane LARPy'
@@ -554,6 +575,7 @@ larp:
       unassigned: "Nieprzypisane: %count%"
     social_visual_settings: "Ustawienia społecznościowe i wizualne"
     current_header_image: "Obecny obraz nagłówka"
+    danger_zone: "Strefa niebezpieczna"
   properties: 'Właściwości'
 
   browse_characters: Przeglądaj dostępne postacie

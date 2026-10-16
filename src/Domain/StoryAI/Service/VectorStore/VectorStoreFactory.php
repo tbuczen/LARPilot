@@ -23,9 +23,9 @@ final readonly class VectorStoreFactory
     ) {
     }
 
-    public function create(string $dsn): VectorStoreInterface
+    public function create(?string $dsn): VectorStoreInterface
     {
-        $dsn = trim($dsn);
+        $dsn = trim($dsn ?? '');
 
         if (empty($dsn) || $dsn === 'null://') {
             $this->logger?->info('Vector store disabled (DSN not configured)');

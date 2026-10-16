@@ -52,9 +52,17 @@ Handles HTTP requests for:
 
 ## State Flow
 ```
-DRAFT → WIP → PUBLISHED → INQUIRIES → CONFIRMED → COMPLETED 
-                 └─────────┴─→ CANCELLED ←─┘
-``` 
+DRAFT → WIP → PUBLISHED → INQUIRIES → CONFIRMED → COMPLETED
+  └──────┴────────┴───────────┴───────────┴─→ CANCELLED
+```
+
+CANCELLED and COMPLETED are terminal: a completed LARP has already happened and cannot be cancelled, and a cancelled LARP cannot be reopened.
+
+### Cancelling and deleting
+
+- **Cancel** (`to_cancelled`): available from DRAFT, WIP, PUBLISHED, INQUIRIES and CONFIRMED to participants with the `ROLE_ORGANIZER` role (`LarpCancelVoter`, attribute `CANCEL_LARP`). The Manage Status page asks for confirmation in a modal. A cancelled LARP keeps all its data; its public page shows a "Cancelled" notice and the application form, survey submission and character confirm/decline are closed.
+- **Delete**: only while the LARP is a DRAFT, by participants with `ROLE_ORGANIZER` (or super admins), via `LarpDeleteVoter` (`DELETE_LARP`). The organizer must type the LARP title. `LarpDeletionService` disconnects connected integrations through their `ConnectableIntegrationInterface::disconnect()` (the Discord bot leaves the server only if no other LARP uses it), then hard-deletes the LARP and every row it owns in one transaction, in dependency order. Other domains clean their stored files through `LarpDeletingEvent` (call recordings, gallery uploads, map images) and `LarpDeletedEvent` (AI embeddings).
+- When a new table gets a foreign key to `larp` (or to anything owned by a LARP), add it to `LarpDeletionService::STATEMENTS`; `LarpDeletionCest::deletionServiceCoversEveryTableReferencingLarp` fails until the list of tables referencing `larp` is updated.
 
 ### State Descriptions
 

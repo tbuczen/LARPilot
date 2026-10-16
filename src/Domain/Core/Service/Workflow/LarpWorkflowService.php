@@ -10,6 +10,8 @@ use Symfony\Component\Workflow\WorkflowInterface;
 
 readonly class LarpWorkflowService
 {
+    public const CANCEL_TRANSITION = 'to_cancelled';
+
     public function __construct(
         private WorkflowInterface          $larpStageStatusStateMachine,
         private EntityManagerInterface     $entityManager,

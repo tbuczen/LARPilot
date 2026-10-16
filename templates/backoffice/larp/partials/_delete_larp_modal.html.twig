@@ -1,0 +1,49 @@
+<div class="modal fade"
+     id="deleteLarpModal-{{ larp.id }}"
+     tabindex="-1"
+     aria-labelledby="deleteLarpModalLabel-{{ larp.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post"
+              action="{{ path('backoffice_larp_delete', {larp: larp.id}) }}"
+              class="modal-content"
+              name="larp_delete"
+              data-controller="type-to-confirm"
+              data-type-to-confirm-expected-value="{{ larp.title }}">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteLarpModalLabel-{{ larp.id }}">
+                    <i class="bi bi-exclamation-triangle text-danger"></i>
+                    {{ 'larp.delete.title'|trans }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ 'larp.delete.confirm'|trans({'%title%': larp.title}) }}</p>
+                <div class="alert alert-danger">
+                    <strong>{{ 'larp.delete.warning'|trans }}</strong>
+                    <p class="mb-0 mt-2">{{ 'larp.delete.consequences'|trans }}</p>
+                </div>
+                <label class="form-label" for="deleteLarpConfirmTitle-{{ larp.id }}">
+                    {{ 'larp.delete.type_title'|trans({'%title%': larp.title}) }}
+                </label>
+                <input type="text"
+                       class="form-control"
+                       id="deleteLarpConfirmTitle-{{ larp.id }}"
+                       name="confirmTitle"
+                       autocomplete="off"
+                       placeholder="{{ 'larp.delete.title_placeholder'|trans }}"
+                       data-type-to-confirm-target="input"
+                       data-action="input->type-to-confirm#check">
+                <input type="hidden" name="_token" value="{{ csrf_token('larp_delete_' ~ larp.id) }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i>{{ 'cancel'|trans }}
+                </button>
+                <button type="submit" class="btn btn-danger" data-type-to-confirm-target="submit" disabled>
+                    <i class="bi bi-trash"></i>{{ 'larp.delete.confirm_button'|trans }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

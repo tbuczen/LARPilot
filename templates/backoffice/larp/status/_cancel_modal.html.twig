@@ -1,0 +1,33 @@
+<div class="modal fade"
+     id="cancelLarpModal"
+     tabindex="-1"
+     aria-labelledby="cancelLarpModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="post"
+              action="{{ path('backoffice_larp_status_transition', {larp: larp.id, transitionName: 'to_cancelled'}) }}"
+              class="modal-content"
+              name="larp_cancel">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelLarpModalLabel">
+                    <i class="bi bi-exclamation-triangle text-warning"></i>
+                    {{ 'larp.cancel.title'|trans }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'close'|trans }}"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ 'larp.cancel.confirm'|trans({'%title%': larp.title}) }}</p>
+                <div class="alert alert-warning mb-0">{{ 'larp.cancel.consequences'|trans }}</div>
+                <input type="hidden" name="_token" value="{{ csrf_token('larp_transition_' ~ larp.id) }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i>{{ 'larp.cancel.keep'|trans }}
+                </button>
+                <button type="submit" class="btn btn-warning">
+                    <i class="bi bi-x-octagon"></i>{{ 'larp.cancel.confirm_button'|trans }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

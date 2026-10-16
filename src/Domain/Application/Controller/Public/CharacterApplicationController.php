@@ -26,6 +26,10 @@ class CharacterApplicationController extends BaseController
         LarpApplicationRepository $repository,
         EntityManagerInterface $em
     ): Response {
+        if ($larp->isCancelled()) {
+            return $this->redirectWithApplicationsClosed($larp);
+        }
+
         if (!$larp->getStatus()?->isVisibleForEveryone()) {
             throw $this->createAccessDeniedException();
         }
@@ -85,6 +89,10 @@ class CharacterApplicationController extends BaseController
             throw $this->createAccessDeniedException('public.application.not_your_application');
         }
 
+        if ($larp->isCancelled()) {
+            return $this->redirectWithApplicationsClosed($larp);
+        }
+
         // Verify the application is in OFFERED status
         if ($application->getStatus() !== SubmissionStatus::OFFERED) {
             $this->addFlash('error', 'public.application.not_offered');
@@ -120,6 +128,10 @@ class CharacterApplicationController extends BaseController
             throw $this->createAccessDeniedException('public.application.not_your_application');
         }
 
+        if ($larp->isCancelled()) {
+            return $this->redirectWithApplicationsClosed($larp);
+        }
+
         // Verify the application is in OFFERED status
         if ($application->getStatus() !== SubmissionStatus::OFFERED) {
             $this->addFlash('error', 'public.application.not_offered');
@@ -140,5 +152,12 @@ class CharacterApplicationController extends BaseController
             'application' => $application,
             'character' => $character,
         ]);
+    }
+
+    private function redirectWithApplicationsClosed(Larp $larp): Response
+    {
+        $this->addFlash('warning', $this->translator->trans('larp.applications_closed'));
+
+        return $this->redirectToRoute('public_larp_details', ['slug' => $larp->getSlug()]);
     }
 }
