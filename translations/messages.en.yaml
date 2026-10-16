@@ -175,7 +175,6 @@ larp:
   character_application: 'Apply for LARP'
   already_participant: 'You are already participating!'
   login_required_to_apply: 'You need to be logged in to apply'
-  login_required_description: 'messages'
   application_already_submitted: 'You have already submitted application'
   application_open: 'Application form is open'
   application_open_description: 'LARP is ready to collect Your application'
