@@ -79,7 +79,7 @@ class GalleryFileService
         rmdir($directory);
     }
 
-    private function getGalleryUploadDirectory(Gallery $gallery): string
+    public function getGalleryUploadDirectory(Gallery $gallery): string
     {
         return $this->parameterBag->get('kernel.project_dir')
             . '/public/uploads/galleries/'

@@ -32,7 +32,7 @@ framework:
                     from: [INQUIRIES, PUBLISHED]
                     to: CONFIRMED
                 to_cancelled:
-                    from: [CONFIRMED, INQUIRIES, PUBLISHED]
+                    from: [DRAFT, WIP, PUBLISHED, INQUIRIES, CONFIRMED]
                     to: CANCELLED
                 to_completed:
                     from: CONFIRMED

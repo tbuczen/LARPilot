@@ -6,6 +6,7 @@ namespace Tests\Support\Factory\Survey;
 
 use App\Domain\Application\Entity\Enum\SubmissionStatus;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
+use App\Domain\Survey\Entity\Enum\SurveyQuestionType;
 use App\Domain\Survey\Entity\SurveyResponse;
 use Tests\Support\Factory\Account\UserFactory;
 use Tests\Support\Factory\Core\LarpFactory;

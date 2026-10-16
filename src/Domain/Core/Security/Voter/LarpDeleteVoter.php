@@ -33,12 +33,14 @@ class LarpDeleteVoter extends Voter
             return false;
         }
 
-        // Super admins can always delete LARPs
+        if (!$subject->isDraft()) {
+            return false;
+        }
+
         if (in_array('ROLE_SUPER_ADMIN', $user->getRoles(), true)) {
             return true;
         }
 
-        // Check if user is an organizer of this LARP
         $participant = $this->participantRepository->findOneBy([
             'larp' => $subject,
             'user' => $user,
@@ -48,7 +50,6 @@ class LarpDeleteVoter extends Voter
             return false;
         }
 
-        // Only organizers can delete LARPs
         return in_array(ParticipantRole::ORGANIZER, $participant->getRoles(), true);
     }
 }

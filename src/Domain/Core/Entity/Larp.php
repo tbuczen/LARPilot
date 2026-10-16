@@ -209,6 +209,16 @@ class Larp implements Timestampable, CreatorAwareInterface, \Stringable
         return $this->status;
     }
 
+    public function isCancelled(): bool
+    {
+        return $this->status?->isCancelled() ?? false;
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->status?->isDraft() ?? true;
+    }
+
     public function setStatus(LarpStageStatus $status): static
     {
         $this->status = $status;

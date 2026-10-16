@@ -37,6 +37,11 @@ final readonly class CallRecordingStorage
 
     public function removeAll(CallRecording $recording): void
     {
-        $this->filesystem->remove($this->storageDirectory . '/' . $recording->getId()->toRfc4122());
+        $this->filesystem->remove($this->recordingDirectory($recording));
+    }
+
+    public function recordingDirectory(CallRecording $recording): string
+    {
+        return $this->storageDirectory . '/' . $recording->getId()->toRfc4122();
     }
 }

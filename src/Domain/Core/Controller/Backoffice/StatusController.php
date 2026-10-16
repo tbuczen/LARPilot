@@ -4,6 +4,8 @@ namespace App\Domain\Core\Controller\Backoffice;
 
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Core\Form\LarpPropertiesType;
+use App\Domain\Core\Security\Voter\LarpCancelVoter;
+use App\Domain\Core\Security\Voter\LarpDeleteVoter;
 use App\Domain\Core\Service\Workflow\LarpWorkflowService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/backoffice/larp/{larp}/status', name: 'backoffice_larp_status_')]
 class StatusController extends AbstractController
@@ -22,6 +25,7 @@ class StatusController extends AbstractController
         private readonly LarpWorkflowService $workflowService,
         private readonly EntityManagerInterface $entityManager,
         private readonly SluggerInterface $slugger,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -31,6 +35,7 @@ class StatusController extends AbstractController
         $this->denyAccessUnlessGranted('MANAGE_LARP_GENERAL_SETTINGS', $larp);
 
         $availableTransitions = $this->workflowService->getAvailableTransitionsWithLabels($larp);
+        unset($availableTransitions[LarpWorkflowService::CANCEL_TRANSITION]);
         $currentStatus = $larp->getStatus();
         $allStatuses = $this->workflowService->getAllStatuses();
 
@@ -42,6 +47,8 @@ class StatusController extends AbstractController
             'availableTransitions' => $availableTransitions,
             'allStatuses' => $allStatuses,
             'propertiesForm' => $propertiesForm->createView(),
+            'canCancel' => $this->isGranted(LarpCancelVoter::CANCEL, $larp),
+            'canDelete' => $this->isGranted(LarpDeleteVoter::DELETE, $larp),
         ]);
     }
 
@@ -87,6 +94,11 @@ class StatusController extends AbstractController
     {
         $this->denyAccessUnlessGranted('MANAGE_LARP_GENERAL_SETTINGS', $larp);
 
+        $isCancellation = $transitionName === LarpWorkflowService::CANCEL_TRANSITION;
+        if ($isCancellation) {
+            $this->denyAccessUnlessGranted(LarpCancelVoter::CANCEL, $larp);
+        }
+
         if (!$this->isCsrfTokenValid('larp_transition_' . $larp->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Invalid CSRF token.');
             return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);
@@ -108,7 +120,9 @@ class StatusController extends AbstractController
 
         $success = $this->workflowService->applyTransition($larp, $transitionName);
 
-        if ($success) {
+        if ($success && $isCancellation) {
+            $this->addFlash('success', $this->translator->trans('larp.cancel.success'));
+        } elseif ($success) {
             $this->addFlash('success', 'Status updated successfully.');
         } else {
             $this->addFlash('error', 'Failed to update status.');

@@ -61,11 +61,45 @@
                         {% endfor %}
                     </div>
                 </div>
-                {% else %}
+                {% elseif not canCancel %}
                 <div class="alert alert-info">
                     {{ 'larp.status.no_transitions'|trans }}
                 </div>
                 {% endif %}
+            </div>
+        </div>
+
+        <div class="card mt-4 border-danger">
+            <div class="card-header">
+                <h5 class="card-title mb-0">{{ 'larp.status.danger_zone'|trans }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+                    <div>
+                        <h6 class="mb-1">{{ 'larp.cancel.title'|trans }}</h6>
+                        <small class="text-muted">
+                            {{ canCancel ? 'larp.cancel.consequences'|trans : 'larp.cancel.not_available'|trans }}
+                        </small>
+                    </div>
+                    {% if canCancel %}
+                        <button type="button" class="btn btn-warning text-nowrap" data-bs-toggle="modal" data-bs-target="#cancelLarpModal">
+                            <i class="bi bi-x-octagon"></i>{{ 'larp.cancel.button'|trans }}
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-3">
+                    <div>
+                        <h6 class="mb-1">{{ 'larp.delete.title'|trans }}</h6>
+                        <small class="text-muted">
+                            {{ canDelete ? 'larp.delete.warning'|trans : 'larp.delete.draft_only'|trans }}
+                        </small>
+                    </div>
+                    {% if canDelete %}
+                        <button type="button" class="btn btn-outline-danger text-nowrap" data-bs-toggle="modal" data-bs-target="#deleteLarpModal-{{ larp.id }}">
+                            <i class="bi bi-trash"></i>{{ 'larp.delete.button'|trans }}
+                        </button>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
@@ -288,6 +322,13 @@
         </div>
     </div>
 </div>
+
+{% if canCancel %}
+    {% include 'backoffice/larp/status/_cancel_modal.html.twig' %}
+{% endif %}
+{% if canDelete %}
+    {% include 'backoffice/larp/partials/_delete_larp_modal.html.twig' %}
+{% endif %}
 
 <style>
 .workflow-diagram {

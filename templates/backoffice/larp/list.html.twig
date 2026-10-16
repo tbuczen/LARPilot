@@ -63,7 +63,9 @@
                                     <td>{{ larp.startDate|display_date }}</td>
                                     <td>
                                         {% if is_granted('DELETE_LARP', larp) %}
-                                            {{ ui.delete_button(larp.id, larp.title, path('backoffice_larp_delete', {'larp': larp.id})) }}
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteLarpModal-{{ larp.id }}">
+                                                <i class="bi bi-trash"></i>{{ 'delete'|trans }}
+                                            </button>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -77,6 +79,7 @@
         </div>
     </div>
 
-    {# Unified delete modal with Stimulus controller #}
-    {% include 'includes/delete_modal.html.twig' %}
+    {% for larp in larps|filter(larp => is_granted('DELETE_LARP', larp)) %}
+        {% include 'backoffice/larp/partials/_delete_larp_modal.html.twig' with {larp: larp} %}
+    {% endfor %}
 {% endblock %}
