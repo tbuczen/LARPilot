@@ -152,7 +152,6 @@ larp:
   character_application: 'Zgłoś się na LARP'
   already_participant: 'Już bierzesz udział!'
   login_required_to_apply: 'Musisz być zalogowany, aby się zgłosić'
-  login_required_description: 'wiadomości'
   application_already_submitted: 'Już wysłałeś zgłoszenie'
   application_open: 'Formularz zgłoszeniowy jest otwarty'
   application_open_description: 'LARP jest gotowy do zebrania Twojego zgłoszenia'

@@ -119,16 +119,14 @@
                     <div class="card shadow-sm mt-4">
                         <div class="card-header bg-success text-white">
                             <h3 class="card-title mb-0">
-                                <i class="bi bi-user-plus me-2"></i>{{ 'larp.character_application'|trans }}
+                                <i class="bi bi-person-plus me-2"></i>{{ 'larp.character_application'|trans }}
                             </h3>
                         </div>
                         <div class="card-body">
                             {% if not app.user %}
                                 <div class="text-center">
                                     <div class="mb-4">
-                                        <i class="bi bi-box-arrow-in-right fa-3x text-primary mb-3"></i>
                                         <h5 class="text-muted">{{ 'larp.login_required_to_apply'|trans }}</h5>
-                                        <p class="text-muted">{{ 'larp.login_required_description'|trans }}</p>
                                     </div>
                                     <a href="{{ path('sso_connect') }}?redirectTo={{ app.request.uri }}" class="btn btn-primary btn-lg">
                                         <i class="bi bi-box-arrow-in-right"></i>{{ 'login'|trans }}
