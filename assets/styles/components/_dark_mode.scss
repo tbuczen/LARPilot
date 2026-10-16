@@ -374,6 +374,20 @@ html.dark-mode {
 
 // Google Maps dark mode styling
 html.dark-mode {
+    .accordion {
+        --bs-accordion-bg: var(--card-bg);
+        --bs-accordion-color: var(--text-primary);
+        --bs-accordion-border-color: var(--border-color);
+        --bs-accordion-btn-color: var(--text-primary);
+        --bs-accordion-btn-bg: var(--card-bg);
+        --bs-accordion-active-color: var(--text-primary);
+        --bs-accordion-active-bg: var(--bg-secondary);
+    }
+
+    .accordion-button::after {
+        filter: invert(1) grayscale(1) brightness(1.6);
+    }
+
     // Card header gradient (dark mode only)
     .card .card-header {
         border-bottom: 1px solid var(--border-color);
