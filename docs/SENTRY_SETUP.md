@@ -30,15 +30,15 @@ Every deploy ends by running `bin/console sentry:test` on the server with the
 settings the website reads from `.env.local`, and prints the result in the
 deploy log:
 
-- `Message sent successfully with ID …` – a test event is in Sentry; errors are
-  reported.
+- `Message sent successfully with ID …` – the server reached Sentry. Look for
+  "This is a test message from the Sentry bundle" in the project; if it is not
+  there, the DSN belongs to a different project or its key was revoked.
 - `WARNING: SENTRY_DSN is empty` – the `SENTRY_DSN` secret is missing on the
   `prod` environment.
 - `No DSN configured` – the DSN is set in GitHub but did not reach the
   website's `.env.local`.
-- `Message not sent!` – the DSN is loaded but the server could not reach Sentry
-  (outbound HTTPS to `*.sentry.io` blocked by the host's firewall, or a wrong
-  DSN).
+- `Message not sent!` – the DSN is loaded but the server could not reach Sentry,
+  usually because the host blocks outbound HTTPS to `*.sentry.io`.
 
 The same command can be run on the server by hand at any time.
 
