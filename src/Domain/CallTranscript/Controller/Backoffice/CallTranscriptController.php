@@ -5,9 +5,12 @@ namespace App\Domain\CallTranscript\Controller\Backoffice;
 use App\Domain\Account\Entity\User;
 use App\Domain\CallTranscript\DTO\CallRecordingOptions;
 use App\Domain\CallTranscript\Entity\CallRecording;
+use App\Domain\CallTranscript\Entity\CallTranscriptSettings;
 use App\Domain\CallTranscript\Entity\Enum\CallOutput;
 use App\Domain\CallTranscript\Form\Type\CallRecordingUploadType;
+use App\Domain\CallTranscript\Form\Type\CallTranscriptSettingsType;
 use App\Domain\CallTranscript\Repository\CallRecordingRepository;
+use App\Domain\CallTranscript\Repository\CallTranscriptSettingsRepository;
 use App\Domain\CallTranscript\Security\Voter\CallTranscriptVoter;
 use App\Domain\CallTranscript\Service\CallRecordingUploader;
 use App\Domain\CallTranscript\Service\CallTranscriptDestinations;
@@ -39,21 +42,12 @@ class CallTranscriptController extends BaseController
         CallRecordingRepository $recordingRepository,
         CallRecordingUploader $uploader,
         CallTranscriptDestinations $destinations,
+        CallTranscriptSettingsRepository $settingsRepository,
     ): Response {
         $this->denyAccessUnlessGranted(CallTranscriptVoter::MANAGE, $larp);
 
-        $googleDocFolders = [];
-        foreach ($destinations->googleDocFolders($larp) as $folder) {
-            $googleDocFolders[$folder->getFileName()] = $folder->getId()->toRfc4122();
-        }
-
-        $discordIntegration = $destinations->discordIntegration($larp);
-        $form = $this->createForm(CallRecordingUploadType::class, null, [
-            'google_doc_folders' => $googleDocFolders,
-            'google_doc_folder_default' => $destinations->defaultGoogleDocFolder($larp)?->getId()->toRfc4122(),
-            'discord_channels' => $this->discordChannelChoices($destinations->discordChannels($larp)),
-            'discord_can_post' => $discordIntegration === null || DiscordBotPermissions::canPost($discordIntegration),
-        ]);
+        $destinationOptions = $this->destinationOptions($larp, $destinations, $settingsRepository->forLarp($larp));
+        $form = $this->createForm(CallRecordingUploadType::class, null, $destinationOptions);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -89,11 +83,57 @@ class CallTranscriptController extends BaseController
             ]);
         }
 
+        $settingsForm = $this->createForm(CallTranscriptSettingsType::class, null, $destinationOptions + [
+            'action' => $this->generateUrl('backoffice_larp_call_transcript_settings', ['larp' => $larp->getId()]),
+        ]);
+
         return $this->render('domain/call_transcript/call_recording/list.html.twig', [
             'larp' => $larp,
             'form' => $form->createView(),
+            'settingsForm' => $settingsForm->createView(),
             'recordings' => $recordingRepository->findForLarp($larp),
+            'googleConnected' => $destinations->googleIntegration($larp) !== null,
+            'discordIntegration' => $destinations->discordIntegration($larp),
+            'discordCanPost' => $destinationOptions['discord_can_post'],
         ]);
+    }
+
+    #[Route('/settings', name: 'settings', methods: ['POST'])]
+    public function settings(
+        Request $request,
+        Larp $larp,
+        CallTranscriptDestinations $destinations,
+        CallTranscriptSettingsRepository $settingsRepository,
+    ): RedirectResponse {
+        $this->denyAccessUnlessGranted(CallTranscriptVoter::MANAGE, $larp);
+
+        $organizer = $this->getUser();
+        if (!$organizer instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $settings = $settingsRepository->forLarp($larp);
+        $form = $this->createForm(CallTranscriptSettingsType::class, null, $this->destinationOptions($larp, $destinations, $settings));
+        $form->handleRequest($request);
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $this->addFlash('error', $this->translator->trans('call_recording.settings.invalid', [], 'call_transcript'));
+
+            return $this->redirectToRoute('backoffice_larp_call_transcript_list', ['larp' => $larp->getId()]);
+        }
+
+        $settings->setSummaryEnabled((bool) $form->get('summary')->getData());
+        if ($form->has('discordChannel')) {
+            $settings->setDiscordChannelId($destinations->discordChannel($larp, $form->get('discordChannel')->getData())?->getExternalId());
+        }
+        $settingsRepository->save($settings);
+
+        if ($form->has('googleDocFolder')) {
+            $destinations->saveDefaultGoogleDocFolder($larp, $destinations->googleDocFolder($larp, $form->get('googleDocFolder')->getData()), $organizer);
+        }
+
+        $this->addFlash('success', $this->translator->trans('call_recording.settings.saved', [], 'call_transcript'));
+
+        return $this->redirectToRoute('backoffice_larp_call_transcript_list', ['larp' => $larp->getId()]);
     }
 
     #[Route('/{recording}', name: 'review', methods: ['GET'])]
@@ -200,6 +240,28 @@ class CallTranscriptController extends BaseController
         }
 
         return $this->redirectToRoute('backoffice_larp_call_transcript_list', ['larp' => $larp->getId()]);
+    }
+
+    /**
+     * @return array{summary_default: bool, google_doc_folders: array<string, string>, google_doc_folder_default: ?string, discord_channels: array<string, array<string, string>>, discord_channel_default: ?string, discord_can_post: bool}
+     */
+    private function destinationOptions(Larp $larp, CallTranscriptDestinations $destinations, CallTranscriptSettings $settings): array
+    {
+        $googleDocFolders = [];
+        foreach ($destinations->googleDocFolders($larp) as $folder) {
+            $googleDocFolders[$folder->getFileName()] = $folder->getId()->toRfc4122();
+        }
+
+        $discordIntegration = $destinations->discordIntegration($larp);
+
+        return [
+            'summary_default' => $settings->isSummaryEnabled(),
+            'google_doc_folders' => $googleDocFolders,
+            'google_doc_folder_default' => $destinations->defaultGoogleDocFolder($larp)?->getId()->toRfc4122(),
+            'discord_channels' => $this->discordChannelChoices($destinations->discordChannels($larp)),
+            'discord_channel_default' => $destinations->discordChannel($larp, $settings->getDiscordChannelId())?->getExternalId(),
+            'discord_can_post' => $discordIntegration === null || DiscordBotPermissions::canPost($discordIntegration),
+        ];
     }
 
     /**

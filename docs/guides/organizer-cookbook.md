@@ -286,19 +286,30 @@ has no post-game questionnaire yet.
 
 ## Recipe 7 – Turn brainstorm calls into usable notes
 
-1. Record the call with **Craig**. Tell everyone first; Craig shows
+1. Once: in **Administration → Call transcripts → Defaults for this LARP**,
+   keep **AI summary** on, pick a Google Drive folder for Google Doc copies and
+   an organizer-only Discord channel for the summary (both optional). If the
+   page says **Update bot permissions**, re-invite the bot first.
+2. Record the call with **Craig**. Tell everyone first; Craig shows
    **[RECORDING]** in its name while it records. Use `/notemessage` for key
    moments ("decision: the king dies in act 2").
-2. Download **Multi-track** in **Ogg Vorbis** or **MP3**.
-3. Upload it in **Administration → Call transcripts**. Leave Polish as the
-   language, untick anyone who didn't agree to be recorded, and start.
-4. A few minutes later, **Open transcript** shows who said what, in time
-   order. It is visible to organizers only.
-5. **Within a day of the call**, while you still remember it, go through the
-   transcript and:
-   - put decisions into the story objects they change;
+3. Download **Multi-track** in **Ogg Vorbis** or **MP3** (long calls are
+   compressed or split for you).
+4. Upload it in **Administration → Call transcripts**. Leave Polish as the
+   language, check who each speaker is (LARPilot proposes participants by
+   their Discord account), untick anyone who didn't agree to be recorded, and
+   start.
+5. A few minutes later you get, for organizers only: a knowledge document with
+   the **summary, decisions, action items, open questions and links to the
+   story objects** that came up, followed by the transcript with real names;
+   a **Google Doc** copy; and a **Discord thread** with the summary in the
+   channel you picked. Anything that failed has a **Retry** button.
+6. **Within a day of the call**, while you still remember it, go through the
+   summary and:
+   - put decisions into the story objects they change (the links take you
+     there);
    - write new canon as **Lore Documents**;
-   - create tasks in **Kanban** for the follow-ups ("Anna writes the Raven
+   - create tasks in **Kanban** for the action items ("Anna writes the Raven
      faction intro by Friday").
 
 Full guide, including free transcription without LARPilot:
@@ -447,7 +458,8 @@ So you don't look for them:
 - Sending the **Mailing** templates (you can edit them, but only the casting
   email is sent today).
 - Linking Google Docs on the **Sources** tab (only Discord and Miro links).
-- Call transcripts longer than about an hour per speaker, and saving
-  transcripts to Google Docs or Discord ([tbuczen/LARPilot#192](https://github.com/tbuczen/LARPilot/issues/192)).
+- Importing Craig recordings straight from Craig's Google Drive folder (you
+  download and upload the `.zip` yourself;
+  [tbuczen/LARPilot#192](https://github.com/tbuczen/LARPilot/issues/192)).
 
 Questions about Discord and Miro: [Q&A](integrations-faq.md).

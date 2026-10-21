@@ -58,6 +58,7 @@ class LarpDeletionService
         'DELETE FROM gallery WHERE larp_id = :larp',
         'DELETE FROM larp_participant WHERE larp_id = :larp',
         'DELETE FROM call_recording WHERE larp_id = :larp',
+        'DELETE FROM call_transcript_settings WHERE larp_id = :larp',
         'DELETE FROM knowledge_document WHERE larp_id = :larp',
         'DELETE FROM skill WHERE larp_id = :larp',
         'DELETE FROM tag WHERE larp_id = :larp',

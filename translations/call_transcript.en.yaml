@@ -90,3 +90,18 @@ call_recording:
   discord:
     transcript_link: 'Transcript in LARPilot: %url%'
     google_doc_link: 'Google Doc: %url%'
+  settings:
+    title: 'Defaults for this LARP'
+    intro: 'Used as the starting choices for every new upload. You can still change them per upload.'
+    summary: 'Write an AI summary'
+    google_doc_folder: 'Save a Google Doc copy in'
+    discord_channel: 'Post the summary to'
+    discord_channel_help: 'Organizer-only channels are listed first. Players see a post in a player-facing channel, so pick one only on purpose.'
+    pick_drive_folder: 'Pick a Google Drive folder for Google Doc copies'
+    google_not_connected: 'Connect Google Drive to also save each transcript as a Google Doc.'
+    choose_discord_channels: 'Watch a Discord channel to post summaries there'
+    discord_not_connected: 'Connect Discord to post each summary in a Discord thread.'
+    open_integrations: 'Open Integrations'
+    save: 'Save defaults'
+    saved: 'Call transcript defaults saved.'
+    invalid: 'The defaults could not be saved. Reload the page and try again.'

@@ -90,3 +90,18 @@ call_recording:
   discord:
     transcript_link: 'Transkrypcja w LARPilot: %url%'
     google_doc_link: 'Dokument Google: %url%'
+  settings:
+    title: 'Ustawienia domyślne tego LARP-a'
+    intro: 'Są punktem wyjścia dla każdego nowego nagrania. Przy wgrywaniu nadal możesz je zmienić.'
+    summary: 'Twórz podsumowanie AI'
+    google_doc_folder: 'Zapisuj kopię w Google Docs w folderze'
+    discord_channel: 'Publikuj podsumowanie w'
+    discord_channel_help: 'Kanały tylko dla organizatorów są na początku listy. Gracze zobaczą wpis w kanale dla graczy, więc wybieraj go tylko świadomie.'
+    pick_drive_folder: 'Wybierz folder na Dysku Google na kopie w Google Docs'
+    google_not_connected: 'Połącz Google Drive, aby zapisywać każdą transkrypcję także jako Dokument Google.'
+    choose_discord_channels: 'Obserwuj kanał na Discordzie, aby publikować tam podsumowania'
+    discord_not_connected: 'Połącz Discorda, aby publikować każde podsumowanie w wątku na Discordzie.'
+    open_integrations: 'Otwórz Integracje'
+    save: 'Zapisz ustawienia'
+    saved: 'Zapisano ustawienia transkrypcji rozmów.'
+    invalid: 'Nie udało się zapisać ustawień. Odśwież stronę i spróbuj ponownie.'

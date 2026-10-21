@@ -99,7 +99,7 @@ LARPilot follows a **Domain-Driven Design (DDD)** approach with modular architec
 - **Map**: Geographic mapping and location management
 - **EventPlanning**: Event scheduling, resource management, conflict detection
 - **Integration**: External service integrations (Google Sheets, Docs, Calendar)
-- **CallTranscript**: Craig call recording import, per-speaker speech-to-text and merged transcripts saved as knowledge documents
+- **CallTranscript**: Craig call recording import, per-speaker speech-to-text (long tracks split via ffmpeg or MP3 frames), speakers mapped to participants, AI summary with linked story objects, merged transcripts saved as knowledge documents, optional Google Doc copy and Discord thread post
 
 **Domain Structure**:
 ```

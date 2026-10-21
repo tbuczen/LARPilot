@@ -2,6 +2,7 @@
 
 namespace App\Domain\CallTranscript\Service;
 
+use App\Domain\Account\Entity\User;
 use App\Domain\Core\Entity\Larp;
 use App\Domain\Integrations\Discord\Picker\DiscordSourceConfig;
 use App\Domain\Integrations\Entity\Enum\ExternalSourceKind;
@@ -117,7 +118,7 @@ readonly class CallTranscriptDestinations
         return $this->googleDocFolder($larp, $folder->getId()->toRfc4122());
     }
 
-    public function saveDefaultGoogleDocFolder(Larp $larp, ?SharedFile $folder): void
+    public function saveDefaultGoogleDocFolder(Larp $larp, ?SharedFile $folder, User $organizer): void
     {
         $mapping = $this->defaultGoogleDocFolderMapping($larp);
         if ($folder === null) {
@@ -128,7 +129,11 @@ readonly class CallTranscriptDestinations
             return;
         }
 
-        $mapping ??= (new ObjectFieldMapping())->setLarp($larp)->setFileType(ResourceType::CALL_TRANSCRIPT_DIRECTORY);
+        if ($mapping === null) {
+            $mapping = (new ObjectFieldMapping())->setLarp($larp)->setFileType(ResourceType::CALL_TRANSCRIPT_DIRECTORY);
+            $mapping->setCreatedBy($organizer);
+        }
+
         $mapping->setExternalFile($folder);
         $this->mappingRepository->save($mapping);
     }
