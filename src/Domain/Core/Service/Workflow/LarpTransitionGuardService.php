@@ -3,9 +3,14 @@
 namespace App\Domain\Core\Service\Workflow;
 
 use App\Domain\Core\Entity\Larp;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LarpTransitionGuardService
 {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
+
     /**
      * Check if LARP can be published
      */
@@ -125,19 +130,19 @@ class LarpTransitionGuardService
         $errors = [];
 
         if (!$larp->getLocation() instanceof \App\Domain\Core\Entity\Location) {
-            $errors[] = 'Location is required to publish';
+            $errors[] = $this->translator->trans('larp.status.error.location_required');
         }
 
         if (in_array($larp->getDescription(), [null, '', '0'], true)) {
-            $errors[] = 'Description is required to publish';
+            $errors[] = $this->translator->trans('larp.status.error.description_required');
         }
 
         if (!$larp->getStartDate() instanceof \DateTimeInterface) {
-            $errors[] = 'Start date is required to publish';
+            $errors[] = $this->translator->trans('larp.status.error.start_date_required');
         }
 
         if (!$larp->getEndDate() instanceof \DateTimeInterface) {
-            $errors[] = 'End date is required to publish';
+            $errors[] = $this->translator->trans('larp.status.error.end_date_required');
         }
 
         return $errors;
@@ -151,16 +156,13 @@ class LarpTransitionGuardService
         $errors = $this->getPublishValidationErrors($larp);
 
         if ($larp->getCharacters()->isEmpty()) {
-            $errors[] = 'At least one character is required to open for inquiries';
+            $errors[] = $this->translator->trans('larp.status.error.character_required');
         }
 
         $charactersWithoutDescription = $larp->getCharacters()->filter(fn ($character): bool => in_array($character->getDescription(), [null, '', '0'], true));
 
         if (!$charactersWithoutDescription->isEmpty()) {
-            $errors[] = sprintf(
-                '%d character(s) are missing descriptions',
-                $charactersWithoutDescription->count()
-            );
+            $errors[] = $this->translator->trans('larp.status.error.characters_missing_descriptions', ['%count%' => $charactersWithoutDescription->count()]);
         }
 
         return $errors;
@@ -177,10 +179,7 @@ class LarpTransitionGuardService
         $unassignedCount = $this->getUnassignedCharactersCount($larp);
 
         if ($unassignedCount > 0) {
-            $errors[] = sprintf(
-                '%d character(s) still need participants assigned',
-                $unassignedCount
-            );
+            $errors[] = $this->translator->trans('larp.status.error.characters_unassigned', ['%count%' => $unassignedCount]);
         }
 
         return $errors;

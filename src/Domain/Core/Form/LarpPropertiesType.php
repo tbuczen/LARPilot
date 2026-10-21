@@ -61,6 +61,7 @@ class LarpPropertiesType extends AbstractType
             ->add('applicationMode', EnumType::class, [
                 'class' => ApplicationMode::class,
                 'choice_label' => fn (ApplicationMode $mode): string => $mode->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'expanded' => true,
                 'label' => 'larp.application_mode',
                 'help' => 'larp.application_mode_help',
@@ -82,6 +83,7 @@ class LarpPropertiesType extends AbstractType
             ->add('setting', EnumType::class, [
                 'class' => LarpSetting::class,
                 'choice_label' => fn (LarpSetting $setting): string => $setting->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'label' => 'larp.setting',
                 'placeholder' => 'larp.select_setting',
                 'required' => false,
@@ -90,6 +92,7 @@ class LarpPropertiesType extends AbstractType
             ->add('type', EnumType::class, [
                 'class' => LarpType::class,
                 'choice_label' => fn (LarpType $type): string => $type->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'label' => 'larp.type',
                 'placeholder' => 'larp.select_type',
                 'required' => false,
@@ -98,6 +101,7 @@ class LarpPropertiesType extends AbstractType
             ->add('characterSystem', EnumType::class, [
                 'class' => LarpCharacterSystem::class,
                 'choice_label' => fn (LarpCharacterSystem $system): string => $system->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'label' => 'larp.character_system',
                 'placeholder' => 'larp.select_character_system',
                 'required' => false,

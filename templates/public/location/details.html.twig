@@ -36,11 +36,11 @@
 
     {% include 'includes/page_header.html.twig' with {
         title: location.title,
-        subtitle: location.fullAddress ~ (location.capacity ? ' • Capacity: ' ~ location.capacity ~ ' people' : ''),
+        subtitle: location.fullAddress ~ (location.capacity ? ' • ' ~ 'public.location_capacity'|trans({'%count%': location.capacity}) : ''),
         icon: 'bi bi-geo-alt',
         breadcrumbs: [
-            { label: 'Home', url: path('public_larp_list') },
-            { label: 'Locations', url: path('public_location_list') },
+            { label: 'public.breadcrumb.home'|trans, url: path('public_larp_list') },
+            { label: 'public.breadcrumb.locations'|trans, url: path('public_location_list') },
             { label: location.title }
         ],
         actions: socialMediaActions
@@ -60,7 +60,7 @@
                                             data-bs-slide-to="{{ loop.index0 }}"
                                             class="{{ loop.first ? 'active' : '' }}"
                                             aria-current="{{ loop.first ? 'true' : 'false' }}"
-                                            aria-label="Slide {{ loop.index }}"></button>
+                                            aria-label="{{ 'public.location_slide'|trans({'%number%': loop.index}) }}"></button>
                                 {% endfor %}
                             </div>
                             <div class="carousel-inner">
@@ -75,12 +75,12 @@
                                 <button class="carousel-control-prev" type="button"
                                         data-bs-target="#locationCarousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
+                                    <span class="visually-hidden">{{ 'public.previous'|trans }}</span>
                                 </button>
                                 <button class="carousel-control-next" type="button"
                                         data-bs-target="#locationCarousel" data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
+                                    <span class="visually-hidden">{{ 'public.next'|trans }}</span>
                                 </button>
                             {% endif %}
                         </div>
@@ -127,9 +127,9 @@
                                             <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
                                             <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
                                         </svg>
-                                        View on Google Maps
+                                        {{ 'public.view_on_google_maps'|trans }}
                                     </span>
-                                    <p class="text-muted small mt-2 mb-0">Click to open in Google Maps</p>
+                                    <p class="text-muted small mt-2 mb-0">{{ 'public.open_in_google_maps'|trans }}</p>
                                 </div>
                             </a>
                         {% endif %}
@@ -211,7 +211,7 @@
                                                 </span>
                                                 {% if larp.status %}
                                                     <span class="badge bg-{{ larp.status.value == 'COMPLETED' ? 'success' : 'primary' }} d-block mt-1">
-                                                        {{ larp.status.value }}
+                                                        {{ larp.status.label|trans }}
                                                     </span>
                                                 {% endif %}
                                             </div>

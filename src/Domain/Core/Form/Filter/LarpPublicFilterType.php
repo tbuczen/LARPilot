@@ -30,7 +30,9 @@ class LarpPublicFilterType extends AbstractType
                 'class' => LarpStageStatus::class,
                 'required' => false,
                 'multiple' => false,
-                'placeholder' => 'All Statuses',
+                'placeholder' => 'filter_all_statuses',
+                'choice_label' => fn (LarpStageStatus $enum): string => $enum->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'attr' => ['class' => 'form-select'],
                 'choices' => [
                     LarpStageStatus::PUBLISHED,
@@ -44,6 +46,8 @@ class LarpPublicFilterType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
+                'choice_label' => fn (LarpSetting $enum): string => $enum->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'placeholder' => 'choose',
             ])
             ->add('type', Filters\EnumFilterType::class, [
@@ -51,6 +55,8 @@ class LarpPublicFilterType extends AbstractType
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
+                'choice_label' => fn (LarpType $enum): string => $enum->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'placeholder' => 'choose',
             ])
             ->add('characterSystem', Filters\EnumFilterType::class, [
@@ -59,6 +65,7 @@ class LarpPublicFilterType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'choice_label' => fn (LarpCharacterSystem $enum): string => $enum->getLabel(),
+                'choice_translation_domain' => 'messages',
                 'placeholder' => 'choose',
             ])
             ->add('location', EntityType::class, [
@@ -90,7 +97,7 @@ class LarpPublicFilterType extends AbstractType
                     'class' => 'form-control',
                     'min' => 1,
                     'max' => 30,
-                    'placeholder' => 'Min days'
+                    'placeholder' => 'filter_min_days'
                 ],
                 'html5' => true,
                 'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {
@@ -110,7 +117,7 @@ class LarpPublicFilterType extends AbstractType
                     'class' => 'form-control',
                     'min' => 1,
                     'max' => 31,
-                    'placeholder' => 'Max days'
+                    'placeholder' => 'filter_max_days'
                 ],
                 'html5' => true,
                 'apply_filter' => function (QueryInterface $filterQuery, $field, $values) {

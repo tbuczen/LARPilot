@@ -12,16 +12,16 @@ enum ApplicationMode: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::CHARACTER_SELECTION => 'Character Selection',
-            self::SURVEY => 'Survey/Questionnaire',
+            self::CHARACTER_SELECTION => 'enum.application_mode.character_selection',
+            self::SURVEY => 'enum.application_mode.survey',
         };
     }
 
     public function getDescription(): string
     {
         return match ($this) {
-            self::CHARACTER_SELECTION => 'Players browse and choose characters to apply for',
-            self::SURVEY => 'Players fill a questionnaire, organizers match them to characters',
+            self::CHARACTER_SELECTION => 'enum.application_mode.character_selection_description',
+            self::SURVEY => 'enum.application_mode.survey_description',
         };
     }
 }

@@ -59,7 +59,7 @@
                                 {% if not participant.isPlayer %}
                                     <div class="mb-3">
                                         <h6 class="text-muted mb-2">
-                                            <i class="bi bi-award me-2"></i>Your Roles:
+                                            <i class="bi bi-award me-2"></i>{{ 'public.my_larps.roles'|trans }}
                                         </h6>
                                         <div class="d-flex flex-wrap gap-2">
                                             {% for role in participant.roles %}
@@ -79,7 +79,7 @@
                                         </div>
                                     {% else %}
                                         <h6 class="text-muted mb-3">
-                                            <i class="bi bi-person-badge me-2"></i>Your Characters:
+                                            <i class="bi bi-person-badge me-2"></i>{{ 'public.my_larps.characters'|trans }}
                                         </h6>
                                         <div class="list-group list-group-flush">
                                             {% for character in participant.larpCharacters %}

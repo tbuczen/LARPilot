@@ -95,7 +95,7 @@
                                     {% for skill in character.skills %}
                                         <div class="col-md-6 mb-2">
                                             <span class="badge bg-secondary me-2">{{ skill.skill.name }}</span>
-                                            <small class="text-muted">Level {{ skill.level }}</small>
+                                            <small class="text-muted">{{ 'public.character.skill_level'|trans({'%level%': skill.level}) }}</small>
                                         </div>
                                     {% endfor %}
                                 </div>

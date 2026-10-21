@@ -43,7 +43,7 @@
                             <tr>
                                 <th>{{ 'title'|trans }}</th>
                                 <th>{{ 'status'|trans }}</th>
-                                <th>{{ 'location'|trans }}</th>
+                                <th>{{ 'location.singular'|trans }}</th>
                                 <th>{{ 'start_date'|trans }}</th>
                                 <th>{{ 'actions'|trans }}</th>
                             </tr>
@@ -57,7 +57,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
+                                        <span class="badge bg-secondary">{{ larp.status.label|trans }}</span>
                                     </td>
                                     <td>{{ larp.location|default('-') }}</td>
                                     <td>{{ larp.startDate|display_date }}</td>

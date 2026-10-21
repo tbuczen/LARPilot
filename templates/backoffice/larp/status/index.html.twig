@@ -12,11 +12,11 @@
             <div class="card-body">
                 <div class="d-flex align-items-center mb-3">
                     <span class="badge text-bg-{{ currentStatus.value == 'DRAFT' ? 'secondary' : (currentStatus.value == 'CONFIRMED' ? 'success' : 'primary') }} fs-5 me-3">
-                        {{ currentStatus.value }}
+                        {{ currentStatus.label|trans }}
                     </span>
                     <div>
-                        <h6 class="mb-0">{{ ('larp.status.' ~ currentStatus.value|lower)|trans }}</h6>
-                        <small class="text-muted">{{ ('larp.status.' ~ currentStatus.value|lower ~ '.description')|trans }}</small>
+                        <h6 class="mb-0">{{ currentStatus.label|trans }}</h6>
+                        <small class="text-muted">{{ currentStatus.description|trans }}</small>
                     </div>
                 </div>
 
@@ -30,21 +30,21 @@
                             <input type="hidden" name="_token" value="{{ csrf_token('larp_transition_' ~ larp.id) }}">
                             <button type="submit" 
                                     class="btn btn-sm btn-outline-primary"
-                                    onclick="return confirm('{{ 'larp.status.confirm_transition'|trans({'%transition%': transition.label}) }}')">
-                                {{ transition.label }}
+                                    onclick="return confirm('{{ 'larp.status.confirm_transition'|trans({'%transition%': transition.label|trans}) }}')">
+                                {{ transition.label|trans }}
                                 {% if transition.to %}
                                     <i class="bi bi-arrow-right"></i>
-                                    <span class="badge text-bg-secondary">{{ transition.to }}</span>
+                                    <span class="badge text-bg-secondary">{{ ('larp.status.' ~ transition.to|lower)|trans }}</span>
                                 {% endif %}
                             </button>
                         </form>
                         {% else %}
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
-                                {{ transition.label }}
+                                {{ transition.label|trans }}
                                 {% if transition.to %}
                                     <i class="bi bi-arrow-right"></i>
-                                    <span class="badge text-bg-secondary">{{ transition.to }}</span>
+                                    <span class="badge text-bg-secondary">{{ ('larp.status.' ~ transition.to|lower)|trans }}</span>
                                 {% endif %}
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -177,9 +177,9 @@
                     {% for status in allStatuses %}
                     <div class="workflow-step {{ status == currentStatus ? 'active' : '' }}">
                         <span class="badge text-bg-{{ status.value == currentStatus.value ? 'primary' : 'secondary' }}">
-                            {{ status.value }}
+                            {{ status.label|trans }}
                         </span>
-                        <small class="d-block mt-1">{{ ('larp.status.' ~ status.value|lower)|trans }}</small>
+                        <small class="d-block mt-1">{{ status.description|trans }}</small>
                     </div>
                     {% if not loop.last %}
                     <div class="workflow-arrow">

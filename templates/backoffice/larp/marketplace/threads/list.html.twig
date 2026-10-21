@@ -38,12 +38,12 @@
                             </td>
                             <td>
                                 {% if thread.involvedCharacters|length > 0 %}
-                                    <strong>{{ 'characters'|trans }}:</strong>
+                                    <strong>{{ 'characters.plural'|trans }}:</strong>
                                     {% for char in thread.involvedCharacters|slice(0, 3) %}
                                         {{ char.title }}{% if not loop.last %}, {% endif %}
                                     {% endfor %}
                                     {% if thread.involvedCharacters|length > 3 %}
-                                        <span class="text-muted">+{{ thread.involvedCharacters|length - 3 }} more</span>
+                                        <span class="text-muted">{{ 'marketplace.more'|trans({'%count%': thread.involvedCharacters|length - 3}) }}</span>
                                     {% endif %}
                                 {% else %}
                                     <span class="text-muted">{{ 'marketplace.no_characters'|trans }}</span>

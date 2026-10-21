@@ -72,12 +72,12 @@
                                                     </span>
                                                 {% elseif event.involvedFactions|length > 0 %}
                                                     <span class="badge bg-warning">
-                                                        <i class="bi bi-people"></i> {{ event.involvedFactions|length }} {{ 'factions'|trans }}
+                                                        <i class="bi bi-people"></i> {{ event.involvedFactions|length }} {{ 'factions.plural'|trans }}
                                                     </span>
                                                 {% endif %}
                                                 {% if event.involvedCharacters|length > 0 %}
                                                     <span class="badge bg-info">
-                                                        <i class="bi bi-person"></i> {{ event.involvedCharacters|length }} {{ 'characters'|trans }}
+                                                        <i class="bi bi-person"></i> {{ event.involvedCharacters|length }} {{ 'characters.plural'|trans }}
                                                     </span>
                                                 {% endif %}
                                             </td>

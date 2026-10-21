@@ -17,15 +17,15 @@ enum LarpSetting: string implements LabelableEnumInterface
     public function getLabel(): string
     {
         return match ($this) {
-            self::FANTASY => 'Fantasy',
-            self::SCI_FI => 'Science Fiction',
-            self::CYBERPUNK => 'Cyberpunk',
-            self::HISTORIC => 'Historic / Reconstruction',
-            self::BATTLE => 'Battle',
-            self::NOIR => 'Noir',
-            self::POST_APO => 'Postapocalyptic',
-            self::WITCHER => 'Witcher',
-            self::HARRY_POTTER => 'Harry Potter',
+            self::FANTASY => 'enum.larp_setting.fantasy',
+            self::SCI_FI => 'enum.larp_setting.sci_fi',
+            self::CYBERPUNK => 'enum.larp_setting.cyberpunk',
+            self::HISTORIC => 'enum.larp_setting.historic',
+            self::BATTLE => 'enum.larp_setting.battle',
+            self::NOIR => 'enum.larp_setting.noir',
+            self::POST_APO => 'enum.larp_setting.post_apo',
+            self::WITCHER => 'enum.larp_setting.witcher',
+            self::HARRY_POTTER => 'enum.larp_setting.harry_potter',
         };
     }
 }

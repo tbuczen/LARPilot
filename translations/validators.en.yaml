@@ -153,3 +153,8 @@ Error: Error
 larp.character.error.unique_name: 'A character with the name "{{ name }}" already exists in this LARP.'
 'A character with this title already exists in this LARP.': '__A character with this title already exists in this LARP.'
 game_map.image_file_invalid: __game_map.image_file_invalid
+
+"gallery.invalid_zip_file": "Please upload a valid ZIP file."
+"staff_position.already_exists": "You already have a position on this map."
+"larp.header_image_invalid": "Please upload a valid image (JPG, PNG, GIF, WebP)."
+"The rejection reason cannot be longer than {{ limit }} characters.": "The rejection reason cannot be longer than {{ limit }} characters."
