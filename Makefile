@@ -18,7 +18,7 @@ endif
 .PHONY: up build install migrate assets dev start stop clean logs
 .PHONY: test test-unit test-filter lint lint-fix stan ecs ecs-fix qa
 .PHONY: db-wait db-create db-drop db-migrate db-reset db-status db-shell
-.PHONY: deploy deploy-no-pull deploy-deps deploy-assets deploy-cache deploy-workers worker-run
+.PHONY: deploy deploy-no-pull deploy-deps deploy-assets deploy-cache deploy-workers deploy-tokens worker-run
 
 # Wait until Postgres is ready (inside compose network)
 db-wait:
@@ -152,7 +152,7 @@ deploy:
 	$(MAKE) deploy-no-pull
 
 # Deployment without git pull
-deploy-no-pull: deploy-deps deploy-cache deploy-assets deploy-workers
+deploy-no-pull: deploy-deps deploy-cache deploy-assets deploy-workers deploy-tokens
 	@echo "✅ Deployment complete!"
 
 # Install/update PHP dependencies (production mode)
@@ -164,8 +164,6 @@ deploy-deps:
 	php -d memory_limit=-1 bin/console cache:clear --env=prod --no-warmup
 	@echo "🗄️  Running database migrations..."
 	php -d memory_limit=-1 bin/console doctrine:migrations:migrate --no-interaction
-	@echo "🔐 Encrypting integration tokens..."
-	php -d memory_limit=-1 bin/console app:integrations:encrypt-tokens --no-interaction
 
 # Compile and update frontend assets
 deploy-assets:
@@ -190,6 +188,12 @@ deploy-cache:
 deploy-workers:
 	@echo "🔁 Restarting Messenger workers..."
 	php -d memory_limit=-1 bin/console messenger:stop-workers --env=prod || true
+
+# Encrypt integration tokens still stored in plain text. Runs last so a bad
+# key can't leave new code running with the previous release's assets.
+deploy-tokens:
+	@echo "🔐 Encrypting integration tokens..."
+	php -d memory_limit=-1 bin/console app:integrations:encrypt-tokens --no-interaction
 
 # Run the Messenger worker in the foreground (production hosts without Docker)
 worker-run:
