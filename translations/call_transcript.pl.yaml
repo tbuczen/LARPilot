@@ -31,6 +31,9 @@ call_recording:
     archive_help: 'Na stronie pobierania Craiga wybierz „Multi-track”. Jeśli zip zawiera transkrypcje Craiga (.vtt, .srt lub .txt), zostaną użyte zamiast rozpoznawania mowy.'
     summary: 'Podsumowanie AI'
     summary_help: 'Po transkrypcji OpenAI pisze krótkie podsumowanie, decyzje, zadania, otwarte pytania i linki do obiektów fabularnych, o których była mowa. Trafia ono na początek transkrypcji.'
+    google_doc_folder: 'Kopia w Google Docs'
+    google_doc_folder_help: 'Zapisz też podsumowanie i transkrypcję jako Dokument Google w tym folderze na Dysku. Lista zawiera tylko foldery wybrane w Integracje → Google Drive.'
+    google_doc_none: 'Nie twórz Dokumentu Google'
   import:
     unreadable_archive: 'Plik nie jest poprawnym archiwum zip.'
     too_large: 'Archiwum jest zbyt duże do zaimportowania.'
@@ -59,6 +62,8 @@ call_recording:
       pending: 'W toku'
       done: 'Gotowe'
       failed: 'Błąd'
+    google_doc: 'Dokument Google'
+    open_google_doc: 'Otwórz w Google Docs'
   document:
     transcript: 'Transkrypcja'
     summary: 'Podsumowanie'

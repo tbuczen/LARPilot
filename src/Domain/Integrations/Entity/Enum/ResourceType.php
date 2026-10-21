@@ -2,6 +2,7 @@
 
 namespace App\Domain\Integrations\Entity\Enum;
 
+use App\Domain\Integrations\Form\Integrations\CallTranscriptDirectoryMappingType;
 use App\Domain\Integrations\Form\Integrations\CharacterDocDirectoryMappingType;
 use App\Domain\Integrations\Form\Integrations\CharacterDocMappingType;
 use App\Domain\Integrations\Form\Integrations\CharacterListColumnMappingType;
@@ -22,6 +23,7 @@ enum ResourceType: string
     case EVENT_LIST = 'event_list';
     case EVENT_DOC = 'event_doc';
     case TAG_LIST = 'tag_list';
+    case CALL_TRANSCRIPT_DIRECTORY = 'call_transcript_directory';
 
     /**
      * @return class-string<AbstractType>
@@ -33,6 +35,7 @@ enum ResourceType: string
             self::EVENT_LIST => EventListColumnMappingType::class,
             self::TAG_LIST => TagListColumnMappingType::class,
             self::CHARACTER_DOC_DIRECTORY => CharacterDocDirectoryMappingType::class,
+            self::CALL_TRANSCRIPT_DIRECTORY => CallTranscriptDirectoryMappingType::class,
             self::CHARACTER_DOC_TEMPLATE, self::CHARACTER_DOC => CharacterDocMappingType::class,
             self::EVENT_DOC => EventDocMappingType::class,
         };
@@ -56,6 +59,7 @@ enum ResourceType: string
             self::CHARACTER_LIST, self::CHARACTER_DOC, self::CHARACTER_DOC_TEMPLATE, self::CHARACTER_DOC_DIRECTORY => $targetType === TargetType::Character,
             self::EVENT_LIST, self::EVENT_DOC => $targetType === TargetType::Event,
             self::TAG_LIST => $targetType === TargetType::Tag,
+            self::CALL_TRANSCRIPT_DIRECTORY => false,
         };
     }
 
@@ -81,6 +85,6 @@ enum ResourceType: string
 
     public function isFolderMapping(): bool
     {
-        return $this === self::CHARACTER_DOC_DIRECTORY;
+        return in_array($this, [self::CHARACTER_DOC_DIRECTORY, self::CALL_TRANSCRIPT_DIRECTORY], true);
     }
 }

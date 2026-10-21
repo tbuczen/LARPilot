@@ -45,6 +45,7 @@ framework:
             App\Domain\CallTranscript\Message\TranscribeCallTrackMessage: async
             App\Domain\CallTranscript\Message\FinalizeCallTranscriptMessage: async
             App\Domain\CallTranscript\Message\GenerateCallSummaryMessage: async
+            App\Domain\CallTranscript\Message\ExportCallTranscriptToGoogleDocMessage: async
 
 when@test:
     framework:

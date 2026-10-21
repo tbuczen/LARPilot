@@ -48,6 +48,19 @@ class CallRecordingUploadType extends AbstractType
                 'required' => false,
                 'data' => $options['summary_default'],
             ]);
+
+        $googleDocFolders = $options['google_doc_folders'];
+        if ($googleDocFolders !== []) {
+            $builder->add('googleDocFolder', ChoiceType::class, [
+                'label' => 'call_recording.form.google_doc_folder',
+                'help' => 'call_recording.form.google_doc_folder_help',
+                'required' => false,
+                'placeholder' => 'call_recording.form.google_doc_none',
+                'choices' => $googleDocFolders,
+                'choice_translation_domain' => false,
+                'data' => $options['google_doc_folder_default'],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -55,7 +68,11 @@ class CallRecordingUploadType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'call_transcript',
             'summary_default' => true,
+            'google_doc_folders' => [],
+            'google_doc_folder_default' => null,
         ]);
         $resolver->setAllowedTypes('summary_default', 'bool');
+        $resolver->setAllowedTypes('google_doc_folders', 'array');
+        $resolver->setAllowedTypes('google_doc_folder_default', ['null', 'string']);
     }
 }

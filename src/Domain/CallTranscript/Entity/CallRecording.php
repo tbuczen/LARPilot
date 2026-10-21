@@ -13,6 +13,7 @@ use App\Domain\Core\Entity\Trait\CreatorAwareInterface;
 use App\Domain\Core\Entity\Trait\CreatorAwareTrait;
 use App\Domain\Core\Entity\Trait\LarpAwareInterface;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
+use App\Domain\Integrations\Entity\SharedFile;
 use App\Domain\StoryObject\Entity\KnowledgeDocument;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -72,6 +73,22 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $summaryFailureReason = null;
+
+    #[ORM\Column(length: 20, enumType: CallOutputStatus::class, options: ['default' => 'skipped'])]
+    private CallOutputStatus $googleDocStatus = CallOutputStatus::SKIPPED;
+
+    #[ORM\ManyToOne(targetEntity: SharedFile::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?SharedFile $googleDocFolder = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleDocId = null;
+
+    #[ORM\Column(length: 1024, nullable: true)]
+    private ?string $googleDocUrl = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $googleDocFailureReason = null;
 
     /**
      * @var Collection<int, CallRecordingTrack>
@@ -195,8 +212,10 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
     {
         $this->status = CallRecordingStatus::FAILED;
         $this->failureReason = $failureReason;
-        if ($this->summaryStatus === CallOutputStatus::PENDING) {
-            $this->summaryStatus = CallOutputStatus::SKIPPED;
+        foreach (CallOutput::cases() as $output) {
+            if ($this->outputStatus($output) === CallOutputStatus::PENDING) {
+                $this->skipOutput($output);
+            }
         }
     }
 
@@ -209,6 +228,7 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
     {
         return match ($output) {
             CallOutput::SUMMARY => $this->summaryStatus,
+            CallOutput::GOOGLE_DOC => $this->googleDocStatus,
         };
     }
 
@@ -216,6 +236,7 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
     {
         return match ($output) {
             CallOutput::SUMMARY => $this->summaryFailureReason,
+            CallOutput::GOOGLE_DOC => $this->googleDocFailureReason,
         };
     }
 
@@ -266,5 +287,60 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
     {
         $this->summaryStatus = CallOutputStatus::FAILED;
         $this->summaryFailureReason = $failureReason;
+    }
+
+    public function getGoogleDocStatus(): CallOutputStatus
+    {
+        return $this->googleDocStatus;
+    }
+
+    public function getGoogleDocFolder(): ?SharedFile
+    {
+        return $this->googleDocFolder;
+    }
+
+    public function getGoogleDocId(): ?string
+    {
+        return $this->googleDocId;
+    }
+
+    public function getGoogleDocUrl(): ?string
+    {
+        return $this->googleDocUrl;
+    }
+
+    public function requestGoogleDoc(?SharedFile $folder): void
+    {
+        $this->googleDocFolder = $folder;
+        $this->googleDocStatus = $folder === null ? CallOutputStatus::SKIPPED : CallOutputStatus::PENDING;
+        $this->googleDocFailureReason = null;
+    }
+
+    public function retryGoogleDoc(): void
+    {
+        $this->googleDocStatus = CallOutputStatus::PENDING;
+        $this->googleDocFailureReason = null;
+    }
+
+    public function completeGoogleDoc(string $documentId, string $documentUrl): void
+    {
+        $this->googleDocId = $documentId;
+        $this->googleDocUrl = $documentUrl;
+        $this->googleDocStatus = CallOutputStatus::DONE;
+        $this->googleDocFailureReason = null;
+    }
+
+    public function failGoogleDoc(string $failureReason): void
+    {
+        $this->googleDocStatus = CallOutputStatus::FAILED;
+        $this->googleDocFailureReason = $failureReason;
+    }
+
+    private function skipOutput(CallOutput $output): void
+    {
+        match ($output) {
+            CallOutput::SUMMARY => $this->summaryStatus = CallOutputStatus::SKIPPED,
+            CallOutput::GOOGLE_DOC => $this->googleDocStatus = CallOutputStatus::SKIPPED,
+        };
     }
 }

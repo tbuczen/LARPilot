@@ -19,6 +19,9 @@
                 {{ form_row(form.language) }}
                 {{ form_row(form.archive) }}
                 {{ form_row(form.summary) }}
+                {% if form.googleDocFolder is defined %}
+                    {{ form_row(form.googleDocFolder) }}
+                {% endif %}
                 <p class="small text-muted">{{ 'call_recording.consent_hint'|trans({}, 'call_transcript') }}</p>
                 <div class="d-flex justify-content-end">
                     {{ ui.primary_button('call_recording.upload_submit'|trans({}, 'call_transcript'), null, 'bi-upload', 'submit') }}

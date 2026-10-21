@@ -27,6 +27,7 @@ final readonly class CallRecordingUploader
         $recording = new CallRecording($larp, $title, $language);
         $recording->setCreatedBy($organizer);
         $recording->requestSummary($options->summary);
+        $recording->requestGoogleDoc($options->googleDocFolder);
         $this->entityManager->persist($recording);
 
         try {

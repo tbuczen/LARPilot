@@ -5,6 +5,7 @@ namespace App\Domain\CallTranscript\Service;
 use App\Domain\CallTranscript\Entity\CallRecording;
 use App\Domain\CallTranscript\Entity\Enum\CallOutput;
 use App\Domain\CallTranscript\Entity\Enum\CallOutputStatus;
+use App\Domain\CallTranscript\Message\ExportCallTranscriptToGoogleDocMessage;
 use App\Domain\CallTranscript\Message\GenerateCallSummaryMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -30,6 +31,17 @@ final readonly class CallTranscriptOutputDispatcher
 
     public function afterSummary(CallRecording $recording): void
     {
+        if ($recording->getGoogleDocStatus() === CallOutputStatus::PENDING) {
+            $this->messageBus->dispatch(new ExportCallTranscriptToGoogleDocMessage($recording->getId()));
+
+            return;
+        }
+
+        $this->afterGoogleDoc($recording);
+    }
+
+    public function afterGoogleDoc(CallRecording $recording): void
+    {
     }
 
     public function retry(CallRecording $recording, CallOutput $output): bool
@@ -40,12 +52,14 @@ final readonly class CallTranscriptOutputDispatcher
 
         match ($output) {
             CallOutput::SUMMARY => $recording->requestSummary(true),
+            CallOutput::GOOGLE_DOC => $recording->retryGoogleDoc(),
         };
         $this->entityManager->flush();
 
-        match ($output) {
-            CallOutput::SUMMARY => $this->messageBus->dispatch(new GenerateCallSummaryMessage($recording->getId())),
-        };
+        $this->messageBus->dispatch(match ($output) {
+            CallOutput::SUMMARY => new GenerateCallSummaryMessage($recording->getId()),
+            CallOutput::GOOGLE_DOC => new ExportCallTranscriptToGoogleDocMessage($recording->getId()),
+        });
 
         return true;
     }

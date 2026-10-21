@@ -38,6 +38,15 @@ class ResourceTypeTest extends TestCase
         }
     }
 
+    public function testCallTranscriptDirectoryMatchesNoTargetType(): void
+    {
+        foreach (TargetType::cases() as $targetType) {
+            $this->assertFalse(ResourceType::CALL_TRANSCRIPT_DIRECTORY->matchesTargetType($targetType));
+        }
+
+        $this->assertTrue(ResourceType::CALL_TRANSCRIPT_DIRECTORY->isFolderMapping());
+    }
+
     public function testEveryResourceTypeHasAnExpectedTargetType(): void
     {
         $coveredResourceTypes = array_map(
@@ -45,6 +54,6 @@ class ResourceTypeTest extends TestCase
             iterator_to_array(self::expectedTargetTypeProvider())
         );
 
-        $this->assertEqualsCanonicalizing(ResourceType::cases(), array_values($coveredResourceTypes));
+        $this->assertEqualsCanonicalizing(ResourceType::cases(), [...array_values($coveredResourceTypes), ResourceType::CALL_TRANSCRIPT_DIRECTORY]);
     }
 }

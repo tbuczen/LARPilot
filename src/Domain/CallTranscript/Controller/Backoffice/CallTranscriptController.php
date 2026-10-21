@@ -10,6 +10,7 @@ use App\Domain\CallTranscript\Form\Type\CallRecordingUploadType;
 use App\Domain\CallTranscript\Repository\CallRecordingRepository;
 use App\Domain\CallTranscript\Security\Voter\CallTranscriptVoter;
 use App\Domain\CallTranscript\Service\CallRecordingUploader;
+use App\Domain\CallTranscript\Service\CallTranscriptDestinations;
 use App\Domain\CallTranscript\Service\CallTranscriptionStarter;
 use App\Domain\CallTranscript\Service\CallTranscriptOutputDispatcher;
 use App\Domain\CallTranscript\Service\Import\CallRecordingImportException;
@@ -35,10 +36,19 @@ class CallTranscriptController extends BaseController
         Larp $larp,
         CallRecordingRepository $recordingRepository,
         CallRecordingUploader $uploader,
+        CallTranscriptDestinations $destinations,
     ): Response {
         $this->denyAccessUnlessGranted(CallTranscriptVoter::MANAGE, $larp);
 
-        $form = $this->createForm(CallRecordingUploadType::class);
+        $googleDocFolders = [];
+        foreach ($destinations->googleDocFolders($larp) as $folder) {
+            $googleDocFolders[$folder->getFileName()] = $folder->getId()->toRfc4122();
+        }
+
+        $form = $this->createForm(CallRecordingUploadType::class, null, [
+            'google_doc_folders' => $googleDocFolders,
+            'google_doc_folder_default' => $destinations->defaultGoogleDocFolder($larp)?->getId()->toRfc4122(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,7 +66,10 @@ class CallTranscriptController extends BaseController
                     (string) $form->get('title')->getData(),
                     $language === CallRecordingUploadType::AUTO_DETECT_LANGUAGE ? null : $language,
                     $archive->getPathname(),
-                    new CallRecordingOptions((bool) $form->get('summary')->getData()),
+                    new CallRecordingOptions(
+                        (bool) $form->get('summary')->getData(),
+                        $form->has('googleDocFolder') ? $destinations->googleDocFolder($larp, $form->get('googleDocFolder')->getData()) : null,
+                    ),
                 );
             } catch (CallRecordingImportException $failure) {
                 $this->addFlash('error', $this->translator->trans($failure->getMessage(), [], 'call_transcript'));

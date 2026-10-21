@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests\Support\CallTranscript;
 
 use App\Domain\CallTranscript\Entity\CallRecording;
+use App\Domain\CallTranscript\Message\ExportCallTranscriptToGoogleDocMessage;
 use App\Domain\CallTranscript\Message\FinalizeCallTranscriptMessage;
 use App\Domain\CallTranscript\Message\GenerateCallSummaryMessage;
 use App\Domain\CallTranscript\Message\TranscribeCallTrackMessage;
+use App\Domain\CallTranscript\MessageHandler\ExportCallTranscriptToGoogleDocHandler;
 use App\Domain\CallTranscript\MessageHandler\FinalizeCallTranscriptHandler;
 use App\Domain\CallTranscript\MessageHandler\GenerateCallSummaryHandler;
 use App\Domain\CallTranscript\MessageHandler\TranscribeCallTrackHandler;
@@ -144,6 +146,7 @@ trait CallTranscriptFlow
             TranscribeCallTrackMessage::class => TranscribeCallTrackHandler::class,
             FinalizeCallTranscriptMessage::class => FinalizeCallTranscriptHandler::class,
             GenerateCallSummaryMessage::class => GenerateCallSummaryHandler::class,
+            ExportCallTranscriptToGoogleDocMessage::class => ExportCallTranscriptToGoogleDocHandler::class,
             default => null,
         };
     }

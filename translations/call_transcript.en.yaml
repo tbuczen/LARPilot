@@ -31,6 +31,9 @@ call_recording:
     archive_help: 'On the Craig download page choose "Multi-track". If the zip contains Craig transcripts (.vtt, .srt or .txt), they are used instead of speech-to-text.'
     summary: 'AI summary'
     summary_help: 'After the transcript, OpenAI writes a short summary, decisions, action items, open questions and links to the story objects that came up. It goes at the top of the transcript.'
+    google_doc_folder: 'Google Doc copy'
+    google_doc_folder_help: 'Also save the summary and transcript as a Google Doc in this Drive folder. Only folders you picked under Integrations → Google Drive are listed.'
+    google_doc_none: 'Don''t create a Google Doc'
   import:
     unreadable_archive: 'The file is not a readable zip archive.'
     too_large: 'The archive is too large to import.'
@@ -59,6 +62,8 @@ call_recording:
       pending: 'In progress'
       done: 'Ready'
       failed: 'Failed'
+    google_doc: 'Google Doc'
+    open_google_doc: 'Open in Google Docs'
   document:
     transcript: 'Transcript'
     summary: 'Summary'
