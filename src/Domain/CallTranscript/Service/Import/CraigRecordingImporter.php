@@ -84,6 +84,7 @@ final readonly class CraigRecordingImporter implements CallRecordingImporterInte
             $transcriptsBySpeaker[$speaker] = ['index' => $index, 'extension' => $extension];
         }
 
+        $userIds = $info === null ? [] : $this->infoParser->parseTrackUserIds($info);
         $tracks = [];
         foreach ($audioBySpeaker as $speaker => $audioFilename) {
             $transcript = $transcriptsBySpeaker[$speaker] ?? null;
@@ -92,6 +93,7 @@ final readonly class CraigRecordingImporter implements CallRecordingImporterInte
                 (string) $speaker,
                 $audioFilename,
                 $transcript === null ? null : $this->extract($archive, $transcript['index'], $targetDirectory, $transcript['extension']),
+                $userIds[CraigInfoParser::speakerKey((string) $speaker)] ?? null,
             );
         }
 
@@ -100,6 +102,7 @@ final readonly class CraigRecordingImporter implements CallRecordingImporterInte
                 (string) $speaker,
                 null,
                 $this->extract($archive, $transcript['index'], $targetDirectory, $transcript['extension']),
+                $userIds[CraigInfoParser::speakerKey((string) $speaker)] ?? null,
             );
         }
 

@@ -33,12 +33,32 @@ final class FixtureGoogleClientFactory implements GoogleClientFactoryInterface
     /** @var array<string, true> */
     private static array $deletedFileIds = [];
 
+    /** @var list<array{method: string, path: string, body: string}> */
+    private static array $uploads = [];
+
+    private static ?int $uploadFailureStatus = null;
+
     public static function reset(): void
     {
         self::$requests = [];
         self::$createdFileCount = 0;
         self::$serviceAccountRoles = [];
         self::$deletedFileIds = [];
+        self::$uploads = [];
+        self::$uploadFailureStatus = null;
+    }
+
+    public static function failUploadsWith(?int $status): void
+    {
+        self::$uploadFailureStatus = $status;
+    }
+
+    /**
+     * @return list<array{method: string, path: string, body: string}>
+     */
+    public static function uploads(): array
+    {
+        return self::$uploads;
     }
 
     public static function grantServiceAccountRole(string $fileId, string $role): void
@@ -111,6 +131,10 @@ final class FixtureGoogleClientFactory implements GoogleClientFactoryInterface
 
     private function driveResponse(string $method, string $path, string $requestBody): Response
     {
+        if (str_starts_with($path, '/upload/drive/v3/files')) {
+            return $this->upload($method, $path, $requestBody);
+        }
+
         if (preg_match('#^/drive/v3/files/([^/]+)/permissions$#', $path, $matches) === 1) {
             return $method === 'GET'
                 ? $this->jsonResponse(['permissions' => $this->servicePermissions($matches[1])])
@@ -168,6 +192,23 @@ final class FixtureGoogleClientFactory implements GoogleClientFactoryInterface
         self::$serviceAccountRoles[$fileId] = (string) $permission['role'];
 
         return $this->jsonResponse(['id' => self::SERVICE_ACCOUNT_PERMISSION_ID]);
+    }
+
+    private function upload(string $method, string $path, string $requestBody): Response
+    {
+        if (self::$uploadFailureStatus !== null) {
+            return new Response(self::$uploadFailureStatus, ['Content-Type' => 'application/json'], (string) json_encode([
+                'error' => ['code' => self::$uploadFailureStatus, 'message' => 'The user has not granted the app access to the folder.'],
+            ]));
+        }
+
+        self::$uploads[] = ['method' => $method, 'path' => $path, 'body' => $requestBody];
+        $fileId = preg_match('#^/upload/drive/v3/files/([^/]+)$#', $path, $matches) === 1 ? $matches[1] : sprintf('created-file-%d', ++self::$createdFileCount);
+
+        return $this->jsonResponse([
+            'id' => $fileId,
+            'webViewLink' => sprintf('https://docs.google.com/document/d/%s/edit', $fileId),
+        ]);
     }
 
     private function deleteFile(string $fileId): Response

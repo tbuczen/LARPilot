@@ -23,7 +23,7 @@ final readonly class StoryObjectRouter
     {
     }
 
-    public function getEditUrl(StoryObject $object, Larp $larp): ?string
+    public function getEditUrl(StoryObject $object, Larp $larp, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): ?string
     {
         $type = $object::getTargetType()->value;
         if (!isset(self::ROUTE_MAP[$type])) {
@@ -34,6 +34,6 @@ final readonly class StoryObjectRouter
         return $this->urlGenerator->generate($route, [
             'larp' => $larp->getId(),
             $param => $object->getId(),
-        ]);
+        ], $referenceType);
     }
 }

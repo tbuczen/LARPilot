@@ -199,10 +199,41 @@ Google integration settings instead of the file picker. Each organizer has to:
 ## Discord bot
 
 Organizers invite one shared LARPilot bot to their Discord server from
-**Integrations → Discord → Connect**. The bot is read-only (permissions
-`66560` = View Channel + Read Message History) and no Discord token is stored per
-LARP: the callback exchanges the one-time code only to learn which server the bot
-joined (Discord treats the `guild_id` query parameter as a hint), then revokes it.
+**Integrations → Discord → Connect**. The invite asks for permissions
+`309237713920`:
+
+| Permission | Bit | Used for |
+| --- | --- | --- |
+| View Channel | `1 << 10` | Listing channels and reading watched ones |
+| Read Message History | `1 << 16` | Syncing threads of watched channels |
+| Send Messages | `1 << 11` | Posting call transcript summaries |
+| Create Public Threads | `1 << 35` | One thread per posted call transcript |
+| Send Messages in Threads | `1 << 38` | The summary messages inside that thread |
+
+No Discord token is stored per LARP: the callback exchanges the one-time code only
+to learn which server the bot joined (Discord treats the `guild_id` query parameter
+as a hint), then revokes it. The `permissions` value Discord sends back on the
+callback is stored in the integration's config (`botPermissions`).
+
+The bot only **posts** into the one channel an organizer picks for a call
+transcript (on **Administration → Call transcripts**), and only among the channels
+the LARP watches; organizer-only channels are listed first, player-facing ones
+only on an explicit choice. It never posts anywhere else.
+
+### Servers connected before posting existed
+
+Servers invited with the old read-only permissions (`66560`), or where Discord
+answered 403 to a post, show **Update bot permissions** on the Discord page of the
+Integrations hub. That button runs the invite again with the new permissions;
+watched channels and links stay. Server admins can instead give the bot's role
+the three posting permissions by hand, but LARPilot only hides the prompt after a
+re-invite reports them.
+
+Matching call speakers to LARP participants also uses the bot to search the
+server's members by name (`GET /guilds/{id}/members/search`). If Discord refuses
+that search (for example because **Server Members Intent** is off on the **Bot**
+page), LARPilot quietly falls back to Discord accounts linked to LARPilot profiles
+and to names; turn the intent on if speakers are not matched.
 
 ### Developer portal setup
 
@@ -232,6 +263,24 @@ The deploy workflow writes all three into `.env.local`.
 Disconnecting Discord from a LARP deletes that LARP's watched channels, everything
 synced from them and the cached excerpts on its story links. The bot leaves the
 server only when no other LARP is still connected to it.
+
+## Call transcripts (ffmpeg)
+
+OpenAI speech-to-text accepts at most 25 MB per file. The worker checks for
+`ffmpeg` on the server at runtime (it must be on the `PATH` of the
+`messenger:consume` process):
+
+- **With ffmpeg** (`sudo apt-get install ffmpeg`), a speaker track over 24 MB is
+  converted to mono 16 kHz Opus at 24 kbps (about 11 MB per hour). If it is still
+  too big, it is cut into parts; each part is transcribed and its timestamps are
+  shifted, so the merged transcript keeps one timeline.
+- **Without ffmpeg**, MP3 tracks are still cut into parts on MP3 frame boundaries
+  in PHP. Other formats (FLAC, Ogg, …) over 25 MB fail with a clear "too large"
+  message for that speaker.
+
+The deploy log prints one line saying whether ffmpeg was found; it never fails the
+deploy. Rate limits and 5xx errors from the provider are retried by Messenger
+(about 1, 2 and 4 minutes later) before the speaker is marked as failed.
 
 ## Miro integration
 

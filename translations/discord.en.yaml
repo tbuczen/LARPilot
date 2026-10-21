@@ -1,9 +1,11 @@
 settings:
   connected_to: 'Connected to the Discord server "%guild%".'
   needs_reconnect: 'LARPilot cannot reach this Discord server any more. Reconnect to invite the bot again.'
-  privacy_note: 'The bot only reads the channels you choose. Every channel starts unwatched and organizer-only; private threads are never read.'
+  privacy_note: 'The bot only reads the channels you choose. Every channel starts unwatched and organizer-only; private threads are never read. It only posts call transcript summaries into a channel an organizer picked on the Call transcripts page.'
   choose_channels: 'Choose channels'
   reconnect: 'Reconnect'
+  update_permissions: 'Update bot permissions'
+  update_permissions_hint: 'The LARPilot bot was invited before it could post. To post call transcript summaries into Discord, invite it again so it may send messages and create threads. Your channels and links stay as they are.'
 channels:
   title: 'Discord channels'
   intro: 'Choose which channels of "%guild%" belong to this LARP. Other LARPs using the same server do not see your choices.'

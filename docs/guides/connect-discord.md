@@ -34,11 +34,16 @@ In your LARP, open **Administration → Integrations**. You can also use the
 
 1. On the **Discord** card, click **Connect**.
 2. Discord opens and asks where to add the **LARPilot** bot. Pick your server.
-3. Discord lists what the bot is allowed to do. It only asks for two things:
+3. Discord lists what the bot is allowed to do:
    - **View Channels** – to see the channel list;
-   - **Read Message History** – to read the conversations in channels you pick.
+   - **Read Message History** – to read the conversations in channels you pick;
+   - **Send Messages**, **Create Public Threads** and **Send Messages in
+     Threads** – only to post call transcript summaries, in a thread of the one
+     channel you pick for a call (see [Record and transcribe Discord
+     calls](record-and-transcribe-discord-calls.md)).
 
-   The bot cannot post, react, delete messages or change anything on your server.
+   The bot never posts on its own, and never reacts, deletes messages or changes
+   anything else on your server.
 4. Click **Authorize**. Discord sends you back to LARPilot.
 
 The Discord page now says **Connected to the Discord server "…"**.
@@ -170,6 +175,10 @@ suggestions. Organizers and story writers can use the inbox.
 
 - The bot reads **only** the channels you switched on. Everything else on the
   server is ignored.
+- The bot **posts** only call transcript summaries, and only into the channel an
+  organizer picked for that call. Organizer-only channels are offered first; a
+  player-facing channel is used only if an organizer explicitly picks it. Players
+  never see what is posted in organizer-only channels.
 - **Private threads are never read**, even inside a watched channel.
 - LARPilot is an index, not a copy of your chat: it keeps titles, links and
   short excerpts (organizer-only channels only), never full conversations.
@@ -188,6 +197,11 @@ More in the [Q&A](integrations-faq.md).
 If the Discord page shows *"LARPilot cannot reach this Discord server any
 more"*, the bot was removed from the server or lost its permissions. Click
 **Reconnect** and invite it again.
+
+If the Discord page shows **Update bot permissions**, the bot was invited before
+it could post (or Discord refused a post). Click the button and authorize the
+invite again; your channels and links stay as they are. You only need this if you
+want call transcript summaries posted to Discord.
 
 ## For the server admin
 

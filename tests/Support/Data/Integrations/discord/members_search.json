@@ -1,0 +1,18 @@
+[
+    {
+        "user": {
+            "id": "1200000000000000077",
+            "username": "tomasz.k",
+            "global_name": "tomek",
+            "avatar": null,
+            "discriminator": "0",
+            "public_flags": 0
+        },
+        "nick": "Tomek (GM)",
+        "roles": ["1100000000000000002"],
+        "joined_at": "2026-01-10T18:00:00.000000+00:00",
+        "deaf": false,
+        "mute": false,
+        "flags": 0
+    }
+]

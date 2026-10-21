@@ -48,6 +48,7 @@ class FixtureRouterTest extends TestCase
             'method' => 'GET',
             'path' => '/channels/' . IntegrationFixtureRouters::DISCORD_THREAD_ID . '/messages',
             'query' => ['limit' => '100'],
+            'body' => '',
         ], $router->getRequests()[0]);
     }
 

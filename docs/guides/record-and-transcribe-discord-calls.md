@@ -5,8 +5,9 @@ LARPilot to keep them: ready-made Discord bots already record calls and turn
 them into text with each line marked by who said it. This guide shows how to
 use them on their own today.
 
-This guide is for **LARP organizers**. LARPilot will later import these
-recordings and transcripts for you (see [What's coming](#whats-coming)).
+This guide is for **LARP organizers**. LARPilot can import Craig recordings
+and turn them into a summary and transcript for you (see [Putting a transcript
+into LARPilot](#putting-a-transcript-into-larpilot)).
 
 > **Before you record anyone**
 >
@@ -69,8 +70,9 @@ On the download page choose **Multi-track**. You get a `.zip` with one audio
 file per person, named after their Discord name.
 
 - To transcribe on your own computer, **FLAC** gives the best quality.
-- To upload to LARPilot (below), choose **Ogg Vorbis** or **MP3**: each
-  person's file must stay under 25 MB, which an hour of FLAC usually is not.
+- To upload to LARPilot (below), choose **Ogg Vorbis** or **MP3**. Files over
+  25 MB per person are compressed or split for you (see [Long
+  calls](#long-calls)); MP3 works even when the server has no ffmpeg.
 
 To leave someone out, delete their file before you share or transcribe.
 
@@ -176,17 +178,72 @@ Start at [discmeet.com](https://discmeet.com/discord-transcription).
 
 ## Putting a transcript into LARPilot
 
-Organizers can import a Craig recording straight into LARPilot:
+Organizers can import a Craig recording straight into LARPilot and get
+something close to "Google Meet + Gemini" notes: a summary, the decisions, who
+does what, and the full transcript with real names.
 
-1. Open **Administration → Call transcripts** and upload the Craig `.zip`
-   (Ogg Vorbis or MP3, see above). Pick the language: Polish is the default.
-2. LARPilot lists the speakers it found. Untick anyone who did not agree to
-   be recorded: their audio is deleted and never transcribed.
+### Once per LARP: defaults
+
+Open **Administration → Call transcripts**. The **Defaults for this LARP** card
+sets what every new upload starts with (you can still change it per upload):
+
+- **Write an AI summary** – on by default.
+- **Save a Google Doc copy in** – appears when Google Drive is connected. Pick a
+  Drive folder first: **Integrations → Google Drive → Mappings**, pick the folder
+  with the Google file picker, and it shows up in this list.
+- **Post the summary to** – appears when Discord is connected and the LARP
+  watches at least one channel. Organizer-only channels are listed first;
+  player-facing channels are in their own group because **players will see the
+  post**. Pick one of those only on purpose. If the page shows **Update bot
+  permissions**, the LARPilot bot was invited before it could post: click it and
+  authorize the invite again (see [Connect your Discord server](connect-discord.md)).
+
+### Every call
+
+1. Upload the Craig `.zip` (Ogg Vorbis or MP3, see above). Pick the language:
+   Polish is the default. Check the summary, Google Doc and Discord choices.
+2. LARPilot lists the speakers it found and proposes who each one is: it uses
+   the Discord account linked to a participant's LARPilot profile (Craig's
+   `info.txt` lists everyone's Discord id) or, if Discord is connected, the
+   server's member list. Change the proposal if it is wrong, or keep the raw
+   Discord name. Untick anyone who did not agree to be recorded: their audio is
+   deleted and never transcribed.
 3. Each person is transcribed separately in the background, then merged into
-   one transcript in time order (`[00:12:31] anna: …`). If the zip already
-   contains Craig's own transcripts, LARPilot uses them instead.
-4. When it is done, **Open transcript** shows the result. It is visible to
-   organizers only. The audio is deleted as soon as the transcript is ready.
+   one transcript in time order, with the names you confirmed:
+   `[00:12:31] Anna Nowak (Gracz): …`. If the zip already contains Craig's own
+   transcripts, LARPilot uses them instead.
+4. With the summary on, OpenAI then writes, in the call's language: a short
+   summary, **decisions**, **action items** (with the person, when someone was
+   named), **open questions**, and **mentioned story objects** – characters,
+   factions, threads, quests, places, items and events whose titles came up,
+   linked to their pages. Long calls are summarized part by part and merged.
+5. The summary goes at the top of a knowledge document, the transcript below
+   it. **Transcript** on the list opens it. It is visible to organizers only.
+   The audio is deleted as soon as the transcript is ready.
+6. If you picked a folder, a Google Doc named **"<call name> – <date>"** with
+   the same content appears there: **Open in Google Docs** on the list.
+7. If you picked a channel, the LARPilot bot opens a thread named after the
+   call in that channel and posts the summary (in several messages if it is
+   long, without pinging anyone) with links to the transcript and the Google
+   Doc. **Open in Discord** on the list jumps to it.
+
+The **Results** column shows each of these separately: *In progress*, *Ready*
+or *Failed*. A failed summary, Google Doc or Discord post never loses the
+transcript: read the reason under it, fix it (for example reconnect Google Drive
+or update the bot permissions) and click **Retry**.
+
+### Long calls
+
+OpenAI accepts at most 25 MB per file. Bigger speaker tracks are handled for
+you: if the server has **ffmpeg**, LARPilot compresses the track (about 11 MB
+per hour) and, if needed, cuts it into parts; without ffmpeg, **MP3** tracks
+are still cut into parts. The timestamps stay correct. Without ffmpeg, a FLAC or
+Ogg track over 25 MB fails with a "too large" message for that person – choose
+MP3 on the Craig download page, or ask whoever runs LARPilot to install ffmpeg.
+If OpenAI is busy or rate-limited, LARPilot waits and tries again a few times
+before giving up on a speaker.
+
+### What next
 
 Transcripts are raw material. Copy the decisions that matter into the story
 objects they are about, or into a **Lore Document** (Story → Lore Documents),
@@ -198,7 +255,6 @@ inbox** like any other conversation.
 
 ## What's coming
 
-Next steps: longer calls (splitting big audio files), reading Craig's Google
-Drive folder automatically, and saving transcripts to a Google Doc or a
-Discord thread. Progress is tracked in
+Next step: reading Craig's Google Drive folder automatically, so you don't
+have to download and upload the `.zip` yourself. Progress is tracked in
 [tbuczen/LARPilot#192](https://github.com/tbuczen/LARPilot/issues/192).

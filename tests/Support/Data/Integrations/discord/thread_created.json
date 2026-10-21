@@ -1,0 +1,21 @@
+{
+    "id": "1100000000000000555",
+    "type": 11,
+    "guild_id": "1100000000000000001",
+    "parent_id": "1100000000000000210",
+    "name": "Planowanie aktu 2",
+    "owner_id": "1100000000000000777",
+    "last_message_id": null,
+    "message_count": 0,
+    "member_count": 1,
+    "rate_limit_per_user": 0,
+    "flags": 0,
+    "thread_metadata": {
+        "archived": false,
+        "auto_archive_duration": 10080,
+        "archive_timestamp": "2026-10-21T18:00:00.000000+00:00",
+        "locked": false,
+        "create_timestamp": "2026-10-21T18:00:00.000000+00:00"
+    },
+    "total_message_sent": 0
+}

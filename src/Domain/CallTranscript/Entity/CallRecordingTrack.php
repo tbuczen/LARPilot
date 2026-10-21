@@ -5,6 +5,7 @@ namespace App\Domain\CallTranscript\Entity;
 use App\Domain\CallTranscript\DTO\TranscriptSegment;
 use App\Domain\CallTranscript\Entity\Enum\CallTrackStatus;
 use App\Domain\CallTranscript\Repository\CallRecordingTrackRepository;
+use App\Domain\Core\Entity\LarpParticipant;
 use App\Domain\Core\Entity\Trait\UuidTraitEntity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,6 +42,16 @@ class CallRecordingTrack
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $failureReason = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private int $attempts = 0;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $discordUserId = null;
+
+    #[ORM\ManyToOne(targetEntity: LarpParticipant::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?LarpParticipant $participant = null;
+
     public function __construct(CallRecording $recording, string $speaker, ?string $audioFilename, ?string $transcriptFilename)
     {
         $this->id = Uuid::v4();
@@ -59,6 +70,28 @@ class CallRecordingTrack
     public function getSpeaker(): string
     {
         return $this->speaker;
+    }
+
+    public function getDiscordUserId(): ?string
+    {
+        return $this->discordUserId;
+    }
+
+    public function setDiscordUserId(?string $discordUserId): self
+    {
+        $this->discordUserId = $discordUserId;
+        return $this;
+    }
+
+    public function getParticipant(): ?LarpParticipant
+    {
+        return $this->participant;
+    }
+
+    public function setParticipant(?LarpParticipant $participant): self
+    {
+        $this->participant = $participant;
+        return $this;
     }
 
     public function getAudioFilename(): ?string
@@ -102,6 +135,16 @@ class CallRecordingTrack
     public function getFailureReason(): ?string
     {
         return $this->failureReason;
+    }
+
+    public function getAttempts(): int
+    {
+        return $this->attempts;
+    }
+
+    public function registerAttempt(): void
+    {
+        ++$this->attempts;
     }
 
     /**

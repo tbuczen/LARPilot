@@ -8,6 +8,7 @@ use App\Domain\Account\Entity\User;
 use App\Domain\Application\Entity\LarpApplicationChoice;
 use App\Domain\CallTranscript\Entity\CallRecording;
 use App\Domain\CallTranscript\Entity\CallRecordingTrack;
+use App\Domain\CallTranscript\Entity\CallTranscriptSettings;
 use App\Domain\CallTranscript\Service\CallRecordingStorage;
 use App\Domain\Core\Entity\Enum\LarpStageStatus;
 use App\Domain\Core\Entity\Enum\ParticipantRole;
@@ -71,6 +72,7 @@ class LarpDeletionCest
 
     private const TABLES_OWNED_BY_LARP = [
         'call_recording',
+        'call_transcript_settings',
         'external_reference',
         'gallery',
         'game_map',
@@ -466,6 +468,7 @@ class LarpDeletionCest
         $callRecording->setCreatedBy($creator);
         $callRecording->addTrack(new CallRecordingTrack($callRecording, 'Organizer', 'organizer.flac', null));
         $entityManager->persist($callRecording);
+        $entityManager->persist((new CallTranscriptSettings($larp))->setSummaryEnabled(false));
         $entityManager->flush();
 
         /** @var CallRecordingStorage $storage */

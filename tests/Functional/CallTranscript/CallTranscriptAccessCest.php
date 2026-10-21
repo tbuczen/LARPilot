@@ -61,6 +61,56 @@ class CallTranscriptAccessCest
         $I->seeResponseCodeIs(403);
     }
 
+    public function playerCannotChangeSettingsOrRetryOutputs(FunctionalTester $I): void
+    {
+        $I->wantTo('verify a player cannot change call transcript defaults or retry an output');
+
+        $organizer = UserFactory::createApprovedUser();
+        $larp = LarpFactory::createDraftLarp($organizer);
+        $recording = new CallRecording($larp->_real(), 'Planning call', 'pl');
+        $recording->setCreatedBy($organizer);
+        $entityManager = $I->getEntityManager();
+        $entityManager->persist($recording);
+        $entityManager->flush();
+
+        $player = UserFactory::createApprovedUser();
+        LarpParticipantFactory::new()->forLarp($larp)->forUser($player)->player()->create();
+
+        $I->amLoggedInAs($player);
+        $I->sendAjaxPostRequest($I->getUrl('backoffice_larp_call_transcript_settings', ['larp' => $larp->getId()]), [
+            'call_transcript_settings' => ['summary' => '1'],
+        ]);
+        $I->seeResponseCodeIs(403);
+
+        $I->sendAjaxPostRequest($I->getUrl('backoffice_larp_call_transcript_retry', [
+            'larp' => $larp->getId(),
+            'recording' => $recording->getId(),
+            'output' => 'summary',
+        ]));
+        $I->seeResponseCodeIs(403);
+    }
+
+    public function organizerCannotRetryWithoutCsrfToken(FunctionalTester $I): void
+    {
+        $I->wantTo('verify retrying an output needs a CSRF token');
+
+        $organizer = UserFactory::createApprovedUser();
+        $larp = LarpFactory::createDraftLarp($organizer);
+        $recording = new CallRecording($larp->_real(), 'Planning call', 'pl');
+        $recording->setCreatedBy($organizer);
+        $entityManager = $I->getEntityManager();
+        $entityManager->persist($recording);
+        $entityManager->flush();
+
+        $I->amLoggedInAs($organizer);
+        $I->sendAjaxPostRequest($I->getUrl('backoffice_larp_call_transcript_retry', [
+            'larp' => $larp->getId(),
+            'recording' => $recording->getId(),
+            'output' => 'discord',
+        ]));
+        $I->seeResponseCodeIs(403);
+    }
+
     private function assertParticipantDenied(FunctionalTester $I, string $role): void
     {
         $organizer = UserFactory::createApprovedUser();

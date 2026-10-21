@@ -61,5 +61,20 @@ services:
         public: true
     App\Domain\CallTranscript\Service\SpeechToText\SpeechToTextProviderInterface: '@Tests\Support\CallTranscript\FakeSpeechToTextProvider'
 
+    Tests\Support\CallTranscript\FakeLlmProvider: ~
+
+    App\Domain\CallTranscript\Service\Summary\CallSummaryGenerator:
+        arguments:
+            $llmProvider: '@Tests\Support\CallTranscript\FakeLlmProvider'
+
+    App\Domain\CallTranscript\Service\Audio\FfmpegLocator:
+        arguments:
+            $enabled: false
+
+    App\Domain\CallTranscript\Service\SpeechToText\CallTrackAudioTranscriber:
+        autowire: true
+        arguments:
+            $maxChunkBytes: 20000
+
     Tests\Support\Integrations\MarkerLinkSuggester:
         tags: ['app.integrations.link_suggester']

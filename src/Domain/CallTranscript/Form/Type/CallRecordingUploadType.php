@@ -3,6 +3,7 @@
 namespace App\Domain\CallTranscript\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,13 +41,57 @@ class CallRecordingUploadType extends AbstractType
                     new File(extensions: ['zip']),
                 ],
                 'attr' => ['accept' => '.zip,application/zip'],
+            ])
+            ->add('summary', CheckboxType::class, [
+                'label' => 'call_recording.form.summary',
+                'help' => 'call_recording.form.summary_help',
+                'required' => false,
+                'data' => $options['summary_default'],
             ]);
+
+        $googleDocFolders = $options['google_doc_folders'];
+        if ($googleDocFolders !== []) {
+            $builder->add('googleDocFolder', ChoiceType::class, [
+                'label' => 'call_recording.form.google_doc_folder',
+                'help' => 'call_recording.form.google_doc_folder_help',
+                'required' => false,
+                'placeholder' => 'call_recording.form.google_doc_none',
+                'choices' => $googleDocFolders,
+                'choice_translation_domain' => false,
+                'data' => $options['google_doc_folder_default'],
+            ]);
+        }
+
+        $discordChannels = $options['discord_channels'];
+        if ($discordChannels !== []) {
+            $builder->add('discordChannel', ChoiceType::class, [
+                'label' => 'call_recording.form.discord_channel',
+                'help' => $options['discord_can_post'] ? 'call_recording.form.discord_channel_help' : 'call_recording.form.discord_channel_missing_permissions',
+                'required' => false,
+                'placeholder' => 'call_recording.form.discord_none',
+                'choices' => $discordChannels,
+                'choice_translation_domain' => false,
+                'data' => $options['discord_channel_default'],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'call_transcript',
+            'summary_default' => true,
+            'google_doc_folders' => [],
+            'google_doc_folder_default' => null,
+            'discord_channels' => [],
+            'discord_channel_default' => null,
+            'discord_can_post' => true,
         ]);
+        $resolver->setAllowedTypes('summary_default', 'bool');
+        $resolver->setAllowedTypes('google_doc_folders', 'array');
+        $resolver->setAllowedTypes('google_doc_folder_default', ['null', 'string']);
+        $resolver->setAllowedTypes('discord_channels', 'array');
+        $resolver->setAllowedTypes('discord_channel_default', ['null', 'string']);
+        $resolver->setAllowedTypes('discord_can_post', 'bool');
     }
 }

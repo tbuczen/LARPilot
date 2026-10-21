@@ -3,9 +3,11 @@
 namespace App\Domain\CallTranscript\Service;
 
 use App\Domain\Account\Entity\User;
+use App\Domain\CallTranscript\DTO\CallRecordingOptions;
 use App\Domain\CallTranscript\Entity\CallRecording;
 use App\Domain\CallTranscript\Entity\CallRecordingTrack;
 use App\Domain\CallTranscript\Service\Import\CallRecordingImporterInterface;
+use App\Domain\CallTranscript\Service\Speaker\CallSpeakerMatcher;
 use App\Domain\Core\Entity\Larp;
 use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
@@ -16,13 +18,17 @@ final readonly class CallRecordingUploader
         private CallRecordingImporterInterface $importer,
         private CallRecordingStorage $storage,
         private EntityManagerInterface $entityManager,
+        private CallSpeakerMatcher $speakerMatcher,
     ) {
     }
 
-    public function upload(Larp $larp, User $organizer, string $title, ?string $language, string $archivePath): CallRecording
+    public function upload(Larp $larp, User $organizer, string $title, ?string $language, string $archivePath, CallRecordingOptions $options = new CallRecordingOptions()): CallRecording
     {
         $recording = new CallRecording($larp, $title, $language);
         $recording->setCreatedBy($organizer);
+        $recording->requestSummary($options->summary);
+        $recording->requestGoogleDoc($options->googleDocFolder);
+        $recording->requestDiscordPost($options->discordChannelId);
         $this->entityManager->persist($recording);
 
         try {
@@ -37,8 +43,11 @@ final readonly class CallRecordingUploader
             ->setRecordingStartedAt($importedRecording->startedAt)
             ->setNotes($importedRecording->notes);
         foreach ($importedRecording->tracks as $importedTrack) {
-            new CallRecordingTrack($recording, $importedTrack->speaker, $importedTrack->audioFilename, $importedTrack->transcriptFilename);
+            $track = new CallRecordingTrack($recording, $importedTrack->speaker, $importedTrack->audioFilename, $importedTrack->transcriptFilename);
+            $track->setDiscordUserId($importedTrack->discordUserId);
         }
+
+        $this->speakerMatcher->proposeParticipants($recording);
 
         $this->entityManager->flush();
 

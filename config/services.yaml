@@ -87,6 +87,9 @@ services:
     App\Domain\CallTranscript\Service\SpeechToText\SpeechToTextProviderInterface:
         alias: App\Domain\CallTranscript\Service\SpeechToText\OpenAISpeechToTextProvider
 
+    App\Domain\CallTranscript\Service\Audio\AudioChunkerInterface:
+        alias: App\Domain\CallTranscript\Service\Audio\SizeLimitedAudioChunker
+
     App\Domain\CallTranscript\Service\Import\CallRecordingImporterInterface:
         alias: App\Domain\CallTranscript\Service\Import\CraigRecordingImporter
 

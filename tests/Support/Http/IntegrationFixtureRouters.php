@@ -44,8 +44,11 @@ final class IntegrationFixtureRouters
             ->on('GET', '/guilds/{guild_id}', 'guild.json')
             ->on('GET', '/guilds/{guild_id}/channels', 'channels.json')
             ->on('GET', '/guilds/{guild_id}/threads/active', 'threads_active.json')
+            ->on('GET', '/guilds/{guild_id}/members/search', 'members_search.json')
             ->on('GET', '/channels/{channel_id}/threads/archived/public', 'threads_archived_public.json')
             ->on('GET', '/channels/{channel_id}/messages', 'messages.json')
+            ->on('POST', '/channels/{channel_id}/threads', 'thread_created.json', 201)
+            ->on('POST', '/channels/{channel_id}/messages', 'message_created.json')
             ->on('POST', '/oauth2/token', 'oauth2_token_bot.json')
             ->on('POST', '/oauth2/token/revoke', 'no_content.json')
             ->on('DELETE', '/users/@me/guilds/{guild_id}', 'no_content.json', 204);

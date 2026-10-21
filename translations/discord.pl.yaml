@@ -1,9 +1,11 @@
 settings:
   connected_to: 'Połączono z serwerem Discord „%guild%”.'
   needs_reconnect: 'LARPilot nie ma już dostępu do tego serwera Discord. Połącz ponownie, aby znów zaprosić bota.'
-  privacy_note: 'Bot czyta tylko wybrane kanały. Każdy kanał jest domyślnie nieobserwowany i widoczny tylko dla organizatorów; prywatne wątki nigdy nie są czytane.'
+  privacy_note: 'Bot czyta tylko wybrane przez Ciebie kanały. Każdy kanał startuje jako nieobserwowany i tylko dla organizatorów; prywatne wątki nigdy nie są czytane. Publikuje tylko podsumowania rozmów w kanale wybranym przez organizatora na stronie Transkrypcje rozmów.'
   choose_channels: 'Wybierz kanały'
   reconnect: 'Połącz ponownie'
+  update_permissions: 'Zaktualizuj uprawnienia bota'
+  update_permissions_hint: 'Bot LARPilot został zaproszony, zanim mógł publikować. Aby publikować podsumowania rozmów na Discordzie, zaproś go ponownie, żeby mógł wysyłać wiadomości i tworzyć wątki. Kanały i powiązania zostaną bez zmian.'
 channels:
   title: 'Kanały Discord'
   intro: 'Wybierz, które kanały serwera „%guild%” należą do tego LARP-a. Inne LARP-y korzystające z tego serwera nie widzą Twojego wyboru.'

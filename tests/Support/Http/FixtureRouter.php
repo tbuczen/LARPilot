@@ -14,7 +14,7 @@ final class FixtureRouter
     private array $routes = [];
 
     /**
-     * @var list<array{method: string, path: string, query: array<string, mixed>}>
+     * @var list<array{method: string, path: string, query: array<string, mixed>, body: string}>
      */
     private array $requests = [];
 
@@ -54,7 +54,8 @@ final class FixtureRouter
         $path = $this->relativePath(rawurldecode((string) parse_url($url, PHP_URL_PATH)));
         parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
 
-        $this->requests[] = ['method' => $method, 'path' => $path, 'query' => $query];
+        $body = $options['body'] ?? '';
+        $this->requests[] = ['method' => $method, 'path' => $path, 'query' => $query, 'body' => is_string($body) ? $body : ''];
 
         $route = $this->match($method, $path, $query);
         if ($route === null) {
@@ -86,7 +87,7 @@ final class FixtureRouter
     }
 
     /**
-     * @return list<array{method: string, path: string, query: array<string, mixed>}>
+     * @return list<array{method: string, path: string, query: array<string, mixed>, body: string}>
      */
     public function getRequests(): array
     {

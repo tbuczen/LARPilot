@@ -38,7 +38,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 readonly class DiscordIntegrationProvider implements ConnectableIntegrationInterface, CredentialProviderInterface, SourceSyncIntegrationInterface, ConversationSourceIntegrationInterface
 {
     public const AUTHORIZE_URL = 'https://discord.com/oauth2/authorize';
-    public const BOT_PERMISSIONS = '66560';
+    public const BOT_PERMISSIONS = '309237713920';
     public const GUILD_INSTALL = '0';
     public const GUILD_NAME_CONFIG_KEY = 'guildName';
     public const ACCOUNT_LABEL_CONFIG_KEY = 'accountLabel';
@@ -117,6 +117,8 @@ readonly class DiscordIntegrationProvider implements ConnectableIntegrationInter
         $integration->setConfig(array_merge($integration->getConfig() ?? [], [
             self::GUILD_NAME_CONFIG_KEY => $guild->name,
             self::ACCOUNT_LABEL_CONFIG_KEY => $guild->name,
+            DiscordBotPermissions::GRANTED_CONFIG_KEY => DiscordBotPermissions::grantedFromCallback($callback->query['permissions'] ?? null),
+            DiscordBotPermissions::POSTING_DENIED_CONFIG_KEY => false,
         ]));
         $integration->markActive();
         $this->larpIntegrationRepository->save($integration);
