@@ -55,7 +55,7 @@ final class DomainBoundaryRule implements Rule
         'Integration' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account'],
         'Integrations' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account'],
         'Feedback' => ['Infrastructure', 'Core'],
-        'CallTranscript' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account'],
+        'CallTranscript' => ['Infrastructure', 'Core', 'Larp', 'StoryObject', 'Account', 'Integrations', 'StoryAI'],
         'Gallery' => ['Infrastructure', 'Core', 'Larp', 'Account'],
         'Survey' => ['Infrastructure', 'Core', 'Larp', 'Account', 'Application', 'StoryObject'],
         'Mailing' => ['Infrastructure', 'Core', 'Larp'],

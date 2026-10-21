@@ -102,6 +102,20 @@ class CraigRecordingImporterTest extends TestCase
         $this->assertStringEndsWith('.srt', (string) $tracksBySpeaker['ghost']->transcriptFilename);
     }
 
+    public function testReadsDiscordUserIdsOfTracksFromInfoFile(): void
+    {
+        $info = "Tracks:\n\tAnna#0 (11)\n\ttomek (12)\n\nNotes:\n";
+        $recording = $this->import([
+            '1-anna.flac' => 'audio',
+            '2-tomek_0.flac' => 'audio',
+            '3-ewa.flac' => 'audio',
+            'info.txt' => $info,
+        ]);
+
+        $this->assertSame(['11', null, '12'], array_map(static fn (ImportedCallTrack $track): ?string => $track->discordUserId, $recording->tracks));
+        $this->assertSame(['anna' => '11', 'tomek' => '12'], (new CraigInfoParser())->parseTrackUserIds($info));
+    }
+
     public function testRejectsArchiveWithoutSpeakers(): void
     {
         $this->expectException(CallRecordingImportException::class);

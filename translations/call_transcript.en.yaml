@@ -44,3 +44,6 @@ call_recording:
     submit: 'Transcribe'
     nothing_selected: 'Select at least one speaker.'
     started: 'Transcription started. The transcript appears in knowledge documents when it is ready.'
+    participant: 'Who is %speaker%?'
+    participant_raw: 'Keep "%speaker%"'
+    participants_hint: 'LARPilot proposes who each speaker is, from the Discord account linked to their LARPilot profile or the Discord server''s member list. Change it if it is wrong; the transcript shows the name and role you pick.'

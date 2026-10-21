@@ -7,6 +7,7 @@ namespace App\Domain\Integrations\Discord\Client;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordBotAuthorization;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordChannel;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordGuild;
+use App\Domain\Integrations\Discord\Client\Dto\DiscordGuildMember;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordMessage;
 use App\Domain\Integrations\Discord\Client\Dto\DiscordThread;
 use App\Domain\Integrations\Discord\Client\Exception\DiscordAccessLostException;
@@ -26,6 +27,8 @@ final class DiscordClient
     public const MAX_PAGE_SIZE = 100;
 
     public const MAX_RATE_LIMIT_ATTEMPTS = 3;
+
+    public const MAX_MEMBER_SEARCH_RESULTS = 1000;
 
     private const DEFAULT_RETRY_AFTER_SECONDS = 1.0;
 
@@ -159,6 +162,22 @@ final class DiscordClient
         usort($messages, fn (DiscordMessage $left, DiscordMessage $right): int => $this->compareSnowflakes($left->id, $right->id));
 
         return array_slice($messages, -$limit);
+    }
+
+    /**
+     * @return list<DiscordGuildMember>
+     */
+    public function searchGuildMembers(string $guildId, string $query, int $limit = 10): array
+    {
+        $this->assertSnowflake($guildId);
+        if ($limit < 1 || $limit > self::MAX_MEMBER_SEARCH_RESULTS) {
+            throw new InvalidArgumentException(sprintf('Discord member search limit must be between 1 and %d, %d given.', self::MAX_MEMBER_SEARCH_RESULTS, $limit));
+        }
+
+        return array_map(
+            DiscordGuildMember::fromArray(...),
+            $this->getList(sprintf('guilds/%s/members/search', $guildId), ['query' => $query, 'limit' => $limit]),
+        );
     }
 
     public function exchangeBotAuthorizationCode(string $code, string $redirectUri, string $clientId, string $clientSecret): DiscordBotAuthorization

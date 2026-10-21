@@ -8,6 +8,7 @@ final readonly class ImportedCallTrack
         public string $speaker,
         public ?string $audioFilename,
         public ?string $transcriptFilename,
+        public ?string $discordUserId = null,
     ) {
     }
 }

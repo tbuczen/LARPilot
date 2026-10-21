@@ -10,6 +10,7 @@ use App\Domain\CallTranscript\Security\Voter\CallTranscriptVoter;
 use App\Domain\CallTranscript\Service\CallRecordingUploader;
 use App\Domain\CallTranscript\Service\CallTranscriptionStarter;
 use App\Domain\CallTranscript\Service\Import\CallRecordingImportException;
+use App\Domain\CallTranscript\Service\Speaker\CallSpeakerLabeler;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -72,14 +73,24 @@ class CallTranscriptController extends BaseController
     }
 
     #[Route('/{recording}', name: 'review', methods: ['GET'])]
-    public function review(Larp $larp, CallRecording $recording): Response
+    public function review(Larp $larp, CallRecording $recording, CallSpeakerLabeler $speakerLabeler): Response
     {
         $this->denyAccessUnlessGranted(CallTranscriptVoter::MANAGE, $larp);
         $this->assertBelongsToLarp($recording, $larp);
 
+        $participantChoices = [];
+        foreach ($larp->getParticipants() as $participant) {
+            $label = $speakerLabeler->participantLabel($participant);
+            if ($label !== null) {
+                $participantChoices[$participant->getId()->toRfc4122()] = $label;
+            }
+        }
+        asort($participantChoices, SORT_NATURAL | SORT_FLAG_CASE);
+
         return $this->render('domain/call_transcript/call_recording/review.html.twig', [
             'larp' => $larp,
             'recording' => $recording,
+            'participantChoices' => $participantChoices,
         ]);
     }
 
@@ -104,7 +115,12 @@ class CallTranscriptController extends BaseController
             $request->request->all('speakers'),
             static fn (mixed $trackId): bool => is_string($trackId) && $trackId !== '',
         ));
-        if ($starter->start($recording, $includedTrackIds) === 0) {
+        $participantIdsByTrackId = array_filter(
+            $request->request->all('participants'),
+            static fn (mixed $participantId, mixed $trackId): bool => is_string($participantId) && is_string($trackId),
+            ARRAY_FILTER_USE_BOTH,
+        );
+        if ($starter->start($recording, $includedTrackIds, $participantIdsByTrackId) === 0) {
             $this->addFlash('warning', $this->translator->trans('call_recording.review.nothing_selected', [], 'call_transcript'));
 
             return $this->redirectToRoute('backoffice_larp_call_transcript_review', [

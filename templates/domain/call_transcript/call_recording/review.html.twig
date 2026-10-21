@@ -15,6 +15,7 @@
         {{ ui.info_alert(('call_recording.status.' ~ recording.status.value)|trans({}, 'call_transcript')) }}
     {% else %}
         <p class="text-muted">{{ 'call_recording.review.intro'|trans({}, 'call_transcript') }}</p>
+        <p class="small text-muted">{{ 'call_recording.review.participants_hint'|trans({}, 'call_transcript') }}</p>
         {% if recording.recordingStartedAt %}
             <p class="small text-muted">{{ 'call_recording.review.started_at'|trans({ '%date%': recording.recordingStartedAt|display_datetime }, 'call_transcript') }}</p>
         {% endif %}
@@ -28,17 +29,31 @@
                 <ul class="list-group list-group-flush">
                     {% for track in recording.tracks %}
                         {% set trackInputId = 'call-track-' ~ track.id %}
+                        {% set participantInputId = 'call-track-participant-' ~ track.id %}
                         <li class="list-group-item" data-call-track="{{ track.speaker }}">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="speakers[]" value="{{ track.id }}" id="{{ trackInputId }}" checked>
-                                <label class="form-check-label" for="{{ trackInputId }}">
-                                    <span class="fw-semibold text-break">{{ track.speaker }}</span>
-                                    {% if track.hasTranscript %}
-                                        <span class="badge text-bg-success">{{ 'call_recording.review.has_transcript'|trans({}, 'call_transcript') }}</span>
-                                    {% else %}
-                                        <span class="badge bg-light text-dark border">{{ 'call_recording.review.needs_transcription'|trans({}, 'call_transcript') }}</span>
-                                    {% endif %}
-                                </label>
+                            <div class="row g-2 align-items-center">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="speakers[]" value="{{ track.id }}" id="{{ trackInputId }}" checked>
+                                        <label class="form-check-label" for="{{ trackInputId }}">
+                                            <span class="fw-semibold text-break">{{ track.speaker }}</span>
+                                            {% if track.hasTranscript %}
+                                                <span class="badge text-bg-success">{{ 'call_recording.review.has_transcript'|trans({}, 'call_transcript') }}</span>
+                                            {% else %}
+                                                <span class="badge bg-light text-dark border">{{ 'call_recording.review.needs_transcription'|trans({}, 'call_transcript') }}</span>
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label class="visually-hidden" for="{{ participantInputId }}">{{ 'call_recording.review.participant'|trans({ '%speaker%': track.speaker }, 'call_transcript') }}</label>
+                                    <select class="form-select form-select-sm" name="participants[{{ track.id }}]" id="{{ participantInputId }}">
+                                        <option value="">{{ 'call_recording.review.participant_raw'|trans({ '%speaker%': track.speaker }, 'call_transcript') }}</option>
+                                        {% for participantId, participantLabel in participantChoices %}
+                                            <option value="{{ participantId }}" {{ track.participant and track.participant.id.toRfc4122 == participantId ? 'selected' }}>{{ participantLabel }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                         </li>
                     {% endfor %}

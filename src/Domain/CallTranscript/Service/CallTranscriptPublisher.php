@@ -5,6 +5,7 @@ namespace App\Domain\CallTranscript\Service;
 use App\Domain\CallTranscript\DTO\SpeakerTranscript;
 use App\Domain\CallTranscript\Entity\CallRecording;
 use App\Domain\CallTranscript\Entity\CallRecordingTrack;
+use App\Domain\CallTranscript\Service\Speaker\CallSpeakerLabeler;
 use App\Domain\CallTranscript\Service\Transcript\TranscriptMerger;
 use App\Domain\Core\Service\Helper\DateFormat;
 use App\Domain\StoryObject\Entity\KnowledgeDocument;
@@ -21,6 +22,7 @@ final readonly class CallTranscriptPublisher
         private CallRecordingStorage $storage,
         private EntityManagerInterface $entityManager,
         private TranslatorInterface $translator,
+        private CallSpeakerLabeler $speakerLabeler,
     ) {
     }
 
@@ -34,7 +36,7 @@ final readonly class CallTranscriptPublisher
                 continue;
             }
 
-            $speakerTranscripts[] = new SpeakerTranscript($track->getSpeaker(), $track->getSegments());
+            $speakerTranscripts[] = new SpeakerTranscript($this->speakerLabeler->label($track, $recording->getLanguage()), $track->getSegments());
         }
 
         $this->storage->removeAll($recording);

@@ -44,3 +44,6 @@ call_recording:
     submit: 'Transkrybuj'
     nothing_selected: 'Wybierz co najmniej jednego rozmówcę.'
     started: 'Transkrypcja rozpoczęta. Pojawi się w dokumentach wiedzy, gdy będzie gotowa.'
+    participant: 'Kim jest %speaker%?'
+    participant_raw: 'Zostaw „%speaker%”'
+    participants_hint: 'LARPilot proponuje, kim jest każdy rozmówca, na podstawie konta Discord połączonego z profilem w LARPilot albo listy członków serwera Discord. Popraw, jeśli się nie zgadza – transkrypcja pokaże wybrane imię i rolę.'
