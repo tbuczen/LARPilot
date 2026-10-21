@@ -18,5 +18,6 @@ when@prod:
                 type: sentry
                 level: error
                 hub_id: Sentry\State\HubInterface
+                channels: ["!request", "!console", "!event", "!deprecation"]
                 fill_extra_context: true
                 process_psr_3_messages: false

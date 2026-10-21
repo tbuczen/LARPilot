@@ -24,6 +24,12 @@ exports it for the cache warmup, so Sentry is active from that release onward.
 
 To try it locally first, put the DSN in `.env.local` and run with `APP_ENV=prod`.
 
+## Using GlitchTip instead
+
+[GlitchTip](https://glitchtip.com) speaks the Sentry protocol, so no code
+changes are needed: put the GlitchTip project's DSN in the `SENTRY_DSN` secret
+and deploy. Its free plan is 1,000 events per month, so keep noisy errors out.
+
 ## Checking it works
 
 Every deploy ends by running `bin/console sentry:test` on the server with the
@@ -45,8 +51,10 @@ The same command can be run on the server by hand at any time.
 ## What gets reported
 
 - Every unhandled exception in the `prod` environment.
-- Every Monolog record at `error` level or above, from any channel, with the
-  log's context attached.
+- Every Monolog record at `error` level or above, with the log's context
+  attached, except the `request` and `console` channels: those only repeat the
+  uncaught exceptions the bundle already reports, so each crash costs one event,
+  not two.
 
 Deliberately **not** reported:
 
