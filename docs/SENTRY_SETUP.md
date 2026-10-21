@@ -24,6 +24,24 @@ exports it for the cache warmup, so Sentry is active from that release onward.
 
 To try it locally first, put the DSN in `.env.local` and run with `APP_ENV=prod`.
 
+## Checking it works
+
+Every deploy ends by running `bin/console sentry:test` on the server with the
+settings the website reads from `.env.local`, and prints the result in the
+deploy log:
+
+- `Message sent successfully with ID …` – a test event is in Sentry; errors are
+  reported.
+- `WARNING: SENTRY_DSN is empty` – the `SENTRY_DSN` secret is missing on the
+  `prod` environment.
+- `No DSN configured` – the DSN is set in GitHub but did not reach the
+  website's `.env.local`.
+- `Message not sent!` – the DSN is loaded but the server could not reach Sentry
+  (outbound HTTPS to `*.sentry.io` blocked by the host's firewall, or a wrong
+  DSN).
+
+The same command can be run on the server by hand at any time.
+
 ## What gets reported
 
 - Every unhandled exception in the `prod` environment.
