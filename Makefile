@@ -146,10 +146,13 @@ qa: ecs stan test
 # ============================================================================
 
 # Full deployment with git pull
+# Requests get public/maintenance.html (503) while the cache is rebuilt,
+# instead of hitting a half-deleted cache. The flag is removed even if a
+# step fails, so the site never stays in maintenance.
 deploy:
 	@echo "🚀 Starting deployment..."
-	git pull
-	$(MAKE) deploy-no-pull
+	mkdir -p var && touch var/maintenance
+	git pull && $(MAKE) deploy-no-pull; status=$$?; rm -f var/maintenance; exit $$status
 
 # Deployment without git pull
 deploy-no-pull: deploy-deps deploy-cache deploy-assets deploy-workers deploy-tokens
