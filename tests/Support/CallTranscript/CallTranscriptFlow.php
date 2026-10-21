@@ -6,8 +6,10 @@ namespace Tests\Support\CallTranscript;
 
 use App\Domain\CallTranscript\Entity\CallRecording;
 use App\Domain\CallTranscript\Message\FinalizeCallTranscriptMessage;
+use App\Domain\CallTranscript\Message\GenerateCallSummaryMessage;
 use App\Domain\CallTranscript\Message\TranscribeCallTrackMessage;
 use App\Domain\CallTranscript\MessageHandler\FinalizeCallTranscriptHandler;
+use App\Domain\CallTranscript\MessageHandler\GenerateCallSummaryHandler;
 use App\Domain\CallTranscript\MessageHandler\TranscribeCallTrackHandler;
 use App\Domain\CallTranscript\Service\CallRecordingStorage;
 use Symfony\Component\Filesystem\Filesystem;
@@ -50,7 +52,7 @@ trait CallTranscriptFlow
         $I->fillField('call_recording_upload[title]', $title);
         $I->selectOption('call_recording_upload[language]', $language);
         $I->attachFile('call_recording_upload[archive]', $this->archiveFilename);
-        $options += [];
+        $options += ['summary' => false];
         foreach ($options as $field => $value) {
             $fieldName = sprintf('call_recording_upload[%s]', $field);
             match (true) {
@@ -81,6 +83,16 @@ trait CallTranscriptFlow
         $I->assertCount($expectedTracks, $this->pendingMessages($I, TranscribeCallTrackMessage::class));
         $this->drainAsyncTransport($I);
 
+        $I->followRedirect();
+        $I->startFollowingRedirects();
+    }
+
+    private function submitAndDrain(FunctionalTester $I, string $formSelector): void
+    {
+        $I->stopFollowingRedirects();
+        $I->submitForm($formSelector, []);
+        $I->seeResponseCodeIsRedirection();
+        $this->drainAsyncTransport($I);
         $I->followRedirect();
         $I->startFollowingRedirects();
     }
@@ -131,6 +143,7 @@ trait CallTranscriptFlow
         return match ($message::class) {
             TranscribeCallTrackMessage::class => TranscribeCallTrackHandler::class,
             FinalizeCallTranscriptMessage::class => FinalizeCallTranscriptHandler::class,
+            GenerateCallSummaryMessage::class => GenerateCallSummaryHandler::class,
             default => null,
         };
     }

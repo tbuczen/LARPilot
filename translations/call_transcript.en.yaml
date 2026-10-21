@@ -15,6 +15,7 @@ call_recording:
     title: 'Call'
     status: 'Status'
     uploaded: 'Uploaded'
+    outputs: 'Results'
   status:
     awaiting_review: 'Waiting for speaker review'
     transcribing: 'Transcribing'
@@ -28,6 +29,8 @@ call_recording:
     language_auto: 'Detect automatically'
     archive: 'Craig recording (.zip)'
     archive_help: 'On the Craig download page choose "Multi-track". If the zip contains Craig transcripts (.vtt, .srt or .txt), they are used instead of speech-to-text.'
+    summary: 'AI summary'
+    summary_help: 'After the transcript, OpenAI writes a short summary, decisions, action items, open questions and links to the story objects that came up. It goes at the top of the transcript.'
   import:
     unreadable_archive: 'The file is not a readable zip archive.'
     too_large: 'The archive is too large to import.'
@@ -47,3 +50,27 @@ call_recording:
     participant: 'Who is %speaker%?'
     participant_raw: 'Keep "%speaker%"'
     participants_hint: 'LARPilot proposes who each speaker is, from the Discord account linked to their LARPilot profile or the Discord server''s member list. Change it if it is wrong; the transcript shows the name and role you pick.'
+  output:
+    summary: 'Summary'
+    retry: 'Retry'
+    retry_started: 'Started again. Refresh the page in a minute.'
+    status:
+      skipped: 'Not requested'
+      pending: 'In progress'
+      done: 'Ready'
+      failed: 'Failed'
+  document:
+    transcript: 'Transcript'
+    summary: 'Summary'
+    decisions: 'Decisions'
+    action_items: 'Action items'
+    open_questions: 'Open questions'
+    story_objects: 'Mentioned story objects'
+    type:
+      character: 'Character'
+      faction: 'Faction'
+      thread: 'Thread'
+      quest: 'Quest'
+      place: 'Place'
+      item: 'Item'
+      event: 'Event'

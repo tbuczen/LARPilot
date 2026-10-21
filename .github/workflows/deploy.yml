@@ -82,6 +82,7 @@ jobs:
 
             cat > .env.local <<ENVLOCAL
             APP_ENV=${APP_ENV:-prod}
+            DEFAULT_URI=${DEFAULT_URI:-https://larpilot.com}
             DATABASE_HOST=${DATABASE_HOST}
             DATABASE_PORT=${DB_PORT}
             DATABASE_NAME=${DATABASE_NAME}
@@ -158,6 +159,7 @@ jobs:
             fi
         env:
           PROJECT_DIR: ${{ vars.PROJECT_DIR }}
+          DEFAULT_URI: ${{ vars.DEFAULT_URI }}
           APP_ENV: ${{ secrets.APP_ENV }}
           APP_SECRET: ${{ secrets.APP_SECRET }}
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}

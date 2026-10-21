@@ -15,6 +15,7 @@ call_recording:
     title: 'Rozmowa'
     status: 'Status'
     uploaded: 'Wgrano'
+    outputs: 'Wyniki'
   status:
     awaiting_review: 'Czeka na wybór rozmówców'
     transcribing: 'Trwa transkrypcja'
@@ -28,6 +29,8 @@ call_recording:
     language_auto: 'Wykryj automatycznie'
     archive: 'Nagranie Craiga (.zip)'
     archive_help: 'Na stronie pobierania Craiga wybierz „Multi-track”. Jeśli zip zawiera transkrypcje Craiga (.vtt, .srt lub .txt), zostaną użyte zamiast rozpoznawania mowy.'
+    summary: 'Podsumowanie AI'
+    summary_help: 'Po transkrypcji OpenAI pisze krótkie podsumowanie, decyzje, zadania, otwarte pytania i linki do obiektów fabularnych, o których była mowa. Trafia ono na początek transkrypcji.'
   import:
     unreadable_archive: 'Plik nie jest poprawnym archiwum zip.'
     too_large: 'Archiwum jest zbyt duże do zaimportowania.'
@@ -47,3 +50,27 @@ call_recording:
     participant: 'Kim jest %speaker%?'
     participant_raw: 'Zostaw „%speaker%”'
     participants_hint: 'LARPilot proponuje, kim jest każdy rozmówca, na podstawie konta Discord połączonego z profilem w LARPilot albo listy członków serwera Discord. Popraw, jeśli się nie zgadza – transkrypcja pokaże wybrane imię i rolę.'
+  output:
+    summary: 'Podsumowanie'
+    retry: 'Ponów'
+    retry_started: 'Uruchomiono ponownie. Odśwież stronę za minutę.'
+    status:
+      skipped: 'Nie zamówiono'
+      pending: 'W toku'
+      done: 'Gotowe'
+      failed: 'Błąd'
+  document:
+    transcript: 'Transkrypcja'
+    summary: 'Podsumowanie'
+    decisions: 'Decyzje'
+    action_items: 'Zadania'
+    open_questions: 'Otwarte pytania'
+    story_objects: 'Wspomniane obiekty fabularne'
+    type:
+      character: 'Postać'
+      faction: 'Frakcja'
+      thread: 'Wątek'
+      quest: 'Zadanie fabularne'
+      place: 'Miejsce'
+      item: 'Przedmiot'
+      event: 'Wydarzenie'

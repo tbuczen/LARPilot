@@ -2,7 +2,10 @@
 
 namespace App\Domain\CallTranscript\Entity;
 
+use App\Domain\CallTranscript\DTO\CallSummary;
 use App\Domain\CallTranscript\DTO\TranscriptSegment;
+use App\Domain\CallTranscript\Entity\Enum\CallOutput;
+use App\Domain\CallTranscript\Entity\Enum\CallOutputStatus;
 use App\Domain\CallTranscript\Entity\Enum\CallRecordingStatus;
 use App\Domain\CallTranscript\Repository\CallRecordingRepository;
 use App\Domain\Core\Entity\Larp;
@@ -57,6 +60,18 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $failureReason = null;
+
+    #[ORM\Column(length: 20, enumType: CallOutputStatus::class, options: ['default' => 'skipped'])]
+    private CallOutputStatus $summaryStatus = CallOutputStatus::SKIPPED;
+
+    /**
+     * @var array<mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $summary = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $summaryFailureReason = null;
 
     /**
      * @var Collection<int, CallRecordingTrack>
@@ -180,5 +195,76 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
     {
         $this->status = CallRecordingStatus::FAILED;
         $this->failureReason = $failureReason;
+        if ($this->summaryStatus === CallOutputStatus::PENDING) {
+            $this->summaryStatus = CallOutputStatus::SKIPPED;
+        }
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status === CallRecordingStatus::COMPLETED;
+    }
+
+    public function outputStatus(CallOutput $output): CallOutputStatus
+    {
+        return match ($output) {
+            CallOutput::SUMMARY => $this->summaryStatus,
+        };
+    }
+
+    public function outputFailureReason(CallOutput $output): ?string
+    {
+        return match ($output) {
+            CallOutput::SUMMARY => $this->summaryFailureReason,
+        };
+    }
+
+    /**
+     * @return list<CallOutput>
+     */
+    public function requestedOutputs(): array
+    {
+        $requestedOutputs = [];
+        foreach (CallOutput::cases() as $output) {
+            if ($this->outputStatus($output) !== CallOutputStatus::SKIPPED) {
+                $requestedOutputs[] = $output;
+            }
+        }
+
+        return $requestedOutputs;
+    }
+
+    public function getSummaryStatus(): CallOutputStatus
+    {
+        return $this->summaryStatus;
+    }
+
+    public function getSummary(): ?CallSummary
+    {
+        return $this->summary === null ? null : CallSummary::fromArray($this->summary);
+    }
+
+    public function getSummaryFailureReason(): ?string
+    {
+        return $this->summaryFailureReason;
+    }
+
+    public function requestSummary(bool $requested): void
+    {
+        $this->summaryStatus = $requested ? CallOutputStatus::PENDING : CallOutputStatus::SKIPPED;
+        $this->summaryFailureReason = null;
+    }
+
+    public function completeSummary(CallSummary $summary): void
+    {
+        $this->summary = $summary->toArray();
+        $this->summaryStatus = CallOutputStatus::DONE;
+        $this->summaryFailureReason = null;
+    }
+
+    public function failSummary(string $failureReason): void
+    {
+        $this->summaryStatus = CallOutputStatus::FAILED;
+        $this->summaryFailureReason = $failureReason;
     }
 }

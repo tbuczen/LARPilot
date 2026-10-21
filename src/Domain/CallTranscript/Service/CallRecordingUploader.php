@@ -3,6 +3,7 @@
 namespace App\Domain\CallTranscript\Service;
 
 use App\Domain\Account\Entity\User;
+use App\Domain\CallTranscript\DTO\CallRecordingOptions;
 use App\Domain\CallTranscript\Entity\CallRecording;
 use App\Domain\CallTranscript\Entity\CallRecordingTrack;
 use App\Domain\CallTranscript\Service\Import\CallRecordingImporterInterface;
@@ -21,10 +22,11 @@ final readonly class CallRecordingUploader
     ) {
     }
 
-    public function upload(Larp $larp, User $organizer, string $title, ?string $language, string $archivePath): CallRecording
+    public function upload(Larp $larp, User $organizer, string $title, ?string $language, string $archivePath, CallRecordingOptions $options = new CallRecordingOptions()): CallRecording
     {
         $recording = new CallRecording($larp, $title, $language);
         $recording->setCreatedBy($organizer);
+        $recording->requestSummary($options->summary);
         $this->entityManager->persist($recording);
 
         try {

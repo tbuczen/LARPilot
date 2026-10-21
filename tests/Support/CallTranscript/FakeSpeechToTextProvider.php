@@ -42,7 +42,7 @@ final class FakeSpeechToTextProvider implements SpeechToTextProviderInterface
         }
 
         $segments = [];
-        foreach (preg_split('/\R/', trim($audio)) ?: [] as $line) {
+        foreach (preg_split('/\R/u', trim($audio)) ?: [] as $line) {
             [$seconds, $text] = array_pad(explode('|', $line, 2), 2, '');
             $segments[] = new TranscriptSegment((float) $seconds, trim($text));
         }

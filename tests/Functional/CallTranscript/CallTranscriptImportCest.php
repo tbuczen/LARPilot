@@ -69,9 +69,9 @@ class CallTranscriptImportCest
         $I->assertCount(0, $document->getVisibleTo());
         $I->assertTrue($document->getLarp()?->getId()->equals($larp->getId()));
         $I->assertSame(
-            '<p>Recorded: 01-10-2026 18:00</p>'
+            '<p>Nagrano: 01-10-2026 18:00</p>'
             . '<p>[00:00:01] anna: Cześć wszystkim</p>'
-            . '<p>[00:00:04] Note: decision: Faction X betrays the king</p>'
+            . '<p>[00:00:04] Notatka: decision: Faction X betrays the king</p>'
             . '<p>[00:00:05] tomek: Hej</p>'
             . '<p>[00:00:08] bartek: Mam notatki</p>'
             . '<p>[00:00:10] anna: Zaczynamy od frakcji</p>',

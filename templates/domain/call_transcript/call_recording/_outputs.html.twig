@@ -1,0 +1,28 @@
+<ul class="list-unstyled mb-0 small">
+    {% for output in recording.requestedOutputs %}
+        {% set status = recording.outputStatus(output) %}
+        <li class="mb-1" data-call-output="{{ output.value }}" data-call-output-status="{{ status.value }}">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span>{{ ('call_recording.output.' ~ output.value)|trans({}, 'call_transcript') }}</span>
+                <span class="badge text-bg-{{ {pending: 'info', done: 'success', failed: 'danger'}[status.value] ?? 'secondary' }}">
+                    {{ ('call_recording.output.status.' ~ status.value)|trans({}, 'call_transcript') }}
+                </span>
+                {% if status.retryable %}
+                    <form method="post" class="d-inline" name="call_recording_retry_{{ output.value }}"
+                          action="{{ path('backoffice_larp_call_transcript_retry', { larp: larp.id, recording: recording.id, output: output.value }) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('call_recording_retry_' ~ recording.id ~ '_' ~ output.value) }}">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-repeat"></i>{{ 'call_recording.output.retry'|trans({}, 'call_transcript') }}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+            {% set failureReason = recording.outputFailureReason(output) %}
+            {% if status.retryable and failureReason %}
+                <div class="text-muted text-break">{{ failureReason }}</div>
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="text-muted">-</li>
+    {% endfor %}
+</ul>

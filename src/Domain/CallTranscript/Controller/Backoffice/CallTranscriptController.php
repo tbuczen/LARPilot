@@ -3,12 +3,15 @@
 namespace App\Domain\CallTranscript\Controller\Backoffice;
 
 use App\Domain\Account\Entity\User;
+use App\Domain\CallTranscript\DTO\CallRecordingOptions;
 use App\Domain\CallTranscript\Entity\CallRecording;
+use App\Domain\CallTranscript\Entity\Enum\CallOutput;
 use App\Domain\CallTranscript\Form\Type\CallRecordingUploadType;
 use App\Domain\CallTranscript\Repository\CallRecordingRepository;
 use App\Domain\CallTranscript\Security\Voter\CallTranscriptVoter;
 use App\Domain\CallTranscript\Service\CallRecordingUploader;
 use App\Domain\CallTranscript\Service\CallTranscriptionStarter;
+use App\Domain\CallTranscript\Service\CallTranscriptOutputDispatcher;
 use App\Domain\CallTranscript\Service\Import\CallRecordingImportException;
 use App\Domain\CallTranscript\Service\Speaker\CallSpeakerLabeler;
 use App\Domain\Core\Controller\BaseController;
@@ -24,6 +27,7 @@ class CallTranscriptController extends BaseController
 {
     public const START_CSRF_TOKEN = 'call_recording_start';
     public const DISCARD_CSRF_TOKEN = 'call_recording_discard';
+    public const RETRY_CSRF_TOKEN = 'call_recording_retry';
 
     #[Route('', name: 'list', methods: ['GET', 'POST'])]
     public function list(
@@ -52,6 +56,7 @@ class CallTranscriptController extends BaseController
                     (string) $form->get('title')->getData(),
                     $language === CallRecordingUploadType::AUTO_DETECT_LANGUAGE ? null : $language,
                     $archive->getPathname(),
+                    new CallRecordingOptions((bool) $form->get('summary')->getData()),
                 );
             } catch (CallRecordingImportException $failure) {
                 $this->addFlash('error', $this->translator->trans($failure->getMessage(), [], 'call_transcript'));
@@ -153,6 +158,27 @@ class CallTranscriptController extends BaseController
 
         $starter->discard($recording);
         $this->addFlash('success', $this->translator->trans('call_recording.discarded', [], 'call_transcript'));
+
+        return $this->redirectToRoute('backoffice_larp_call_transcript_list', ['larp' => $larp->getId()]);
+    }
+
+    #[Route('/{recording}/retry/{output}', name: 'retry', methods: ['POST'])]
+    public function retry(
+        Request $request,
+        Larp $larp,
+        CallRecording $recording,
+        CallOutput $output,
+        CallTranscriptOutputDispatcher $outputDispatcher,
+    ): RedirectResponse {
+        $this->denyAccessUnlessGranted(CallTranscriptVoter::MANAGE, $larp);
+        $this->assertBelongsToLarp($recording, $larp);
+        if (!$this->isCsrfTokenValid(self::RETRY_CSRF_TOKEN . '_' . $recording->getId()->toRfc4122() . '_' . $output->value, $request->request->getString('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        if ($outputDispatcher->retry($recording, $output)) {
+            $this->addFlash('success', $this->translator->trans('call_recording.output.retry_started', [], 'call_transcript'));
+        }
 
         return $this->redirectToRoute('backoffice_larp_call_transcript_list', ['larp' => $larp->getId()]);
     }

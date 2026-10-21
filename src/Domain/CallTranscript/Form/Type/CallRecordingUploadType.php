@@ -3,6 +3,7 @@
 namespace App\Domain\CallTranscript\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,6 +41,12 @@ class CallRecordingUploadType extends AbstractType
                     new File(extensions: ['zip']),
                 ],
                 'attr' => ['accept' => '.zip,application/zip'],
+            ])
+            ->add('summary', CheckboxType::class, [
+                'label' => 'call_recording.form.summary',
+                'help' => 'call_recording.form.summary_help',
+                'required' => false,
+                'data' => $options['summary_default'],
             ]);
     }
 
@@ -47,6 +54,8 @@ class CallRecordingUploadType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'call_transcript',
+            'summary_default' => true,
         ]);
+        $resolver->setAllowedTypes('summary_default', 'bool');
     }
 }
