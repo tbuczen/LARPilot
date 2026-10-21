@@ -150,6 +150,12 @@ jobs:
             elif ! env -u SENTRY_DSN -u SENTRY_RELEASE php -d memory_limit=-1 bin/console sentry:test; then
               echo "WARNING: this server could not send a test event to Sentry. Errors are not being reported; see docs/SENTRY_SETUP.md."
             fi
+
+            if command -v ffmpeg >/dev/null 2>&1; then
+              echo "ffmpeg: available ($(command -v ffmpeg)). Long call recordings are compressed and split before speech-to-text."
+            else
+              echo "ffmpeg: not installed. Long MP3 call tracks are still split, but other formats over 25 MB per speaker fail. Install it with 'sudo apt-get install ffmpeg' (see docs/DEPLOYMENT.md)."
+            fi
         env:
           PROJECT_DIR: ${{ vars.PROJECT_DIR }}
           APP_ENV: ${{ secrets.APP_ENV }}

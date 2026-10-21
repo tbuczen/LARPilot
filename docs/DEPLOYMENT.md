@@ -233,6 +233,24 @@ Disconnecting Discord from a LARP deletes that LARP's watched channels, everythi
 synced from them and the cached excerpts on its story links. The bot leaves the
 server only when no other LARP is still connected to it.
 
+## Call transcripts (ffmpeg)
+
+OpenAI speech-to-text accepts at most 25 MB per file. The worker checks for
+`ffmpeg` on the server at runtime (it must be on the `PATH` of the
+`messenger:consume` process):
+
+- **With ffmpeg** (`sudo apt-get install ffmpeg`), a speaker track over 24 MB is
+  converted to mono 16 kHz Opus at 24 kbps (about 11 MB per hour). If it is still
+  too big, it is cut into parts; each part is transcribed and its timestamps are
+  shifted, so the merged transcript keeps one timeline.
+- **Without ffmpeg**, MP3 tracks are still cut into parts on MP3 frame boundaries
+  in PHP. Other formats (FLAC, Ogg, …) over 25 MB fail with a clear "too large"
+  message for that speaker.
+
+The deploy log prints one line saying whether ffmpeg was found; it never fails the
+deploy. Rate limits and 5xx errors from the provider are retried by Messenger
+(about 1, 2 and 4 minutes later) before the speaker is marked as failed.
+
 ## Miro integration
 
 Organizers connect a Miro team per LARP through OAuth (`knpu_oauth2_client` client `integration_miro`).

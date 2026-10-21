@@ -41,6 +41,9 @@ class CallRecordingTrack
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $failureReason = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private int $attempts = 0;
+
     public function __construct(CallRecording $recording, string $speaker, ?string $audioFilename, ?string $transcriptFilename)
     {
         $this->id = Uuid::v4();
@@ -102,6 +105,16 @@ class CallRecordingTrack
     public function getFailureReason(): ?string
     {
         return $this->failureReason;
+    }
+
+    public function getAttempts(): int
+    {
+        return $this->attempts;
+    }
+
+    public function registerAttempt(): void
+    {
+        ++$this->attempts;
     }
 
     /**
