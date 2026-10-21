@@ -30,7 +30,7 @@
                         <ul class="list-unstyled mb-0 small">
                             <li class="mb-2">
                                 <i class="bi bi-geo-alt text-muted me-2"></i>
-                                <strong>{{ 'location'|trans }}:</strong><br>
+                                <strong>{{ 'location.singular'|trans }}:</strong><br>
                                 <span class="ms-3">
                                     {% if larp.location and larp.location.slug %}
                                         <a href="{{ path('public_location_details', {slug: larp.location.slug}) }}"
@@ -58,15 +58,15 @@
                                 <strong>{{ 'status'|trans }}:</strong><br>
                                 <span class="ms-3">
                                     {% if larp.status.value == 'INQUIRIES' %}
-                                        <span class="badge bg-success">{{ larp.status.value }}</span>
+                                        <span class="badge bg-success">{{ larp.status.label|trans }}</span>
                                     {% elseif larp.status.value == 'PUBLISHED' %}
-                                        <span class="badge bg-info">{{ larp.status.value }}</span>
+                                        <span class="badge bg-info">{{ larp.status.label|trans }}</span>
                                     {% elseif larp.status.value == 'CONFIRMED' %}
-                                        <span class="badge bg-primary">{{ larp.status.value }}</span>
+                                        <span class="badge bg-primary">{{ larp.status.label|trans }}</span>
                                     {% elseif larp.status.value == 'COMPLETED' %}
-                                        <span class="badge bg-secondary">{{ larp.status.value }}</span>
+                                        <span class="badge bg-secondary">{{ larp.status.label|trans }}</span>
                                     {% else %}
-                                        <span class="badge bg-warning">{{ larp.status.value }}</span>
+                                        <span class="badge bg-warning">{{ larp.status.label|trans }}</span>
                                     {% endif %}
                                 </span>
                             </li>

@@ -7,7 +7,7 @@
             <div class="larp-header-title">
                 {# Mobile toggle button next to title #}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#larpNavbar"
-                        aria-controls="larpNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                        aria-controls="larpNavbar" aria-expanded="false" aria-label="{{ 'toggle_navigation'|trans }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -164,7 +164,7 @@
                                         <li><hr class="dropdown-divider"></li>
 
                                         {# Core Story Elements #}
-                                        <li><h6 class="dropdown-header">Core Elements</h6></li>
+                                        <li><h6 class="dropdown-header">{{ 'larp.menu.core_elements'|trans }}</h6></li>
                                         <li>
                                             <a class="dropdown-item" href="{{ path('backoffice_larp_story_character_list', {'larp': larp.id}) }}">
                                                 <i class="bi bi-person"></i> {{ 'larp.character.list'|trans }}
@@ -188,7 +188,7 @@
                                         <li><hr class="dropdown-divider"></li>
 
                                         {# Story Content #}
-                                        <li><h6 class="dropdown-header">Story Content</h6></li>
+                                        <li><h6 class="dropdown-header">{{ 'larp.menu.story_content'|trans }}</h6></li>
                                         <li>
                                             <a class="dropdown-item" href="{{ path('backoffice_larp_story_thread_list', {'larp': larp.id}) }}">
                                                 <i class="bi bi-bezier2"></i> {{ 'larp.threads'|trans }}
@@ -212,7 +212,7 @@
                                         <li><hr class="dropdown-divider"></li>
 
                                         {# World Building #}
-                                        <li><h6 class="dropdown-header">World Building</h6></li>
+                                        <li><h6 class="dropdown-header">{{ 'larp.menu.world_building'|trans }}</h6></li>
                                         <li>
                                             <a class="dropdown-item" href="{{ path('backoffice_larp_story_place_list', {'larp': larp.id}) }}">
                                                 <i class="bi bi-geo-alt"></i> {{ 'larp.place.list'|trans }}

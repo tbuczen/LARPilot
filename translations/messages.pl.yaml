@@ -533,7 +533,23 @@ larp:
     current: "Obecny status"
     available_transitions: "Dostępne akcje"
     no_transitions: "W tej chwili nie ma dostępnych zmian statusu."
-    confirm_transition: "Czy na pewno chcesz %transition%?"
+    confirm_transition: "Czy na pewno chcesz wykonać akcję: %transition%?"
+    error:
+      location_required: "Do publikacji wymagana jest lokalizacja"
+      description_required: "Do publikacji wymagany jest opis"
+      start_date_required: "Do publikacji wymagana jest data rozpoczęcia"
+      end_date_required: "Do publikacji wymagana jest data zakończenia"
+      character_required: "Do otwarcia zgłoszeń wymagana jest co najmniej jedna postać"
+      characters_missing_descriptions: "Postacie bez opisu: %count%"
+      characters_unassigned: "Postacie bez przypisanego uczestnika: %count%"
+    flash:
+      header_upload_failed: "Nie udało się wysłać obrazu nagłówka: %error%"
+      properties_updated: "Właściwości LARPa zostały zaktualizowane."
+      properties_failed: "Nie udało się zaktualizować właściwości LARPa. Sprawdź błędy w formularzu."
+      invalid_csrf: "Nieprawidłowy token CSRF."
+      transition_not_allowed: "Ta zmiana statusu jest niedozwolona."
+      status_updated: "Status został zaktualizowany."
+      status_failed: "Nie udało się zmienić statusu."
     workflow: "Przegląd przepływu pracy"
     visibility: "Ustawienia widoczności"
     visible_everyone: "Widoczny dla wszystkich"
@@ -692,6 +708,10 @@ confirmation: "Czy na pewno chcesz kontynuować? Tej akcji nie można cofnąć."
 votes: "Głosy"
 
 public:
+  breadcrumb:
+    home: "Strona główna"
+    locations: "Lokalizacje"
+  location_capacity: "Pojemność: %count% os."
   participant:
     my_larps:
       title: 'Moje LARPy i postacie'
@@ -782,6 +802,28 @@ kanban:
     done: 'Zrobione'
 
 enum:
+  larp_setting:
+    fantasy: "Fantasy"
+    sci_fi: "Science fiction"
+    cyberpunk: "Cyberpunk"
+    historic: "Historyczny / Rekonstrukcja"
+    battle: "Bitewny"
+    noir: "Noir"
+    post_apo: "Postapokaliptyczny"
+    witcher: "Wiedźmin"
+    harry_potter: "Harry Potter"
+  larp_type:
+    battle: "Bitewny"
+    story: "Fabularny"
+    mixed: "Mieszany: fabuła z bitwami"
+  larp_character_system:
+    sandbox: "Gracze zgłaszają własne postacie"
+    pre_written: "Postacie napisane przez organizatorów"
+  application_mode:
+    character_selection: "Wybór postaci"
+    survey: "Ankieta / kwestionariusz"
+    character_selection_description: "Gracze przeglądają postacie i wybierają te, o które chcą się ubiegać"
+    survey_description: "Gracze wypełniają ankietę, a organizatorzy dopasowują ich do postaci"
   location_type:
     indoor: "Wewnątrz"
     outdoor: "Na zewnątrz"
@@ -927,25 +969,25 @@ super_admin:
     plan_help: 'Wybierz plan subskrypcji dla tego użytkownika'
     no_plan_free_tier: 'Brak planu (Tryb darmowy - 1 LARP)'
     status_effects: 'Efekty statusu'
-    status_pending_desc: 'User cannot access backoffice features, only public pages'
-    status_approved_desc: 'User has full access to backoffice features'
-    status_suspended_desc: 'User access is temporarily suspended'
-    status_banned_desc: 'User is permanently banned from the platform'
+    status_pending_desc: "Użytkownik nie ma dostępu do funkcji panelu organizatora, tylko do stron publicznych"
+    status_approved_desc: "Użytkownik ma pełny dostęp do funkcji panelu organizatora"
+    status_suspended_desc: "Dostęp użytkownika jest tymczasowo zawieszony"
+    status_banned_desc: "Użytkownik został trwale zablokowany na platformie"
     approve: 'Approve'
     suspend: 'Suspend'
     ban: 'Ban'
-    approve_user: 'Approve User'
-    suspend_user: 'Suspend User'
-    ban_user: 'Ban User'
-    confirm_ban: 'Are you sure you want to ban this user? This is a serious action.'
-    quick_actions: 'Quick Actions'
-    filter_by_status: 'Filter by Status'
-    all_statuses: 'All Statuses'
+    approve_user: "Zatwierdź użytkownika"
+    suspend_user: "Zawieś użytkownika"
+    ban_user: "Zablokuj użytkownika"
+    confirm_ban: "Czy na pewno chcesz zablokować tego użytkownika? To poważna operacja."
+    quick_actions: "Szybkie akcje"
+    filter_by_status: "Filtruj według statusu"
+    all_statuses: "Wszystkie statusy"
 tag:
   file_select:
     title: 'Importuj tagi'
     heading: 'Wybierz plik do importu listy tagów'
-    no_files: 'No files available for import'
+    no_files: "Brak plików do zaimportowania"
 
 mailing:
   templates:
@@ -1152,7 +1194,7 @@ event_category:
 # Ustawienia LARPu
 larp_setting:
   fantasy: 'Fantasy'
-  sci_fi: 'Science Fiction'
+  sci_fi: "Science fiction"
   historical: 'Historyczny'
   modern: 'Współczesny'
   post_apocalyptic: 'Postapokaliptyczny'
@@ -1217,28 +1259,28 @@ staff_position:
   updated_at: 'Zaaktualizowano'
   tap_to_select: 'Kliknij na mapę w celu określenia swojej lokalizacji'
   selected_cell: 'Zaznaczony koordynat'
-  no_cell_selected: 'No cell selected'
-  status_note: 'Status Note'
-  status_note_placeholder: 'e.g., On break, Handling incident...'
-  save_position: 'Save Position'
-  remove_position: 'Remove Position'
-  remove_confirm: 'Are you sure you want to remove your position from this map?'
-  updated: 'Position updated successfully'
-  removed: 'Position removed successfully'
-  invalid_cell: 'Invalid grid cell selected'
-  select_cell: 'Please select a grid cell first'
-  limited_visibility: 'You are viewing a limited list of staff positions. Contact organizers for full visibility.'
-  active_positions: 'Active Positions'
-  positions_list: 'Positions List'
-  staff_member: 'Staff Member'
+  no_cell_selected: "Nie wybrano pola"
+  status_note: "Notatka statusu"
+  status_note_placeholder: "np. przerwa, obsługa incydentu..."
+  save_position: "Zapisz stanowisko"
+  remove_position: "Usuń stanowisko"
+  remove_confirm: "Czy na pewno chcesz usunąć swoje stanowisko z tej mapy?"
+  updated: "Stanowisko zostało zaktualizowane"
+  removed: "Stanowisko zostało usunięte"
+  invalid_cell: "Wybrano nieprawidłowe pole siatki"
+  select_cell: "Najpierw wybierz pole siatki"
+  limited_visibility: "Widzisz ograniczoną listę stanowisk ekipy. Skontaktuj się z organizatorami, aby zobaczyć pełną listę."
+  active_positions: "Aktywne stanowiska"
+  positions_list: "Lista stanowisk"
+  staff_member: "Członek ekipy"
   role: 'Role'
   cell: 'Cell'
   status: 'Status'
-  no_positions: 'No staff positions recorded yet'
-  already_exists: 'You already have a position on this map'
-  show_on_map: 'Show Staff Positions'
-  update_position: 'Update Position'
-  my_position: 'My Position'
+  no_positions: "Nie zapisano jeszcze żadnych stanowisk ekipy"
+  already_exists: "Masz już stanowisko na tej mapie"
+  show_on_map: "Pokaż stanowiska ekipy"
+  update_position: "Zaktualizuj stanowisko"
+  my_position: "Moje stanowisko"
 ai_assistant:
   input_placeholder: Zapytaj o fabułę swojego LARPa...
   new_conversation: Nowa rozmowa
@@ -1610,3 +1652,145 @@ integration_hub:
     needs_attention: 'Integracje wymagające uwagi'
     connected: 'Połączone: %count%'
     open: 'Otwórz integracje'
+
+workflow:
+  transition:
+    to_wip: "Przenieś do „W trakcie prac”"
+    to_published: "Opublikuj"
+    to_inquiries: "Otwórz zgłoszenia"
+    to_confirmed: "Potwierdź wydarzenie"
+    to_cancelled: "Anuluj wydarzenie"
+    to_completed: "Oznacz jako zakończone"
+    back_to_draft: "Cofnij do szkicu"
+    back_to_wip: "Cofnij do „W trakcie prac”"
+
+filter_all_statuses: "Wszystkie statusy"
+filter_min_days: "Min. dni"
+filter_max_days: "Maks. dni"
+
+"resource_booking.saved": "Rezerwacja zasobu została zapisana."
+"resource_booking.add_resource": "Dodaj zasób"
+"common.back": "Wróć"
+"location.no_locations_found": "Nie znaleziono lokalizacji."
+"public.larp.application_form": "Formularz zgłoszeniowy"
+"public.larp.application_form_description": "Wybierz postacie, w które chciał(a)byś zagrać, i napisz, dlaczego."
+"form.character_choice": "Wybór postaci"
+"public.larp.submit_application": "Wyślij zgłoszenie"
+"public.larp.application_deadline": "Zgłoszenia są przyjmowane do terminu ustalonego przez organizatorów."
+"public.larp.invitation.you_are_invited": "Zaproszono Cię do udziału w tym LARPie"
+"public.larp.invitation.login_to_accept": "Zaloguj się, aby przyjąć zaproszenie"
+"public.application.confirm_character_title": "Potwierdź swoją postać"
+"public.application.confirm_warning_title": "Przeczytaj uważnie"
+"public.application.confirm_warning_text": "Potwierdzając, przyjmujesz tę postać i miejsce na wydarzeniu. Późniejsza zmiana tej decyzji może być trudna."
+"public.application.yes_confirm": "Tak, potwierdzam"
+"public.application.confirm_modal_title": "Potwierdzenie postaci"
+"public.application.confirm_modal_question": "Czy na pewno chcesz potwierdzić tę postać?"
+"public.application.confirm_modal_info": "Organizatorzy zostaną powiadomieni o Twojej decyzji."
+"public.application.confirm_final": "Potwierdź"
+"public.application.decline_character_title": "Odrzuć swoją postać"
+"public.application.decline_warning_title": "Przeczytaj uważnie"
+"public.application.decline_warning_text": "Odrzucając, rezygnujesz z tej postaci i miejsca na wydarzeniu. Późniejsza zmiana tej decyzji może być trudna."
+"public.application.yes_decline": "Tak, odrzucam"
+"public.application.decline_modal_title": "Odrzucenie postaci"
+"public.application.decline_modal_question": "Czy na pewno chcesz odrzucić tę postać?"
+"public.application.decline_modal_info": "Organizatorzy zostaną powiadomieni o Twojej decyzji."
+"public.application.decline_final": "Odrzuć"
+"skills.plural": "Umiejętności"
+"refresh": "Odśwież"
+"super_admin.users.status_pending": "Oczekujący"
+"super_admin.users.status_approved": "Zatwierdzony"
+"super_admin.users.status_suspended": "Zawieszony"
+"super_admin.users.status_banned": "Zbanowany"
+"survey.preview": "Podgląd"
+"common.save": "Zapisz"
+"common.applicant": "Zgłaszający się"
+"common.status": "Status"
+"common.submitted_at": "Data wysłania"
+"common.not_answered": "Brak odpowiedzi"
+"common.user": "Użytkownik"
+"common.email": "E-mail"
+"common.actions": "Akcje"
+"common.view": "Zobacz"
+"characters.plural": "postaci"
+"recruitment.open": "Otwarte rekrutacje"
+"recruitment.none": "Brak otwartych rekrutacji."
+"integrations.file_select.title": "Wybierz plik"
+"integrations.file_select.heading": "Wybierz plik do importu"
+"integrations.file_select.no_files": "Nie znaleziono plików."
+"event.category": "Kategoria"
+"time": "Czas"
+"visibility": "Widoczność"
+"factions.plural": "frakcji"
+"create_first": "Utwórz pierwszy"
+"error.generic": "Wystąpił błąd."
+"enabled": "Włączony"
+"disabled": "Wyłączony"
+"form.map_location.type": "Typ"
+"form.map_location.grid_coordinates": "Współrzędne siatki"
+"form.map_location.capacity": "Pojemność"
+"form.proposal.comment": "Komentarz"
+"proposal.accept": "Zaakceptuj"
+"proposal.reject": "Odrzuć"
+"form.recruitment.type": "Typ"
+"form.recruitment.number": "Liczba osób"
+"form.recruitment.notes": "Notatki"
+"proposal.create": "Utwórz propozycję"
+"tag.import.title": "Importuj tagi"
+"tag.import.heading": "Importuj tagi"
+"tag.import.description": "Zaimportuj tagi z podłączonego dokumentu lub arkusza."
+"tag.import.no_integrations": "Nie podłączono jeszcze żadnych integracji. Najpierw podłącz je w centrum integracji."
+"backoffice.dashboard": "Panel"
+"lore.always_include": "Zawsze uwzględniany"
+"knowledge_document.settings": "Ustawienia"
+"knowledge_document.visibility_settings": "Ustawienia widoczności"
+"knowledge_document.visibility_help": "Wybierz, kto może zobaczyć ten dokument."
+"knowledge_document.list": "Dokumenty wiedzy"
+"knowledge_document.category": "Kategoria"
+"knowledge_document.visibility": "Widoczność"
+"updated_at": "Zaktualizowano"
+"knowledge_document.public": "Publiczny"
+"knowledge_document.owners": "właścicieli"
+"knowledge_document.visible_to": "z dostępem"
+"knowledge_document.restricted": "Ograniczony"
+"gallery.current_zip_file": "Aktualny plik ZIP"
+"gallery.upload_new_replace": "Wyślij nowy plik, aby go zastąpić."
+"gallery.title": "Tytuł"
+"gallery.visibility": "Widoczność"
+"gallery.description": "Opis"
+"created_at": "Utworzono"
+"public.larp.invitation.accepted": "Zaproszenie zostało przyjęte."
+"survey.saved": "Ankieta została zapisana."
+"survey.not_found": "Nie znaleziono ankiety."
+"survey.response.character_assigned": "Postać %character% została przypisana do: %user%."
+"survey.response.matches_regenerated": "Dopasowania zostały wygenerowane ponownie."
+"survey.response.all_matches_regenerated": "Wszystkie dopasowania zostały wygenerowane ponownie."
+
+"public.larp_list.status": "Status:"
+"public.larp_list.setting": "Konwencja:"
+"public.larp_list.type": "Typ:"
+"public.larp_list.characters": "Postacie:"
+"public.larp_list.date": "Data:"
+"public.larp_list.location": "Lokalizacja:"
+"public.larp_list.empty": "Nie znaleziono LARPów spełniających podane kryteria."
+"public.larp_list.duration": "Czas trwania:"
+"public.larp_list.days": "%count% dzień|%count% dni|%count% dni"
+"public.my_larps.roles": "Twoje role:"
+"public.my_larps.characters": "Twoje postacie:"
+"public.view_on_google_maps": "Zobacz w Mapach Google"
+"public.open_in_google_maps": "Kliknij, aby otworzyć w Mapach Google"
+"public.location_slide": "Slajd %number%"
+"public.previous": "Poprzedni"
+"public.next": "Następny"
+"public.incident.create_soon": "Formularz zgłaszania incydentów pojawi się wkrótce..."
+"public.incident.details": "Szczegóły incydentu"
+"public.incident.empty": "Nie zgłoszono jeszcze żadnych incydentów."
+"public.character.skill_level": "Poziom %level%"
+"toggle_navigation": "Przełącz nawigację"
+"larp.menu.core_elements": "Elementy główne"
+"larp.menu.story_content": "Treści fabularne"
+"larp.menu.world_building": "Budowanie świata"
+"location.state_active": "Aktywna"
+"location.state_inactive": "Nieaktywna"
+"survey.response.points": "%score% pkt"
+"location.address_autocomplete_hint": "Zacznij wpisywać adres, aby skorzystać z podpowiedzi"
+"marketplace.more": "+%count% więcej"

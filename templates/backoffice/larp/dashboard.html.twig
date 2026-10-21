@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <h6 class="card-title">{{ 'event.status'|trans }}</h6>
                     <span class="badge badge-{{ larp.status.value == 'draft' ? 'secondary' : (larp.status.value == 'active' ? 'success' : 'primary') }} fs-6">
-                        {{ larp.status.value|upper }}
+                        {{ larp.status.label|trans }}
                     </span>
                 </div>
             </div>
@@ -59,7 +59,7 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h6 class="card-title">{{ 'location'|trans }}</h6>
+                    <h6 class="card-title">{{ 'location.singular'|trans }}</h6>
                     {% if larp.location %}
                         <p class="mb-0">
                             <a href="{{ path('public_location_details', { slug: larp.location.slug }) }}" target="_blank" rel="noopener">

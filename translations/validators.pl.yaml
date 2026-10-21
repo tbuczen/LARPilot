@@ -153,3 +153,8 @@ Error: Błąd
 larp.character.error.unique_name: 'Postać o nazwie "{{ name }}" już istnieje w tym LARPie.'
 'A character with this title already exists in this LARP.': 'Postać o tym tytule już istnieje w tym LARPie.'
 game_map.image_file_invalid: 'Proszę przesłać prawidłowy plik obrazu'
+
+"gallery.invalid_zip_file": "Prześlij prawidłowy plik ZIP."
+"staff_position.already_exists": "Masz już stanowisko na tej mapie."
+"larp.header_image_invalid": "Prześlij prawidłowy obraz (JPG, PNG, GIF, WebP)."
+"The rejection reason cannot be longer than {{ limit }} characters.": "Powód odrzucenia nie może być dłuższy niż {{ limit }} znaków."

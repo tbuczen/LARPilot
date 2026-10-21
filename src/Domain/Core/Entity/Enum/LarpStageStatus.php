@@ -2,7 +2,7 @@
 
 namespace App\Domain\Core\Entity\Enum;
 
-enum LarpStageStatus: string
+enum LarpStageStatus: string implements LabelableEnumInterface
 {
     case DRAFT = 'DRAFT'; #just created
     case WIP = 'WIP'; #work in progress - visible for all organizers team
@@ -11,6 +11,16 @@ enum LarpStageStatus: string
     case CONFIRMED = 'CONFIRMED'; #confirmed that it will happen
     case CANCELLED = 'CANCELLED'; #cancelled by organizers at any stage before completion
     case COMPLETED = 'COMPLETED'; #completed/ happened after confirmation that it will happen
+
+    public function getLabel(): string
+    {
+        return 'larp.status.' . strtolower($this->value);
+    }
+
+    public function getDescription(): string
+    {
+        return $this->getLabel() . '.description';
+    }
 
     public function isVisibleForEveryone(): bool
     {

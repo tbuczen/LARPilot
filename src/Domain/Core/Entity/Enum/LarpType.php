@@ -12,9 +12,9 @@ enum LarpType: string implements LabelableEnumInterface
     public function getLabel(): string
     {
         return match ($this) {
-            self::BATTLE => 'Battle',
-            self::STORY => 'Story',
-            self::MIXED => 'Mixed Story with Battle',
+            self::BATTLE => 'enum.larp_type.battle',
+            self::STORY => 'enum.larp_type.story',
+            self::MIXED => 'enum.larp_type.mixed',
         };
     }
 }

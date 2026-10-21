@@ -76,14 +76,14 @@ class StatusController extends AbstractController
                     );
                     $larp->setHeaderImage($newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('error', 'Could not upload header image: ' . $e->getMessage());
+                    $this->addFlash('error', $this->translator->trans('larp.status.flash.header_upload_failed', ['%error%' => $e->getMessage()]));
                 }
             }
 
             $this->entityManager->flush();
-            $this->addFlash('success', 'LARP properties updated successfully.');
+            $this->addFlash('success', $this->translator->trans('larp.status.flash.properties_updated'));
         } else {
-            $this->addFlash('error', 'Failed to update LARP properties. Please check the form for errors.');
+            $this->addFlash('error', $this->translator->trans('larp.status.flash.properties_failed'));
         }
 
         return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);
@@ -100,7 +100,7 @@ class StatusController extends AbstractController
         }
 
         if (!$this->isCsrfTokenValid('larp_transition_' . $larp->getId(), $request->request->get('_token'))) {
-            $this->addFlash('error', 'Invalid CSRF token.');
+            $this->addFlash('error', $this->translator->trans('larp.status.flash.invalid_csrf'));
             return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);
         }
 
@@ -114,7 +114,7 @@ class StatusController extends AbstractController
         }
 
         if (!$this->workflowService->canTransition($larp, $transitionName)) {
-            $this->addFlash('error', 'This transition is not allowed.');
+            $this->addFlash('error', $this->translator->trans('larp.status.flash.transition_not_allowed'));
             return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);
         }
 
@@ -123,9 +123,9 @@ class StatusController extends AbstractController
         if ($success && $isCancellation) {
             $this->addFlash('success', $this->translator->trans('larp.cancel.success'));
         } elseif ($success) {
-            $this->addFlash('success', 'Status updated successfully.');
+            $this->addFlash('success', $this->translator->trans('larp.status.flash.status_updated'));
         } else {
-            $this->addFlash('error', 'Failed to update status.');
+            $this->addFlash('error', $this->translator->trans('larp.status.flash.status_failed'));
         }
 
         return $this->redirectToRoute('backoffice_larp_status_index', ['larp' => $larp->getId()]);

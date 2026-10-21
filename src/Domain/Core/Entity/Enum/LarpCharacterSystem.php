@@ -10,8 +10,8 @@ enum LarpCharacterSystem: string implements LabelableEnumInterface
     public function getLabel(): string
     {
         return match ($this) {
-            self::SANDBOX => 'Players can submit their own characters',
-            self::PREPARED_CHARACTERS => 'Characters written by organisers',
+            self::SANDBOX => 'enum.larp_character_system.sandbox',
+            self::PREPARED_CHARACTERS => 'enum.larp_character_system.pre_written',
         };
     }
 }

@@ -97,21 +97,8 @@ readonly class LarpWorkflowService
         return $this->guardService->getValidationErrors($larp, $transitionName);
     }
 
-    /**
-     * Get human-readable label for transition
-     */
     private function getTransitionLabel(string $transitionName): string
     {
-        return match ($transitionName) {
-            'to_wip' => 'Move to Work in Progress',
-            'to_published' => 'Publish',
-            'to_inquiries' => 'Open for Inquiries',
-            'to_confirmed' => 'Confirm Event',
-            'to_cancelled' => 'Cancel Event',
-            'to_completed' => 'Mark as Completed',
-            'back_to_draft' => 'Move back to Draft',
-            'back_to_wip' => 'Move back to Work in Progress',
-            default => ucfirst(str_replace('_', ' ', $transitionName)),
-        };
+        return 'workflow.transition.' . $transitionName;
     }
 }

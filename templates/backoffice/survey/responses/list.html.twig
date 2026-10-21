@@ -67,7 +67,7 @@
                                     <td>
                                         {% if response.matchSuggestions and response.matchSuggestions|length > 0 %}
                                             <span class="badge bg-primary">
-                                                {{ response.matchSuggestions[0].score }} pts
+                                                {{ 'survey.response.points'|trans({'%score%': response.matchSuggestions[0].score}) }}
                                             </span>
                                         {% else %}
                                             <span class="text-muted">-</span>

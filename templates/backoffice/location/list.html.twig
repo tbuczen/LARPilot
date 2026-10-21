@@ -42,9 +42,9 @@
                                             <td>{{ location.capacity ?? 'N/A' }}</td>
                                             <td>
                                                 {% if location.isActive %}
-                                                    <span class="badge bg-success">Active</span>
+                                                    <span class="badge bg-success">{{ 'location.state_active'|trans }}</span>
                                                 {% else %}
-                                                    <span class="badge bg-secondary">Inactive</span>
+                                                    <span class="badge bg-secondary">{{ 'location.state_inactive'|trans }}</span>
                                                 {% endif %}
                                             </td>
                                             <td>

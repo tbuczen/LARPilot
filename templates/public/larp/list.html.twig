@@ -30,44 +30,44 @@
                                 <p class="card-text">{{ larp.description|truncate_words(15) }}</p>
 
                                 <div class="mb-2">
-                                    <strong>Status:</strong>
+                                    <strong>{{ 'public.larp_list.status'|trans }}</strong>
                                     <span class="badge bg-{{ larp.status.value == 'PUBLISHED' ? 'primary' : (larp.status.value == 'CONFIRMED' ? 'success' : 'secondary') }}">
-                                        {{ larp.status.value|title }}
+                                        {{ larp.status.label|trans }}
                                     </span>
                                 </div>
 
                                 {% if larp.setting %}
                                     <div class="mb-2">
-                                        <strong>Setting:</strong>
-                                        <span class="badge bg-info">{{ larp.setting.label }}</span>
+                                        <strong>{{ 'public.larp_list.setting'|trans }}</strong>
+                                        <span class="badge bg-info">{{ larp.setting.label|trans }}</span>
                                     </div>
                                 {% endif %}
 
                                 {% if larp.type %}
                                     <div class="mb-2">
-                                        <strong>Type:</strong>
-                                        <span class="badge bg-warning">{{ larp.type.label }}</span>
+                                        <strong>{{ 'public.larp_list.type'|trans }}</strong>
+                                        <span class="badge bg-warning">{{ larp.type.label|trans }}</span>
                                     </div>
                                 {% endif %}
 
                                 {% if larp.characterSystem %}
                                     <div class="mb-2">
-                                        <strong>Characters:</strong>
-                                        <span class="badge ">{{ larp.characterSystem.label }}</span>
+                                        <strong>{{ 'public.larp_list.characters'|trans }}</strong>
+                                        <span class="badge ">{{ larp.characterSystem.label|trans }}</span>
                                     </div>
                                 {% endif %}
 
                                 <div class="mb-2">
-                                    <strong>Date:</strong> {{ larp.startDate|display_date }} - {{ larp.endDate|display_date }}
+                                    <strong>{{ 'public.larp_list.date'|trans }}</strong> {{ larp.startDate|display_date }} - {{ larp.endDate|display_date }}
                                 </div>
 
                                 <div class="mb-2">
-                                    <strong>Duration:</strong> {{ larp.duration }} day{{ larp.duration > 1 ? 's' : '' }}
+                                    <strong>{{ 'public.larp_list.duration'|trans }}</strong> {{ 'public.larp_list.days'|trans({'%count%': larp.duration}) }}
                                 </div>
 
                                 {% if larp.location %}
                                     <div class="mb-2">
-                                        <strong>Location:</strong>
+                                        <strong>{{ 'public.larp_list.location'|trans }}</strong>
                                         <a href="{{ path('public_location_details', {'slug': larp.location.slug}) }}" class="text-decoration-none">
                                             {{ larp.location.title }}
                                         </a>
@@ -98,7 +98,7 @@
                 {% else %}
                     <div class="col-12">
                         <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> No LARPs found matching your criteria.
+                            <i class="bi bi-info-circle"></i> {{ 'public.larp_list.empty'|trans }}
                         </div>
                     </div>
                 {% endfor %}

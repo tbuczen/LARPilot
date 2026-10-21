@@ -68,7 +68,7 @@
                                     {% if faction.members|length > 0 %}
                                         {% set hasContent = true %}
                                         <div class="{% if faction.threads|length > 0 or faction.quests|length > 0 %}mt-1{% endif %}">
-                                            <strong>{{ 'characters'|trans }}:</strong>
+                                            <strong>{{ 'characters.plural'|trans }}:</strong>
                                             <span class="badge bg-info">{{ faction.members|length }}</span>
                                             {% if faction.members|length <= 3 %}
                                                 <br>
