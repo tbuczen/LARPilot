@@ -34,6 +34,12 @@ call_recording:
     google_doc_folder: 'Google Doc copy'
     google_doc_folder_help: 'Also save the summary and transcript as a Google Doc in this Drive folder. Only folders you picked under Integrations → Google Drive are listed.'
     google_doc_none: 'Don''t create a Google Doc'
+    discord_channel: 'Post to Discord'
+    discord_channel_help: 'When the transcript is ready, the LARPilot bot opens a thread named after the call in this channel and posts the summary with links to the transcript. Only channels this LARP watches are listed.'
+    discord_channel_missing_permissions: 'The LARPilot bot cannot post yet: click "Update bot permissions" on the Discord integration page first.'
+    discord_none: 'Don''t post to Discord'
+    discord_organizer_channels: 'Organizers only'
+    discord_player_channels: 'Player-facing – players will see the post'
   import:
     unreadable_archive: 'The file is not a readable zip archive.'
     too_large: 'The archive is too large to import.'
@@ -64,6 +70,8 @@ call_recording:
       failed: 'Failed'
     google_doc: 'Google Doc'
     open_google_doc: 'Open in Google Docs'
+    discord: 'Discord post'
+    open_discord: 'Open in Discord'
   document:
     transcript: 'Transcript'
     summary: 'Summary'
@@ -79,3 +87,6 @@ call_recording:
       place: 'Place'
       item: 'Item'
       event: 'Event'
+  discord:
+    transcript_link: 'Transcript in LARPilot: %url%'
+    google_doc_link: 'Google Doc: %url%'

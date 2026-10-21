@@ -61,6 +61,19 @@ class CallRecordingUploadType extends AbstractType
                 'data' => $options['google_doc_folder_default'],
             ]);
         }
+
+        $discordChannels = $options['discord_channels'];
+        if ($discordChannels !== []) {
+            $builder->add('discordChannel', ChoiceType::class, [
+                'label' => 'call_recording.form.discord_channel',
+                'help' => $options['discord_can_post'] ? 'call_recording.form.discord_channel_help' : 'call_recording.form.discord_channel_missing_permissions',
+                'required' => false,
+                'placeholder' => 'call_recording.form.discord_none',
+                'choices' => $discordChannels,
+                'choice_translation_domain' => false,
+                'data' => $options['discord_channel_default'],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -70,9 +83,15 @@ class CallRecordingUploadType extends AbstractType
             'summary_default' => true,
             'google_doc_folders' => [],
             'google_doc_folder_default' => null,
+            'discord_channels' => [],
+            'discord_channel_default' => null,
+            'discord_can_post' => true,
         ]);
         $resolver->setAllowedTypes('summary_default', 'bool');
         $resolver->setAllowedTypes('google_doc_folders', 'array');
         $resolver->setAllowedTypes('google_doc_folder_default', ['null', 'string']);
+        $resolver->setAllowedTypes('discord_channels', 'array');
+        $resolver->setAllowedTypes('discord_channel_default', ['null', 'string']);
+        $resolver->setAllowedTypes('discord_can_post', 'bool');
     }
 }

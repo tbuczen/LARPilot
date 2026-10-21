@@ -17,6 +17,8 @@ use App\Domain\CallTranscript\Service\Import\CallRecordingImportException;
 use App\Domain\CallTranscript\Service\Speaker\CallSpeakerLabeler;
 use App\Domain\Core\Controller\BaseController;
 use App\Domain\Core\Entity\Larp;
+use App\Domain\Integrations\Discord\DiscordBotPermissions;
+use App\Domain\Integrations\Entity\ExternalSource;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,9 +47,12 @@ class CallTranscriptController extends BaseController
             $googleDocFolders[$folder->getFileName()] = $folder->getId()->toRfc4122();
         }
 
+        $discordIntegration = $destinations->discordIntegration($larp);
         $form = $this->createForm(CallRecordingUploadType::class, null, [
             'google_doc_folders' => $googleDocFolders,
             'google_doc_folder_default' => $destinations->defaultGoogleDocFolder($larp)?->getId()->toRfc4122(),
+            'discord_channels' => $this->discordChannelChoices($destinations->discordChannels($larp)),
+            'discord_can_post' => $discordIntegration === null || DiscordBotPermissions::canPost($discordIntegration),
         ]);
         $form->handleRequest($request);
 
@@ -69,6 +74,7 @@ class CallTranscriptController extends BaseController
                     new CallRecordingOptions(
                         (bool) $form->get('summary')->getData(),
                         $form->has('googleDocFolder') ? $destinations->googleDocFolder($larp, $form->get('googleDocFolder')->getData()) : null,
+                        $form->has('discordChannel') ? $destinations->discordChannel($larp, $form->get('discordChannel')->getData())?->getExternalId() : null,
                     ),
                 );
             } catch (CallRecordingImportException $failure) {
@@ -194,6 +200,31 @@ class CallTranscriptController extends BaseController
         }
 
         return $this->redirectToRoute('backoffice_larp_call_transcript_list', ['larp' => $larp->getId()]);
+    }
+
+    /**
+     * @param list<ExternalSource> $channels
+     *
+     * @return array<string, array<string, string>>
+     */
+    private function discordChannelChoices(array $channels): array
+    {
+        $organizerOnly = [];
+        $playerFacing = [];
+        foreach ($channels as $channel) {
+            $label = '#' . $channel->getTitle();
+            if (CallTranscriptDestinations::isPlayerFacing($channel)) {
+                $playerFacing[$label] = $channel->getExternalId();
+                continue;
+            }
+
+            $organizerOnly[$label] = $channel->getExternalId();
+        }
+
+        return array_filter([
+            $this->translator->trans('call_recording.form.discord_organizer_channels', [], 'call_transcript') => $organizerOnly,
+            $this->translator->trans('call_recording.form.discord_player_channels', [], 'call_transcript') => $playerFacing,
+        ]);
     }
 
     private function assertBelongsToLarp(CallRecording $recording, Larp $larp): void

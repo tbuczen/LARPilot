@@ -22,6 +22,9 @@
                 {% if form.googleDocFolder is defined %}
                     {{ form_row(form.googleDocFolder) }}
                 {% endif %}
+                {% if form.discordChannel is defined %}
+                    {{ form_row(form.discordChannel) }}
+                {% endif %}
                 <p class="small text-muted">{{ 'call_recording.consent_hint'|trans({}, 'call_transcript') }}</p>
                 <div class="d-flex justify-content-end">
                     {{ ui.primary_button('call_recording.upload_submit'|trans({}, 'call_transcript'), null, 'bi-upload', 'submit') }}

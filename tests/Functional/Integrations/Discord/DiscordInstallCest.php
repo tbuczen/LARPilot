@@ -43,7 +43,7 @@ class DiscordInstallCest
 
     public function connectRedirectsToTheDiscordBotAuthorization(FunctionalTester $I): void
     {
-        $I->wantTo('start inviting the Discord bot with read-only permissions and a signed state');
+        $I->wantTo('start inviting the Discord bot with read and post permissions and a signed state');
 
         $organizer = UserFactory::createApprovedUser();
         $larp = LarpFactory::createDraftLarp($organizer);
@@ -53,7 +53,7 @@ class DiscordInstallCest
 
         $I->assertSame('1100000000000000777', $authorizationQuery['client_id']);
         $I->assertSame('bot', $authorizationQuery['scope']);
-        $I->assertSame('66560', $authorizationQuery['permissions']);
+        $I->assertSame('309237713920', $authorizationQuery['permissions']);
         $I->assertSame('0', $authorizationQuery['integration_type']);
         $I->assertSame('code', $authorizationQuery['response_type']);
         $I->assertSame(self::CALLBACK_PATH, parse_url($authorizationQuery['redirect_uri'], PHP_URL_PATH));
@@ -72,10 +72,11 @@ class DiscordInstallCest
 
         $I->amLoggedInAs($organizer);
         $state = $this->startDiscordConnect($I, $larp->getId())['state'];
-        $this->visitDiscordCallback($I, ['state' => $state, 'code' => 'bot-code', 'guild_id' => self::GUILD_ID, 'permissions' => '66560']);
+        $this->visitDiscordCallback($I, ['state' => $state, 'code' => 'bot-code', 'guild_id' => self::GUILD_ID, 'permissions' => '309237713920']);
 
         $I->seeResponseCodeIsRedirection();
         $integration = $this->findDiscordIntegration($I, $larp->getId());
+        $I->assertSame('309237713920', $integration?->getConfig()['botPermissions'] ?? null);
         $I->assertNotNull($integration);
         $I->assertSame(ConnectionType::BotInstall, $integration->getConnectionType());
         $I->assertSame(IntegrationStatus::Active, $integration->getStatus());

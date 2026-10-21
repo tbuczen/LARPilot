@@ -1,0 +1,23 @@
+{
+    "id": "1300000000000000555",
+    "type": 0,
+    "channel_id": "1100000000000000555",
+    "content": "Posted",
+    "author": {
+        "id": "1100000000000000777",
+        "username": "LARPilot",
+        "global_name": null,
+        "discriminator": "0000",
+        "bot": true
+    },
+    "attachments": [],
+    "embeds": [],
+    "mentions": [],
+    "mention_roles": [],
+    "pinned": false,
+    "mention_everyone": false,
+    "tts": false,
+    "timestamp": "2026-10-21T18:00:01.000000+00:00",
+    "edited_timestamp": null,
+    "flags": 0
+}

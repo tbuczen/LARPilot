@@ -8,10 +8,12 @@ use App\Domain\CallTranscript\Entity\CallRecording;
 use App\Domain\CallTranscript\Message\ExportCallTranscriptToGoogleDocMessage;
 use App\Domain\CallTranscript\Message\FinalizeCallTranscriptMessage;
 use App\Domain\CallTranscript\Message\GenerateCallSummaryMessage;
+use App\Domain\CallTranscript\Message\PostCallTranscriptToDiscordMessage;
 use App\Domain\CallTranscript\Message\TranscribeCallTrackMessage;
 use App\Domain\CallTranscript\MessageHandler\ExportCallTranscriptToGoogleDocHandler;
 use App\Domain\CallTranscript\MessageHandler\FinalizeCallTranscriptHandler;
 use App\Domain\CallTranscript\MessageHandler\GenerateCallSummaryHandler;
+use App\Domain\CallTranscript\MessageHandler\PostCallTranscriptToDiscordHandler;
 use App\Domain\CallTranscript\MessageHandler\TranscribeCallTrackHandler;
 use App\Domain\CallTranscript\Service\CallRecordingStorage;
 use Symfony\Component\Filesystem\Filesystem;
@@ -147,6 +149,7 @@ trait CallTranscriptFlow
             FinalizeCallTranscriptMessage::class => FinalizeCallTranscriptHandler::class,
             GenerateCallSummaryMessage::class => GenerateCallSummaryHandler::class,
             ExportCallTranscriptToGoogleDocMessage::class => ExportCallTranscriptToGoogleDocHandler::class,
+            PostCallTranscriptToDiscordMessage::class => PostCallTranscriptToDiscordHandler::class,
             default => null,
         };
     }

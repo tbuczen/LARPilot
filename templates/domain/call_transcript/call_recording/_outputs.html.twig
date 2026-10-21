@@ -12,6 +12,11 @@
                         <i class="bi bi-eye"></i>{{ 'call_recording.output.open_google_doc'|trans({}, 'call_transcript') }}
                     </a>
                 {% endif %}
+                {% if output.value == 'discord' and status.value == 'done' and recording.discordThreadUrl %}
+                    <a href="{{ recording.discordThreadUrl }}" class="btn btn-sm btn-outline-info" target="_blank" rel="noopener">
+                        <i class="bi bi-eye"></i>{{ 'call_recording.output.open_discord'|trans({}, 'call_transcript') }}
+                    </a>
+                {% endif %}
                 {% if status.retryable %}
                     <form method="post" class="d-inline" name="call_recording_retry_{{ output.value }}"
                           action="{{ path('backoffice_larp_call_transcript_retry', { larp: larp.id, recording: recording.id, output: output.value }) }}">

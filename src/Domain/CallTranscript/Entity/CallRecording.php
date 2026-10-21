@@ -90,6 +90,21 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $googleDocFailureReason = null;
 
+    #[ORM\Column(length: 20, enumType: CallOutputStatus::class, options: ['default' => 'skipped'])]
+    private CallOutputStatus $discordStatus = CallOutputStatus::SKIPPED;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $discordChannelId = null;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $discordThreadId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $discordThreadUrl = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $discordFailureReason = null;
+
     /**
      * @var Collection<int, CallRecordingTrack>
      */
@@ -229,6 +244,7 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
         return match ($output) {
             CallOutput::SUMMARY => $this->summaryStatus,
             CallOutput::GOOGLE_DOC => $this->googleDocStatus,
+            CallOutput::DISCORD => $this->discordStatus,
         };
     }
 
@@ -237,6 +253,7 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
         return match ($output) {
             CallOutput::SUMMARY => $this->summaryFailureReason,
             CallOutput::GOOGLE_DOC => $this->googleDocFailureReason,
+            CallOutput::DISCORD => $this->discordFailureReason,
         };
     }
 
@@ -336,11 +353,63 @@ class CallRecording implements CreatorAwareInterface, Timestampable, LarpAwareIn
         $this->googleDocFailureReason = $failureReason;
     }
 
+    public function getDiscordStatus(): CallOutputStatus
+    {
+        return $this->discordStatus;
+    }
+
+    public function getDiscordChannelId(): ?string
+    {
+        return $this->discordChannelId;
+    }
+
+    public function getDiscordThreadId(): ?string
+    {
+        return $this->discordThreadId;
+    }
+
+    public function getDiscordThreadUrl(): ?string
+    {
+        return $this->discordThreadUrl;
+    }
+
+    public function requestDiscordPost(?string $channelId): void
+    {
+        $this->discordChannelId = $channelId;
+        $this->discordStatus = $channelId === null ? CallOutputStatus::SKIPPED : CallOutputStatus::PENDING;
+        $this->discordFailureReason = null;
+    }
+
+    public function retryDiscordPost(): void
+    {
+        $this->discordStatus = CallOutputStatus::PENDING;
+        $this->discordFailureReason = null;
+    }
+
+    public function startDiscordThread(string $threadId, string $threadUrl): void
+    {
+        $this->discordThreadId = $threadId;
+        $this->discordThreadUrl = $threadUrl;
+    }
+
+    public function completeDiscordPost(): void
+    {
+        $this->discordStatus = CallOutputStatus::DONE;
+        $this->discordFailureReason = null;
+    }
+
+    public function failDiscordPost(string $failureReason): void
+    {
+        $this->discordStatus = CallOutputStatus::FAILED;
+        $this->discordFailureReason = $failureReason;
+    }
+
     private function skipOutput(CallOutput $output): void
     {
         match ($output) {
             CallOutput::SUMMARY => $this->summaryStatus = CallOutputStatus::SKIPPED,
             CallOutput::GOOGLE_DOC => $this->googleDocStatus = CallOutputStatus::SKIPPED,
+            CallOutput::DISCORD => $this->discordStatus = CallOutputStatus::SKIPPED,
         };
     }
 }

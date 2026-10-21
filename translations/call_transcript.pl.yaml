@@ -34,6 +34,12 @@ call_recording:
     google_doc_folder: 'Kopia w Google Docs'
     google_doc_folder_help: 'Zapisz też podsumowanie i transkrypcję jako Dokument Google w tym folderze na Dysku. Lista zawiera tylko foldery wybrane w Integracje → Google Drive.'
     google_doc_none: 'Nie twórz Dokumentu Google'
+    discord_channel: 'Opublikuj na Discordzie'
+    discord_channel_help: 'Gdy transkrypcja będzie gotowa, bot LARPilot założy w tym kanale wątek nazwany jak rozmowa i opublikuje podsumowanie z linkami do transkrypcji. Lista zawiera tylko kanały obserwowane przez ten LARP.'
+    discord_channel_missing_permissions: 'Bot LARPilot nie może jeszcze publikować: najpierw kliknij „Zaktualizuj uprawnienia bota” na stronie integracji z Discordem.'
+    discord_none: 'Nie publikuj na Discordzie'
+    discord_organizer_channels: 'Tylko dla organizatorów'
+    discord_player_channels: 'Dla graczy – gracze zobaczą wpis'
   import:
     unreadable_archive: 'Plik nie jest poprawnym archiwum zip.'
     too_large: 'Archiwum jest zbyt duże do zaimportowania.'
@@ -64,6 +70,8 @@ call_recording:
       failed: 'Błąd'
     google_doc: 'Dokument Google'
     open_google_doc: 'Otwórz w Google Docs'
+    discord: 'Wpis na Discordzie'
+    open_discord: 'Otwórz na Discordzie'
   document:
     transcript: 'Transkrypcja'
     summary: 'Podsumowanie'
@@ -79,3 +87,6 @@ call_recording:
       place: 'Miejsce'
       item: 'Przedmiot'
       event: 'Wydarzenie'
+  discord:
+    transcript_link: 'Transkrypcja w LARPilot: %url%'
+    google_doc_link: 'Dokument Google: %url%'

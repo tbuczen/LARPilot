@@ -7,6 +7,7 @@ use App\Domain\CallTranscript\Entity\Enum\CallOutput;
 use App\Domain\CallTranscript\Entity\Enum\CallOutputStatus;
 use App\Domain\CallTranscript\Message\ExportCallTranscriptToGoogleDocMessage;
 use App\Domain\CallTranscript\Message\GenerateCallSummaryMessage;
+use App\Domain\CallTranscript\Message\PostCallTranscriptToDiscordMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -42,6 +43,9 @@ final readonly class CallTranscriptOutputDispatcher
 
     public function afterGoogleDoc(CallRecording $recording): void
     {
+        if ($recording->getDiscordStatus() === CallOutputStatus::PENDING) {
+            $this->messageBus->dispatch(new PostCallTranscriptToDiscordMessage($recording->getId()));
+        }
     }
 
     public function retry(CallRecording $recording, CallOutput $output): bool
@@ -53,12 +57,14 @@ final readonly class CallTranscriptOutputDispatcher
         match ($output) {
             CallOutput::SUMMARY => $recording->requestSummary(true),
             CallOutput::GOOGLE_DOC => $recording->retryGoogleDoc(),
+            CallOutput::DISCORD => $recording->retryDiscordPost(),
         };
         $this->entityManager->flush();
 
         $this->messageBus->dispatch(match ($output) {
             CallOutput::SUMMARY => new GenerateCallSummaryMessage($recording->getId()),
             CallOutput::GOOGLE_DOC => new ExportCallTranscriptToGoogleDocMessage($recording->getId()),
+            CallOutput::DISCORD => new PostCallTranscriptToDiscordMessage($recording->getId()),
         });
 
         return true;

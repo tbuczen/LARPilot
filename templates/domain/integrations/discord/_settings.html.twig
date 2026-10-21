@@ -6,6 +6,13 @@
 </p>
 {% if not integration.status.usable %}
     {{ ui.warning_alert('settings.needs_reconnect'|trans({}, 'discord')) }}
+{% elseif not discord_bot_can_post(integration) %}
+    <div class="alert alert-warning d-flex flex-column flex-sm-row gap-2 justify-content-between align-items-sm-center" data-discord-permissions-prompt>
+        <span>{{ 'settings.update_permissions_hint'|trans({}, 'discord') }}</span>
+        <a href="{{ path('backoffice_larp_connect_integration', { larp: larp.id, provider: integration.provider.value }) }}" class="btn btn-warning text-nowrap">
+            <i class="bi bi-shield-check"></i>{{ 'settings.update_permissions'|trans({}, 'discord') }}
+        </a>
+    </div>
 {% endif %}
 <p class="text-muted small">{{ 'settings.privacy_note'|trans({}, 'discord') }}</p>
 <div class="d-flex gap-2">

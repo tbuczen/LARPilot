@@ -28,6 +28,7 @@ final readonly class CallRecordingUploader
         $recording->setCreatedBy($organizer);
         $recording->requestSummary($options->summary);
         $recording->requestGoogleDoc($options->googleDocFolder);
+        $recording->requestDiscordPost($options->discordChannelId);
         $this->entityManager->persist($recording);
 
         try {
