@@ -143,6 +143,13 @@ jobs:
             export DISCORD_CLIENT_SECRET="${DISCORD_CLIENT_SECRET:-$OAUTH_DISCORD_CLIENT_SECRET}"
 
             make deploy
+
+            echo "Checking that errors reach Sentry, with the settings the website reads from .env.local..."
+            if [ -z "$SENTRY_DSN" ]; then
+              echo "WARNING: SENTRY_DSN is empty, so errors are not reported to Sentry. Set the SENTRY_DSN secret on the 'prod' environment."
+            elif ! env -u SENTRY_DSN -u SENTRY_RELEASE php -d memory_limit=-1 bin/console sentry:test; then
+              echo "WARNING: this server could not send a test event to Sentry. Errors are not being reported; see docs/SENTRY_SETUP.md."
+            fi
         env:
           PROJECT_DIR: ${{ vars.PROJECT_DIR }}
           APP_ENV: ${{ secrets.APP_ENV }}
