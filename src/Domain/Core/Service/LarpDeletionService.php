@@ -11,6 +11,7 @@ use App\Domain\Integrations\Service\Capability\ConnectableIntegrationInterface;
 use App\Domain\Integrations\Service\IntegrationRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -70,6 +71,7 @@ class LarpDeletionService
         private readonly LarpIntegrationRepository $integrationRepository,
         private readonly IntegrationRegistry $integrationRegistry,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly LoggerInterface $logger,
         #[Autowire('%kernel.project_dir%')]
         private readonly string $projectDirectory,
         private readonly Filesystem $filesystem = new Filesystem(),
@@ -95,8 +97,29 @@ class LarpDeletionService
 
         $this->entityManager->clear();
 
-        $this->filesystem->remove($deletingEvent->getPathsToRemove());
-        $this->eventDispatcher->dispatch(new LarpDeletedEvent($larpId));
+        $this->removeFiles($deletingEvent->getPathsToRemove(), $larpId->toRfc4122());
+        $this->notifyDeleted(new LarpDeletedEvent($larpId));
+    }
+
+    /**
+     * @param list<string> $paths
+     */
+    private function removeFiles(array $paths, string $larpId): void
+    {
+        try {
+            $this->filesystem->remove($paths);
+        } catch (\Throwable $exception) {
+            $this->logger->error('Files of a deleted LARP could not be removed.', ['larpId' => $larpId, 'paths' => $paths, 'exception' => $exception]);
+        }
+    }
+
+    private function notifyDeleted(LarpDeletedEvent $deletedEvent): void
+    {
+        try {
+            $this->eventDispatcher->dispatch($deletedEvent);
+        } catch (\Throwable $exception) {
+            $this->logger->error('A listener failed after a LARP was deleted.', ['larpId' => $deletedEvent->getLarpId()->toRfc4122(), 'exception' => $exception]);
+        }
     }
 
     private function disconnectIntegrations(Larp $larp): void
